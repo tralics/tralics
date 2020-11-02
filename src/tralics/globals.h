@@ -98,7 +98,6 @@ namespace math_ns {
     auto mk_mi(char32_t c) -> Xml *;
     auto mk_mi(uchar c, size_t font) -> Xml *;
     auto mk_space(const std::string &a) -> Xml *;
-    auto nb_args_for_cmd(int c) -> int;
     void fill_math_char_slots();
     void fill_math_char_slots_ent();
     void fill_single_char();

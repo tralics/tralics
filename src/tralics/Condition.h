@@ -3,10 +3,10 @@
 #include <vector>
 
 struct CondAux {
-    int if_limit; // specifies the largest code of a fi_or_else command
-    int cur_if;   // is the name of the current type of conditional
-    int if_line;  // is the line number at which it began
-    int serial;   // is the serial number
+    int      if_limit; // specifies the largest code of a fi_or_else command
+    unsigned cur_if;   // is the name of the current type of conditional
+    int      if_line;  // is the line number at which it began
+    int      serial;   // is the serial number
 
     void dump(long i) const;
 };
@@ -26,7 +26,7 @@ struct Condition : public std::vector<CondAux> {
     [[nodiscard]] auto is_this_if(size_t n) const -> bool { return size() == n; }
 
     void pop();
-    auto push(int chr) -> size_t;
+    auto push(unsigned chr) -> size_t;
     void wait_for_fi() { back().if_limit = fi_code; }
     void terminate();
     void set_limit(size_t n, int l) { at(n - 1).if_limit = l; }

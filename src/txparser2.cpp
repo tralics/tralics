@@ -397,7 +397,7 @@ auto Parser::T_xmllatex() -> std::string {
     return mac_buffer;
 }
 
-void Parser::E_get_config(int c) {
+void Parser::E_get_config(unsigned c) {
     Token       T        = cur_tok;
     TokenList   L1       = read_arg();
     std::string resource = list_to_string_c(L1, "Problem scanning resource name");

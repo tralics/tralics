@@ -535,7 +535,7 @@ void Parser::tipa_star() {
     if (get_token()) return; // should not happen
     int cmd = cur_cmd_chr.cmd;
     if (cmd == 12 || cmd == 11) {
-        int n = cur_cmd_chr.chr;
+        auto n = cur_cmd_chr.chr;
         if (n > 0 && n < 128) {
             if (n == 'k') {
                 extended_chars(0x29e);
@@ -586,7 +586,7 @@ void Parser::tipa_semi() {
     if (get_token()) return; // should not happen
     int cmd = cur_cmd_chr.cmd;
     if (cmd == 12 || cmd == 11) {
-        int n = cur_cmd_chr.chr;
+        auto n = cur_cmd_chr.chr;
         if (n > 0 && n < 128) {
             if (n == 'E' || n == 'J' || n == 'A' || n == 'U') {
                 mk_hi("sc", char(n));
@@ -625,7 +625,7 @@ void Parser::tipa_colon() {
     if (get_token()) return; // should not happen
     int cmd = cur_cmd_chr.cmd;
     if (cmd == 12 || cmd == 11) {
-        int n = cur_cmd_chr.chr;
+        auto n = cur_cmd_chr.chr;
         if (n > 0 && n < 128) {
             if (n == 'd') {
                 extended_chars(0x256);
@@ -668,7 +668,7 @@ void Parser::tipa_exclam() {
     if (get_token()) return; // should not happen
     int cmd = cur_cmd_chr.cmd;
     if (cmd == 12 || cmd == 11) {
-        int n = cur_cmd_chr.chr;
+        auto n = cur_cmd_chr.chr;
         if (n > 0 && n < 128) {
             if (n == 'G') {
                 extended_chars(0x29b);
@@ -703,7 +703,7 @@ void Parser::tipa_normal() {
     if (get_token()) return; // should not happen
     int cmd = cur_cmd_chr.cmd;
     if (cmd == 12 || cmd == 11) {
-        int n = cur_cmd_chr.chr;
+        auto n = cur_cmd_chr.chr;
         if (n > 0 && n < 128) {
             if (n == '0') {
                 extended_chars(0x289);

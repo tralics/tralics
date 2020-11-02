@@ -318,7 +318,7 @@ void Parser::T_scantokens(TokenList &L) {
 
 // In TeX, you say \input foo, in latex you say \input{foo}
 // This accepts both syntaxes.
-auto Parser::latex_input(int q) -> std::string {
+auto Parser::latex_input(subtypes q) -> std::string {
     remove_initial_space_and_back_input();
     std::string file;
     if (q == include_code || cur_tok.is_OB_token()) {
@@ -2149,7 +2149,7 @@ void Parser::E_convert() {
     Token  T = cur_tok;
     Buffer B;
     B.clear();
-    int c = cur_cmd_chr.chr;
+    auto c = cur_cmd_chr.chr;
     switch (c) {
     case number_code:
     case at_arabic_code:
@@ -2193,6 +2193,7 @@ void Parser::E_convert() {
     case tralicsversion_code: B.append(tralics_version); break;
     case etexrevision_code: B.append(".0"); break;
     case rayear_code: B.format("{}", the_parser.get_ra_year()); break;
+    default:;
     }
     TokenList L = B.str_toks(nlt_space); // SPACE
     if (tracing_commands()) {

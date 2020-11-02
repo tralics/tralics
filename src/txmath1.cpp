@@ -60,6 +60,56 @@ namespace {
         auto expo = Buffer_special_exponent(B);
         return expo ? new Xml(*expo) : nullptr;
     }
+
+    // Returns the number of arguments of the command.
+    auto nb_args_for_cmd(subtypes c) -> int {
+        if (c >= first_maccent_code && c <= last_maccent_code) return 1;
+        switch (c) {
+        case mathchoice_code: return 4;
+        case operatorname_code: return 1;
+        case operatornamestar_code: return 1;
+        case overline_code: return 1;
+        case underline_code: return 1;
+        case stackrel_code: return 2;
+        case underset_code: return 2;
+        case overset_code: return 2;
+        case accentset_code: return 2;
+        case underaccent_code: return 2;
+        case frac_code: return 2;
+        case overbrace_code: return 1;
+        case underbrace_code: return 1;
+        case undertilde_code: return 1;
+        case mathmi_code: return 1;
+        case mathmn_code: return 1;
+        case mathmo_code: return 1;
+        case mathci_code: return 1;
+        case mathcn_code: return 1;
+        case mathcsymbol_code: return 1;
+        case math_attribute_code: return 2;
+        case thismath_attribute_code: return 2;
+        case formula_attribute_code: return 2;
+        case mathlabel_code: return 2;
+        case dfrac_code: return 2;
+        case tfrac_code: return 2;
+        case cfrac_code: return 2;
+        case binom_code: return 2;
+        case dbinom_code: return 2;
+        case tbinom_code: return 2;
+        case sqrt_code: return 1;
+        case root_code: return 1;
+        case genfrac_code: return 2;
+        case multicolumn_code: return 3;
+        case qopname_code: return 3;
+        case mathbox_code: return 1;
+        case multiscripts_code: return 1;
+        case phantom_code: return 1;
+        case hphantom_code: return 1;
+        case vphantom_code: return 1;
+        case smash_code: return 1;
+        case boxed_code: return 1;
+        default: return -1;
+        }
+    }
 } // namespace
 
 // This prints the whole MathP list on the stream
@@ -406,56 +456,6 @@ void Buffer::push_back_math_aux(std::string s) {
         for (size_t i = 0; i < n; i++) push_back_xml_char(s[i]);
 }
 
-// Returns the number of arguments of the command.
-auto math_ns::nb_args_for_cmd(int c) -> int {
-    if (c >= first_maccent_code && c <= last_maccent_code) return 1;
-    switch (c) {
-    case mathchoice_code: return 4;
-    case operatorname_code: return 1;
-    case operatornamestar_code: return 1;
-    case overline_code: return 1;
-    case underline_code: return 1;
-    case stackrel_code: return 2;
-    case underset_code: return 2;
-    case overset_code: return 2;
-    case accentset_code: return 2;
-    case underaccent_code: return 2;
-    case frac_code: return 2;
-    case overbrace_code: return 1;
-    case underbrace_code: return 1;
-    case undertilde_code: return 1;
-    case mathmi_code: return 1;
-    case mathmn_code: return 1;
-    case mathmo_code: return 1;
-    case mathci_code: return 1;
-    case mathcn_code: return 1;
-    case mathcsymbol_code: return 1;
-    case math_attribute_code: return 2;
-    case thismath_attribute_code: return 2;
-    case formula_attribute_code: return 2;
-    case mathlabel_code: return 2;
-    case dfrac_code: return 2;
-    case tfrac_code: return 2;
-    case cfrac_code: return 2;
-    case binom_code: return 2;
-    case dbinom_code: return 2;
-    case tbinom_code: return 2;
-    case sqrt_code: return 1;
-    case root_code: return 1;
-    case genfrac_code: return 2;
-    case multicolumn_code: return 3;
-    case qopname_code: return 3;
-    case mathbox_code: return 1;
-    case multiscripts_code: return 1;
-    case phantom_code: return 1;
-    case hphantom_code: return 1;
-    case vphantom_code: return 1;
-    case smash_code: return 1;
-    case boxed_code: return 1;
-    default: return -1;
-    }
-}
-
 // Not inline because of a bug of the Mac Compiler gcc4.2.1
 
 auto MathElt::get_fml_subtype() const -> subtypes { return math_to_sub(get_lcmd()); }
@@ -475,7 +475,7 @@ void MathElt::cv_noML_special() const {
         return;
     }
     mathml_buffer.push_back_math_token(Val, false);
-    int n = math_ns::nb_args_for_cmd(c);
+    int n = nb_args_for_cmd(c);
     if (n == -1) mathml_buffer.append("unknown");
     if (c == mathbox_code) {
         mathml_buffer.append("{");
@@ -575,7 +575,7 @@ void MathElt::cv_noMLt_special() const {
 
 void MathElt::cv_noMLt_special0() const {
     subtypes c = get_fml_subtype();
-    int      n = math_ns::nb_args_for_cmd(c);
+    int      n = nb_args_for_cmd(c);
     Math &   L = get_list();
     if (n == -1) mathml_buffer.append("unknown");
     if (c == mathbox_code) {

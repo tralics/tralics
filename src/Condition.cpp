@@ -10,7 +10,7 @@ void Condition::dump() const {
 void CondAux::dump(long i) const {
     Logger::finish_seq();
     the_log << "### level " << i << " serial " << serial << ": ";
-    auto T = to_unsigned(cur_if);
+    auto T = cur_if;
     if (T >= unless_code) {
         T -= unless_code;
         the_log << "\\unless";
@@ -33,14 +33,14 @@ auto Condition::top_branch() const -> int {
 // for \currentiftype
 auto Condition::top_type() const -> long {
     if (empty()) return 0;
-    auto n = to_unsigned(back().cur_if);
+    auto n = back().cur_if;
     if (n < unless_code) return to_signed(n + 1);
 
     return -to_signed(n - unless_code + 1);
 }
 
 // Pushes a new conditional
-auto Condition::push(int chr) -> size_t {
+auto Condition::push(unsigned chr) -> size_t {
     if_serial++;
     push_back({if_code, chr, the_parser.get_cur_line(), if_serial});
     return size();

@@ -45,28 +45,28 @@ public:
     Stats                                     my_stats; // for the statistics
     Token                                     err_tok;  // in case of error
 private:
-    bool   unexpected_seen_hi{false}; // check for wrongly placed font changes
-    bool   calc_loaded;               // did we see \usepackage{calc} ?
-    bool   numbered_verbatim{};       // has this verbatim line numbers ?
-    bool   restricted;                // are we in restricted mode ?
-    bool   force_eof{false};          // did we see \endinput ?
-    bool   no_new_file{false};        // can we pop the input stack ?
-    bool   file_ended{};              //
-    bool   chapter_has_star{false};   // true in frontmatter, backmatter
-    bool   list_files_p;              // Should we list the files at the end ?
-    bool   tok_is_defined{};          // use by \ifcsname
-    int    old_nberrs{};              // previous number of errors
-    int    cur_line{};                // current input line number
-    int    begin_env_line{0};         // input line number of
-    int    ra_year{1789};             // default year if none given as argument
-    int    default_language_num{0};   // default language
-    int    cur_level;                 // current level on the execution stack
-    size_t equation_ctr_pos{};        // position in the table of the counter equation
-    states state;                     // current state of the scanner
-    Token  cur_tok;                   // current token
-    Token  after_assignment_token;    // token for \afterassignment
-    CmdChr cur_cmd_chr;               // current command code and modifier
-    int    sectionning_offset;        // what is the main section, part, chapter ?
+    bool     unexpected_seen_hi{false}; // check for wrongly placed font changes
+    bool     calc_loaded;               // did we see \usepackage{calc} ?
+    bool     numbered_verbatim{};       // has this verbatim line numbers ?
+    bool     restricted;                // are we in restricted mode ?
+    bool     force_eof{false};          // did we see \endinput ?
+    bool     no_new_file{false};        // can we pop the input stack ?
+    bool     file_ended{};              //
+    bool     chapter_has_star{false};   // true in frontmatter, backmatter
+    bool     list_files_p;              // Should we list the files at the end ?
+    bool     tok_is_defined{};          // use by \ifcsname
+    int      old_nberrs{};              // previous number of errors
+    int      cur_line{};                // current input line number
+    int      begin_env_line{0};         // input line number of
+    int      ra_year{1789};             // default year if none given as argument
+    int      default_language_num{0};   // default language
+    int      cur_level;                 // current level on the execution stack
+    size_t   equation_ctr_pos{};        // position in the table of the counter equation
+    states   state;                     // current state of the scanner
+    Token    cur_tok;                   // current token
+    Token    after_assignment_token;    // token for \afterassignment
+    CmdChr   cur_cmd_chr;               // current command code and modifier
+    subtypes sectionning_offset;        // what is the main section, part, chapter ?
 public:
     l_state     long_state;     // Error recovery handling (\long)
     scan_stat   scanner_status; // Error recovery handling (\outer)
@@ -328,7 +328,7 @@ private:
     void        define_bool_key(subtypes c);
     void        define_choice_key();
     void        define_cmd_key(subtypes c);
-    void        define_something(int chr, bool gbl, symcodes w);
+    void        define_something(subtypes chr, bool gbl, symcodes w);
     auto        delimiter_for_verb(bool &special_space) -> char32_t;
     auto        delimiter_for_saveverb() -> char32_t;
     static auto dimen_attrib(ScaledInt A) -> std::string;
@@ -336,7 +336,7 @@ private:
     void        dimen_from_list0(Token T, TokenList &L);
     void        dim_define(size_t a, ScaledInt c, bool gbl);
     void        disable_keys();
-    auto        do_register_arg(int q, int &p, Token &tfe) -> size_t;
+    auto        do_register_arg(int q, unsigned &p, Token &tfe) -> size_t;
     void        do_register_command(bool gbl);
     void        dump_save_stack() const;
     auto        edef_aux(TokenList &L) -> bool;
@@ -382,7 +382,7 @@ private:
     void        fetch_name2();
     auto        fetch_name_opt() -> std::string;
     auto        find_env_token(const std::string &name, bool beg) -> Token;
-    void        E_get_config(int c);
+    void        E_get_config(unsigned c);
     void        finish_a_cell(Token T, const std::string &a);
     void        finish_counter_cmd(Token first, TokenList &L);
     void        finish_csname(Buffer &b, const std::string &s);
@@ -509,7 +509,7 @@ private:
     auto        last_att_list() -> AttList &;
     void        E_latex_ctr();
     void        E_latex_ctr_fnsymbol(long n, TokenList &res) const;
-    auto        latex_input(int q) -> std::string;
+    auto        latex_input(subtypes q) -> std::string;
     void        LC();
     void        leave_h_mode();
     void        leave_v_mode();
@@ -711,7 +711,7 @@ private:
     void        M_let(Token A, bool global, bool redef);
     void        M_let(Token a, Token b, bool gbl, bool redef);
     void        M_let_fast(Token a, Token b, bool gbl);
-    void        M_let(int chr, bool gbl);
+    void        M_let(subtypes chr, bool gbl);
 
     void        M_new_thm();
     void        M_def(bool edef, bool gbl, symcodes what, rd_flag fl);
@@ -726,7 +726,7 @@ private:
     void        M_shorthand_define(subtypes cmd, bool gbl);
     auto        shorthand_gdefine(int cmd, String sh, int k) -> Token;
     void        M_shortverb(subtypes x);
-    void        short_verb_error(Token T, Token t, int x);
+    void        short_verb_error(Token T, Token t, unsigned x);
     static void show_box(Xml *X);
     void        skip_group(TokenList &);
     void        skip_group0(TokenList &L);
@@ -839,7 +839,7 @@ private:
     void        T_ipa(subtypes c);
     void        T_isin();
     void        T_item(subtypes c);
-    auto        T_item_label(int c) -> std::string;
+    auto        T_item_label(unsigned c) -> std::string;
     void        T_keywords();
     void        T_label(subtypes c);
     void        T_line(subtypes c);
@@ -1053,7 +1053,7 @@ private:
     void L3_new_conditional_aux(TokenList &arg_spec, subtypes s);
     void L3_new_conditional_parm(subtypes s);
     auto l3_parms_from_ac(long n, Token T, bool s) -> TokenList;
-    void E_prg_return(int c);
+    void E_prg_return(unsigned c);
     auto L3_split_next_name() -> bool;
     auto l3_to_string(subtypes c, TokenList &L) -> std::string;
     void L3_user_split_next_name(bool base);

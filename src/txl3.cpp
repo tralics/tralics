@@ -119,7 +119,7 @@ void Parser::L3_logid() {
 // execute trueC or falseC.  Defined as
 //  \expandafter\use_i:nn\__int_to_roman:w in latex,
 
-void Parser::E_prg_return(int c) {
+void Parser::E_prg_return(unsigned c) {
     Token T = (c == 0 ? T_use1 : T_use2);
     scan_int(T); // let's hope this will not fail
     TokenList L1 = read_arg();

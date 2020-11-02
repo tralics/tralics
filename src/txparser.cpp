@@ -1457,7 +1457,7 @@ auto Parser::expand_mac_inner(const TokenList &W, TokenList *arguments) -> Token
         Token x = *C;
         ++C;
         if (x.is_a_char() && x.cmd_val() == eol_catcode) {
-            int       k  = x.chr_val();
+            auto      k  = x.chr_val();
             TokenList ww = arguments[k];
             res.splice(res.end(), ww);
         } else
@@ -2857,7 +2857,7 @@ void Parser::E_fi_or_else() {
     int K = conditions.top_limit();
     if (K == if_code)
         insert_relax();
-    else if (cur_cmd_chr.chr > K)
+    else if (cur_cmd_chr.chr > to_unsigned(K))
         extra_fi_or_else();
     else {
         while (cur_cmd_chr.chr != fi_code) pass_text(T);
@@ -2877,7 +2877,7 @@ void Parser::E_unless() {
 
 void Parser::E_if_test(subtypes test, bool negate) {
     Token Tfe = cur_tok;
-    auto  sz  = conditions.push(negate ? test + unless_code : test);
+    auto  sz  = conditions.push(negate ? subtypes(test + unless_code) : test);
     int   k   = conditions.top_serial();
     trace_if(negate ? -1 : -2);
     if (test == if_case_code) {
@@ -3130,7 +3130,7 @@ void Parser::M_let(bool gbl) {
 
 // first \let, \futurelet then L3 variants
 // {\let\foo\undef \cs_undefine:c{foo}} leaves \foo unchanged; ok ?
-void Parser::M_let(int chr, bool gbl) {
+void Parser::M_let(subtypes chr, bool gbl) {
     if (chr == let_code)
         M_let(gbl);
     else if (chr == futurelet_code)
@@ -3161,10 +3161,10 @@ void Parser::M_let(int chr, bool gbl) {
         if (chr >= 8) {
             nnew = true;
             gbl  = true;
-            chr -= 8;
+            chr  = subtypes(chr - 8);
         } else if (chr >= 4) {
             gbl = true;
-            chr -= 4;
+            chr = subtypes(chr - 4);
         }
         Token a;
         if (chr == 1 || chr == 3)
@@ -3272,7 +3272,7 @@ auto Parser::read_latex_macro() -> Macro * {
 
 // \def, \xdef, \gdef, \edef, latex variants and latex3 variants
 // \long \protected flags are integrated in w
-void Parser::define_something(int chr, bool gbl, symcodes w) {
+void Parser::define_something(subtypes chr, bool gbl, symcodes w) {
     switch (chr) {
     case def_code: M_def(false, gbl, w, rd_always); return; // hack
     case newcommand_code: M_newcommand(rd_if_undef); return;
@@ -3283,26 +3283,27 @@ void Parser::define_something(int chr, bool gbl, symcodes w) {
     case renew_code: M_newcommand(rd_if_defined); return;
     case provide_code: M_newcommand(rd_skip); return;
     case declare_math_operator_code: M_declare_math_operator(); return;
+    default:;
     }
     bool csname = false;
     if (32 <= chr) {
-        chr -= 32;
+        chr    = subtypes(chr - 32);
         csname = true;
     }
     rd_flag fl = rd_always;
     if (16 <= chr) {
-        chr -= 16;
-        fl = rd_if_undef;
+        chr = subtypes(chr - 16);
+        fl  = rd_if_undef;
     }
     // 16 case; expand, global, protected, long
     if (chr == gdef_code || chr == xdef_code || chr == lgdef_code || chr == lxdef_code || chr == pgdef_code || chr == pxdef_code ||
         chr == plgdef_code || chr == plxdef_code) {
-        chr--;
+        chr = subtypes(chr - 1);
         gbl = true;
     }
     bool exp = false;
     if (chr == edef_code || chr == ledef_code || chr == pedef_code || chr == pledef_code) {
-        chr -= 2;
+        chr = subtypes(chr - 2);
         exp = true;
     }
     if (chr == ldef_code || chr == pldef_code) {
@@ -3467,7 +3468,7 @@ auto Parser::shorthand_gdefine(int cmd, String sh, int k) -> Token {
 // We may have seen \advance, then \foo, where \foo is defined by
 // \countdef, so that we can return after seeing \foo.
 // In any case, returns a position and sets p to the type.
-auto Parser::do_register_arg(int q, int &p, Token &tfe) -> size_t {
+auto Parser::do_register_arg(int q, unsigned &p, Token &tfe) -> size_t {
     Token T = cur_tok;
     if (q != register_cmd) {
         get_x_token();
@@ -3512,11 +3513,11 @@ auto Parser::do_register_arg(int q, int &p, Token &tfe) -> size_t {
 // Handles \advance\skip0 by \skip1, \divide \skip0 by \count1
 
 void Parser::do_register_command(bool gbl) {
-    Token T = cur_tok;
-    int   q = cur_cmd_chr.cmd;
-    int   p = 0;
-    auto  l = do_register_arg(q, p, T); // changes T from \advance to \skip
-    if (cur_tok.is_invalid()) return;   // was an error
+    Token    T = cur_tok;
+    int      q = cur_cmd_chr.cmd;
+    unsigned p = 0;
+    auto     l = do_register_arg(q, p, T); // changes T from \advance to \skip
+    if (cur_tok.is_invalid()) return;      // was an error
     if (q == register_cmd)
         scan_optional_equals();
     else
@@ -3583,7 +3584,7 @@ void Parser::M_tracingall() {
 
 // This implements \arabic, \@arabic, etc
 void Parser::E_latex_ctr() {
-    int       t = cur_cmd_chr.chr;
+    auto      t = cur_cmd_chr.chr;
     Token     T = cur_tok;
     long      n = 0;
     TokenList res;
@@ -3617,6 +3618,7 @@ void Parser::E_latex_ctr() {
             counter_overflow(T, n, 9);
         else
             E_latex_ctr_fnsymbol(n, res);
+    default:;
     }
     if (tracing_commands()) {
         Logger::finish_seq();

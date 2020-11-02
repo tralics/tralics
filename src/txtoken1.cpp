@@ -15,23 +15,20 @@
 // We define functions that return the name of a token;
 
 namespace tralics_ns {
-    auto make_name(const std::string &x, int y) -> std::string;
     auto make_name16(String x, size_t y) -> std::string;
-    auto strip_end(String s) -> String;
     auto math_env_name(subtypes c) -> String;
 } // namespace tralics_ns
 
-using tralics_ns::make_name;
-using tralics_ns::strip_end;
+namespace {
+    auto make_name(const std::string &x, unsigned y) -> std::string { return fmt::format("{}{}", x, y); }
 
-// This converts `endfoo' to `foo'. It does not check that the
-// string starts with `end', just that is is not zero.
-auto tralics_ns::strip_end(String s) -> String {
-    if (s == nullptr) return nullptr;
-    return s + 3;
-}
-
-auto tralics_ns::make_name(const std::string &x, int y) -> std::string { return fmt::format("{}{}", x, y); }
+    // This converts `endfoo' to `foo'. It does not check that the
+    // string starts with `end', just that is is not zero.
+    auto strip_end(String s) -> String {
+        if (s == nullptr) return nullptr;
+        return s + 3;
+    }
+} // namespace
 
 auto tralics_ns::make_name16(String x, size_t y) -> std::string { return fmt::format("{}\"{:X}", x, y); }
 

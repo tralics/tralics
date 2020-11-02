@@ -45,7 +45,7 @@ auto TexFonts::get_dimen_param(long ft, long pos) -> ScaledInt {
 }
 
 // Sets an integer parameter for a font
-void TexFonts::set_int_param(long ft, int pos, long v) {
+void TexFonts::set_int_param(long ft, subtypes pos, long v) {
     if (!is_valid(ft)) {
         the_parser.parse_error("attempt to modify unexistent font param");
         return;

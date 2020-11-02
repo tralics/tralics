@@ -339,7 +339,7 @@ void Parser::missing_equals(Token T) {
     back_input(cur_tok);
 }
 
-void Parser::short_verb_error(Token Tfe, Token t, int x) {
+void Parser::short_verb_error(Token Tfe, Token t, unsigned x) {
     err_buf = Tfe.tok_to_str() + ':';
     if (x == 3)
         err_buf.format("Not a short verb {}", t);
@@ -369,7 +369,9 @@ void Parser::counter_overflow(Token T, long n, int nmax) {
 
 void Parser::bad_redefinition(int rd, Token T) {
     err_buf = fmt::format("{}: Cannot define {}; token is {}", err_tok, T,
-                          (rd == 1 ? "undefined" : rd == 0 ? "already defined" : "not a command"));
+                          (rd == 1   ? "undefined"
+                           : rd == 0 ? "already defined"
+                                     : "not a command"));
     signal_error(err_tok, "bad definition");
 }
 

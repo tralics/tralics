@@ -454,7 +454,7 @@ void Parser::T_item(subtypes c) {
 }
 
 // c=1 in the case of \@item (new scheme)
-auto Parser::T_item_label(int c) -> std::string {
+auto Parser::T_item_label(unsigned c) -> std::string {
     TokenList L;
     bool      opt = cur_tok.is_open_bracket();
     if (opt) read_optarg_nopar(L);
@@ -573,13 +573,13 @@ void Parser::T_paras(subtypes x) {
         }
         return;
     }
-    int y = x - sectionning_offset;
+    int y = int(x) - int(sectionning_offset);
     if (x == endsec_code) {
         y           = 0;
         TokenList L = read_arg();
         if (!L.empty()) {
             token_from_list(L.front());
-            if (cur_cmd_chr.cmd == section_cmd) y = cur_cmd_chr.chr - sectionning_offset;
+            if (cur_cmd_chr.cmd == section_cmd) y = int(cur_cmd_chr.chr) - int(sectionning_offset);
         }
     }
     if (y < 0) y = 0;
@@ -1948,6 +1948,7 @@ void Parser::T_curves(subtypes c) {
     case closecurve_code: x0 = "closecurve"; break;
     case curve_code: x0 = "curve"; break;
     case tagcurve_code: x0 = "tagcurve"; break;
+    default:;
     }
     the_stack.push1(the_names[x0]);
     the_stack.set_arg_mode();
@@ -2184,6 +2185,7 @@ void Parser::T_specimp(subtypes c) {
         flush_buffer();
         the_stack.add_newid0("allowbreak");
         return;
+    default:;
     }
 }
 
