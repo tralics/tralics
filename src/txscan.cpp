@@ -184,7 +184,6 @@ void Parser::push_input_stack(const std::string &name, bool restore_at, bool re)
     every_eof   = false; // might be set to true
     require_eof = re;
     input_line.clear();
-    lines.set_interactive(false);
     input_line_pos = 0;
     cur_file_pos   = 0;
 }
@@ -243,7 +242,6 @@ void Parser::close_all() {
     input_line.clear();
     input_line_pos = 0;
     lines.clear();
-    lines.set_interactive(false);
 }
 
 // A file name is a special thing in TeX.
@@ -1818,10 +1816,10 @@ void Parser::list_to_glue(internal_type level, Token t, TokenList &L) {
 // Handles a command like \advance\count0 by, that allows \global before it.
 // here cur_tok would be \advance
 void Parser::M_prefixed_aux(bool gbl) {
-    auto     chr = cur_cmd_chr.chr;
-    Token    T   = cur_tok;
-    auto     p   = static_cast<subtypes>(0);
-    long     q   = 0;
+    auto  chr = cur_cmd_chr.chr;
+    Token T   = cur_tok;
+    auto  p   = static_cast<subtypes>(0);
+    long  q   = 0;
     switch (cur_cmd_chr.cmd) {
     case set_font_cmd: word_define(cur_font_loc, chr, gbl); return;
     case shorthand_def_cmd: M_shorthand_define(chr, gbl); return;

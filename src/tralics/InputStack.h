@@ -27,11 +27,7 @@ struct InputStack {
     void set_line_ptr(LineList &X) {
         L.clear_and_copy(X);
         X.file_name = "";
-        L.set_interactive(X.interactive);
     }
 
-    void get_line_ptr(LineList &X) {
-        X.clear_and_copy(L);
-        X.set_interactive(L.interactive);
-    }
+    void get_line_ptr(LineList &X) { X.clear_and_copy(L); }
 };

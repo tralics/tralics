@@ -38,10 +38,6 @@ struct LineList : public std::list<Line> { // \todo use a vector instead
     auto skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const;
     void splice_first(LineList &X); // \todo inline
     void split_string(std::string x, int l);
-
-    [[deprecated]] bool interactive{false}; // is this file or a tty ? \todo get rid of interactive mode
-    [[deprecated]] void set_interactive(){};
-    [[deprecated]] void set_interactive(bool) {}
 };
 
 inline std::vector<LineList> file_pool; // pool managed by filecontents \todo static inline in LineList

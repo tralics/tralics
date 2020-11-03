@@ -42,8 +42,6 @@ private:
     bool                     noyearerror{};
     std::array<id_type, 128> id_class{};
 
-    [[deprecated]] bool interactive{false};
-
 public:
     std::string default_year;
 

@@ -142,9 +142,8 @@ void LineList::normalise_final_cr() {
 }
 
 void LineList::reset(std::string x) {
-    cur_line    = 0;
-    encoding    = 0;
-    interactive = false;
+    cur_line = 0;
+    encoding = 0;
     clear();
     file_name = std::move(x);
 }
@@ -205,16 +204,11 @@ void LineList::before_close(bool sigforce) {
 auto LineList::get_next(Buffer &b) -> int {
     int  n         = -1;
     bool converted = false;
-    if (interactive) {
-        n = read_from_tty(b);
-        if (n == -1) interactive = false;
-    } else {
-        if (empty()) return -1;
-        b.append(front());
-        n         = front().number;
-        converted = front().converted;
-        pop_front();
-    }
+    if (empty()) return -1;
+    b.append(front());
+    n         = front().number;
+    converted = front().converted;
+    pop_front();
     if (!converted) {
         cur_file_name = file_name;
         b.convert_line(n, encoding);

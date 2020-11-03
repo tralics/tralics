@@ -808,7 +808,6 @@ void Bibtex::read(const std::string &src, bib_from ct) {
     normal_biblio = ct == from_year;
     refer_biblio  = ct == from_refer;
     in_lines.read(src, 1);
-    interactive = false;
 
     last_ok_line = 0;
     reset_input();
