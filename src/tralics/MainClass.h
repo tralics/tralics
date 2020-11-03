@@ -71,7 +71,6 @@ public:
     bool double_quote_att{false}; ///< double quote as attribute value delimitor
     bool dverbose{false};         ///< Are we verbose at begin document ?
     bool footnote_hack{true};     ///< Not sure what this activates
-    bool handling_ra{true};       ///< Are we handling the INRIA RA from the 2000s? \todo remove all references to the RA
     bool math_variant{false};
     bool no_entnames{false};
     bool no_undef_mac{false};
@@ -84,6 +83,8 @@ public:
     bool shell_escape_allowed{false};
     bool use_all_sizes{false};
     bool use_font_elt{false};
+
+    [[deprecated]] bool handling_ra{true}; ///< Are we handling the INRIA RA from the 2000s? \todo remove all references to the RA
 
     auto check_for_tcf(const std::string &s) -> bool; ///< Look for a `.tcf` file, and if found set `tcf_file` and `use_tcf`
 
