@@ -89,12 +89,6 @@ void LineList::change_encoding(long wc) {
     }
 }
 
-void LineList::set_interactive() {
-    interactive = true;
-    file_name   = "tty";
-    encoding    = the_main->input_encoding;
-}
-
 // interface with the line editor.
 auto LineList::read_from_tty(Buffer &B) -> int {
     static bool                   prev_line = false; // was previous line non-blank ?

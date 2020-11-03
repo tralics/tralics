@@ -476,8 +476,7 @@ enum param_args {
     pa_outputdir,
     pa_logfile,
     pa_doctype,
-    pa_param,
-    pa_inputdata
+    pa_param
 };
 
 void MainClass::parse_option(int &p, int argc, char **argv) {
@@ -495,7 +494,6 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         if (ss == "doctype") return pa_doctype;
         if (ss == "entnames") return pa_entnames;
         if (ss == "externalprog") return pa_externalprog;
-        if (ss == "inputdata") return pa_inputdata;
         if (ss == "inputdir") return pa_inputpath;
         if (ss == "inputfile") return pa_inputfile;
         if (ss == "inputpath") return pa_inputpath;
@@ -537,12 +535,6 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         case pa_rightquote: rightquote_val = static_cast<char32_t>(std::stoul(a, nullptr, 16)); return;
         case pa_defaultclass: default_class = a; return;
         case pa_inputfile: see_name(a); return;
-        case pa_inputdata:
-            interactive_math = true;
-            only_input_data  = true;
-            see_name("texput");
-            everyjob_string = "\\usepackage{amsmath}" + std::string(a) + "\\stop";
-            return;
         case pa_outputfile: out_name = a; return;
         case pa_inputpath: new_in_dir(a); return;
         case pa_outputdir: out_dir = a; return;
@@ -695,12 +687,6 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         load_l3 = true;
         return;
     }
-    if ((s == "interactivemath") || (s == "i") || (s == "adventure")) {
-        interactive_math = true;
-        input_encoding   = 0;
-        see_name("texput");
-        return;
-    }
     if (s == "noundefmac") {
         no_undef_mac = true;
         return;
@@ -746,7 +732,8 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         return;
     }
     if ((s == "radebug") || (s == "check") || (s == "ps") || (s == "xmlfo") || (s == "xmlhtml") || (s == "xmltex") || (s == "xmllint") ||
-        (s == "xmlall") || (s == "all") || (s == "nobibyearerror") || (s == "nobibyearmodify") || (s == "findwords")) {
+        (s == "xmlall") || (s == "all") || (s == "nobibyearerror") || (s == "nobibyearmodify") || (s == "findwords") ||
+        (s == "interactivemath") || (s == "i") || (s == "adventure")) {
         obsolete(s);
         return;
     }

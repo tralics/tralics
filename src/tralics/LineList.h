@@ -6,8 +6,6 @@ struct LineList : public std::list<Line> { // \todo use a vector instead
     std::string file_name;                 // file name associated to the lines
     size_t      encoding{1};               // current file encoding
 
-    [[deprecated]] bool interactive{false}; // is this file or a tty ? \todo get rid of interactive mode
-
     [[nodiscard]] auto dump_name() const -> std::string;
 
     void after_open();
@@ -21,7 +19,6 @@ struct LineList : public std::list<Line> { // \todo use a vector instead
     auto find_documentclass() -> std::string;
     void find_top_atts();
     auto find_top_val(const std::string &s, bool c) -> std::string;
-    void set_interactive(bool sw) { interactive = sw; }
     auto get_next_raw(Buffer &b) -> int;
     auto get_next_cv(Buffer &b, size_t w) -> int;
     auto get_next(Buffer &b) -> int;
@@ -38,10 +35,13 @@ struct LineList : public std::list<Line> { // \todo use a vector instead
     auto read_from_tty(Buffer &b) -> int;
     void register_file();
     void reset(std::string x);
-    void set_interactive();
     auto skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const;
     void splice_first(LineList &X); // \todo inline
     void split_string(std::string x, int l);
+
+    [[deprecated]] bool interactive{false}; // is this file or a tty ? \todo get rid of interactive mode
+    [[deprecated]] void set_interactive(){};
+    [[deprecated]] void set_interactive(bool sw) {}
 };
 
 inline std::vector<LineList> file_pool; // pool managed by filecontents \todo static inline in LineList
