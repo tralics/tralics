@@ -3,9 +3,10 @@
 
 struct LineList : public std::list<Line> { // \todo use a vector instead
     int         cur_line{0};               // current line number
-    bool        interactive{false};        // is this file or a tty ? \todo get rid of interactive mode
     std::string file_name;                 // file name associated to the lines
     size_t      encoding{1};               // current file encoding
+
+    [[deprecated]] bool interactive{false}; // is this file or a tty ? \todo get rid of interactive mode
 
     [[nodiscard]] auto dump_name() const -> std::string;
 

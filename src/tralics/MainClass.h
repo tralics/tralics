@@ -68,12 +68,13 @@ public:
 
     int tpa_mode{3};
 
+    [[deprecated]] bool interactive_math{false}; ///< Are we in interactive mode? \todo get rid of interactive mode
+
     bool distinguish_refer{true}; ///< Something to do with bibliographies in RA \todo remove
     bool double_quote_att{false}; ///< double quote as attribute value delimitor
     bool dverbose{false};         ///< Are we verbose at begin document ?
     bool footnote_hack{true};     ///< Not sure what this activates
     bool handling_ra{true};       ///< Are we handling the INRIA RA from the 2000s? \todo remove all references to the RA
-    bool interactive_math{false}; ///< Are we in interactive mode? \todo get rid of interactive mode
     bool math_variant{false};
     bool no_entnames{false};
     bool no_undef_mac{false};

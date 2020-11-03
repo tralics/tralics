@@ -40,8 +40,9 @@ private:
     std::string              cur_field_name;
     std::string              no_year;
     bool                     noyearerror{};
-    bool                     interactive{false};
     std::array<id_type, 128> id_class{};
+
+    [[deprecated]] bool interactive{false};
 
 public:
     std::string default_year;
