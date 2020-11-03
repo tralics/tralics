@@ -46,8 +46,6 @@ All options start with a single or double hyphen, they are:
   -config FILE: use FILE instead of default configuration file
   -confdir : indicates where the configuration files are located
   -noconfig: no configuration file is used
-  -interactivemath: reads from the terminal, 
-      and prints math formulas on the terminal
   -utf8: says that the source is encoded in utf8 instead of latin1
   -latin1: overrides -utf8
   -utf8output: same as -oe8
@@ -361,15 +359,8 @@ void MainClass::get_os() {
 void MainClass::check_for_input() {
     if (std::none_of(input_path.begin(), input_path.end(), [](const auto &s) { return s.empty(); })) input_path.emplace_back("");
 
-    std::string s = hack_for_input(infile);
-    if (interactive_math) {
-        input_content.set_interactive();
-        input_content.push_front(Line(1, "foo", true));
-        input_content.push_front(Line(2, "foo", false));
-        open_log();
-        return;
-    }
-    auto of = find_in_path(s);
+    std::string s  = hack_for_input(infile);
+    auto        of = find_in_path(s);
     if (!of) {
         spdlog::critical("Fatal error: Cannot open input file {}", infile);
         exit(1);
@@ -775,8 +766,6 @@ auto MainClass::find_config_file() -> std::optional<std::filesystem::path> {
         if (!user_config_file.ends_with(".tcf")) return main_ns::search_in_confdir(user_config_file + ".tcf");
         return main_ns::search_in_confdir(user_config_file);
     }
-    // If interactive, read config only if given as parameter
-    if (interactive_math) return {};
     std::string xclass = input_content.find_configuration();
     if (!xclass.empty()) {
         the_log << "Trying config file from source file `" << xclass << "'\n";

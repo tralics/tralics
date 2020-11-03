@@ -41,7 +41,7 @@ struct LineList : public std::list<Line> { // \todo use a vector instead
 
     [[deprecated]] bool interactive{false}; // is this file or a tty ? \todo get rid of interactive mode
     [[deprecated]] void set_interactive(){};
-    [[deprecated]] void set_interactive(bool sw) {}
+    [[deprecated]] void set_interactive(bool) {}
 };
 
 inline std::vector<LineList> file_pool; // pool managed by filecontents \todo static inline in LineList

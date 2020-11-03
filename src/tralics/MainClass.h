@@ -68,8 +68,6 @@ public:
 
     int tpa_mode{3};
 
-    [[deprecated]] bool interactive_math{false}; ///< Are we in interactive mode? \todo get rid of interactive mode
-
     bool distinguish_refer{true}; ///< Something to do with bibliographies in RA \todo remove
     bool double_quote_att{false}; ///< double quote as attribute value delimitor
     bool dverbose{false};         ///< Are we verbose at begin document ?

@@ -748,7 +748,6 @@ void Parser::after_math(bool is_inline) {
     else {
         bool w = the_stack.in_h_mode() || the_stack.in_v_mode();
         leave_h_mode();
-        if (the_main->interactive_math) return; // no need to be subtle
         remove_initial_space_and_back_input();
         if (w && cur_cmd_chr.cmd != par_cmd) back_input(hash_table.noindent_token);
     }
@@ -765,7 +764,6 @@ void Parser::finish_no_mathml(bool is_inline, size_t vp) {
     id.add_attribute(the_names["textype"], s);
     Xml *res = u.convert_math_noML(eqtb_int_table[nomath_code].val == -2);
     res->id  = id;
-    if (the_main->interactive_math) std::cout << res << "\n";
     after_math(is_inline);
     the_stack.top_stack()->push_back_unless_nullptr(res);
     if (cmi.has_label()) add_math_label(res);
@@ -780,7 +778,6 @@ void Parser::finish_trivial_math(Xml *res) {
         the_log << "formula was math\n";
     }
     the_parser.my_stats.one_more_trivial();
-    if (the_main->interactive_math) std::cout << res << "\n";
     leave_v_mode();
     MathHelper::finish_math_mem();
     the_stack.top_stack()->add_tmp(gsl::not_null{res});
@@ -871,12 +868,6 @@ void Parser::T_math(subtypes type) {
     res1->add_att(the_names["type"], the_names[cmi.pos_att]);
     if (!textype.empty()) res1->add_att(the_names["textype"], std::string(textype));
     if (cmi.has_label()) add_math_label(res1);
-    if (the_main->interactive_math) {
-        if (only_input_data)
-            std::cout << x << "\n";
-        else
-            std::cout << res1 << "\n";
-    }
     the_stack.add_last(res1);
     if (!is_inline) the_stack.add_nl();
 }
