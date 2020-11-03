@@ -60,7 +60,6 @@ private:
     int      old_nberrs{};              // previous number of errors
     int      cur_line{};                // current input line number
     int      begin_env_line{0};         // input line number of
-    int      ra_year{1789};             // default year if none given as argument
     int      default_language_num{0};   // default language
     int      cur_level;                 // current level on the execution stack
     size_t   equation_ctr_pos{};        // position in the table of the counter equation
@@ -69,6 +68,8 @@ private:
     Token    after_assignment_token;    // token for \afterassignment
     CmdChr   cur_cmd_chr;               // current command code and modifier
     subtypes sectionning_offset;        // what is the main section, part, chapter ?
+
+    [[deprecated]] int ra_year{1789}; // default year if none given as argument
 public:
     l_state     long_state;     // Error recovery handling (\long)
     scan_stat   scanner_status; // Error recovery handling (\outer)
@@ -161,10 +162,10 @@ public:
         cur_env_name   = std::move(s);
         begin_env_line = x;
     }
-    void               set_ra_year(int x) { ra_year = x; }
-    void               set_job_name(std::string s) { job_name = std::move(s); }
-    void               set_year_string(std::string s) { year_string = std::move(s); }
-    [[nodiscard]] auto tracing_commands() const -> bool { // \todo remove eventually
+    [[deprecated]] void set_ra_year(int x) { ra_year = x; }
+    void                set_job_name(std::string s) { job_name = std::move(s); }
+    void                set_year_string(std::string s) { year_string = std::move(s); }
+    [[nodiscard]] auto  tracing_commands() const -> bool { // \todo remove eventually
         static const auto ans = is_pos_par(tracingcommands_code);
         return ans;
     }

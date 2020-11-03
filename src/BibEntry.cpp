@@ -596,7 +596,6 @@ void BibEntry::presort(long serial) {
         label = lab1 + s;
     }
     B.clear();
-    if (the_main->handling_ra) B = ra_prefix() + lab3;
     B.format("{}{}    {}    ", label, lab2, y);
     B.special_title(all_fields[fp_title]);
     B.lowercase();

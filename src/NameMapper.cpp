@@ -372,7 +372,7 @@ void NameMapper::assign_name(const std::string &A, const std::string &B) {
         return;
     }
 
-    if (A == "rasection" && ra_ok) {
+    if (A == "rasection") { // \todo RA
         set("nb_rasection", B);
         return;
     }

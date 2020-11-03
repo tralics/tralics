@@ -111,11 +111,6 @@ namespace {
     auto pers_rc(const std::string &rc) -> std::string {
         if (rc.empty()) {
             if (have_default_ur) return the_default_rc;
-            if (the_main->handling_ra && the_parser.get_ra_year() > 2006) {
-                // signal error, make a default
-                the_parser.parse_error("No default Research Centre defined");
-                the_default_rc = "unknown";
-            }
             have_default_ur = true;
             return the_default_rc;
         }
@@ -144,7 +139,7 @@ namespace {
         return s;
     }
 
-    // Return the value of the key in a list.
+    // Return the value of the key in a list. \todo lots of RA stuff
     auto find_one_key(const std::string &name, const std::string &key) -> std::string {
         if (name == "ur") return pers_rc(key);
         if (name == "theme") return MainClass::check_theme(key);

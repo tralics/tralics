@@ -825,7 +825,6 @@ void Bibtex::boot(std::string S, bool inra) {
     no_year      = std::move(S);
     in_ra        = inra;
     want_numeric = false;
-    if (the_main->handling_ra) want_numeric = true;
     for (auto &id_clas : id_class) id_clas = legal_id_char;
     for (size_t i = 0; i < 32; i++) id_class[i] = illegal_id_char;
     id_class[static_cast<unsigned char>(' ')]  = illegal_id_char;

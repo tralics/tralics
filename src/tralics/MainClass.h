@@ -97,7 +97,8 @@ public:
     static auto check_theme(const std::string &s) -> std::string; ///< Check that theme is valid \todo RA specific?
 
 private:
-    void check_section_use() const;                   ///< Not sure what this does, RA related
+    [[deprecated]] void check_section_use() const {}; ///< Not sure what this does, RA related
+
     void parse_args(int argc, char **argv);           ///< Parse the command-line arguments
     void parse_option(int &p, int argc, char **argv); ///< Interprets one command-line option, advances p
     void read_config_and_other();                     ///< Read the config file and extract all relevant information

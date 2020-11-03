@@ -86,7 +86,7 @@ found at http://www.cecill.info.)";
 
     std::string log_name;
     std::string machine;
-    std::string no_ext;
+    std::string no_ext; // \todo should be a fs::path
     std::string opt_doctype;
     std::string user_config_file;
 
@@ -137,7 +137,7 @@ found at http://www.cecill.info.)";
     }
 
     /// Checks that name is non-empty and all lowercase
-    void check_lowercase(const std::string &s) {
+    [[deprecated]] void check_lowercase(const std::string &s) {
         if (s.empty()) {
             spdlog::critical("Illegal file name of the form safir/2002.tex");
             the_main->bad_year(); // never returns
@@ -148,7 +148,7 @@ found at http://www.cecill.info.)";
         }
     }
 
-    void check_year(int y, Buffer &C, const std::string &dclass, const std::string &Y) {
+    [[deprecated]] void check_year(int y, Buffer &C, const std::string &dclass, const std::string &Y) {
         if (y < 2000 || y >= 2100) the_main->bad_year();
         std::string raclass = std::string("ra") + C;
         if (dclass != raclass) {
@@ -163,7 +163,7 @@ found at http://www.cecill.info.)";
 
     /// If B holds apics2006, puts apics in B, 2006 in C, returns 2006
     // \todo refactor or deprecate with RA
-    auto extract_year(std::string &B, std::string &C) -> int {
+    [[deprecated]] auto extract_year(std::string &B, std::string &C) -> int {
         size_t m = B.size(), n = m, k = 0;
         while (k < 4 && n > 0 && (std::isdigit(B[n - 1]) != 0)) {
             n--;
@@ -862,7 +862,7 @@ auto MainClass::find_document_type() -> bool {
 
 void MainClass::find_dtd() {
     std::string res = opt_doctype;
-    if (handling_ra || res.empty()) res = config_file.find_top_val("DocType", false);
+    if (res.empty()) res = config_file.find_top_val("DocType", false);
 
     Buffer B(res); // \todo refactor this to avoid using a Buffer
     B.skip_letter_dig_dot();
@@ -888,10 +888,7 @@ void MainClass::find_dtd() {
             dtdfile = "classes.dtd";
         }
     }
-    if (handling_ra)
-        spdlog::trace("dtd is {} from {} (mode RAWEB{})", dtd, dtdfile, year);
-    else
-        spdlog::trace("dtd is {} from {} (standard mode)", dtd, dtdfile);
+    spdlog::trace("dtd is {} from {}", dtd, dtdfile);
 }
 
 void MainClass::read_config_and_other() {
@@ -922,7 +919,6 @@ void MainClass::read_config_and_other() {
 
     bool hr = dtype == "ra" || dtype == "RA" || (dtype.empty() && dft == 4);
     if (dclass.empty()) hr = false;
-    handling_ra = false;
     find_dtd();
     see_name1(); // this sets year_string.
     the_parser.set_default_language((hr && year <= 2002) ? 1 : 0);
@@ -932,7 +928,7 @@ void MainClass::read_config_and_other() {
     config_file.find_top_atts();
     LineList TP = config_file.parse_and_extract("TitlePage");
     Titlepage_create(TP);
-    if (have_dclass && !handling_ra) from_config.insert("\\InputIfFileExists*+{" + ult_name + "}{}{}\n", true);
+    if (have_dclass) from_config.insert("\\InputIfFileExists*+{" + ult_name + "}{}{}\n", true);
     input_content.splice(doc_class_pos, from_config);
     config_file.clear();
 }
@@ -956,22 +952,9 @@ void MainClass::see_name(std::string s) {
 
 void MainClass::see_name1() {
     Buffer      C;
-    std::string B = no_ext;
-    int         y = 0;
-    if (handling_ra) { // find and check the year from the file name
-        y = extract_year(B, C);
-        check_year(y, C, dclass, year_string);
-    }
-    B                        = std::filesystem::path(B).filename();
-    the_parser.the_projetval = B; // this is apics
-    if (handling_ra) {            // \todo handling_ra should disappear from tralics alltogether
-        check_lowercase(B);
-        year_string = C;
-        out_name    = B; // This is apics
-        year        = y;
-        the_parser.set_ra_year(y);
-        return;
-    }
+    int         y            = 0;
+    std::string B            = std::filesystem::path(no_ext).filename();
+    the_parser.the_projetval = B;                            // this is apics
     if (out_name.empty()) {                                  // might be given as an option
         out_name = std::filesystem::path(no_ext).filename(); // \todo make no_ext an fs path?
     }
@@ -1048,10 +1031,6 @@ void MainClass::run(int argc, char **argv) {
     show_input_size();
     boot_bibtex(handling_ra);
     trans0();
-    if (handling_ra) {
-        if (the_names["language"].empty()) the_names.set("language", "language");
-        the_parser.add_language_att();
-    }
     the_parser.init(input_content);
     the_parser.translate_all();
     check_section_use();
@@ -1117,14 +1096,6 @@ auto MainClass::check_theme(const std::string &s) -> std::string {
         the_parser.signal_error(the_parser.err_tok, "Bad theme");
     }
     return res;
-}
-
-void MainClass::check_section_use() const {
-    if (handling_ra) {
-        std::vector<ParamDataSlot> &X = config_data[1];
-        for (auto &i : X)
-            if (i.no_topic()) the_parser.parse_error(Token(), "No module in section ", i.key, "no module");
-    }
 }
 
 void MainClass::set_input_encoding(size_t wc) {

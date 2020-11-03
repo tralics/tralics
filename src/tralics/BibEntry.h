@@ -45,9 +45,9 @@ public:
     BibEntry() : user_fields(the_main->bibtex_fields.size()) {}
 
 private:
-    [[nodiscard]] auto from_to_string() const -> std::string { return cite_key.from_to_string(); };
-    [[nodiscard]] auto ra_prefix() const -> std::string;
-    [[nodiscard]] auto get_cite_prefix() const -> bib_from { return cite_key.cite_prefix; }
+    [[nodiscard]] auto             from_to_string() const -> std::string { return cite_key.from_to_string(); };
+    [[deprecated, nodiscard]] auto ra_prefix() const -> std::string;
+    [[nodiscard]] auto             get_cite_prefix() const -> bib_from { return cite_key.cite_prefix; }
 
     void out_something(field_pos p);
     void out_something(field_pos p, size_t w);

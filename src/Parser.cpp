@@ -1043,8 +1043,6 @@ void Parser::load_latex() {
     TokenList body;
     new_prim("@empty", body);
     hash_table.empty_token = hash_table.locate("@empty");
-    // Special raweb compatibility hacks
-    if (the_main->handling_ra) ra_ok = false;
     // this is like \let\bgroup={, etc
     hash_table.primitive("bgroup", open_catcode, subtypes('{'));
     hash_table.primitive("egroup", close_catcode, subtypes('}'));

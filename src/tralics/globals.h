@@ -28,7 +28,6 @@ inline bool                                                         global_in_ur
 inline bool                                                         in_hlinee, have_above, have_below;
 inline bool                                                         no_xml_error{false};
 inline bool                                                         old_ra = false;
-inline bool                                                         ra_ok{true};
 inline bool                                                         use_quotes{false};
 inline bool                                                         xkv_is_global;
 inline bool                                                         xkv_is_save;
