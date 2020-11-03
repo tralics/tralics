@@ -84,7 +84,7 @@ public:
     bool use_all_sizes{false};
     bool use_font_elt{false};
 
-    [[deprecated]] bool handling_ra{true}; ///< Are we handling the INRIA RA from the 2000s? \todo remove all references to the RA
+    [[deprecated]] bool handling_ra{false}; ///< Are we handling the INRIA RA from the 2000s? \todo remove all references to the RA
 
     auto check_for_tcf(const std::string &s) -> bool; ///< Look for a `.tcf` file, and if found set `tcf_file` and `use_tcf`
 

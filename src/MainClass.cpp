@@ -922,7 +922,7 @@ void MainClass::read_config_and_other() {
 
     bool hr = dtype == "ra" || dtype == "RA" || (dtype.empty() && dft == 4);
     if (dclass.empty()) hr = false;
-    handling_ra = hr;
+    handling_ra = false;
     find_dtd();
     see_name1(); // this sets year_string.
     the_parser.set_default_language((hr && year <= 2002) ? 1 : 0);
