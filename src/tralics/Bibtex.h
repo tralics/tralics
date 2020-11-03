@@ -70,8 +70,7 @@ private:
     auto               get_class(char32_t c) -> id_type { return id_class[c]; }
     void               handle_multiple_entries(BibEntry *Y);
     void               kill_the_lists();
-    auto               look_for_macro(const Buffer &name) -> std::optional<size_t>;
-    auto               look_for_macro(size_t h, const std::string &name) -> std::optional<size_t>;
+    auto               look_for_macro(const std::string &name) -> std::optional<size_t>;
     void               mac_def_val(size_t X) { all_macros[X].value = all_macros[X].name; }
     void               mac_set_val(size_t X, const std::string &s) { all_macros[X].value = s; }
     auto               make_entry(const CitationKey &a, bib_creator b, std::string myid) -> BibEntry *;

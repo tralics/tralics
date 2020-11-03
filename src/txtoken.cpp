@@ -135,22 +135,6 @@ auto Token::no_case_letter(char x) const -> bool {
     return false;
 }
 
-// The hash table  --------------------------------------------------
-
-// Returns the hashcode of the string in the buffer (assumed zero-terminated).
-// \todo standalone from std::string
-auto Buffer::hashcode(size_t prime) const -> size_t {
-    size_t j = 1;
-    size_t h = static_cast<uchar>(at(0));
-    if (h == 0) return 0;
-    for (;;) {
-        size_t c = static_cast<uchar>((*this)[j]);
-        if (c == 0) return h;
-        h = (h + h + c) % prime;
-        j++;
-    }
-}
-
 auto token_ns::compare(const TokenList &A, const TokenList &B) -> bool {
     auto C1 = A.begin();
     auto E1 = A.end();

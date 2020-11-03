@@ -88,7 +88,7 @@ struct SthInternal {
     }
 
     void glue_to_mu() {
-        if (type >= it_glue) int_val = glue_val.width.value; // \todo no value here
+        if (type >= it_glue) int_val = glue_val.width;
     }
 };
 

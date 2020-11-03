@@ -745,12 +745,8 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         dualmath = true;
         return;
     }
-    if (s == "findwords") {
-        find_words = true;
-        return;
-    }
     if ((s == "radebug") || (s == "check") || (s == "ps") || (s == "xmlfo") || (s == "xmlhtml") || (s == "xmltex") || (s == "xmllint") ||
-        (s == "xmlall") || (s == "all") || (s == "nobibyearerror") || (s == "nobibyearmodify")) {
+        (s == "xmlall") || (s == "all") || (s == "nobibyearerror") || (s == "nobibyearmodify") || (s == "findwords")) {
         obsolete(s);
         return;
     }
@@ -1108,7 +1104,6 @@ void MainClass::out_xml() {
     fp << the_parser.the_stack.document_element() << "\n";
 
     spdlog::info("Output written on {} ({} bytes).", p, fp.tellp());
-    if (the_main->find_words) the_parser.the_stack.document_element()->word_stats(out_dir / out_name);
 }
 
 void MainClass::finish_init() const {

@@ -15,63 +15,6 @@
 namespace {
     std::ofstream decoy_fp;
 
-    // Prints all words with frequency i. Removes them from the list
-    void dump_and_list(WordList *WL, int i) {
-        WordList *L       = WL->next;
-        WordList *first   = WL;
-        int       printed = 0;
-        while (L != nullptr) {
-            WordList *N = L->next;
-            if (L->dump(decoy_fp, i)) {
-                printed++;
-                delete L;
-            } else {
-                first->next = L;
-                first       = L;
-            }
-            L = N;
-        }
-        first->next = nullptr;
-        if (printed != 0) { scbuf.format("{}={}, ", i, printed); }
-    }
-
-    // Finish dumping the words
-    void dump_words(const std::string &name) {
-        auto *    WL = new WordList("", 0, nullptr);
-        WordList *W  = WL;
-        for (auto *L : WL0) {
-            if (L == nullptr) continue;
-            while (W->next != nullptr) W = W->next;
-            W->next = L;
-        }
-        if (WL->next == nullptr) return;
-        auto wf = get_out_dir("words");
-
-        auto f = std::ofstream(wf);
-        if (!name.empty()) f << "Team " << name << "\n";
-        scbuf.clear();
-        int i = 0;
-        while (WL->next != nullptr) {
-            i++;
-            dump_and_list(WL, i);
-        }
-        f << "Total " << nb_words << "  ";
-        scbuf.remove_last(2);
-        scbuf.append(".\n");
-        f << scbuf;
-    }
-
-    // This is static. If s is &foo;bar, returns the length
-    // of the &foo; part. Returns 0 if this is not an entity.
-    auto is_entity(const std::string &s) -> size_t {
-        static const std::array<String, 6> entities = {"&nbsp;", "&ndash;", "&mdash;", "&ieme;", "&gt;", "&lt;"};
-
-        for (const auto *w : entities) {
-            if (s.starts_with(w)) return strlen(w);
-        }
-        return 0;
-    }
-
     // Figure with subfigure. We construct a table with two rows
     // for a par. ctr holds the value of the counter for the caption.
     auto figline(Xml *from, int &ctr, Xml *junk) -> Xml * {
@@ -859,50 +802,6 @@ auto Xml::par_is_empty() -> bool {
     if (at(0)->is_xmlc()) return false;
     if (at(0)->is_xmlc() || !at(0)->id.is_font_change()) return false;
     return at(0)->par_is_empty();
-}
-
-// The scanner for all_the_words
-void Xml::word_stats_i() {
-    if (is_xmlc()) {
-        const std::string &str = name;
-        for (size_t i = 0;; i++) {
-            char c = str[i];
-            if (c == 0) return;
-            if (c == '&') {
-                if (str.substr(i).starts_with("&oelig;")) {
-                    i += 6;
-                    scbuf += "oe";
-                    continue;
-                }
-                if (str.substr(i).starts_with("&amp;")) {
-                    i += 4;
-                    scbuf += "&";
-                    continue;
-                }
-                auto w = is_entity(str.substr(i));
-                if (w != 0) {
-                    i += w - 1;
-                    scbuf.new_word();
-                    continue;
-                }
-            }
-            if (c == ' ' || c == '`' || c == '\n' || c == ',' || c == '.' || c == '(' || c == ')' || c == ':' || c == ';' || c == '\253' ||
-                c == '\273' || c == '\'' || c == '\"')
-                scbuf.new_word();
-            else
-                scbuf << c;
-        }
-    } else {
-        if (name == the_names["formula"]) return;
-        for (size_t i = 0; i < size(); i++) at(i)->word_stats_i();
-    }
-}
-
-void Xml::word_stats(const std::string &match) {
-    scbuf.clear();
-    word_stats_i();
-    scbuf.new_word();
-    dump_words(match);
 }
 
 // This adds x at the end the element

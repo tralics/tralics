@@ -38,15 +38,15 @@ class MainClass {
     std::vector<std::string> all_config_types;
     std::vector<std::string> after_conf;
 
-    bool find_words{false};
-    bool noconfig{false};
-    bool nomathml{false};
-    bool dualmath{false};
-    bool silent{false}; // are we silent ?
-    bool etex_enabled{true};
-    bool multi_math_label{false};
-    bool load_l3{false};
-    bool verbose{false}; ///< Are we verbose ?
+    [[deprecated]] bool find_words{false};
+    bool                noconfig{false};
+    bool                nomathml{false};
+    bool                dualmath{false};
+    bool                silent{false}; // are we silent ?
+    bool                etex_enabled{true};
+    bool                multi_math_label{false};
+    bool                load_l3{false};
+    bool                verbose{false}; ///< Are we verbose ?
 
 public:
     Stack *the_stack{}; ///< pointer to the stack

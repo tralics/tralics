@@ -36,7 +36,6 @@ public:
     // Standard const methods
     [[nodiscard]] auto at_eol() const -> bool { return ptrs.b >= size(); } ///< Is the read pointer at the end?
     [[nodiscard]] auto convert_to_log_encoding() const -> std::string;     ///< Convert to logging encoding
-    [[nodiscard]] auto hashcode(size_t prime) const -> size_t;             ///< Hash code of the string in the buffer
     [[nodiscard]] auto head() const -> char { return (*this)[ptrs.b]; }    ///< The character under the read pointer
     [[nodiscard]] auto insert_space_here(size_t k) const -> bool;          ///< For typography
     [[nodiscard]] auto int_val() const -> std::optional<size_t>;           ///< Try to parse the contents as an integer
@@ -108,7 +107,6 @@ public:
     void insert_token(Token T, bool sw);
     void interpret_aux(std::vector<std::string> &bib, std::vector<std::string> &bib2);
     void l3_fabricate_cond(const std::string &base, const std::string &sig, subtypes w);
-    void new_word();
     void next_bibtex_char();
     void normalise_for_bibtex(String s);
     void out_four_hats(char32_t ch);

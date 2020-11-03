@@ -39,7 +39,6 @@ inline int                                                          cur_entry_li
 inline int                                                          cur_file_line{0};  // current line number
 inline int                                                          init_file_pos = 0; // position in init file
 inline int                                                          nb_errs{0};
-inline int                                                          nb_words = 0;
 inline long                                                         cline_first, cline_last;
 inline long                                                         composition_section = -1;
 inline size_t                                                       ur_size{0};
@@ -47,7 +46,6 @@ inline std::array<std::array<char32_t, lmaxchar>, max_encoding - 2> custom_table
 inline std::array<std::array<std::string, 15>, 128>                 math_chars;
 inline std::array<std::string, 8>                                   ra_pretable;
 inline std::array<String, 3>                                        my_constant_table;
-inline std::array<WordList *, 100>                                  WL0;
 inline std::optional<size_t>                                        pool_position;  // \todo this is a static variable that should disappear
 inline std::string                                                  all_themes;     //
 inline std::string                                                  cur_entry_name; // name of entry under construction.

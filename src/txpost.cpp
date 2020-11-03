@@ -25,11 +25,6 @@ namespace post_ns {
     void print_no_title(int i, String s);
 } // namespace post_ns
 
-// For finding words.
-namespace all_words_ns {
-    void add_a_word(String s, size_t h);
-} // namespace all_words_ns
-
 void Parser::user_XML_swap(subtypes c) {
     if (c == zero_code)
         the_xmlB = the_xmlA;
@@ -155,44 +150,4 @@ void tralics_ns::find_index_labels(std::vector<std::string> &W) {
     }
 }
 
-// This is called when a new word is seen. \todo algorithm seems to overwrite WL0 a lot
-void all_words_ns::add_a_word(String s, size_t h) {
-    auto      H = h % 100;
-    WordList *L = WL0[H];
-    while (L != nullptr) {
-        if (L->is_here(s, h)) {
-            L->freq++;
-            return;
-        }
-        L = L->next;
-    }
-    WL0[H] = new WordList(s, h, WL0[H]);
-}
-
 inline auto dig_char(char c) -> bool { return c == '-' || (std::isdigit(c) != 0); }
-
-void Buffer::new_word() {
-    if (empty()) return;
-    if (size() == 1) at(0) = 'x';
-    bool ok = true;
-    for (unsigned i = 0; i < size(); i++) {
-        if (!dig_char(at(i))) {
-            ok = false;
-            break;
-        }
-    }
-    if (ok) {
-        clear();
-        return;
-    }
-    ++nb_words;
-    ok = true;
-    if (std::isupper(at(0)) != 0) {
-        for (size_t i = 1; i < size(); i++) {
-            if (std::islower(at(i)) == 0) ok = false;
-        }
-        if (ok) at(0) += 'a' - 'A';
-    }
-    all_words_ns::add_a_word(data(), hashcode(6397));
-    clear();
-}

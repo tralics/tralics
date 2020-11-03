@@ -144,12 +144,9 @@ void Bibtex::read_ra() {
     }
 }
 
-// Returns the index of the macro named name if it exists,  not_found otherwise.
-auto Bibtex::look_for_macro(const Buffer &name) -> std::optional<size_t> { return look_for_macro(name.hashcode(bib_hash_mod), name); }
-
-auto Bibtex::look_for_macro(size_t h, const std::string &name) -> std::optional<size_t> {
+auto Bibtex::look_for_macro(const std::string &name) -> std::optional<size_t> {
     for (size_t i = 0; i < all_macros.size(); i++)
-        if (all_macros[i].is_same(h, name)) return i;
+        if (all_macros[i].is_same(name)) return i;
     return {};
 }
 
@@ -160,14 +157,13 @@ auto Bibtex::look_for_macro(size_t h, const std::string &name) -> std::optional<
 //   otherwise we define/redefine user one]
 auto Bibtex::find_a_macro(Buffer &name, bool insert, String xname, String val) -> std::optional<size_t> {
     if (xname != nullptr) name = xname;
-    auto h   = name.hashcode(bib_hash_mod);
-    auto lfm = look_for_macro(h, name);
+    auto lfm = look_for_macro(name);
     if (lfm || !insert) return lfm;
     auto res = all_macros.size();
     if (xname != nullptr)
-        all_macros.emplace_back(h, xname, val);
+        all_macros.emplace_back(xname, val);
     else
-        all_macros.emplace_back(h, name);
+        all_macros.emplace_back(name);
     return res;
 }
 

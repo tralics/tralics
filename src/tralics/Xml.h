@@ -84,8 +84,6 @@ public:
     auto try_cline_again(bool action) -> bool;
     void unbox(Xml *x);
     auto value_at(long n) -> Xml *;
-    void word_stats(const std::string &match);
-    void word_stats_i();
     void replace_first(Xml *x) {
         if (!empty()) at(0) = gsl::not_null{x};
     }
