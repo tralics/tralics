@@ -136,44 +136,6 @@ found at http://www.cecill.info.)";
             for (unsigned j = 0; j < lmaxchar; ++j) i[j] = char32_t(j);
     }
 
-    /// Checks that name is non-empty and all lowercase
-    [[deprecated]] void check_lowercase(const std::string &s) {
-        if (s.empty()) { spdlog::critical("Illegal file name of the form safir/2002.tex"); }
-        if (std::any_of(s.begin(), s.end(), [](char c) { return c < 32 || uchar(c) > 127 || (std::isupper(c) != 0); })) {
-            spdlog::critical("Fatal: only lowercase letters allowed, {}", s);
-            exit(1);
-        }
-    }
-
-    [[deprecated]] void check_year(int y, Buffer &C, const std::string &dclass, const std::string &Y) {
-        std::string raclass = std::string("ra") + C;
-        if (dclass != raclass) {
-            spdlog::critical("Illegal document class {} should be {}", dclass, raclass);
-            exit(1);
-        }
-        if (Y.empty()) return;
-        if (Y == C) return;
-        spdlog::critical("Fatal: Option -year={} incompatible with year in source file", Y);
-        exit(1);
-    }
-
-    /// If B holds apics2006, puts apics in B, 2006 in C, returns 2006
-    // \todo refactor or deprecate with RA
-    [[deprecated]] auto extract_year(std::string &B, std::string &C) -> int {
-        size_t m = B.size(), n = m, k = 0;
-        while (k < 4 && n > 0 && (std::isdigit(B[n - 1]) != 0)) {
-            n--;
-            k++;
-        }
-        int y = 0;
-        for (auto i = n; i < m; i++) {
-            y = 10 * y + B[i] - '0';
-            C.push_back(B[i]);
-        }
-        B.resize(n);
-        return y;
-    }
-
     /// Sometimes, we want `bar` if `\jobname` is `foo/bar`
     auto hack_for_input(const std::filesystem::path &s) -> std::string {
         std::filesystem::path path = s.parent_path();
