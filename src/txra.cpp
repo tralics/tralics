@@ -22,13 +22,13 @@ namespace {
     // returns -1 if there no other RC in the buffer.
     // returns -2 if the RC is invalid
     // returns location in the table otherwise
-    auto next_RC_in_buffer(Buffer &B, std::string &sname, std::string &lname) -> long {
+    [[deprecated]] auto next_RC_in_buffer(Buffer &B, std::string &sname, std::string &lname) -> long {
         std::vector<ParamDataSlot> &ur_list = config_data[0];
         B.skip_sp_tab_comma();
         if (B.head() == 0) return -1;
         if (B.substr(B.ptrs.b, 3) == "\\UR") {
             static bool warned = false;
-            if (!warned && the_parser.get_ra_year() > 2006) {
+            if (!warned && the_parser.ra_year > 2006) {
                 log_and_tty << "You should use Lille instead of \\URLille,\n";
                 log_and_tty << "Nancy instead of \\URNancy, etc.\n";
                 warned = true;
@@ -51,7 +51,7 @@ namespace {
     // This is the function used since 2007, when definining the
     // Research Centers of the team;
     // May return  <URRocquencourt/><URSophia/>
-    void check_RC(Buffer &B, Xml *res) {
+    [[deprecated]] void check_RC(Buffer &B, Xml *res) {
         const std::string &tmp      = the_names["rcval"];
         bool               need_elt = tmp[0] == '+'; // Hack
         std::string        str;

@@ -756,7 +756,7 @@ void Bibtex::work() {
 auto Bibtex::wrong_class(int y, const std::string &Y, bib_from from) -> bool {
     if (from != from_refer) return false;
     if (old_ra) return false;
-    int ry = the_parser.get_ra_year();
+    int ry = the_parser.ra_year;
     if (y <= 0 || y > ry || (!distinguish_refer && y == ry)) {
         the_bibtex.err_in_entry("");
         log_and_tty << "entry moved from refer to year because\n";
@@ -820,7 +820,7 @@ void Bibtex::boot(std::string S) {
 }
 
 void Bibtex::bootagain() {
-    old_ra = the_parser.get_ra_year() < 2006; // \todo we should really not keep this around
+    old_ra = the_parser.ra_year < 2006; // \todo we should really not keep this around
 
     if (the_parser.cur_lang_fr()) { // french
         define_a_macro("jan", "janvier");

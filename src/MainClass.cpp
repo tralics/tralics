@@ -98,8 +98,8 @@ found at http://www.cecill.info.)";
         for (size_t i = 0; i < V.size(); i += 2) the_names.assign(V[i], V[i + 1]);
     }
 
-    void bad_conf(String s) {
-        spdlog::critical("The configuration file for the RA is ra{}.tcf or ra.tcf\n", the_parser.get_ra_year());
+    [[deprecated]] void bad_conf(String s) {
+        spdlog::critical("The configuration file for the RA is ra{}.tcf or ra.tcf\n", the_parser.ra_year);
         spdlog::critical("It must define a value for the parameter {}", s);
         spdlog::critical("No xml file generated");
         exit(1);
@@ -850,7 +850,7 @@ void MainClass::find_dtd() {
 }
 
 void MainClass::read_config_and_other() {
-    year             = the_parser.get_ra_year();
+    year             = the_parser.ra_year;
     bool have_dclass = !dclass.empty();
     if (auto of = find_config_file(); of)
         open_config_file(*of);
@@ -909,13 +909,11 @@ void MainClass::see_name1() {
         out_name = std::filesystem::path(no_ext).filename(); // \todo make no_ext an fs path?
     }
     if (year_string.empty()) { // might be given as an option
-        year = the_parser.get_ra_year();
-        Buffer C;
-        C.format("{}", year);
-        year_string = C;
+        year        = the_parser.ra_year;
+        year_string = fmt::format("{}", year);
     } else {
-        year = std::stoi(year_string);
-        the_parser.set_ra_year(year);
+        year               = std::stoi(year_string);
+        the_parser.ra_year = year;
     }
 }
 
@@ -984,7 +982,6 @@ void MainClass::run(int argc, char **argv) {
     trans0();
     the_parser.init(input_content);
     the_parser.translate_all();
-    check_section_use();
     the_parser.after_main_text();
     if (seen_enddocument) the_parser.the_stack.add_nl();
     the_parser.final_checks();

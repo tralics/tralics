@@ -69,8 +69,9 @@ private:
     CmdChr   cur_cmd_chr;               // current command code and modifier
     subtypes sectionning_offset;        // what is the main section, part, chapter ?
 
-    [[deprecated]] int ra_year{1789}; // default year if none given as argument
 public:
+    [[deprecated]] int ra_year{1789}; // default year if none given as argument
+
     l_state     long_state;     // Error recovery handling (\long)
     scan_stat   scanner_status; // Error recovery handling (\outer)
     std::string the_projetval;  // this could be miaou
@@ -148,7 +149,6 @@ public:
     auto               get_cur_val() -> SthInternal & { return cur_val; }
     [[nodiscard]] auto get_job_name() const -> std::string { return job_name; }
     [[nodiscard]] auto get_list_files() const -> bool { return list_files_p; }
-    [[nodiscard]] auto get_ra_year() const -> int { return ra_year; }
     [[nodiscard]] auto get_year_string() const -> std::string { return year_string; }
     void               init(LineList x) { lines = std::move(x); }
     void               remember_ur(std::string s) { the_url_val = std::move(s); }
@@ -162,10 +162,9 @@ public:
         cur_env_name   = std::move(s);
         begin_env_line = x;
     }
-    [[deprecated]] void set_ra_year(int x) { ra_year = x; }
-    void                set_job_name(std::string s) { job_name = std::move(s); }
-    void                set_year_string(std::string s) { year_string = std::move(s); }
-    [[nodiscard]] auto  tracing_commands() const -> bool { // \todo remove eventually
+    void               set_job_name(std::string s) { job_name = std::move(s); }
+    void               set_year_string(std::string s) { year_string = std::move(s); }
+    [[nodiscard]] auto tracing_commands() const -> bool { // \todo remove eventually
         static const auto ans = is_pos_par(tracingcommands_code);
         return ans;
     }

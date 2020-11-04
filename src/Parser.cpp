@@ -946,7 +946,7 @@ void Parser::boot_time() {
     the_main->short_date = short_date;
     // Default year for the raweb. Until April its last year \todo remove RA stuff
     if (month <= 4) year--;
-    the_parser.set_ra_year(year);
+    the_parser.ra_year = year;
 }
 
 // Installs the default language.
