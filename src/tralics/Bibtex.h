@@ -35,12 +35,13 @@ private:
     bool                     nocitestar{false};
     bool                     normal_biblio{true};
     bool                     refer_biblio{};
-    bool                     in_ra{};
     bool                     want_numeric{};
     std::string              cur_field_name;
     std::string              no_year;
     bool                     noyearerror{};
     std::array<id_type, 128> id_class{};
+
+    [[deprecated]] bool in_ra{false};
 
 public:
     std::string default_year;
@@ -80,7 +81,6 @@ private:
     void               parse_one_field(BibEntry *X);
     void               read_one_field(bool store);
     void               read_field(bool store);
-    auto               read2(bib_from pre) -> bool;
     void               reset_input() { input_line.clear(); }
     void               reverse_pass();
     void               scan_for_at();
@@ -90,9 +90,9 @@ private:
     void               skip_space();
     [[nodiscard]] auto wrong_first_char(char32_t c, size_t what) const -> int;
 
-public:
-    [[nodiscard]] auto is_in_ra() const -> bool { return in_ra; }
+    [[deprecated]] auto read2(bib_from pre) -> bool;
 
+public:
     auto        get_an_entry(size_t i) { return all_entries[i]; }
     auto        exec_bibitem(const std::string &w, const std::string &b) -> std::string;
     void        nocitestar_true() { nocitestar = true; }
@@ -102,10 +102,9 @@ public:
     void        read(const std::string &src, bib_from ct);
     auto        read0(Buffer &B, bib_from ct) -> bool;
     void        read1(const std::string &cur);
-    void        read_ra();
     void        err_in_file(String s, bool last) const;
     static void err_in_name(String a, long i);
-    void        boot(std::string S, bool inra);
+    void        boot(std::string S);
     void        enter_in_table(BibEntry *x) { all_entries_table.push_back(x); }
     void        bootagain();
 

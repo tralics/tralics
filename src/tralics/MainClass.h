@@ -113,7 +113,7 @@ private:
     void after_main_text();
     void append_non_eof_line(String, int);
     void bad_mod(int a, std::string b, Buffer &c);
-    void boot_bibtex(bool inra);
+    void boot_bibtex();
     void call_dvips(std::string);
     void check_all();
     void check_before_begin(int k);

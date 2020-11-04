@@ -25,8 +25,7 @@ void Bibliography::dump_bibtex() {
     if (n > 0) {
         bbl.open();
         for (size_t i = 0; i < n; i++) the_bibtex.read1(biblio_src[i]);
-    } else
-        the_bibtex.read_ra();
+    }
 }
 
 void Bibliography::stats() {

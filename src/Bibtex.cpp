@@ -131,19 +131,6 @@ auto Bibtex::read2(bib_from pre) -> bool {
     return read0(B, pre);
 }
 
-// This loads all three files, if we are compiling the raweb. Otherwise,
-// there is no default.
-// We read apics2006_all.bib if this exists
-void Bibtex::read_ra() {
-    if (in_ra) {
-        bbl.open();
-        if (read2(from_any)) return;
-        read2(from_year);
-        read2(from_foot);
-        read2(from_refer);
-    }
-}
-
 auto Bibtex::look_for_macro(const std::string &name) -> std::optional<size_t> {
     for (size_t i = 0; i < all_macros.size(); i++)
         if (all_macros[i].is_same(name)) return i;
@@ -812,9 +799,8 @@ void Bibtex::read(const std::string &src, bib_from ct) {
     }
 }
 
-void Bibtex::boot(std::string S, bool inra) {
+void Bibtex::boot(std::string S) {
     no_year      = std::move(S);
-    in_ra        = inra;
     want_numeric = false;
     for (auto &id_clas : id_class) id_clas = legal_id_char;
     for (size_t i = 0; i < 32; i++) id_class[i] = illegal_id_char;

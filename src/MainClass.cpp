@@ -904,15 +904,13 @@ void MainClass::see_name(std::string s) {
 }
 
 void MainClass::see_name1() {
-    Buffer      C;
-    int         y            = 0;
-    std::string B            = std::filesystem::path(no_ext).filename();
-    the_parser.the_projetval = B;                            // this is apics
+    the_parser.the_projetval = std::filesystem::path(no_ext).filename();
     if (out_name.empty()) {                                  // might be given as an option
         out_name = std::filesystem::path(no_ext).filename(); // \todo make no_ext an fs path?
     }
     if (year_string.empty()) { // might be given as an option
         year = the_parser.get_ra_year();
+        Buffer C;
         C.format("{}", year);
         year_string = C;
     } else {
@@ -938,12 +936,12 @@ void MainClass::trans0() {
     }
 }
 
-void MainClass::boot_bibtex(bool inra) {
+void MainClass::boot_bibtex() {
     auto fn                 = out_dir / (out_name + "_.bbl");
     ::distinguish_refer     = distinguish_refer;
     bbl.name                = fn;
     the_bibtex.default_year = year_string;
-    the_bibtex.boot(out_name, inra);
+    the_bibtex.boot(out_name);
 }
 
 void MainClass::show_input_size() {
@@ -982,7 +980,7 @@ void MainClass::run(int argc, char **argv) {
     finish_init();
     spdlog::trace("OK with the configuration file, dealing with the TeX file...");
     show_input_size();
-    boot_bibtex(handling_ra);
+    boot_bibtex();
     trans0();
     the_parser.init(input_content);
     the_parser.translate_all();
