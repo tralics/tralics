@@ -89,7 +89,6 @@ public:
     auto check_for_tcf(const std::string &s) -> bool; ///< Look for a `.tcf` file, and if found set `tcf_file` and `use_tcf`
 
     void add_to_from_config(int n, const std::string &b); ///< Add contents to `from_config`
-    void bad_year() const;                                ///< If the year is wrong, fail \todo this seems to be RA specific
     void run(int argc, char **argv);                      ///< Do everything
     void set_ent_names(const std::string &s);             ///< Set no_entnames from a string saying yes or no
     void set_input_encoding(size_t wc);                   ///< Set default input file encoding and log the action \todo remove?

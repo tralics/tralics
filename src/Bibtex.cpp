@@ -787,15 +787,6 @@ auto Bibtex::wrong_class(int y, const std::string &Y, bib_from from) -> bool {
     return false;
 }
 
-void Bibtex::bad_year(const std::string &given, String wanted) {
-    the_bibtex.err_in_entry("");
-    log_and_tty << "the year field of this entry should be " << wanted << ", ";
-    if (given.empty())
-        log_and_tty << "it is missing.\n";
-    else
-        log_and_tty << "it is `" << given << "'.\n";
-}
-
 // Faire un hack: s'il y a un extrabib, et normal_biblio
 // le rajouter a la fin, et virer le extrabib
 // Plus le parser propement

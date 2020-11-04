@@ -138,10 +138,7 @@ found at http://www.cecill.info.)";
 
     /// Checks that name is non-empty and all lowercase
     [[deprecated]] void check_lowercase(const std::string &s) {
-        if (s.empty()) {
-            spdlog::critical("Illegal file name of the form safir/2002.tex");
-            the_main->bad_year(); // never returns
-        }
+        if (s.empty()) { spdlog::critical("Illegal file name of the form safir/2002.tex"); }
         if (std::any_of(s.begin(), s.end(), [](char c) { return c < 32 || uchar(c) > 127 || (std::isupper(c) != 0); })) {
             spdlog::critical("Fatal: only lowercase letters allowed, {}", s);
             exit(1);
@@ -149,7 +146,6 @@ found at http://www.cecill.info.)";
     }
 
     [[deprecated]] void check_year(int y, Buffer &C, const std::string &dclass, const std::string &Y) {
-        if (y < 2000 || y >= 2100) the_main->bad_year();
         std::string raclass = std::string("ra") + C;
         if (dclass != raclass) {
             spdlog::critical("Illegal document class {} should be {}", dclass, raclass);
@@ -931,11 +927,6 @@ void MainClass::read_config_and_other() {
     if (have_dclass) from_config.insert("\\InputIfFileExists*+{" + ult_name + "}{}{}\n", true);
     input_content.splice(doc_class_pos, from_config);
     config_file.clear();
-}
-
-void MainClass::bad_year() const {
-    spdlog::critical("Fatal: Input file name must be team name followed by {}", year);
-    end_with_help(1);
 }
 
 void MainClass::see_name(std::string s) {
