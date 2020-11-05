@@ -614,7 +614,6 @@ auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
         err_in_file("duplicate entry ignored", true);
         return nullptr;
     }
-    if (old_ra && default_prefix() == from_refer) X->cite_key.move_to_refer();
     if (cn > type_extension) {
         X->is_extension = cn - type_extension;
         cn              = type_extension;
@@ -742,7 +741,6 @@ void Bibtex::work() {
 // Signals an error if the year is invalid in the case of refer.
 auto Bibtex::wrong_class(int y, const std::string &Y, bib_from from) -> bool {
     if (from != from_refer) return false;
-    if (old_ra) return false;
     int ry = the_parser.ra_year;
     if (y <= 0 || y > ry || (!distinguish_refer && y == ry)) {
         the_bibtex.err_in_entry("");
@@ -807,8 +805,6 @@ void Bibtex::boot(std::string S) {
 }
 
 void Bibtex::bootagain() {
-    old_ra = the_parser.ra_year < 2006; // \todo we should really not keep this around
-
     if (the_parser.cur_lang_fr()) { // french
         define_a_macro("jan", "janvier");
         define_a_macro("feb", "f\\'evrier");

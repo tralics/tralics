@@ -33,7 +33,7 @@ void CitationKey::make_key(const std::string &s) {
     full_key.clear();
     if (cite_prefix == from_foot)
         full_key = "foot";
-    else if (cite_prefix == from_refer && !old_ra)
+    else if (cite_prefix == from_refer)
         full_key = "refer";
     full_key.append("cite:");
     full_key.append(s);
