@@ -243,7 +243,6 @@ Hashtab::Hashtab() {
     primitive("tralics@fnhack", fnhack_cmd);
     primitive("tralics@pop@module", popmodule_cmd);
     primitive("tralics@push@module", pushmodule_cmd);
-    primitive("tralics@interpret@rc", interpret_rc_cmd);
     primitive("thanks", footnote_cmd);
     primitive("caption", caption_cmd);
     primitive("centering", centering_cmd, center_code);

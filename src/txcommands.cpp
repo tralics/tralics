@@ -973,7 +973,6 @@ void Parser::translate03() {
     case oldfont_cmd: old_font(); return;
     case fontsize_cmd: translate_font_size(); return;
     case fnhack_cmd: fnhack(); return;
-    case interpret_rc_cmd: interpret_rc(); return;
     case footnote_cmd: T_cap_or_note(false); return;
     case selectfont_cmd: font_has_changed(); return;
     case ltfont_cmd:

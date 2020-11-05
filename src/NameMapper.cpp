@@ -262,8 +262,8 @@ void NameMapper::boot() {
     set("put", "pic-put");
     set("quotation", "quoted");
     set("quote", "quoted");
-    set("rclist", "UR");
-    set("rcval", "+UR");
+    set("rclist", "UR"); // \todo RA stuff
+    set("rcval", "+UR"); // \todo RA stuff
     set("rotate_angle", "angle");
     set("rotatebox", "pic-rotatebox");
     set("row_spaceafter", "spaceafter");

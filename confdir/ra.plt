@@ -284,7 +284,7 @@
       \else\tralics@get@config{theme}{\ra@theme}\fi} \@addnl
     \ra@check@project\@addnl
     \xbox{projetdeveloppe}{\ra@proj@c}\@addnl
-    \expandafter\tralics@interpret@rc\expandafter{\ra@UR}\@addnl
+    %\expandafter\tralics@interpret@rc\expandafter{\ra@UR}\@addnl
     \the\ra@topics
   \end{xmlelement*}\@addnl
 }

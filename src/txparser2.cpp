@@ -93,7 +93,7 @@ namespace {
         return X[to_unsigned(cur_section - 1)].value;
     }
 
-    auto is_good_ur(const std::string &x) -> bool {
+    auto is_good_ur(const std::string &x) -> bool { // \todo RA stuff?
         std::vector<ParamDataSlot> &ur_list = config_data[0];
         auto                        n       = ur_list.size();
         if (ur_size == 0) {

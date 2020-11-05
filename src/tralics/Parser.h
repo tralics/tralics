@@ -487,7 +487,6 @@ private:
     void        interpret_genfrac_cmd(size_t res, subtypes k, CmdChr W);
     void        interpret_mathchoice_cmd(size_t res, subtypes k, CmdChr W);
     void        interpret_math_cmd(size_t res, subtypes c);
-    void        interpret_rc();
     void        invalid_key(Token T, const std::string &key, const TokenList &val);
     auto        is_delimiter(const TokenList &L) -> bool;
     void        is_date_valid();

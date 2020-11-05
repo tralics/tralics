@@ -47,55 +47,6 @@ namespace {
             }
         return -2;
     }
-
-    // This is the function used since 2007, when definining the
-    // Research Centers of the team;
-    // May return  <URRocquencourt/><URSophia/>
-    [[deprecated]] void check_RC(Buffer &B, Xml *res) {
-        const std::string &tmp      = the_names["rcval"];
-        bool               need_elt = tmp[0] == '+'; // Hack
-        std::string        str;
-        if (need_elt) str = tmp.substr(1);
-        Buffer      temp2;
-        std::string sname, lname;
-        temp2.clear();
-        std::vector<int> vals;
-        size_t           nb = 0;
-        B.ptrs.b            = 0;
-        for (;;) {
-            auto j = next_RC_in_buffer(B, sname, lname);
-            if (j == -1) break;
-            if (j == -2) {
-                nb = 0;
-                break;
-            }
-            Xml *new_elt{nullptr};
-            if (need_elt)
-                new_elt = new Xml(std::string(str + sname), nullptr);
-            else {
-                new_elt = new Xml(the_names["rcval"], nullptr);
-                new_elt->id.add_attribute(std::string("name"), std::string(sname));
-            }
-            res->push_back_unless_nullptr(new_elt);
-            temp2 += sname + " ";
-            the_default_rc = sname;
-            nb++;
-        }
-        ur_size = nb;
-        if (nb == 1) have_default_ur = true;
-        if (nb != 0) {
-            the_log << "Localisation " << temp2 << "\n";
-            return;
-        }
-
-        if (B.empty())
-            err_buf = "Empty localisation value\n";
-        else
-            err_buf = "Illegal localisation value: " + B + "\n";
-        err_buf += "Use one or more of:";
-        config_data[0].keys_to_buffer(err_buf);
-        the_parser.signal_error();
-    }
 } // namespace
 
 namespace ra_ns {
@@ -141,15 +92,7 @@ void Parser::fnhack() {
     new_macro(Lb, B, false);
 }
 
-// User function associated to \UR in the RA
-void Parser::interpret_rc() {
-    TokenList L = read_arg();
-    Tbuf.clear();
-    Tbuf << L; // \todo make TokenList formattable
-    Xml *res = new Xml(the_names["rclist"], nullptr);
-    the_stack.add_last(res);
-    check_RC(Tbuf, res);
-}
+// \todo make TokenList formattable
 
 // --------------------------------------------------
 // \end{RAsection} or \tralics@pop@section

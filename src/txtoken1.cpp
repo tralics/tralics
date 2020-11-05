@@ -2613,7 +2613,6 @@ auto CmdChr::name() const -> std::string {
     case popmodule_cmd: return "tralics@pop@module";
     case pushmodule_cmd: return "tralics@push@module";
     case fnhack_cmd: return "tralics@fnhack";
-    case interpret_rc_cmd: return "tralics@interpret@rc";
     case caption_cmd: return "caption";
     case centering_cmd: return token_centering_name();
     case save_box_cmd: return chr == 0 ? "sbox" : "savebox";

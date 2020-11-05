@@ -117,7 +117,6 @@ enum symcodes : unsigned {
     caption_cmd,
     ra_startdoc_cmd,
     fnhack_cmd,
-    interpret_rc_cmd,
     centering_cmd,
     fbox_cmd,
     save_box_cmd,

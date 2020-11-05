@@ -41,7 +41,7 @@ inline int                                                          init_file_po
 inline int                                                          nb_errs{0};
 inline long                                                         cline_first, cline_last;
 inline long                                                         composition_section = -1;
-inline size_t                                                       ur_size{0};
+inline size_t                                                       ur_size{0}; // \todo RA stuff?
 inline std::array<std::array<char32_t, lmaxchar>, max_encoding - 2> custom_table;
 inline std::array<std::array<std::string, 15>, 128>                 math_chars;
 inline std::array<std::string, 8>                                   ra_pretable;
