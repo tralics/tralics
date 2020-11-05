@@ -2715,7 +2715,6 @@ auto CmdChr::name() const -> std::string {
     case ignore_content_cmd: return strip_end(token_eignorec_name());
     case raw_env_cmd: return "rawxml";
     case math_env_cmd: return strip_end(tralics_ns::math_env_name(chr));
-    case RAsection_env_cmd: return "RAsection";
     case tabular_env_cmd: return chr == 0 ? "tabular" : "tabular*";
     case verbatim_env_cmd: return chr == 0 ? "verbatim" : chr == 1 ? "Verbatim" : "@verbatim";
     case minipage_cmd: return "minipage";
@@ -2737,7 +2736,6 @@ auto CmdChr::name() const -> std::string {
     case end_ignore_content_cmd: return token_eignorec_name();
     case end_raw_env_cmd: return "endrawxml";
     case end_math_env_cmd: return tralics_ns::math_env_name(chr);
-    case end_RAsection_env_cmd: return "endRAsection";
     case end_tabular_env_cmd: return chr == 0 ? "endtabular" : "endtabular*";
     case end_verbatim_env_cmd: return chr == 0 ? "endverbatim" : chr == 1 ? "endVerbatim" : "end@verbatim";
     case end_minipage_cmd: return "endminipage";

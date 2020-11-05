@@ -724,7 +724,6 @@ Hashtab::Hashtab() {
     primitive("vmatrix", math_env_cmd, matrixv_code);
     primitive("Vmatrix", math_env_cmd, matrixV_code);
 
-    primitive("tralics@push@section", RAsection_env_cmd);
     primitive("tabular", tabular_env_cmd, zero_code);
     primitive("tabular*", tabular_env_cmd, one_code);
     primitive("verbatim", verbatim_env_cmd, zero_code);
@@ -781,7 +780,6 @@ Hashtab::Hashtab() {
     // primitive("endequation*",end_math_env_cmd,equation_star_code);
     // primitive("endmath",end_math_env_cmd,math_code);
     // primitive("enddisplaymath",end_math_env_cmd,displaymath_code);
-    primitive("tralics@pop@section", end_RAsection_env_cmd);
     primitive("endtabular", end_tabular_env_cmd, zero_code);
     primitive("endtabular*", end_tabular_env_cmd, one_code);
     primitive("endverbatim", end_verbatim_env_cmd, zero_code);

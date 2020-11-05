@@ -223,9 +223,9 @@
 \newenvironment{module}{\@start@module}{\tralics@pop@module}
 
 \newcommand\ra@change@section[1]{%
-    \unless \ifra@firstsection \tralics@pop@section\fi 
+    %\unless \ifra@firstsection \tralics@pop@section\fi 
     \global\ra@firstsectionfalse 
-    \tralics@push@section{#1}%
+    %\tralics@push@section{#1}%
 }
 
 

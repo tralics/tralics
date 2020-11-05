@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE unknown SYSTEM 'unknown.dtd'>
-<!-- Translated from latex by tralics 2.15.4, date: 2015/11/26-->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/05 -->
 <unknown>
 <p>This tests also a certain number of errors</p>
 <p>OK
@@ -148,27 +148,18 @@ Today is Tuesday 25th March 2008.</p>
 <p>Paris
 
 <error n='\tralics@get@config' l='265' c='illegal data'/>rennes</p>
-<domaine titre='Application Domains' id-text='domaine' id='uid1'>
-<module id-text='1' id='uid2'><head>Panorama 2</head>
-<p>Module1</p></module>
-<module id-text='2' id='uid3'><head>Panorama 2</head>
-<p>Module2</p></module></domaine>
-<Section titre='Software' id-text='logiciels' id='uid4' name='logiciels'>
-<module id-text='3' id='uid5'><head>Titre 3</head>
-<p>Module3</p></module>
-<module id-text='4' id='uid6'><head>Titre 4</head>
-<p>Module4</p></module><p><ref target='uid2'/>
-<ref target='uid3'/>
-<ref target='uid5'/>
-<ref target='uid6'/>
-<ref target='uid6'/>
-<ref target='uid6'/>
+<p><ref target='mod:panorama'/>
+<ref target='mod:telecom'/>
+<ref target='mod:logi1'/>
+<ref target='mod:logi2'/>
+<ref target='section:foo'/>
+<ref target='section:foo'/>
 <error n='\PackageError' l='288' c='uerror'/>
 <error n='\PackageError' l='289' c='uerror'/></p>
-<p><ref target='uid2'/>
-<ref target='uid3'/>
-<ref target='uid5'/>
-<ref target='uid6'/>
+<p><ref target='mod:panorama'/>
+<ref target='mod:telecom'/>
+<ref target='mod:logi1'/>
+<ref target='mod:logi2'/>
 <error n='\tfoo' l='298' c='bad prefix'/><error n='}' l='298' c='Extra }'/> <error n='\tfoo' l='298' c='bad prefix'/> a OK
 <error n='&gt;' l='299' c='Extra }'/>
 <error n='\foo&gt;' l='300' c='bad prefix'/></p>
@@ -223,8 +214,8 @@ Table</p>
 <table rend='inline'><row><cell halign='center'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>x</mi></math></formula></cell>
 </row></table>
 <table rend='inline'><row><cell halign='center'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>u</mi><mi>w</mi><mi>w</mi><mi>v</mi></mrow></math></formula></cell>
-</row></table><p id-text='bar' id='uid8'>
-xx <anchor id-text='1' id='uid7'/> yy <ref target='uid7'/><ref target='uid8'/>
+</row></table><p id-text='bar' id='uid2'>
+xx <anchor id-text='1' id='uid1'/> yy <ref target='uid1'/><ref target='uid2'/>
 <error n='$' l='435' c='Illegal anchor in math mode'/><error n='$' l='435' c='Illegal anchor in math mode'/><error n='$' l='435' c='Illegal anchor in math mode'/><error n='$' l='435' c='Illegal anchor in math mode'/>12345</p>
 <error n='$' l='438' c='bad end'/><p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>A</mi></math></formula> <error n='$' l='438' c='bad end'/></p>
 <formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mi>B</mi></math></formula>
@@ -232,30 +223,30 @@ xx <anchor id-text='1' id='uid7'/> yy <ref target='uid7'/><ref target='uid8'/>
 <error n='$' l='439' c='bad end'/><error n='$' l='439' c='Missing \right. inserted'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>C</mi><mfenced separators='' open='(' close=''/></mrow></math></formula>
 <error n='$' l='440' c='bad end'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>D</mi><mfrac><mrow/> <mi>w</mi></mfrac></mrow></math></formula>
 <error n='\math' l='441' c='bad end'/><formula textype='math' type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>E</mi></math></formula></p>
-<formula id-text='3.6' id='uid9' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mi>x</mi></math></formula>
-<formula textype='align' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr id-text='3.7' id='uid10'><mtd columnalign='right'><mi>a</mi></mtd><mtd columnalign='left'><mi>b</mi></mtd></mtr><mtr id-text='3.8' id='uid11'><mtd columnalign='right'><mi>c</mi></mtd><mtd columnalign='left'><mi>d</mi></mtd></mtr></mtable></math></formula>
-<formula textype='align' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr id-text='u1' id='uid12'><mtd columnalign='right'><mi>a</mi></mtd><mtd columnalign='left'><mi>b</mi></mtd></mtr><mtr id-text='u2' id='uid13'><mtd columnalign='right'><mi>c</mi></mtd><mtd columnalign='left'><mi>d</mi></mtd></mtr></mtable></math></formula>
+<formula id-text='3.6' id='uid3' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mi>x</mi></math></formula>
+<formula textype='align' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr id-text='3.7' id='uid4'><mtd columnalign='right'><mi>a</mi></mtd><mtd columnalign='left'><mi>b</mi></mtd></mtr><mtr id-text='3.8' id='uid5'><mtd columnalign='right'><mi>c</mi></mtd><mtd columnalign='left'><mi>d</mi></mtd></mtr></mtable></math></formula>
+<formula textype='align' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr id-text='u1' id='uid6'><mtd columnalign='right'><mi>a</mi></mtd><mtd columnalign='left'><mi>b</mi></mtd></mtr><mtr id-text='u2' id='uid7'><mtd columnalign='right'><mi>c</mi></mtd><mtd columnalign='left'><mi>d</mi></mtd></mtr></mtable></math></formula>
 <formula textype='align' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mi>a</mi></mtd><mtd columnalign='left'><mi>b</mi></mtd></mtr><mtr><mtd columnalign='right'><mi>c</mi></mtd><mtd columnalign='left'><mi>d</mi></mtd></mtr></mtable></math></formula>
 <p noindent='true'><error n='\equation' l='462' c='duplicate label'/><error n='\equation' l='462' c='duplicate tag'/></p>
-<formula id-text='uu' id='uid14' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mi>x</mi></math></formula>
-<p noindent='true'><ref target='uid9'/><ref target='uid10'/><ref target='uid11'/></p>
-<error n='\align' l='470' c='duplicate label'/><error n='\align' l='470' c='duplicate tag'/><formula textype='align' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr id-text='foo' id='uid15'><mtd columnalign='right'><mi>a</mi></mtd><mtd columnalign='left'><mi>b</mi></mtd></mtr><mtr id-text='3.9' id='uid16'><mtd columnalign='right'><mi>c</mi></mtd><mtd columnalign='left'><mi>d</mi></mtd></mtr><mtr id-text='av' id='uid17'><mtd columnalign='right'><mi>e</mi></mtd><mtd columnalign='left'><mi>f</mi></mtd></mtr></mtable></math></formula>
-<formula textype='eqnarray' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr id-text='3.10' id='uid18'><mtd columnalign='right'><mi>x</mi></mtd></mtr><mtr id-text='3.11' id='uid19'><mtd columnalign='right'><mi>y</mi></mtd></mtr></mtable></math></formula>
+<formula id-text='uu' id='uid8' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mi>x</mi></math></formula>
+<p noindent='true'><ref target='uid3'/><ref target='uid4'/><ref target='uid5'/></p>
+<error n='\align' l='470' c='duplicate label'/><error n='\align' l='470' c='duplicate tag'/><formula textype='align' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr id-text='foo' id='uid9'><mtd columnalign='right'><mi>a</mi></mtd><mtd columnalign='left'><mi>b</mi></mtd></mtr><mtr id-text='3.9' id='uid10'><mtd columnalign='right'><mi>c</mi></mtd><mtd columnalign='left'><mi>d</mi></mtd></mtr><mtr id-text='av' id='uid11'><mtd columnalign='right'><mi>e</mi></mtd><mtd columnalign='left'><mi>f</mi></mtd></mtr></mtable></math></formula>
+<formula textype='eqnarray' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr id-text='3.10' id='uid12'><mtd columnalign='right'><mi>x</mi></mtd></mtr><mtr id-text='3.11' id='uid13'><mtd columnalign='right'><mi>y</mi></mtd></mtr></mtable></math></formula>
 <formula textype='eqnarray*' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mi>x</mi></mtd></mtr><mtr><mtd columnalign='right'><mi>y</mi></mtd></mtr></mtable></math></formula>
-<formula textype='Beqnarray' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr id-text='3.12' id='uid20'><mtd columnalign='right'><mi>x</mi></mtd></mtr><mtr id-text='3.13' id='uid21'><mtd columnalign='right'><mi>y</mi></mtd></mtr></mtable></math></formula>
+<formula textype='Beqnarray' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr id-text='3.12' id='uid14'><mtd columnalign='right'><mi>x</mi></mtd></mtr><mtr id-text='3.13' id='uid15'><mtd columnalign='right'><mi>y</mi></mtd></mtr></mtable></math></formula>
 <formula textype='Beqnarray*' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mi>x</mi></mtd></mtr><mtr><mtd columnalign='right'><mi>y</mi></mtd></mtr></mtable></math></formula>
-<formula id-text='3.14' id='uid22' textype='multline' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='left'><mi>x</mi></mtd></mtr><mtr><mtd columnalign='right'><mi>y</mi></mtd></mtr></mtable></math></formula>
-<formula id-text='foo' id='uid23' textype='multline' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='left'><mi>x</mi></mtd></mtr><mtr><mtd columnalign='right'><mi>y</mi></mtd></mtr></mtable></math></formula>
+<formula id-text='3.14' id='uid16' textype='multline' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='left'><mi>x</mi></mtd></mtr><mtr><mtd columnalign='right'><mi>y</mi></mtd></mtr></mtable></math></formula>
+<formula id-text='foo' id='uid17' textype='multline' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='left'><mi>x</mi></mtd></mtr><mtr><mtd columnalign='right'><mi>y</mi></mtd></mtr></mtable></math></formula>
 <formula textype='multline*' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='left'><mi>x</mi></mtd></mtr><mtr><mtd columnalign='right'><mi>y</mi></mtd></mtr></mtable></math></formula>
-<formula textype='gather' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr id-text='3.15' id='uid24'><mtd><mi>x</mi></mtd></mtr><mtr id-text='3.16' id='uid25'><mtd><mi>y</mi></mtd></mtr></mtable></math></formula>
+<formula textype='gather' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr id-text='3.15' id='uid18'><mtd><mi>x</mi></mtd></mtr><mtr id-text='3.16' id='uid19'><mtd><mi>y</mi></mtd></mtr></mtable></math></formula>
 <formula textype='gather*' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd><mi>x</mi></mtd></mtr><mtr><mtd><mi>y</mi></mtd></mtr></mtable></math></formula>
-<formula textype='align' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr id-text='3.17' id='uid26'><mtd columnalign='right'><mi>x</mi></mtd></mtr><mtr id-text='3.18' id='uid27'><mtd columnalign='right'><mi>y</mi></mtd></mtr></mtable></math></formula>
+<formula textype='align' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr id-text='3.17' id='uid20'><mtd columnalign='right'><mi>x</mi></mtd></mtr><mtr id-text='3.18' id='uid21'><mtd columnalign='right'><mi>y</mi></mtd></mtr></mtable></math></formula>
 <formula textype='align*' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mi>x</mi></mtd></mtr><mtr><mtd columnalign='right'><mi>y</mi></mtd></mtr></mtable></math></formula>
-<formula textype='align' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr id-text='3.19' id='uid28'><mtd columnalign='right'><mrow><msup><mi>x</mi> <mn>2</mn> </msup><mo>+</mo><msup><mi>y</mi> <mn>2</mn> </msup></mrow></mtd><mtd columnalign='left'><mrow><mo>=</mo><msup><mi>z</mi> <mn>2</mn> </msup></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><msup><mi>x</mi> <mn>3</mn> </msup><mo>+</mo><msup><mi>y</mi> <mn>3</mn> </msup></mrow></mtd><mtd columnalign='left'><mrow><mo>=</mo><msup><mi>z</mi> <mn>3</mn> </msup></mrow></mtd></mtr><mtr id-text='*' id='uid29'><mtd columnalign='right'><mrow><msup><mi>x</mi> <mn>4</mn> </msup><mo>+</mo><msup><mi>y</mi> <mn>4</mn> </msup></mrow></mtd><mtd columnalign='left'><mrow><mo>=</mo><msup><mi>r</mi> <mn>4</mn> </msup></mrow></mtd></mtr><mtr id-text='*' id='uid30'><mtd columnalign='right'><mrow><msup><mi>x</mi> <mn>5</mn> </msup><mo>+</mo><msup><mi>y</mi> <mn>5</mn> </msup></mrow></mtd><mtd columnalign='left'><mrow><mo>=</mo><msup><mi>r</mi> <mn>5</mn> </msup></mrow></mtd></mtr><mtr id-text='eq:A1&apos;' id='uid31'><mtd columnalign='right'><mrow><msup><mi>x</mi> <mn>6</mn> </msup><mo>+</mo><msup><mi>y</mi> <mn>6</mn> </msup></mrow></mtd><mtd columnalign='left'><mrow><mo>=</mo><msup><mi>r</mi> <mn>6</mn> </msup></mrow></mtd></mtr><mtr id-text='3.20' id='uid32'><mtd columnalign='right'><msub><mi>A</mi> <mn>1</mn> </msub></mtd><mtd columnalign='left'><mrow><mo>=</mo><msub><mi>N</mi> <mn>0</mn> </msub><mrow><mo>(</mo><mi>&lambda;</mi><mo>;</mo><msup><mi>&Omega;</mi> <mo>&apos;</mo> </msup><mo>)</mo></mrow><mo>-</mo><mi>&phiv;</mi><mrow><mo>(</mo><mi>&lambda;</mi><mo>;</mo><msup><mi>&Omega;</mi> <mo>&apos;</mo> </msup><mo>)</mo></mrow></mrow></mtd></mtr><mtr id-text='ALSO (3.20)' id='uid33'><mtd columnalign='right'><msub><mi>A</mi> <mn>2</mn> </msub></mtd><mtd columnalign='left'><mrow><mo>=</mo><mi>&phiv;</mi><mrow><mo>(</mo><mi>&lambda;</mi><mo>;</mo><msup><mi>&Omega;</mi> <mo>&apos;</mo> </msup><mo>)</mo></mrow><mspace width='0.166667em'/><mi>&phiv;</mi><mrow><mo>(</mo><mi>&lambda;</mi><mo>;</mo><mi>&Omega;</mi><mo>)</mo></mrow></mrow></mtd></mtr><mtr id-text='3.21' id='uid34'><mtd columnalign='right'><msub><mi>A</mi> <mn>3</mn> </msub></mtd><mtd columnalign='left'><mrow><mo>=</mo><mi>&Nscr;</mi><mo>(</mo><mi>&lambda;</mi><mo>;</mo><mi>&omega;</mi><mo>)</mo></mrow></mtd></mtr></mtable></math></formula>
-<error n='\multline' l='499' c='duplicate tag'/><error n='\multline' l='499' c='duplicate tag'/><error n='\multline' l='499' c='duplicate label'/><formula id-text='a' id='uid35' textype='multline' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='left'><mn>1</mn></mtd></mtr><mtr><mtd columnalign='right'><mi>b</mi></mtd></mtr></mtable></math></formula>
-<formula id-text='foo' id='uid36' textype='multline' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='left'><mi>a</mi></mtd></mtr><mtr><mtd columnalign='right'><mi>b</mi></mtd></mtr></mtable></math></formula>
+<formula textype='align' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr id-text='3.19' id='uid22'><mtd columnalign='right'><mrow><msup><mi>x</mi> <mn>2</mn> </msup><mo>+</mo><msup><mi>y</mi> <mn>2</mn> </msup></mrow></mtd><mtd columnalign='left'><mrow><mo>=</mo><msup><mi>z</mi> <mn>2</mn> </msup></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><msup><mi>x</mi> <mn>3</mn> </msup><mo>+</mo><msup><mi>y</mi> <mn>3</mn> </msup></mrow></mtd><mtd columnalign='left'><mrow><mo>=</mo><msup><mi>z</mi> <mn>3</mn> </msup></mrow></mtd></mtr><mtr id-text='*' id='uid23'><mtd columnalign='right'><mrow><msup><mi>x</mi> <mn>4</mn> </msup><mo>+</mo><msup><mi>y</mi> <mn>4</mn> </msup></mrow></mtd><mtd columnalign='left'><mrow><mo>=</mo><msup><mi>r</mi> <mn>4</mn> </msup></mrow></mtd></mtr><mtr id-text='*' id='uid24'><mtd columnalign='right'><mrow><msup><mi>x</mi> <mn>5</mn> </msup><mo>+</mo><msup><mi>y</mi> <mn>5</mn> </msup></mrow></mtd><mtd columnalign='left'><mrow><mo>=</mo><msup><mi>r</mi> <mn>5</mn> </msup></mrow></mtd></mtr><mtr id-text='eq:A1&apos;' id='uid25'><mtd columnalign='right'><mrow><msup><mi>x</mi> <mn>6</mn> </msup><mo>+</mo><msup><mi>y</mi> <mn>6</mn> </msup></mrow></mtd><mtd columnalign='left'><mrow><mo>=</mo><msup><mi>r</mi> <mn>6</mn> </msup></mrow></mtd></mtr><mtr id-text='3.20' id='uid26'><mtd columnalign='right'><msub><mi>A</mi> <mn>1</mn> </msub></mtd><mtd columnalign='left'><mrow><mo>=</mo><msub><mi>N</mi> <mn>0</mn> </msub><mrow><mo>(</mo><mi>&lambda;</mi><mo>;</mo><msup><mi>&Omega;</mi> <mo>&apos;</mo> </msup><mo>)</mo></mrow><mo>-</mo><mi>&phiv;</mi><mrow><mo>(</mo><mi>&lambda;</mi><mo>;</mo><msup><mi>&Omega;</mi> <mo>&apos;</mo> </msup><mo>)</mo></mrow></mrow></mtd></mtr><mtr id-text='ALSO (3.20)' id='uid27'><mtd columnalign='right'><msub><mi>A</mi> <mn>2</mn> </msub></mtd><mtd columnalign='left'><mrow><mo>=</mo><mi>&phiv;</mi><mrow><mo>(</mo><mi>&lambda;</mi><mo>;</mo><msup><mi>&Omega;</mi> <mo>&apos;</mo> </msup><mo>)</mo></mrow><mspace width='0.166667em'/><mi>&phiv;</mi><mrow><mo>(</mo><mi>&lambda;</mi><mo>;</mo><mi>&Omega;</mi><mo>)</mo></mrow></mrow></mtd></mtr><mtr id-text='3.21' id='uid28'><mtd columnalign='right'><msub><mi>A</mi> <mn>3</mn> </msub></mtd><mtd columnalign='left'><mrow><mo>=</mo><mi>&Nscr;</mi><mo>(</mo><mi>&lambda;</mi><mo>;</mo><mi>&omega;</mi><mo>)</mo></mrow></mtd></mtr></mtable></math></formula>
+<error n='\multline' l='499' c='duplicate tag'/><error n='\multline' l='499' c='duplicate tag'/><error n='\multline' l='499' c='duplicate label'/><formula id-text='a' id='uid29' textype='multline' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='left'><mn>1</mn></mtd></mtr><mtr><mtd columnalign='right'><mi>b</mi></mtd></mtr></mtable></math></formula>
+<formula id-text='foo' id='uid30' textype='multline' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='left'><mi>a</mi></mtd></mtr><mtr><mtd columnalign='right'><mi>b</mi></mtd></mtr></mtable></math></formula>
 <formula textype='multline*' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='left'><mn>3</mn></mtd></mtr><mtr><mtd columnalign='right'><mi>b</mi></mtd></mtr></mtable></math></formula>
-<formula textype='eqnarray' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr id-text='3.22' id='uid37'><mtd columnalign='right'><mi>x</mi></mtd><mtd><mo>=</mo></mtd><mtd columnalign='left'><mrow><mn>17</mn><mi>y</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mi>y</mi></mtd><mtd><mo>&gt;</mo></mtd><mtd columnalign='left'><mrow><mi>a</mi><mo>+</mo><mi>b</mi><mo>+</mo><mi>c</mi><mo>+</mo><mi>d</mi><mo>+</mo><mi>e</mi><mo>+</mo><mi>f</mi><mo>+</mo><mi>g</mi><mo>+</mo><mi>h</mi><mo>+</mo><mi>i</mi><mo>+</mo><mi>j</mi><mo>+</mo></mrow></mtd></mtr><mtr id-text='3.23' id='uid38'><mtd/><mtd/><mtd columnalign='left'><mrow><mi>k</mi><mo>+</mo><mi>l</mi><mo>+</mo><mi>m</mi><mo>+</mo><mi>n</mi><mo>+</mo><mi>o</mi><mo>+</mo><mi>p</mi></mrow></mtd></mtr></mtable></math></formula>
+<formula textype='eqnarray' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr id-text='3.22' id='uid31'><mtd columnalign='right'><mi>x</mi></mtd><mtd><mo>=</mo></mtd><mtd columnalign='left'><mrow><mn>17</mn><mi>y</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mi>y</mi></mtd><mtd><mo>&gt;</mo></mtd><mtd columnalign='left'><mrow><mi>a</mi><mo>+</mo><mi>b</mi><mo>+</mo><mi>c</mi><mo>+</mo><mi>d</mi><mo>+</mo><mi>e</mi><mo>+</mo><mi>f</mi><mo>+</mo><mi>g</mi><mo>+</mo><mi>h</mi><mo>+</mo><mi>i</mi><mo>+</mo><mi>j</mi><mo>+</mo></mrow></mtd></mtr><mtr id-text='3.23' id='uid32'><mtd/><mtd/><mtd columnalign='left'><mrow><mi>k</mi><mo>+</mo><mi>l</mi><mo>+</mo><mi>m</mi><mo>+</mo><mi>n</mi><mo>+</mo><mi>o</mi><mo>+</mo><mi>p</mi></mrow></mtd></mtr></mtable></math></formula>
 <error n='$' l='509' c='Illegal \notag'/><p noindent='true'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>x</mi></math></formula> <error n='$' l='509' c='Illegal \notag'/></p>
 <formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mi>x</mi></math></formula>
 <p noindent='true'><error n='$' l='509' c='Illegal \notag'/></p>
@@ -276,7 +267,6 @@ xx <anchor id-text='1' id='uid7'/> yy <ref target='uid7'/><ref target='uid8'/>
 <formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>B</mi><mi>y</mi></mrow></math></formula>
 <p noindent='true'><formula textype='math' type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>A</mi><mi>u</mi></mrow></math></formula></p>
 <formula textype='displaymath' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>B</mi><mi>u</mi></mrow></math></formula>
-<formula id-text='3.24' id='uid39' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mi>x</mi></math></formula>
+<formula id-text='3.24' id='uid33' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mi>x</mi></math></formula>
 <formula textype='align*' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mi>x</mi></mtd></mtr></mtable></math></formula>
-</Section>
 </unknown>

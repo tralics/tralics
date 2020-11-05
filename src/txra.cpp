@@ -20,37 +20,25 @@ namespace {
 } // namespace
 
 namespace ra_ns {
-    void fnhack(TokenList &c, TokenList &d, TokenList &aux);
-} // namespace ra_ns
-
-auto Parser::next_arg_is_project() -> bool {
-    TokenList L = read_arg();
-    if (L.empty()) return true;
-    return L.front().is_one_token();
-}
-
-// --------------------------------------------------
-
-// If c has no \footnote, copies it in aux;
-// else copies only what is before, what is after is appended to d
-void ra_ns::fnhack(TokenList &c, TokenList &d, TokenList &aux) {
-    Hashtab &H  = the_parser.hash_table;
-    int      bl = 0;
-    while (!c.empty()) {
-        Token x = c.front();
-        c.pop_front();
-        token_ns::check_brace(x, bl);
-        if (x == H.footnote_token && bl == 0) {
-            if (!d.empty()) {
-                d.push_front(H.space_token);
-                d.push_front(H.comma_token);
+    void fnhack(TokenList &c, TokenList &d, TokenList &aux) {
+        Hashtab &H  = the_parser.hash_table;
+        int      bl = 0;
+        while (!c.empty()) {
+            Token x = c.front();
+            c.pop_front();
+            token_ns::check_brace(x, bl);
+            if (x == H.footnote_token && bl == 0) {
+                if (!d.empty()) {
+                    d.push_front(H.space_token);
+                    d.push_front(H.comma_token);
+                }
+                d.splice(d.begin(), c);
+            } else {
+                aux.push_back(x);
             }
-            d.splice(d.begin(), c);
-        } else {
-            aux.push_back(x);
         }
     }
-}
+} // namespace ra_ns
 
 // User function \fn@hack\foo\bar
 void Parser::fnhack() {

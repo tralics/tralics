@@ -1307,8 +1307,6 @@ void Parser::translate03() {
         pop_level(bt_env); // IS THIS OK ?
         T_math(c);
         return;
-    case RAsection_env_cmd: T_rasection(); return;
-    case end_RAsection_env_cmd: T_rasection_end(); return;
     case popmodule_cmd: the_stack.end_module(); return;
     case pushmodule_cmd: push_module(); return;
     case tabular_env_cmd: T_start_tabular(c); return;
