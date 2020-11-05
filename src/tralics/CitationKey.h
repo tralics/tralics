@@ -20,7 +20,6 @@ struct CitationKey {
     [[nodiscard]] auto is_similar(const CitationKey &w) const -> bool { return cite_key == w.cite_key; }
     [[nodiscard]] auto is_similar_lower(const CitationKey &w) const -> bool { return lower_cite_key == w.lower_cite_key; }
     [[nodiscard]] auto is_same(const CitationKey &w) const -> bool { return is_similar(w) && cite_prefix == w.cite_prefix; }
-    [[nodiscard]] auto is_same_old(const CitationKey &w) const -> bool { return full_key == w.full_key; }
     [[nodiscard]] auto is_same_lower(const CitationKey &w) const -> bool { return is_similar_lower(w) && cite_prefix == w.cite_prefix; }
     [[nodiscard]] auto from_to_string() const -> std::string;
 

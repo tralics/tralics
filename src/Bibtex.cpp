@@ -210,14 +210,8 @@ auto Bibtex::find_field_pos(const std::string &s) -> field_pos {
 
 // This finds a citation that matches exactly S
 auto Bibtex::find_entry(const CitationKey &s) -> BibEntry * {
-    auto len = all_entries.size();
-    if (old_ra) {
-        for (size_t i = 0; i < len; i++)
-            if (all_entries[i]->cite_key.is_same_old(s)) return all_entries[i];
-    } else {
-        for (size_t i = 0; i < len; i++)
-            if (all_entries[i]->cite_key.is_same(s)) return all_entries[i];
-    }
+    for (size_t i = 0; i < all_entries.size(); i++)
+        if (all_entries[i]->cite_key.is_same(s)) return all_entries[i];
     return nullptr;
 }
 
@@ -226,9 +220,9 @@ auto Bibtex::find_entry(const CitationKey &s) -> BibEntry * {
 auto Bibtex::find_lower_case(const CitationKey &s, int &n) -> BibEntry * {
     n = 0;
     BibEntry *res{nullptr};
-    for (auto &all_entrie : all_entries)
-        if (all_entrie->cite_key.is_same_lower(s)) {
-            res = all_entrie;
+    for (auto &entry : all_entries)
+        if (entry->cite_key.is_same_lower(s)) {
+            res = entry;
             n++;
         }
     return res;
