@@ -93,18 +93,6 @@ namespace {
         return X[to_unsigned(cur_section - 1)].value;
     }
 
-    auto is_good_ur(const std::string &x) -> bool { // \todo RA stuff?
-        std::vector<ParamDataSlot> &ur_list = config_data[0];
-        auto                        n       = ur_list.size();
-        if (ur_size == 0) {
-            for (size_t i = 0; i < n; i++) ur_list[i].is_used = true;
-            ur_size = n;
-        }
-        for (size_t i = 0; i < n; i++)
-            if (ur_list[i].matches(x)) return true;
-        return false;
-    }
-
     // Interprets the RC argument of a pers command \todo RA
     // This returns the short name, said otherwise, the argument.
     // Notice the space case when argument is empty, or +foo or =foo.
@@ -117,13 +105,6 @@ namespace {
         if (rc[0] == '+') { return rc.substr(1); }
         bool spec = (rc.size() >= 2 && rc[0] == '=');
         auto RC   = spec ? rc.substr(1) : rc;
-        if (!is_good_ur(RC)) {
-            err_buf                       = "Invalid Unit Centre " + rc + "\nUse one of:";
-            std::vector<ParamDataSlot> &V = config_data[0];
-            for (auto &i : V)
-                if (i.is_used) err_buf += " " + i.key;
-            the_parser.signal_error(the_parser.err_tok, "illegal data");
-        }
         if (spec) {
             the_default_rc  = RC;
             have_default_ur = true;

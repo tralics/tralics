@@ -140,14 +140,14 @@ Today is Tuesday 25th March 2008.</p>
 <participantes><pers prenom='a' nom='b'/>
 <pers prenom='c' nom='d'/>
 </participantes>
-<error n='\tralics@get@config' l='256' c='illegal data'/><error n='\tralics@get@config' l='256' c='illegal data'/><error n='\tralics@get@config' l='256' c='illegal data'/><pers prenom='Jean B' nom='Dupond' affiliation='' profession='' hdr='not yet' research-centre='Lyon'>Ok</pers>
+<error n='\tralics@get@config' l='256' c='illegal data'/><error n='\tralics@get@config' l='256' c='illegal data'/><pers prenom='Jean B' nom='Dupond' affiliation='' profession='' hdr='not yet' research-centre='Lyon'>Ok</pers>
 <pers prenom='Jean A' nom='Dupond' affiliation='cnrs' profession='Research' hdr='not yet' research-centre='Sophia'>Ok</pers>
 <pers prenom='Jean B' nom='Dupond' affiliation='inria' profession='Engineer' hdr='not yet' research-centre='Lyon'>Ok</pers>
 <pers prenom='Jean C' nom='Dupond' affiliation='ibm' profession='Other' research-centre='Paris'>Ok</pers>
 <pers prenom='Jean D' nom='Dupond' affiliation='Other' profession='Teaching' hdr='not yet' research-centre='Paris'>Ok</pers>
 <p>Paris
 
-<error n='\tralics@get@config' l='265' c='illegal data'/>rennes</p>
+rennes</p>
 <p><ref target='mod:panorama'/>
 <ref target='mod:telecom'/>
 <ref target='mod:logi1'/>
