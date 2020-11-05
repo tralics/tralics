@@ -28,19 +28,6 @@ namespace {
         "\nall characters up to next `=' ignored.\n"                 // 8
     };
 
-    void boot_ra_prefix(String s) {
-        std::array<char, 3 * 8> tmp{};
-        for (unsigned i = 0; i < 8; i++) {
-            size_t j   = i * 3;
-            tmp[j]     = s[1];
-            tmp[j + 1] = static_cast<char>('A' + to_signed(i));
-            tmp[j + 2] = 0;
-        }
-        tmp[0] = s[0];
-        tmp[3] = s[2];
-        for (unsigned i = 0; i < 8; i++) { ra_pretable[i] = tmp.data() + i * 3; }
-    }
-
     // Finds the type of an entry (or comment, string, preamble). \todo without the_names?
     auto find_type(const std::string &s) -> entry_type {
         if (s.empty()) return type_comment; // in case of error.
@@ -704,7 +691,6 @@ void Bibtex::work() {
     auto n = all_entries.size();
     if (n == 0) return;
     if (!bbl.empty()) bbl.flush();
-    boot_ra_prefix("ABC");
     all_entries_table.reserve(n);
     for (size_t i = 0; i < n; i++) all_entries[i]->un_crossref();
     for (size_t i = 0; i < n; i++) all_entries[i]->work(to_signed(i));
