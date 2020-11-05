@@ -134,7 +134,7 @@ Error here
 <ref target='mod:a'/>
 <error n='\PackageError' l='269' c='uerror'/></p>
 <accueil isproject='true' html='testerr'>
-<theme><error n='\tralics@get@config' l='279' c='Bad theme'/>com</theme>
+<theme><error n='\tralics@get@config' l='279' c='no list'/></theme>
 <error n='\PackageError' l='279' c='uerror'/><projet>ProjB</projet>
 <projetdeveloppe>ProjC</projetdeveloppe>
 </accueil>

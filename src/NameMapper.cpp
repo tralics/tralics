@@ -11,12 +11,6 @@ namespace config_ns {
 } // namespace config_ns
 
 namespace {
-    // Function called when theme_vals is seen in the config file.
-    void interpret_theme_list(const Buffer &B) {
-        all_themes = " " + B + " ";
-        for (char &c : all_themes) c = static_cast<char>(std::tolower(c));
-    }
-
     // This interprets Foo="Visiteur/foo/Chercheur//Enseignant//Technique//"
     // This creates four slots in a table indexed by k.
     void interpret_data_list(Buffer &B, const std::string &name) {
@@ -79,8 +73,6 @@ namespace {
             interpret_section_list(b, false);
         else if (a == "fullsection")
             interpret_section_list(b, true);
-        else if (a == "theme")
-            interpret_theme_list(b);
         else if (a.empty()) {
         } else
             interpret_data_list(b, a);

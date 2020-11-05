@@ -1002,23 +1002,6 @@ void MainClass::out_xml() {
     spdlog::info("Output written on {} ({} bytes).", p, fp.tellp());
 }
 
-auto MainClass::check_theme(const std::string &s) -> std::string {
-    static Buffer B;
-    std::string   res = B.add_with_space(s);
-    if (all_themes.find(B) == std::string::npos) {
-        if (s.empty())
-            err_buf = "Empty or missing theme\n";
-        else
-            err_buf = "Invalid theme " + s + "\n";
-        if (all_themes.empty())
-            err_buf += "Configuration file defines nothing";
-        else
-            err_buf += "Valid themes are" + all_themes;
-        the_parser.signal_error(the_parser.err_tok, "Bad theme");
-    }
-    return res;
-}
-
 void MainClass::set_input_encoding(size_t wc) {
     if (wc < max_encoding) {
         input_encoding = wc;

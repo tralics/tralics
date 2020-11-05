@@ -142,7 +142,6 @@ namespace {
     // Return the value of the key in a list. \todo lots of RA stuff
     auto find_one_key(const std::string &name, const std::string &key) -> std::string {
         if (name == "ur") return pers_rc(key);
-        if (name == "theme") return MainClass::check_theme(key);
         if (name == "fullsection") return check_section(key);
         if (name == "section") return check_spec_section(key);
         ParamDataList *X = config_data.find_list(name, false);

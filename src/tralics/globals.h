@@ -13,8 +13,6 @@
 struct WordList;
 class LabelInfo;
 
-[[deprecated]] inline std::string all_themes;
-
 inline bool                                                         bad_minus{false};
 inline bool                                                         bib_allow_break{true};
 inline bool                                                         compatibility{false};
