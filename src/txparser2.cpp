@@ -41,58 +41,6 @@ namespace {
     TokenList KV_list;
     TokenList xkv_action;
 
-    // return non-empty string only if section is new
-    auto check_section(const std::string &s) -> std::string {
-        static long cur_section = -1;
-        long        k           = -1;
-        err_buf.clear();
-        std::vector<ParamDataSlot> &X = config_data[1];
-        auto                        n = X.size(); // number of sections
-        if (s.empty())
-            k = cur_section;
-        else
-            for (size_t i = 0; i < n; i++)
-                if (X[i].key == s) {
-                    k = to_signed(i + 1);
-                    break;
-                }
-        if (k > 0 && k < cur_section) {
-            err_buf.format("Bad section {} after {}\nOrder of sections is{}", s, X[to_unsigned(cur_section - 1)].key, sec_buffer);
-            the_parser.signal_error();
-        } else if (k == -1) {
-            if (n == 0) {
-                the_parser.parse_error("Illegal access to fullsection list.");
-                return "";
-            }
-            if (!s.empty()) {
-                err_buf.format("Invalid section {}\nValid sections are{}", s, sec_buffer);
-                the_parser.signal_error();
-                if (cur_section < 0) cur_section = 1;
-            }
-        } else
-            cur_section = k;
-        if (cur_section < 0) {
-            the_parser.parse_error("No default section");
-            cur_section = 1;
-        }
-        if (cur_section == composition_section) {
-            static bool first_module = true;
-            if (first_module)
-                first_module = false;
-            else {
-                the_parser.parse_error("Only one module accepted in composition");
-                cur_section++;
-                return "";
-            }
-        }
-        static long prev = -1;
-        if (prev == cur_section) return "";
-        prev                                    = cur_section;
-        cur_sec_no_topic                        = X[to_unsigned(cur_section - 1)].no_topic();
-        X[to_unsigned(cur_section - 1)].is_used = true; // incompatible with topics
-        return X[to_unsigned(cur_section - 1)].value;
-    }
-
     // Interprets the RC argument of a pers command \todo RA
     // This returns the short name, said otherwise, the argument.
     // Notice the space case when argument is empty, or +foo or =foo.
@@ -112,10 +60,7 @@ namespace {
         return RC;
     }
 
-    // Special command. We assume that cur_sec_no_topic
-    // is correctlty set.
     auto check_spec_section(const std::string &s) -> std::string {
-        if (cur_sec_no_topic) return "";
         if (s.empty()) return "default";
         return s;
     }
@@ -123,7 +68,6 @@ namespace {
     // Return the value of the key in a list. \todo lots of RA stuff
     auto find_one_key(const std::string &name, const std::string &key) -> std::string {
         if (name == "ur") return pers_rc(key);
-        if (name == "fullsection") return check_section(key);
         if (name == "section") return check_spec_section(key);
         ParamDataList *X = config_data.find_list(name, false);
         if (X == nullptr) {

@@ -13,11 +13,12 @@
 struct WordList;
 class LabelInfo;
 
+[[deprecated]] inline long composition_section = -1;
+
 inline bool                                                         bad_minus{false};
 inline bool                                                         bib_allow_break{true};
 inline bool                                                         compatibility{false};
-inline bool                                                         cur_sec_no_topic = false;
-inline bool                                                         have_default_ur  = false;
+inline bool                                                         have_default_ur = false;
 inline bool                                                         nofloat_hack{false};
 inline bool                                                         only_input_data{false};
 inline bool                                                         raw_bib{false};
@@ -38,7 +39,6 @@ inline int                                                          cur_file_lin
 inline int                                                          init_file_pos = 0; // position in init file
 inline int                                                          nb_errs{0};
 inline long                                                         cline_first, cline_last;
-inline long                                                         composition_section = -1;
 inline std::array<std::array<char32_t, lmaxchar>, max_encoding - 2> custom_table;
 inline std::array<std::array<std::string, 15>, 128>                 math_chars;
 inline std::array<String, 3>                                        my_constant_table;
