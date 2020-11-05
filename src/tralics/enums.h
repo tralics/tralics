@@ -72,7 +72,6 @@ enum symcodes : unsigned {
     fontsize_cmd,
     ltfont_cmd,
     item_cmd,
-    pers_cmd,
     doc_class_cmd,
     package_cmd,
     if_package_loaded_cmd,

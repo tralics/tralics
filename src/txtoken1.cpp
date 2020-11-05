@@ -2534,13 +2534,6 @@ auto CmdChr::name() const -> std::string {
         case kvo_process_code: return "ProcessKeyvalOptions";
         default: return nullptr;
         }
-    case pers_cmd:
-        switch (chr) {
-        case 3: return "@persB";
-        case 2: return "persB";
-        case 1: return "@persA";
-        default: return "persA";
-        }
     case doc_class_cmd: return chr == 0 ? "documentclass" : "LoadClass";
     case package_cmd: return "usepackage";
     case inputclass_cmd: return "InputClass";
