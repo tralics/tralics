@@ -226,18 +226,11 @@ auto Bibtex::find_entry(const CitationKey &s) -> BibEntry * {
 auto Bibtex::find_lower_case(const CitationKey &s, int &n) -> BibEntry * {
     n = 0;
     BibEntry *res{nullptr};
-    if (old_ra) {
-        for (auto &all_entrie : all_entries)
-            if (all_entrie->cite_key.is_same_lower_old(s)) {
-                res = all_entrie;
-                n++;
-            }
-    } else
-        for (auto &all_entrie : all_entries)
-            if (all_entrie->cite_key.is_same_lower(s)) {
-                res = all_entrie;
-                n++;
-            }
+    for (auto &all_entrie : all_entries)
+        if (all_entrie->cite_key.is_same_lower(s)) {
+            res = all_entrie;
+            n++;
+        }
     return res;
 }
 

@@ -39,13 +39,6 @@ void CitationKey::make_key(const std::string &s) {
     full_key.append(s);
 }
 
-auto CitationKey::is_same_lower_old(const CitationKey &w) const -> bool {
-    if (!is_similar_lower(w)) return false;
-    if (cite_prefix == w.cite_prefix) return true;
-    if (cite_prefix == from_foot || w.cite_prefix == from_foot) return false;
-    return true;
-}
-
 auto CitationKey::from_to_string() const -> std::string {
     if (cite_prefix == from_year) return "year";
     if (cite_prefix == from_refer) return "refer";
