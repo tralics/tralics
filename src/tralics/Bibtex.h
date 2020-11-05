@@ -110,7 +110,6 @@ public:
 
     static void err_in_entry(String a);
     static auto find_field_pos(const std::string &s) -> field_pos;
-    static auto wrong_class(int y, const std::string &Y, bib_from from) -> bool;
 };
 
 inline Bibtex the_bibtex;

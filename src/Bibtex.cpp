@@ -738,27 +738,6 @@ void Bibtex::work() {
     bbl.too_late = true;
 }
 
-// Signals an error if the year is invalid in the case of refer.
-auto Bibtex::wrong_class(int y, const std::string &Y, bib_from from) -> bool {
-    if (from != from_refer) return false;
-    int ry = the_parser.ra_year;
-    if (y <= 0 || y > ry || (!distinguish_refer && y == ry)) {
-        the_bibtex.err_in_entry("");
-        log_and_tty << "entry moved from refer to year because\n";
-        if (y == 0)
-            log_and_tty << "the year field of this entry is missing.\n";
-        else if (y < 0)
-            log_and_tty << "the year field of this entry is invalid";
-        else if (y == ry)
-            log_and_tty << "it is from this year";
-        else
-            log_and_tty << "it is unpublished";
-        if (!Y.empty()) log_and_tty << " (year field is `" << Y << "').\n";
-        return true;
-    }
-    return false;
-}
-
 // Faire un hack: s'il y a un extrabib, et normal_biblio
 // le rajouter a la fin, et virer le extrabib
 // Plus le parser propement
