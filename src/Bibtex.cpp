@@ -116,21 +116,6 @@ void Bibtex::read1(const std::string &cur) {
     spdlog::warn("Bibtex Info: no biblio file {}", B);
 }
 
-// Handles one bib file for the raweb. Returns true if the file exists.
-// Extension can be foot, year or refer. New in Tralics 2.9.3 it can be any
-auto Bibtex::read2(bib_from pre) -> bool {
-    Buffer B;
-    B.append(no_year);
-    if (pre == from_foot)
-        B.append("_foot");
-    else if (pre == from_refer)
-        B.append("_refer");
-    else if (pre == from_any)
-        B.append("_all");
-    B.append(default_year);
-    return read0(B, pre);
-}
-
 auto Bibtex::look_for_macro(const std::string &name) -> std::optional<size_t> {
     for (size_t i = 0; i < all_macros.size(); i++)
         if (all_macros[i].is_same(name)) return i;

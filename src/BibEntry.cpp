@@ -214,30 +214,6 @@ namespace {
     }
 } // namespace
 
-// This returns a prefix from ra_pretable, according to from and type_int.
-auto BibEntry::ra_prefix() const -> std::string {
-    if (get_cite_prefix() == from_refer) return ra_pretable[0];
-    if (get_cite_prefix() == from_foot) return ra_pretable[1];
-    switch (type_int) {
-    case type_book:
-    case type_booklet:
-    case type_proceedings: return ra_pretable[2];
-    case type_phdthesis: return ra_pretable[3];
-    case type_article:
-    case type_inbook:
-    case type_incollection: return ra_pretable[4];
-    case type_conference:
-    case type_inproceedings: return ra_pretable[5];
-    case type_manual:
-    case type_techreport:
-    case type_coursenotes: return ra_pretable[6];
-    case type_masterthesis:
-    case type_misc:
-    case type_unpublished:
-    default: return ra_pretable[7];
-    }
-}
-
 // This is non trivial, because we have a fixed-sized array and a varying size
 // return true if the field is not already filled.
 auto BibEntry::store_field(field_pos where) -> bool {

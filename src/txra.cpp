@@ -15,10 +15,6 @@
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 
-namespace {
-    Buffer Tbuf;
-} // namespace
-
 namespace ra_ns {
     void fnhack(TokenList &c, TokenList &d, TokenList &aux) {
         Hashtab &H  = the_parser.hash_table;
@@ -50,12 +46,7 @@ void Parser::fnhack() {
     new_macro(Lb, B, false);
 }
 
-// \todo make TokenList formattable
-
-void Parser::push_module() {
-    std::string aux = sT_arg_nopar();
-    push_module(aux);
-}
+void Parser::push_module() { push_module(sT_arg_nopar()); }
 
 void Parser::push_module(const std::string &aux) {
     if (the_stack.in_h_mode()) { parse_error("Invalid \\begin{module} in a paragraph"); }

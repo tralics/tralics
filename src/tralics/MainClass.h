@@ -91,7 +91,7 @@ public:
     void set_ent_names(const std::string &s);             ///< Set no_entnames from a string saying yes or no
     void set_input_encoding(size_t wc);                   ///< Set default input file encoding and log the action \todo remove?
 
-    static auto check_theme(const std::string &s) -> std::string; ///< Check that theme is valid \todo RA specific?
+    [[deprecated]] static auto check_theme(const std::string &s) -> std::string; ///< Check that theme is valid \todo RA specific?
 
 private:
     void parse_args(int argc, char **argv);           ///< Parse the command-line arguments

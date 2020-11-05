@@ -41,8 +41,6 @@ private:
     bool                     noyearerror{};
     std::array<id_type, 128> id_class{};
 
-    [[deprecated]] bool in_ra{false};
-
 public:
     std::string default_year;
 
@@ -89,8 +87,6 @@ private:
     auto               see_new_entry(entry_type cn, int lineno) -> BibEntry *;
     void               skip_space();
     [[nodiscard]] auto wrong_first_char(char32_t c, size_t what) const -> int;
-
-    [[deprecated]] auto read2(bib_from pre) -> bool;
 
 public:
     auto        get_an_entry(size_t i) { return all_entries[i]; }

@@ -734,12 +734,6 @@ void Xml::add_non_empty_to(Xml *res) {
     }
 }
 
-// Postprocessor for <composition>
-void Xml::compo_special() {
-    XmlAction X(the_names["module"], rc_composition);
-    recurse(X);
-}
-
 // This is used by sT_translate. It converts an XML element
 // to a string, using scbuf as temporary. clears the object
 auto Xml::convert_to_string() -> std::string {

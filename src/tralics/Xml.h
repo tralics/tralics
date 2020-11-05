@@ -87,8 +87,6 @@ public:
         if (!empty()) at(0) = gsl::not_null{x};
     }
     void bordermatrix();
-
-    [[deprecated]] void compo_special();
 };
 
 struct XmlAndType {
