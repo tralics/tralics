@@ -50,7 +50,6 @@ public:
     void add_nl();
     void add_non_empty_to(Xml *res);
     void change_name(const std::string &s) { name = the_names[s]; }
-    void compo_special();
     void convert_to_string(Buffer &B);
     void insert_at(size_t pos, Xml *x);
     void insert_bib(Xml *bib, Xml *match);
@@ -88,6 +87,8 @@ public:
         if (!empty()) at(0) = gsl::not_null{x};
     }
     void bordermatrix();
+
+    [[deprecated]] void compo_special();
 };
 
 struct XmlAndType {

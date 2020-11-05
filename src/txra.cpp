@@ -52,31 +52,6 @@ void Parser::fnhack() {
 
 // \todo make TokenList formattable
 
-// --------------------------------------------------
-// \end{RAsection} or \tralics@pop@section
-Xid  compo_id = Xid(decltype(Xid::value)(-1));
-void Parser::T_rasection_end() {
-    Xml *in = the_stack.top_stack();
-    if (in->id == compo_id) in->compo_special();
-    the_stack.pop(the_names["RAsection"]);
-}
-
-// \begin{RAsection} or \tralics@push@section
-void Parser::T_rasection() {
-    std::string name     = sT_arg_nopar();
-    std::string elt_name = the_names["nb_rasection"];
-    auto        iname    = name;
-    leave_h_mode();
-    the_stack.add_nl();
-    Xml *cur = new Xml(elt_name.empty() ? iname : elt_name, nullptr);
-    if (!elt_name.empty()) cur->id.add_attribute(the_names["name"], iname);
-    if (iname == the_names["composition_ra"]) compo_id = cur->id;
-    the_stack.push(the_names["RAsection"], cur);
-    string_define(0, name, false);
-    std::string id = the_stack.add_new_anchor();
-    create_label("section:" + name, id);
-}
-
 void Parser::push_module() {
     std::string aux = sT_arg_nopar();
     push_module(aux);

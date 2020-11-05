@@ -1064,9 +1064,6 @@ private:
     void tex_string(Buffer &B, Token T, bool esc) const;
     void tl_set_rescan(subtypes c);
     void Tl3_gen_from_ac(subtypes c);
-
-    [[deprecated]] void T_rasection();
-    [[deprecated]] void T_rasection_end();
 };
 
 inline Parser the_parser;

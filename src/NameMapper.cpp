@@ -181,7 +181,6 @@ void NameMapper::boot() {
     set("circle", "pic-circle");
     set("citetype", "type");
     set("closecurve", "pic-closecurve");
-    set("composition_ra", "composition");
     set("cst_display", "display");
     set("cst_div0", "div0");
     set("cst_div1", "div1");
@@ -249,7 +248,6 @@ void NameMapper::boot() {
     set("minipage_width", "width");
     set("multiput", "pic-multiput");
     set("natcit", "Cit");
-    set("nb_rasection", "");
     set("np_center_etc", "center");
     set("np_center", "center");
     set("np_cst_width", "width");
@@ -369,11 +367,6 @@ void NameMapper::assign_name(const std::string &A, const std::string &B) {
     if (A == "pack_font_att") {
         if (B == "true") the_main->pack_font_elt = true;
         if (B == "false") the_main->pack_font_elt = false;
-        return;
-    }
-
-    if (A == "rasection") { // \todo RA
-        set("nb_rasection", B);
         return;
     }
 
