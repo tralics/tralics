@@ -84,8 +84,6 @@ public:
     bool use_all_sizes{false};
     bool use_font_elt{false};
 
-    [[deprecated]] bool handling_ra{false}; ///< Are we handling the INRIA RA from the 2000s? \todo remove all references to the RA
-
     auto check_for_tcf(const std::string &s) -> bool; ///< Look for a `.tcf` file, and if found set `tcf_file` and `use_tcf`
 
     void add_to_from_config(int n, const std::string &b); ///< Add contents to `from_config`
@@ -130,7 +128,6 @@ private:
     void end_mod();
     void find_dtd(); ///< Finds the DTD, create default if nothing given
     void find_field(String a);
-    void finish_init() const; ///< RA related stuff
     void finish_xml();
     void get_doc_type();         ///< Determine document type from various sources
     void get_os();               ///< Sets cur_os to the current OS as a symbolic string

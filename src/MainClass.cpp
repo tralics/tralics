@@ -968,7 +968,7 @@ void MainClass::run(int argc, char **argv) {
     if (opt_doctype.empty()) opt_doctype = input_content.find_doctype();
 
     read_config_and_other();
-    finish_init();
+    for (size_t i = 2; i < config_data.size(); i++) config_data[i].check_other();
     spdlog::trace("OK with the configuration file, dealing with the TeX file...");
     show_input_size();
     boot_bibtex();
@@ -1000,13 +1000,6 @@ void MainClass::out_xml() {
     fp << the_parser.the_stack.document_element() << "\n";
 
     spdlog::info("Output written on {} ({} bytes).", p, fp.tellp());
-}
-
-void MainClass::finish_init() const {
-    if (handling_ra) {
-        if (year <= 2003) all_themes = " 1a 1b 1c 2a 2b 3a 3b 4a 4b ";
-    }
-    for (size_t i = 2; i < config_data.size(); i++) config_data[i].check_other();
 }
 
 auto MainClass::check_theme(const std::string &s) -> std::string {
