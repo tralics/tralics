@@ -17,36 +17,6 @@
 
 namespace {
     Buffer Tbuf;
-
-    // User says \UR{foo,bar}
-    // returns -1 if there no other RC in the buffer.
-    // returns -2 if the RC is invalid
-    // returns location in the table otherwise
-    [[deprecated]] auto next_RC_in_buffer(Buffer &B, std::string &sname, std::string &lname) -> long {
-        std::vector<ParamDataSlot> &ur_list = config_data[0];
-        B.skip_sp_tab_comma();
-        if (B.head() == 0) return -1;
-        if (B.substr(B.ptrs.b, 3) == "\\UR") {
-            static bool warned = false;
-            if (!warned && the_parser.ra_year > 2006) {
-                log_and_tty << "You should use Lille instead of \\URLille,\n";
-                log_and_tty << "Nancy instead of \\URNancy, etc.\n";
-                warned = true;
-            }
-            B.advance(3);
-        }
-        B.ptrs.a = B.ptrs.b;
-        B.skip_letter();
-        auto k = ur_list.size();
-        for (size_t j = 0; j < k; j++)
-            if (B.substring() == ur_list[j].key) {
-                sname              = ur_list[j].key;
-                lname              = ur_list[j].value;
-                ur_list[j].is_used = true;
-                return to_signed(j);
-            }
-        return -2;
-    }
 } // namespace
 
 namespace ra_ns {
