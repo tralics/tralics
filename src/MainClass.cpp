@@ -98,13 +98,6 @@ found at http://www.cecill.info.)";
         for (size_t i = 0; i < V.size(); i += 2) the_names.assign(V[i], V[i + 1]);
     }
 
-    [[deprecated]] void bad_conf(String s) {
-        spdlog::critical("The configuration file for the RA is ra{}.tcf or ra.tcf\n", the_parser.ra_year);
-        spdlog::critical("It must define a value for the parameter {}", s);
-        spdlog::critical("No xml file generated");
-        exit(1);
-    }
-
     /// Display usage message, then exit the program \todo Manage this centrally
     void usage_and_quit(int v) {
         std::cout << usage;
@@ -1012,21 +1005,8 @@ void MainClass::out_xml() {
 void MainClass::finish_init() const {
     if (handling_ra) {
         if (year <= 2003) all_themes = " 1a 1b 1c 2a 2b 3a 3b 4a 4b ";
-        if (year <= 2014 && all_themes.empty()) bad_conf("theme_vals");
-        if (config_data[0].empty()) bad_conf("ur_vals");
-        if (year >= 2007) {
-            if (config_data[2].empty()) bad_conf("profession_vals");
-            if (year >= 2013)
-                config_data[3].clear(); // kill this
-            else if (config_data[3].empty())
-                bad_conf("affiliation_vals");
-        }
-        auto n = config_data[1].size();
-        if (n == 0) bad_conf("sections_vals");
-        if (n < 2) bad_conf("Config file did not provide sections");
     }
-    auto n = config_data.size();
-    for (size_t i = 2; i < n; i++) config_data[i].check_other();
+    for (size_t i = 2; i < config_data.size(); i++) config_data[i].check_other();
 }
 
 auto MainClass::check_theme(const std::string &s) -> std::string {
