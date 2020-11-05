@@ -366,11 +366,7 @@ void MainClass::open_log() { // \todo spdlog etc
         spdlog::trace("Input path: ({})", fmt::join(tmp, ","));
     }
 
-    if (only_input_data)
-        spdlog::info("Starting translation of command line argument");
-    else
-        spdlog::info("Starting translation of file {}", infile);
-
+    spdlog::info("Starting translation of file {}", infile);
     check_for_encoding(); // \todo this does not feel like it belongs here
 }
 
@@ -921,10 +917,6 @@ void MainClass::trans0() {
     the_parser.load_latex();
     if (load_l3) the_parser.L3_load(true);
     Titlepage.start_thing(verbose);
-    if (only_input_data) {
-        Logger::log_finish();
-        exit(0);
-    }
 }
 
 void MainClass::boot_bibtex() {
@@ -968,7 +960,7 @@ void MainClass::run(int argc, char **argv) {
     if (opt_doctype.empty()) opt_doctype = input_content.find_doctype();
 
     read_config_and_other();
-    for (size_t i = 2; i < config_data.size(); i++) config_data[i].check_other();
+    for (auto &d : config_data) d.check_other();
     spdlog::trace("OK with the configuration file, dealing with the TeX file...");
     show_input_size();
     boot_bibtex();

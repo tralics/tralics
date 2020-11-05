@@ -13,8 +13,9 @@ namespace config_ns {
 namespace {
     // This interprets Foo="Visiteur/foo/Chercheur//Enseignant//Technique//"
     // This creates four slots in a table indexed by k.
-    void interpret_data_list(Buffer &B, const std::string &name) {
-        ParamDataList *V = config_data.find_list(name, true);
+    void interpret_data_list(const std::string &b, const std::string &name) {
+        Buffer B(b);
+        auto * V = config_data.find_list(name, true);
         if (config_ns::start_interpret(B, "//")) V->clear();
         for (;;) {
             std::string r1, r2;
@@ -27,55 +28,12 @@ namespace {
         }
     }
 
-    // Interprets Sections ="/foo/bar*/gee".
-    // In 2007, we have  NewSections ="/foo/FOO/bar/BAR/gee/GEE"
-    // This is indicated by new_syntax
-    // Puts foo bar+ gee in the transcript file (we use + instead of *, meaning
-    // that the character was interpreted). Three RaSection objects are
-    // created, named foo, bar and gee. The second is marked: not for topic.
-    // In simplified mode, a section has a name and a number.
-    // Otherwise it has additional fields.
-    void interpret_section_list(Buffer &B, bool new_syntax) {
-        ParamDataList &V = config_data[1];
-        if (config_ns::start_interpret(B, "//")) {
-            V.clear();
-            sec_buffer.clear();
-            composition_section = -1;
-        }
-        std::string s, r;
-        for (;;) {
-            if (!B.slash_separated(s)) break;
-            if (new_syntax) {
-                if (!B.slash_separated(r)) break;
-            } else
-                r = "";
-            if (s.empty()) continue;
-            bool star = false;
-            auto ns   = s.size();
-            if (ns > 1 && s[ns - 1] == '*') {
-                s    = std::string(s, 0, ns - 1);
-                star = true;
-            }
-            if (r.empty()) r = s;
-            the_log << "Section: " << s << (star ? "+" : "") << " -> " << r << "\n";
-            if (s == "composition") composition_section = to_signed(V.size() + 1);
-            sec_buffer += " " + s;
-            V.push_back({s, r, !star});
-        }
-    }
-
     // --------------------------------------------------
     // This interprets theme_vals = "foo bar"
     // and all consequences
 
-    void interpret_list(const std::string &a, Buffer &b) {
-        if (a == "section")
-            interpret_section_list(b, false);
-        else if (a == "fullsection")
-            interpret_section_list(b, true);
-        else if (a.empty()) {
-        } else
-            interpret_data_list(b, a);
+    void interpret_list(const std::string &a, const std::string &b) {
+        if (!a.empty()) interpret_data_list(b, a);
     }
 } // namespace
 
@@ -330,10 +288,7 @@ void NameMapper::assign(const std::string &sa, const std::string &sb) {
         else
             set("np_separator", sb);
     }
-    if (sa.ends_with("_vals")) {
-        Buffer B(sb);
-        interpret_list(sa.substr(0, n - 5), B); // \todo without Buffer
-    }
+    if (sa.ends_with("_vals")) { interpret_list(sa.substr(0, n - 5), sb); }
     if (sa == "mml_font_normal") { set("mml@font@normal", sb); }
     if (sa == "mml_font_upright") { set("mml@font@upright", sb); }
     if (sa == "mml_font_bold") { set("mml@font@bold", sb); }

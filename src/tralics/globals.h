@@ -13,14 +13,10 @@
 struct WordList;
 class LabelInfo;
 
-[[deprecated]] inline long composition_section = -1;
-
 inline bool                                                         bad_minus{false};
 inline bool                                                         bib_allow_break{true};
 inline bool                                                         compatibility{false};
-inline bool                                                         have_default_ur = false;
 inline bool                                                         nofloat_hack{false};
-inline bool                                                         only_input_data{false};
 inline bool                                                         raw_bib{false};
 inline bool                                                         seen_enddocument{false};
 inline bool                                                         distinguish_refer = false;
@@ -50,7 +46,6 @@ inline std::string                                                  file_name;  
 inline std::string                                                  file_list;       // \todo vector of std::fs::path
 inline std::string                                                  hlinee_above, hlinee_width, hlinee_below;
 inline std::string                                                  tralics_version{"2.15.4"};
-inline std::string                                                  the_default_rc; // \todo RA stuff
 inline std::string                                                  the_tag;
 inline std::string                                                  xkv_header;
 inline std::string                                                  xkv_prefix;
