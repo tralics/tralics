@@ -7,6 +7,9 @@ struct ParamDataList : public std::unordered_map<std::string, std::string> {
     void interpret(const std::string &b);
 };
 
-struct ConfigData : public std::unordered_map<std::string, ParamDataList> {};
+struct ConfigData : public std::unordered_map<std::string, ParamDataList> {
+    auto find_one_key(const std::string &name, const std::string &key) const -> std::string; // \todo lots of RA stuff
+    auto format_keys(const std::string &name) const -> std::string;
+};
 
 inline ConfigData config_data; // \todo make static?

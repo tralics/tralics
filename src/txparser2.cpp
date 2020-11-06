@@ -40,51 +40,6 @@ namespace {
     Buffer    mac_buf, buf_for_del;
     TokenList KV_list;
     TokenList xkv_action;
-
-    // Interprets the RC argument of a pers command \todo RA
-    // This returns the short name, said otherwise, the argument.
-    // Notice the space case when argument is empty, or +foo or =foo.
-    auto pers_rc(const std::string &rc) -> std::string {
-        static std::string the_default_rc; // \todo remove
-        if (rc.empty()) return the_default_rc;
-        if (rc[0] == '+') return rc.substr(1);
-        bool spec = (rc.size() >= 2 && rc[0] == '=');
-        auto RC   = spec ? rc.substr(1) : rc;
-        if (spec) the_default_rc = RC;
-        return RC;
-    }
-
-    auto check_spec_section(const std::string &s) -> std::string {
-        if (s.empty()) return "default";
-        return s;
-    }
-
-    // Return the value of the key in a list. \todo lots of RA stuff \todo goes in ParamData.h
-    auto find_one_key(const std::string &name, const std::string &key) -> std::string {
-        if (name == "ur") return pers_rc(key);
-        if (name == "section") return check_spec_section(key);
-        auto it = config_data.find(name);
-        if (it == config_data.end()) {
-            the_parser.parse_error(the_parser.err_tok, "Configuration file does not define ", name, "no list");
-            return "";
-        }
-        auto &X = it->second;
-        if (auto it2 = X.find(key); it2 != X.end()) return it2->second;
-        err_buf = fmt::format("Illegal value '{}' for {}\nUse one of:", key, name);
-        for (const auto &i : X) err_buf += " " + i.first;
-        the_parser.signal_error(the_parser.err_tok, "illegal data");
-        return "";
-    }
-
-    // Converts the whole data struture as foo1=bar1,foo2=bar2, \todo goes in ParamData.h
-    auto find_keys(const std::string &name) -> std::string {
-        auto it = config_data.find(name);
-        if (it == config_data.end()) return "";
-        std::string res;
-        for (const auto &d : it->second) res.append(fmt::format("{}={},", d.first, d.second));
-        if (!res.empty()) res.pop_back();
-        return res;
-    }
 } // namespace
 
 namespace xkv_ns {
@@ -318,9 +273,9 @@ void Parser::E_get_config(unsigned c) {
     if (c != 0) {
         TokenList L2 = read_arg();
         key          = list_to_string_c(L2, "Problem scanning key");
-        res          = find_one_key(resource, key);
+        res          = config_data.find_one_key(resource, key);
     } else
-        res = find_keys(resource);
+        res = config_data.format_keys(resource);
     mac_buf     = res;
     TokenList L = mac_buf.str_toks11(false);
     if (tracing_macros()) {
