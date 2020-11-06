@@ -1,6 +1,5 @@
 #include "tralics/Bbl.h"
 #include "tralics/Bibtex.h"
-#include "tralics/ConfigData.h"
 #include "tralics/Line.h"
 #include "tralics/LineList.h"
 #include "tralics/Logger.h"

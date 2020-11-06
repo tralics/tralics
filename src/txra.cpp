@@ -10,7 +10,6 @@
 
 // This file contains commands needed for the RA
 
-#include "tralics/ConfigData.h"
 #include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"

@@ -10,7 +10,6 @@
 
 // The file contains code for configurating the Raweb
 
-#include "tralics/ConfigData.h"
 #include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
