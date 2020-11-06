@@ -120,7 +120,7 @@ Today is Tuesday March 25, 2008.
 Today is Tuesday 25th March 2008.</p>
 <p>Tuesday</p>
 <p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mfenced separators='' open='(' close=''><mn>1</mn><mo>&middot;</mo><mn>25</mn><mo>&gt;</mo><mn>0</mn><mo>.</mo></mfenced><mtext>textṡ.</mtext></mrow></math></formula></p>
-<error n='\bad' l='224' c='Undefined command'/><error n='\bad' l='233' c='Undefined command'/><error n='\tralics@get@config' l='240' c='no list'/><error n='\tralics@get@config' l='241' c='illegal data'/><catperso><head>BB</head>
+<error n='\bad' l='224' c='Undefined command'/><error n='\bad' l='227' c='Undefined command'/><error n='\bad' l='233' c='Undefined command'/><error n='\tralics@get@config' l='240' c='no list'/><error n='\tralics@get@config' l='241' c='illegal data'/><catperso><head>BB</head>
 </catperso>
 <catperso><head>CC</head>
 </catperso>

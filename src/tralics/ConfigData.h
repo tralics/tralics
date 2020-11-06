@@ -1,14 +1,11 @@
 #pragma once
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 // \todo use maps and such for this
 
-struct ParamDataSlot {
-    std::string key, value;
-};
-
-struct ParamDataList : public std::vector<ParamDataSlot> {
+struct ParamDataList : public std::unordered_map<std::string, std::string> {
     std::string name;
 
     ParamDataList(std::string s) : name(std::move(s)) {}

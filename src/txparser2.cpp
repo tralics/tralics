@@ -59,7 +59,7 @@ namespace {
         return s;
     }
 
-    // Return the value of the key in a list. \todo lots of RA stuff
+    // Return the value of the key in a list. \todo lots of RA stuff \todo goes in ParamData.h
     auto find_one_key(const std::string &name, const std::string &key) -> std::string {
         if (name == "ur") return pers_rc(key);
         if (name == "section") return check_spec_section(key);
@@ -68,21 +68,19 @@ namespace {
             the_parser.parse_error(the_parser.err_tok, "Configuration file does not define ", name, "no list");
             return "";
         }
-        auto n = X->size();
-        for (size_t i = 0; i < n; i++)
-            if ((*X)[i].key == key) return (*X)[i].value;
+        if (auto it = X->find(key); it != X->end()) return it->second;
         err_buf = fmt::format("Illegal value '{}' for {}\nUse one of:", key, name);
-        for (const auto &i : *X) err_buf += " " + i.key;
+        for (const auto &i : *X) err_buf += " " + i.first;
         the_parser.signal_error(the_parser.err_tok, "illegal data");
         return "";
     }
 
-    // Converts the whole data struture as foo1=bar1,foo2=bar2,
+    // Converts the whole data struture as foo1=bar1,foo2=bar2, \todo goes in ParamData.h
     auto find_keys(const std::string &name) -> std::string {
         auto *X = config_data.find_list(name, false); // \todo optional?
         if (X == nullptr) return "";
         std::string res;
-        for (const auto &d : *X) res.append(fmt::format("{}={},", d.key, d.value));
+        for (const auto &d : *X) res.append(fmt::format("{}={},", d.first, d.second));
         if (!X->empty()) res.pop_back();
         return res;
     }

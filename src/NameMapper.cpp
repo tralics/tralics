@@ -12,7 +12,7 @@ namespace config_ns {
 
 namespace {
     // This interprets Foo="Visiteur/foo/Chercheur//Enseignant//Technique//"
-    // This creates four slots in a table indexed by k.
+    // This creates four slots in a table indexed by k. \todo goes in ParamData.h
     void interpret_data_list(const std::string &b, const std::string &name) {
         Buffer B(b);
         auto * V = config_data.find_list(name, true);
@@ -24,7 +24,7 @@ namespace {
             if (r1.empty()) continue;
             if (r2.empty()) r2 = r1;
             the_log << name << ": " << r1 << " -> " << r2 << "\n";
-            V->push_back({r1, r2});
+            (*V)[r1] = r2;
         }
     }
 
