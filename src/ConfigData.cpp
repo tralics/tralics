@@ -1,9 +1,7 @@
 #include "tralics/ConfigData.h"
 
 auto ConfigData::find_list(const std::string &name, bool creat) -> ParamDataList * {
-    for (auto &p : *this)
-        if (p.name == name) return &p;
+    if (auto it = find(name); it != end()) return &it->second;
     if (!creat) return nullptr;
-    emplace_back(name);
-    return &back();
+    return &(*this)[name];
 }

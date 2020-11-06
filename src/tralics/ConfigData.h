@@ -3,17 +3,11 @@
 #include <unordered_map>
 #include <vector>
 
-// \todo use maps and such for this
+using ParamDataList = std::unordered_map<std::string, std::string>;
 
-struct ParamDataList : public std::unordered_map<std::string, std::string> {
-    std::string name;
-
-    ParamDataList(std::string s) : name(std::move(s)) {}
-};
-
-class ConfigData : public std::vector<ParamDataList> {
+class ConfigData : public std::unordered_map<std::string, ParamDataList> {
 public:
-    auto find_list(const std::string &name, bool creat) -> ParamDataList *;
+    [[deprecated]] auto find_list(const std::string &name, bool creat) -> ParamDataList *;
 };
 
-inline ConfigData config_data;
+inline ConfigData config_data; // \todo make static?
