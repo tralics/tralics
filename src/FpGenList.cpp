@@ -23,7 +23,7 @@ auto FpGenList::find_str(int &n) const -> Token {
 // Adds at the end of *this a space and S (of type letter)
 // Assumes that S is ascii
 void FpGenList::add_last_space(String S) {
-    push_back(the_parser.hash_table.space_token);
+    push_back(hash_table.space_token);
     for (size_t i = 0;; i++) {
         auto c = S[i];
         if (c == 0) return;
@@ -38,7 +38,7 @@ void FpGenList::add_last_space(String S) {
 // Adds at the end of *this a space, W, a second space and S (of type letter)
 // Assumes that S is ascii
 void FpGenList::add_last_space(TokenList &W, String S) {
-    push_back(the_parser.hash_table.space_token);
+    push_back(hash_table.space_token);
     append(W);
     add_last_space(S);
 }
@@ -90,7 +90,7 @@ void FpGenList::fp_gen_app() {
         (S == "seed") || (S == "random") || (S == "sin") || (S == "cos") || (S == "sincos") || (S == "tan") || (S == "cot") ||
         (S == "tancot") || (S == "arcsin") || (S == "arccos") || (S == "arcsincos") || (S == "arctan") || (S == "arccot") ||
         (S == "arctancot") || (S == "pop") || (S == "swap") || (S == "copy")) {
-        push_back(the_parser.hash_table.space_token);
+        push_back(hash_table.space_token);
         TokenList z;
         split_after(n, z);
         append(z);
@@ -115,7 +115,7 @@ void FpGenList::fp_gen_exp() {
 // and A*B*C gives A B mul C mul. Handles division also.
 // Order is preserved.
 void FpGenList::fp_gen_mul() {
-    static const Token x1 = the_parser.hash_table.star_token;
+    static const Token x1 = hash_table.star_token;
     static const Token x2(other_t_offset, '/');
     for (;;) {
         TokenList aux;
@@ -139,7 +139,7 @@ void FpGenList::fp_gen_mul() {
         FpGenList Aux2(aux2);
         Aux2.fp_gen_exp();                                 // handle B
         Aux.add_last_space(Aux2, y == x1 ? "mul" : "div"); // we have A B mul
-        Aux.push_back(the_parser.hash_table.space_token);
+        Aux.push_back(hash_table.space_token);
         Aux.push_back(y2); // insert the second op
         Aux.append(*this);
         swap(Aux);
@@ -148,8 +148,8 @@ void FpGenList::fp_gen_mul() {
 
 // This handles addition subtraction. in the same fashion as fp_gen_mul
 void FpGenList::fp_gen_add() {
-    Token x1 = the_parser.hash_table.plus_token;
-    Token x2 = the_parser.hash_table.minus_token;
+    Token x1 = hash_table.plus_token;
+    Token x2 = hash_table.minus_token;
     for (;;) {
         TokenList aux;
         Token     y = split_at(x1, x2, aux);
@@ -173,7 +173,7 @@ void FpGenList::fp_gen_add() {
         Aux2.fp_gen_mul();
 
         Aux.add_last_space(Aux2, y == x1 ? "add" : "sub");
-        Aux.push_back(the_parser.hash_table.space_token);
+        Aux.push_back(hash_table.space_token);
         Aux.push_back(y2);
         Aux.append(*this);
         swap(Aux);
@@ -184,15 +184,15 @@ void FpGenList::fp_gen_add() {
 // If a character has been replaced, a space is added at the end.
 void FpGenList::fp_gen_komma() {
     bool  need_space = false;
-    Token x1         = the_parser.hash_table.comma_token;
+    Token x1         = hash_table.comma_token;
     Token x2         = Token(other_t_offset, ':');
     for (auto &X : *this) {
         if (X == x1 || X == x2) {
             need_space = true;
-            X          = the_parser.hash_table.space_token;
+            X          = hash_table.space_token;
         }
     }
-    if (need_space) push_back(the_parser.hash_table.space_token);
+    if (need_space) push_back(hash_table.space_token);
     fp_gen_add();
 }
 
@@ -233,7 +233,7 @@ void FpGenList::to_postfix() {
             FpGenList BB(B);
             BB.fp_gen_komma(); //
             swap(A);           // A holds: +cos(c+d), and value holds sin
-            push_back(the_parser.hash_table.space_token);
+            push_back(hash_table.space_token);
             append(BB);
             append(A);
         } else
@@ -246,8 +246,8 @@ void FpGenList::to_postfix() {
 // this  gives    (3+4)*(0-5-6),
 void FpGenList::fp_check_paren() {
     Token x0(other_t_offset, '(');
-    Token x1 = the_parser.hash_table.minus_token;
-    Token x2 = the_parser.hash_table.plus_token;
+    Token x1 = hash_table.minus_token;
+    Token x2 = hash_table.plus_token;
     ;
     for (auto X = begin(); X != end(); ++X) {
         Token x = *X;
@@ -259,7 +259,7 @@ void FpGenList::fp_check_paren() {
             if (y.is_space_token() || y == x2)
                 erase(Y);
             else if (y == x1)
-                insert(Y, the_parser.hash_table.zero_token);
+                insert(Y, hash_table.zero_token);
         }
     }
 }

@@ -96,7 +96,7 @@ auto classes_ns::make_keyval(TokenList &key_val) -> KeyAndVal {
 auto classes_ns::make_options(TokenList &L) -> OptionList {
     OptionList res;
     TokenList  key;
-    Token      comma = the_parser.hash_table.comma_token;
+    Token      comma = hash_table.comma_token;
     while (!L.empty()) {
         token_ns::split_at(comma, L, key);
         token_ns::remove_first_last_space(key);
@@ -419,22 +419,22 @@ void classes_ns::unknown_option(KeyAndVal &cur, TokenList &res, TokenList &spec,
         if (X == 1) {
             TokenList w;
             w = string_to_list(cur.name, true);
-            spec.push_back(the_parser.hash_table.def_token);
-            spec.push_back(the_parser.hash_table.CurrentOptionKey_token);
+            spec.push_back(hash_table.def_token);
+            spec.push_back(hash_table.CurrentOptionKey_token);
             spec.splice(spec.end(), w);
 
             w = cur.val;
             if (w.empty())
-                w.push_back(the_parser.hash_table.relax_token);
+                w.push_back(hash_table.relax_token);
             else
                 w.pop_front();
             the_parser.brace_me(w);
-            spec.push_back(the_parser.hash_table.def_token);
-            spec.push_back(the_parser.hash_table.CurrentOptionValue_token);
+            spec.push_back(hash_table.def_token);
+            spec.push_back(hash_table.CurrentOptionValue_token);
             spec.splice(spec.end(), w);
             the_parser.brace_me(u);
-            spec.push_back(the_parser.hash_table.def_token);
-            spec.push_back(the_parser.hash_table.CurrentOption_token);
+            spec.push_back(hash_table.def_token);
+            spec.push_back(hash_table.CurrentOption_token);
             spec.splice(spec.end(), u);
             u = C->default_handler;
             spec.splice(spec.end(), u);
@@ -443,8 +443,8 @@ void classes_ns::unknown_option(KeyAndVal &cur, TokenList &res, TokenList &spec,
             res.splice(res.end(), u);
         } else {
             the_parser.brace_me(u);
-            res.push_back(the_parser.hash_table.def_token);
-            res.push_back(the_parser.hash_table.CurrentOption_token);
+            res.push_back(hash_table.def_token);
+            res.push_back(hash_table.CurrentOption_token);
             res.splice(res.end(), u);
             u = C->default_handler;
             res.splice(res.end(), u);

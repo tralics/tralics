@@ -54,3 +54,5 @@ public:
         xkv_tkey_token, gsavevalue_token, savevalue_token, empty_token, composite_token, ExplFileName_token, ExplFileDate_token,
         ExplFileVersion_token, ExplFileDescription_token, last_tok;
 };
+
+inline Hashtab hash_table;

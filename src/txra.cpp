@@ -17,7 +17,7 @@
 
 namespace ra_ns {
     void fnhack(TokenList &c, TokenList &d, TokenList &aux) {
-        Hashtab &H  = the_parser.hash_table;
+        Hashtab &H  = hash_table;
         int      bl = 0;
         while (!c.empty()) {
             Token x = c.front();

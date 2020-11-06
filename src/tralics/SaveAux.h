@@ -8,7 +8,7 @@
 // \todo this needs some overhaul...
 class SaveAuxBase {
 public:
-    Parser &  P;
+    Parser &  P;    // \todo always the_parser, remove
     save_type type; // the type of the real thing
     int       line; // current line number at start
     long      level;

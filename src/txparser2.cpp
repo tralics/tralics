@@ -1120,7 +1120,7 @@ auto Parser::xkv_save_keys_aux(bool c, int c2) -> bool {
 // Otherwise we look for \savevalue or \gsavevalue, skip equals.
 // We set some booleans
 auto xkv_ns::find_key_of(const TokenList &L, int type) -> std::string {
-    Hashtab & H      = the_parser.hash_table;
+    Hashtab & H      = hash_table;
     Token     equals = H.equals_token;
     auto      C      = L.begin();
     auto      E      = L.end();
@@ -1163,7 +1163,7 @@ void xkv_ns::find_aux(int c) {
 // This merges L into W; both lists have the form \global{key}=value
 // or, depenfing on the type, are lists of keys
 void xkv_ns::merge(TokenList &W, TokenList &L, int type) {
-    Token     comma = the_parser.hash_table.comma_token;
+    Token     comma = hash_table.comma_token;
     TokenList key;
     TokenList tmp;
     if (W.empty()) {
@@ -1204,7 +1204,7 @@ void xkv_ns::remove(TokenList &W, TokenList &L, int type) {
     Buffer &B   = buf_for_del;
     Buffer &aux = txparser2_local_buf;
     the_parser.list_to_string_c(L, ",", ",", "Invalid key name list", B);
-    Token     comma = the_parser.hash_table.comma_token;
+    Token     comma = hash_table.comma_token;
     TokenList tmp;
     TokenList key;
     W.swap(tmp);

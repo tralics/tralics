@@ -30,7 +30,7 @@ std::array<Xml *, 128> single_chars;
 
 auto math_ns::get_builtin_alt(size_t p) -> Xml * { return math_data.get_builtin_alt(p); } // \todo Why a global function?
 
-inline void eval_let(String a, String b) { the_parser.hash_table.eval_let(a, b); }
+inline void eval_let(String a, String b) { hash_table.eval_let(a, b); }
 void        math_ns::fill_single_char() {
     for (auto &c : single_chars) c = nullptr;
     for (uchar x = 'a'; x <= 'z'; x++) { single_chars[x] = new Xml(std::string(1, char(x))); }
@@ -1124,7 +1124,7 @@ auto math_ns::math_space_code(subtypes c) -> bool {
 
 auto MathDataP::init_builtin(String name, math_loc pos, Xml *x, symcodes t) -> Token {
     init_builtin(pos, x);
-    return the_parser.hash_table.primitive(name, t, subtypes(pos));
+    return hash_table.primitive(name, t, subtypes(pos));
 }
 
 // This is for a general token. It defines name to be (t,pos)
@@ -1208,10 +1208,10 @@ void MathDataP::TM_mk(String a, String b, math_types c) {
 }
 
 // For a command like \frac.
-auto mk_cmd(String name, subtypes pos) -> Token { return the_parser.hash_table.primitive(name, special_math_cmd, pos); }
+auto mk_cmd(String name, subtypes pos) -> Token { return hash_table.primitive(name, special_math_cmd, pos); }
 
 // For a command like \enspace.
-void mk_space(const std::string &name, int b) { the_parser.hash_table.primitive(name, mathspace_cmd, subtypes(b)); }
+void mk_space(const std::string &name, int b) { hash_table.primitive(name, mathspace_cmd, subtypes(b)); }
 
 void        MathDataP::fill_lr(size_t a, String b, String c) { xml_lr_ptable[a] = std::string(no_ent_names ? c : b); }
 inline void MathDataP::fill_lr(size_t a, String b) { xml_lr_ptable[a] = std::string(b); }
@@ -1392,10 +1392,10 @@ void MathDataP::boot2() {
     x->push_back_unless_nullptr(math_data.get_mc_table(6));
     x->push_back_unless_nullptr(get_builtin(int_code));
     init_builtin("idotsint", idotsint_code, x, mathop_cmd);
-    x                                         = new Xml(std::string("none"), nullptr);
-    the_parser.hash_table.mmlnone_token       = init_builtin("mmlnone", mml_none_code, x, mathord_cmd);
-    x                                         = new Xml(std::string("mprescripts"), nullptr);
-    the_parser.hash_table.mmlprescripts_token = init_builtin("mmlprescripts", mml_prescripts_code, x, mathord_cmd);
+    x                              = new Xml(std::string("none"), nullptr);
+    hash_table.mmlnone_token       = init_builtin("mmlnone", mml_none_code, x, mathord_cmd);
+    x                              = new Xml(std::string("mprescripts"), nullptr);
+    hash_table.mmlprescripts_token = init_builtin("mmlprescripts", mml_prescripts_code, x, mathord_cmd);
 }
 
 void MathDataP::boot() {

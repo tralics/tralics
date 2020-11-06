@@ -14,13 +14,13 @@ namespace xkv_ns {
 
 // Ctor
 XkvSetkeys::XkvSetkeys(Parser *PP) : P(PP) {
-    comma_token     = P->hash_table.comma_token;
-    equals_token    = P->hash_table.equals_token;
-    na_token        = P->hash_table.xkv_na_token;
-    fams_token      = P->hash_table.xkv_fams_token;
-    rm_token        = P->hash_table.xkv_rm_token;
-    savevalue_token = P->hash_table.savevalue_token;
-    usevalue_token  = P->hash_table.usevalue_token;
+    comma_token     = hash_table.comma_token;
+    equals_token    = hash_table.equals_token;
+    na_token        = hash_table.xkv_na_token;
+    fams_token      = hash_table.xkv_fams_token;
+    rm_token        = hash_table.xkv_rm_token;
+    savevalue_token = hash_table.savevalue_token;
+    usevalue_token  = hash_table.usevalue_token;
 }
 
 // This reads and manages the list of families
@@ -55,7 +55,7 @@ void XkvSetkeys::fetch_keys(bool c) {
 
 // Evaluate now everything
 void XkvSetkeys::finish() {
-    P->new_macro(xkv_prefix, P->hash_table.xkv_prefix_token);
+    P->new_macro(xkv_prefix, hash_table.xkv_prefix_token);
     P->new_macro(fams, fams_token);
     P->new_macro(na, na_token);
     if (!delayed.empty()) delayed.pop_back(); // remove trailing comma
@@ -108,7 +108,7 @@ void XkvSetkeys::run(bool c) {
     if (xkv_ns::is_Gin(fams)) {
         TokenList L = the_parser.read_arg();
         L.push_back(comma_token);
-        the_parser.new_macro(L, the_parser.hash_table.locate("Gin@keys"));
+        the_parser.new_macro(L, hash_table.locate("Gin@keys"));
         return;
     }
     extract_keys(fams, Fams);
@@ -126,8 +126,8 @@ void XkvSetkeys::check_preset(String s) {
     for (size_t i = 0; i < N; i++) {
         xkv_ns::makehd(Fams[i]);
         B = "XKV@" + xkv_header + s;
-        if (P->hash_table.is_defined(B)) {
-            Token     T = P->hash_table.locate(B);
+        if (hash_table.is_defined(B)) {
+            Token     T = hash_table.locate(B);
             TokenList W = P->get_mac_value(T);
             set_aux(W, to_signed(i));
         }
@@ -162,7 +162,7 @@ void XkvSetkeys::set_aux(TokenList &W, long idx) {
         }
         for (; i < N; i++) {
             if (!cur.is_defined(Fams[i])) continue;
-            Token T = P->hash_table.last_tok;
+            Token T = hash_table.last_tok;
             found   = true;
             run_key(T, cur, Fams[i]);
             if (!set_all && found) break;
@@ -174,7 +174,7 @@ void XkvSetkeys::set_aux(TokenList &W, long idx) {
 // This is called if the value must be saved
 void XkvSetkeys::save_key(const std::string &Key, TokenList &L) {
     txparser2_local_buf = "XKV@" + xkv_header + Key + "@value";
-    Token T             = P->hash_table.locate(txparser2_local_buf);
+    Token T             = hash_table.locate(txparser2_local_buf);
     P->new_macro(L, T, xkv_is_global);
 }
 
@@ -230,8 +230,8 @@ void XkvSetkeys::replace_pointers(TokenList &L) {
         token_ns::remove_ext_braces(key);
         std::string Key     = P->list_to_string_c(key, "Argument of \\savevalue");
         txparser2_local_buf = "XKV@" + xkv_header + Key + "@value";
-        if (P->hash_table.is_defined(B)) {
-            TokenList w = P->get_mac_value(P->hash_table.last_tok);
+        if (hash_table.is_defined(B)) {
+            TokenList w = P->get_mac_value(hash_table.last_tok);
             L.splice(L.begin(), w);
         } else {
             B = "No value recorded for key `" + Key + "'; ignored";
@@ -245,12 +245,12 @@ void XkvSetkeys::replace_pointers(TokenList &L) {
 void XkvSetkeys::run_default(const std::string &Key, Token mac, bool s) {
     Buffer &B = txparser2_local_buf;
     B         = xkv_header + Key + "@default";
-    if (!P->hash_table.is_defined(B)) {
+    if (!hash_table.is_defined(B)) {
         B = "No value specified for key `" + Key + "'";
         P->parse_error(P->err_tok, B);
         return;
     }
-    Token     T = P->hash_table.locate(B);
+    Token     T = hash_table.locate(B);
     TokenList L = P->get_mac_value(T);
     if (L.empty() || L.front() != mac) {
         // no hack needed

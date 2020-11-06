@@ -47,7 +47,7 @@ auto gbl_or_assign(bool gbl, bool re) -> String {
     return "changing ";
 }
 
-Parser::Parser() : cur_env_name("document") {
+Parser::Parser() : cur_env_name("document") { // \todo move more to the header
     sectionning_offset                 = section_code;
     restricted                         = false;
     cur_level                          = 1;

@@ -236,7 +236,7 @@ auto Buffer::str_toks(nl_to_tok nl) -> TokenList {
 // Use character code 11 whenever possible
 auto Buffer::str_toks11(bool nl) -> TokenList {
     auto      SP = Token(space_token_val);
-    Token     NL = the_parser.hash_table.newline_token;
+    Token     NL = hash_table.newline_token;
     TokenList L;
     ptrs.b = 0;
     for (;;) {

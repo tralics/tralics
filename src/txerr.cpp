@@ -39,7 +39,7 @@ namespace {
         }
 
         if (T.is_in_hash()) {
-            auto s = the_parser.hash_table[T.hash_loc()];
+            auto s = hash_table[T.hash_loc()];
             if (std::none_of(s.begin(), s.end(), [](char c) { return c == '<' || c == '>' || c == '&' || c < 32; })) return "\\" + s;
 
             Buffer B("\\");

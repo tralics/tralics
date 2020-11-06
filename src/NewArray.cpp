@@ -11,7 +11,7 @@ void NewArray::boot(Parser *Q) {
     P = Q;
     for (unsigned i = 0; i < nb_newcolumn; i++) {
         nct_bool[i] = false;
-        nct_tok[i]  = P->hash_table.relax_token;
+        nct_tok[i]  = hash_table.relax_token;
     }
     nct_size = 0;
 }
@@ -305,7 +305,7 @@ auto NewArray::ac_next() -> bool {
         return true;
     }
     // strange
-    if (current_token == the_parser.hash_table.verb_token) {
+    if (current_token == hash_table.verb_token) {
         preamble.pop_front();
         return true;
     }

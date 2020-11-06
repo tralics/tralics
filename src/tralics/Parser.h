@@ -27,7 +27,6 @@ class Parser {
     friend class XkvSetkeys;
 
 public:
-    Hashtab                                   hash_table;         // the hash table
     Mactab                                    mac_table;          // the table of macros
     Stack                                     the_stack;          // the stack
     std::array<EqtbString, 10>                eqtb_string_table;  // eqtb strings

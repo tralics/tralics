@@ -76,7 +76,7 @@ void MathHelper::check_for_eqnum(subtypes type, bool multi) {
 
 // nnewt item in the list of tags
 void MathHelper::add_tag(TokenList &L) {
-    if (!tag_list.empty()) tag_list.push_back(the_parser.hash_table.comma_token);
+    if (!tag_list.empty()) tag_list.push_back(hash_table.comma_token);
     tag_list.splice(tag_list.end(), L);
 }
 
@@ -85,7 +85,7 @@ void MathHelper::handle_tags() {
     TokenList L = tag_list;
     token_ns::remove_first_last_space(L);
     the_parser.brace_me(L);
-    L.push_front(is_tag_starred ? the_parser.hash_table.ytag1_token : the_parser.hash_table.xtag1_token);
+    L.push_front(is_tag_starred ? hash_table.ytag1_token : hash_table.xtag1_token);
     the_parser.back_input(L);
     tag_list = TokenList();
 }

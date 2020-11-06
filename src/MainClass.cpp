@@ -941,7 +941,7 @@ void MainClass::more_boot() const {
         int w = (2 << 15) - 1;
         the_parser.word_define(mathprop_ctr_code, w, true);
     }
-    if (etex_enabled) the_parser.hash_table.boot_etex();
+    if (etex_enabled) hash_table.boot_etex();
     LineList res;
     res.reset(".tex");
     res.emplace_back(1, "\\message{File ignored^^J}\\endinput", false);

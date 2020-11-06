@@ -252,9 +252,9 @@ void NameMapper::assign(const std::string &sa, const std::string &sb) {
     if (sa == "default_class") { the_main->default_class = sb; }
     if (sa == "alternate_item") {
         if (sb == "false")
-            the_parser.hash_table.eval_let("item", "@@item");
+            hash_table.eval_let("item", "@@item");
         else if (sb == "true")
-            the_parser.hash_table.eval_let("item", "@item");
+            hash_table.eval_let("item", "@item");
     }
     if (sa == "url_font") { the_main->add_to_from_config(1, "\\def\\urlfont{" + sb + "}"); }
     if (sa == "everyjob") { everyjob_string = fmt::format("\\everyjob={{{}}}", sb); }
@@ -318,13 +318,13 @@ void NameMapper::assign_name(const std::string &A, const std::string &B) {
     if (A == "theorem") {
         if (B[0] == 0) { // reverst to old behavior
             set("np_theorem", B);
-            the_parser.hash_table.eval_let("@begintheorem", "@ybegintheorem");
+            hash_table.eval_let("@begintheorem", "@ybegintheorem");
         } else if (B[0] == ' ') { // special case
             set("np_theorem", B.substr(1));
-            the_parser.hash_table.eval_let("@begintheorem", "@ybegintheorem");
+            hash_table.eval_let("@begintheorem", "@ybegintheorem");
         } else {
             set("np_theorem", B);
-            the_parser.hash_table.eval_let("@begintheorem", "@xbegintheorem");
+            hash_table.eval_let("@begintheorem", "@xbegintheorem");
         }
         return;
     }

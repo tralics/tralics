@@ -5,13 +5,13 @@
 // upn. Thes stack is a comm-separated list of tokens.
 // This adds L in front.
 void FpStack::push_upn(TokenList &L) {
-    if (!empty()) push_front(the_parser.hash_table.comma_token);
+    if (!empty()) push_front(hash_table.comma_token);
     prepend(L);
 }
 
 // This adds a fp number in front of the stack.
 void FpStack::push_upn(const FpNum &x) {
-    if (!empty()) push_front(the_parser.hash_table.comma_token);
+    if (!empty()) push_front(hash_table.comma_token);
     TokenList xv = x.to_list();
     prepend(xv);
 }

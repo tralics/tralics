@@ -1827,8 +1827,8 @@ void Parser::upn_eval(TokenList &l) {
     FpStack & S = upn_stack;
     FpGenList L(l);
     L.remove_spaces();
-    Token     t1 = the_parser.hash_table.space_token;
-    Token     t2 = the_parser.hash_table.newline_token;
+    Token     t1 = hash_table.space_token;
+    Token     t2 = hash_table.newline_token;
     TokenList z;
     if (L.split_at(t1, t2, z).val != 0) {
         upn_eval(z);

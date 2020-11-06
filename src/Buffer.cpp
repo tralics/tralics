@@ -227,7 +227,7 @@ auto Buffer::push_back(Token T) -> bool {
         return the_parser.has_letter_catcode(T.char_val());
     }
     if (T.is_in_hash()) {
-        Buffer Tmp = the_parser.hash_table[T.hash_loc()];
+        Buffer Tmp = hash_table[T.hash_loc()];
         append(Tmp.convert_to_log_encoding());
         return true;
     }
@@ -279,7 +279,7 @@ void Buffer::insert_token(Token T, bool sw) {
         bool need_space = sw ? (std::isalpha(static_cast<int>(c)) != 0) : the_parser.has_letter_catcode(c);
         if (need_space) push_back(' ');
     } else if (T.is_in_hash()) { // multichar
-        append(the_parser.hash_table[T.hash_loc()]);
+        append(hash_table[T.hash_loc()]);
         push_back(' ');
     } else { // empty or bad
         if (sw)

@@ -64,13 +64,13 @@ SaveAuxGlue::~SaveAuxGlue() {
 
 // Restore command. We have to take care to free memory for user commands.
 SaveAuxCmd::~SaveAuxCmd() {
-    auto lvl = P.hash_table.eqtb[cs].level;
+    auto lvl = hash_table.eqtb[cs].level;
     if (lvl == 1) { // retain old value, so kill val
         if (val.is_user()) P.mac_table.delete_macro_ref(val.chr);
     } else {
-        if (P.hash_table.eqtb[cs].val.is_user()) // kill cur and change
-            P.mac_table.delete_macro_ref(P.hash_table.eqtb[cs].val.chr);
-        P.hash_table.eqtb[cs] = {val, level};
+        if (hash_table.eqtb[cs].val.is_user()) // kill cur and change
+            P.mac_table.delete_macro_ref(hash_table.eqtb[cs].val.chr);
+        hash_table.eqtb[cs] = {val, level};
     }
 }
 

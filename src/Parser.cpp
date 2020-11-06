@@ -758,26 +758,26 @@ namespace {
 
         other_accent[unused_accent_even_cc] = Token(0);
         other_accent[unused_accent_odd_cc]  = Token(0);
-        special_double[0]                   = the_parser.hash_table.locate("textsubgrave");
-        special_double[1]                   = the_parser.hash_table.locate("textgravedot");
-        special_double[2]                   = the_parser.hash_table.locate("textsubacute");
-        special_double[3]                   = the_parser.hash_table.locate("textacutemacron");
-        special_double[4]                   = the_parser.hash_table.locate("textsubcircum");
-        special_double[5]                   = the_parser.hash_table.locate("textcircumdot");
-        special_double[6]                   = the_parser.hash_table.locate("textsubtilde");
-        special_double[7]                   = the_parser.hash_table.locate("texttildedot");
-        special_double[8]                   = the_parser.hash_table.locate("textsubumlaut");
-        special_double[9]                   = the_parser.hash_table.locate("textdoublegrave");
-        special_double[10]                  = the_parser.hash_table.locate("textsubring");
-        special_double[11]                  = the_parser.hash_table.locate("textringmacron");
-        special_double[12]                  = the_parser.hash_table.locate("textsubwedge");
-        special_double[13]                  = the_parser.hash_table.locate("textacutewedge");
-        special_double[14]                  = the_parser.hash_table.locate("textsubarch");
-        special_double[15]                  = the_parser.hash_table.locate("textbrevemacron");
-        special_double[16]                  = the_parser.hash_table.locate("textsubbar");
-        special_double[17]                  = the_parser.hash_table.locate("textsubdot");
-        special_double[18]                  = the_parser.hash_table.locate("textdotacute");
-        special_double[19]                  = the_parser.hash_table.locate("textbottomtiebar");
+        special_double[0]                   = hash_table.locate("textsubgrave");
+        special_double[1]                   = hash_table.locate("textgravedot");
+        special_double[2]                   = hash_table.locate("textsubacute");
+        special_double[3]                   = hash_table.locate("textacutemacron");
+        special_double[4]                   = hash_table.locate("textsubcircum");
+        special_double[5]                   = hash_table.locate("textcircumdot");
+        special_double[6]                   = hash_table.locate("textsubtilde");
+        special_double[7]                   = hash_table.locate("texttildedot");
+        special_double[8]                   = hash_table.locate("textsubumlaut");
+        special_double[9]                   = hash_table.locate("textdoublegrave");
+        special_double[10]                  = hash_table.locate("textsubring");
+        special_double[11]                  = hash_table.locate("textringmacron");
+        special_double[12]                  = hash_table.locate("textsubwedge");
+        special_double[13]                  = hash_table.locate("textacutewedge");
+        special_double[14]                  = hash_table.locate("textsubarch");
+        special_double[15]                  = hash_table.locate("textbrevemacron");
+        special_double[16]                  = hash_table.locate("textsubbar");
+        special_double[17]                  = hash_table.locate("textsubdot");
+        special_double[18]                  = hash_table.locate("textdotacute");
+        special_double[19]                  = hash_table.locate("textbottomtiebar");
     }
 
     /// This creates the table with all the names.

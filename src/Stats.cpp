@@ -15,8 +15,8 @@ void Stats::token_stats() const {
                   m_large, m_small);
     if (nb_hdr != 0) spdlog::trace("Number of HdR: {}.", nb_hdr);
     spdlog::trace("Buffer merge {}.", m_merge); // \todo clean up
-    spdlog::trace("Macros created {}, deleted {}; hash size {} + {}; footnotes {}.", nb_macros, nb_macros_del,
-                  the_parser.hash_table.usage_normal, the_parser.hash_table.usage_unhashed, footnotes);
+    spdlog::trace("Macros created {}, deleted {}; hash size {} + {}; footnotes {}.", nb_macros, nb_macros_del, hash_table.usage_normal,
+                  hash_table.usage_unhashed, footnotes);
     spdlog::trace("Save stack +{} -{}.", level_up, level_down);
     spdlog::trace("Attribute list search {}({}) found {} in {} elements ({} at boot).", sh_find, sh_boot, sh_used,
                   the_main->the_stack->get_xid(), nb_xboot);

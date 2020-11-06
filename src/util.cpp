@@ -57,10 +57,10 @@ auto find_counter(const std::string &s) -> int {
     if (only_digits(s)) return counter_val(std::stoi(s));
     static Buffer B;
     B        = "c@" + s;
-    Token t  = the_parser.hash_table.locate(B);
+    Token t  = hash_table.locate(B);
     auto  cs = t.eqtb_loc();
-    if (the_parser.hash_table.eqtb[cs].val.cmd != assign_int_cmd) return -1;
-    return counter_val(int(the_parser.hash_table.eqtb[cs].val.chr) - int(count_reg_offset));
+    if (hash_table.eqtb[cs].val.cmd != assign_int_cmd) return -1;
+    return counter_val(int(hash_table.eqtb[cs].val.chr) - int(count_reg_offset));
 }
 
 auto only_digits(const std::string &s) -> bool {

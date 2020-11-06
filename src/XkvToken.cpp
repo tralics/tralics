@@ -33,7 +33,7 @@ auto XkvToken::ignore_this(std::vector<std::string> &igna) const -> bool {
 // Constructs the header, in xkv_header
 // Constructs the 3 macros in action
 void XkvToken::prepare(const std::string &fam) {
-    Hashtab &H = the_parser.hash_table;
+    Hashtab &H = hash_table;
     // We start constructing the three macros
     Buffer &B = txparser2_local_buf;
     action.push_back(H.def_token);
@@ -60,7 +60,7 @@ void XkvToken::prepare(const std::string &fam) {
 auto XkvToken::is_defined(const std::string &fam) const -> bool {
     xkv_ns::makehd(fam);
     txparser2_local_buf += keyname;
-    return the_parser.hash_table.is_defined(txparser2_local_buf);
+    return hash_table.is_defined(txparser2_local_buf);
 }
 
 // Returns true if must be saved; may set xkv_is_global
@@ -70,6 +70,6 @@ auto XkvToken::check_save() const -> bool {
         return true;
     }
     xkv_ns::find_aux(0);
-    if (!the_parser.hash_table.is_defined(txparser2_local_buf)) return false;
+    if (!hash_table.is_defined(txparser2_local_buf)) return false;
     return the_parser.find_a_save_key(keyname);
 }

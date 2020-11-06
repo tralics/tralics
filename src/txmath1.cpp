@@ -955,7 +955,7 @@ void MathElt::cv_noMLt() {
     case relax_cmd: {
         auto T = Token(get_font());
         auto x = T.hash_loc();
-        auto s = the_parser.hash_table[x];
+        auto s = hash_table[x];
         mathml_buffer.push_back_math_tag(s, pbm_empty);
         return;
     }
