@@ -1,6 +1,6 @@
-#include "tralics/ParamDataVector.h"
+#include "tralics/ConfigData.h"
 
-auto ParamDataVector::find_list(const std::string &name, bool creat) -> ParamDataList * {
+auto ConfigData::find_list(const std::string &name, bool creat) -> ParamDataList * {
     for (auto &p : *this)
         if (p.name == name) return &p;
     if (!creat) return nullptr;

@@ -1,7 +1,7 @@
 #include "tralics/NameMapper.h"
+#include "tralics/ConfigData.h"
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"
-#include "tralics/ParamDataVector.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include <spdlog/spdlog.h>

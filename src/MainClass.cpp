@@ -1,11 +1,11 @@
 #include "tralics/Bbl.h"
 #include "tralics/Bibtex.h"
+#include "tralics/ConfigData.h"
 #include "tralics/Line.h"
 #include "tralics/LineList.h"
 #include "tralics/Logger.h"
 #include "tralics/MathDataP.h"
 #include "tralics/NameMapper.h"
-#include "tralics/ParamDataVector.h"
 #include "tralics/Parser.h"
 #include "tralics/TitlePage.h"
 #include "tralics/TitlePageAux.h"
@@ -960,7 +960,6 @@ void MainClass::run(int argc, char **argv) {
     if (opt_doctype.empty()) opt_doctype = input_content.find_doctype();
 
     read_config_and_other();
-    for (auto &d : config_data) d.check_other();
     spdlog::trace("OK with the configuration file, dealing with the TeX file...");
     show_input_size();
     boot_bibtex();

@@ -11,9 +11,9 @@
 // This file contains the TeX parser of tralics It contains a lot of other
 // things, but not the XML generator.
 
+#include "tralics/ConfigData.h"
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"
-#include "tralics/ParamDataVector.h"
 #include "tralics/Saver.h"
 #include "tralics/XkvSetkeys.h"
 #include "tralics/util.h"
@@ -72,7 +72,7 @@ namespace {
         for (size_t i = 0; i < n; i++)
             if ((*X)[i].key == key) return (*X)[i].value;
         err_buf = fmt::format("Illegal value '{}' for {}\nUse one of:", key, name);
-        X->keys_to_buffer(err_buf);
+        for (const auto &i : *X) err_buf += " " + i.key;
         the_parser.signal_error(the_parser.err_tok, "illegal data");
         return "";
     }
