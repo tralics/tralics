@@ -519,7 +519,7 @@ auto Buffer::string_delims() -> bool {
 // Assumes the buffer is of the form foo/bar/etc,
 // with a final slash; returns the next item; Retval false if no string found
 
-auto Buffer::slash_separated(std::string &a) -> bool {
+auto Buffer::slash_separated(std::string &a) -> bool { // \todo std::optional<std::string>
     Buffer tmp;
     size_t p = 0;
     skip_sp_tab();

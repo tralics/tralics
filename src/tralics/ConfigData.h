@@ -3,10 +3,11 @@
 #include <unordered_map>
 #include <vector>
 
-using ParamDataList = std::unordered_map<std::string, std::string>;
+struct ParamDataList : public std::unordered_map<std::string, std::string> {
+    void interpret(const std::string &b);
+};
 
-class ConfigData : public std::unordered_map<std::string, ParamDataList> {
-public:
+struct ConfigData : public std::unordered_map<std::string, ParamDataList> {
     [[deprecated]] auto find_list(const std::string &name, bool creat) -> ParamDataList *;
 };
 

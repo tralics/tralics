@@ -10,33 +10,6 @@ namespace config_ns {
     auto start_interpret(Buffer &B, String s) -> bool;
 } // namespace config_ns
 
-namespace {
-    // This interprets Foo="Visiteur/foo/Chercheur//Enseignant//Technique//"
-    // This creates four slots in a table indexed by k. \todo goes in ParamData.h
-    void interpret_data_list(const std::string &b, const std::string &name) {
-        Buffer B(b);
-        auto * V = config_data.find_list(name, true);
-        if (config_ns::start_interpret(B, "//")) V->clear();
-        for (;;) {
-            std::string r1, r2;
-            if (!B.slash_separated(r1)) return;
-            if (!B.slash_separated(r2)) return;
-            if (r1.empty()) continue;
-            if (r2.empty()) r2 = r1;
-            the_log << name << ": " << r1 << " -> " << r2 << "\n";
-            (*V)[r1] = r2;
-        }
-    }
-
-    // --------------------------------------------------
-    // This interprets theme_vals = "foo bar"
-    // and all consequences
-
-    void interpret_list(const std::string &a, const std::string &b) {
-        if (!a.empty()) interpret_data_list(b, a);
-    }
-} // namespace
-
 auto NameMapper::operator[](const std::string &name) const -> std::string {
     if (auto i = dict.find(name); i != dict.end()) return i->second;
     return name;
@@ -288,7 +261,7 @@ void NameMapper::assign(const std::string &sa, const std::string &sb) {
         else
             set("np_separator", sb);
     }
-    if (sa.ends_with("_vals")) { interpret_list(sa.substr(0, n - 5), sb); }
+    if (sa.ends_with("_vals") && (sa.size() > 5)) { config_data[sa.substr(0, n - 5)].interpret(sb); }
     if (sa == "mml_font_normal") { set("mml@font@normal", sb); }
     if (sa == "mml_font_upright") { set("mml@font@upright", sb); }
     if (sa == "mml_font_bold") { set("mml@font@bold", sb); }
