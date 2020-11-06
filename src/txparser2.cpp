@@ -37,7 +37,6 @@ namespace {
         auto interpret(const std::string &s, Token T) -> bool;
     };
 
-    Buffer    mac_buf, buf_for_del;
     TokenList KV_list;
     TokenList xkv_action;
 } // namespace
@@ -276,8 +275,7 @@ void Parser::E_get_config(unsigned c) {
         res          = config_data.find_one_key(resource, key);
     } else
         res = config_data.format_keys(resource);
-    mac_buf     = res;
-    TokenList L = mac_buf.str_toks11(false);
+    TokenList L = Buffer(res).str_toks11(false);
     if (tracing_macros()) {
         Logger::finish_seq();
         the_log << T << " #1=" << resource;
@@ -1155,7 +1153,7 @@ void xkv_ns::merge(TokenList &W, TokenList &L, int type) {
 
 // This deletes L from W. Here L is a simple list of keys
 void xkv_ns::remove(TokenList &W, TokenList &L, int type) {
-    Buffer &B   = buf_for_del;
+    Buffer  B;
     Buffer &aux = txparser2_local_buf;
     the_parser.list_to_string_c(L, ",", ",", "Invalid key name list", B);
     Token     comma = hash_table.comma_token;
