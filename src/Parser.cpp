@@ -830,22 +830,6 @@ auto operator<<(std::ostream &X, const Image &Y) -> std::ostream &; // \todo els
 // via this function
 auto Parser::cur_line_to_istring() const -> std::string { return std::string(fmt::format("{}", get_cur_line())); }
 
-// This is the TeX command \string ; if esc is false, no escape char is inserted
-void Parser::tex_string(Buffer &B, Token T, bool esc) {
-    if (T.not_a_cmd())
-        B.push_back(T.char_val());
-    else {
-        auto x = T.val;
-        if (esc && x >= single_offset) B.insert_escape_char_raw();
-        if (x >= hash_offset)
-            B.append(hash_table[T.hash_loc()]);
-        else if (x < first_multitok_val)
-            B.push_back(T.char_val());
-        else
-            B.append(null_cs_name());
-    }
-}
-
 // Enter a new image file, if ok is false, do not increase the occ count
 void Parser::enter_file_in_table(const std::string &nm, bool ok) {
     for (auto &X : the_images) {

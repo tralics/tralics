@@ -1005,3 +1005,19 @@ auto Buffer::insert_space_here(size_t k) const -> bool {
     if (std::isupper(at(k - 1)) == 0) return false;
     return true;
 }
+
+// This is the TeX command \string ; if esc is false, no escape char is inserted
+void Buffer::tex_string(Token T, bool esc) {
+    if (T.not_a_cmd())
+        push_back(T.char_val());
+    else {
+        auto x = T.val;
+        if (esc && x >= single_offset) insert_escape_char_raw();
+        if (x >= hash_offset)
+            append(hash_table[T.hash_loc()]);
+        else if (x < first_multitok_val)
+            push_back(T.char_val());
+        else
+            append(null_cs_name());
+    }
+}

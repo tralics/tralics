@@ -1064,8 +1064,6 @@ private:
     void T_scantokens(TokenList &L);
     void tl_set_rescan(subtypes c);
     void Tl3_gen_from_ac(subtypes c);
-
-    static void tex_string(Buffer &B, Token T, bool esc);
 };
 
 inline Parser the_parser;

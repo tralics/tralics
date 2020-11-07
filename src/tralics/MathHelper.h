@@ -44,7 +44,6 @@ public:
         multi_labels.push_back(s);
         multi_labels_type.push_back(t);
     }
-    static void        finish_math_mem();
     void               set_type(bool b);
     [[nodiscard]] auto has_label() const -> bool { return seen_label || eqnum_status == 1 || eqnum_status == 3; }
     void               stats();

@@ -2172,7 +2172,7 @@ void Parser::E_convert() {
     case l3string_code: // like \string sans escapechar
     case string_code:
         if (get_token_o()) return; // error ?
-        tex_string(B, cur_tok, c == string_code);
+        B.tex_string(cur_tok, c == string_code);
         break;
     case meaning_c_code: // latex3
         token_show(3, B);

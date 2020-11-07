@@ -135,6 +135,7 @@ public:
     void skip_sp_tab_nl();
     void skip_sp_tab(); // \todo skip(const std::string&)
     void special_title(std::string s);
+    void tex_string(Token T, bool esc);
 
     auto push_back(Token T) -> bool;
     void push_back(char32_t c);

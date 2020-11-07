@@ -750,7 +750,7 @@ auto Parser::start_scan_math(Math &u, subtypes type) -> bool {
 // and look at the next (expanded) token. If it is no \par, we insert
 // a \noindent.
 void Parser::after_math(bool is_inline) {
-    MathHelper::finish_math_mem();
+    math_data.finish_math_mem();
     if (is_inline)
         leave_v_mode();
     else if (the_stack.is_frame("fbox"))
@@ -789,7 +789,7 @@ void Parser::finish_trivial_math(Xml *res) {
     }
     the_parser.my_stats.one_more_trivial();
     leave_v_mode();
-    MathHelper::finish_math_mem();
+    math_data.finish_math_mem();
     the_stack.top_stack()->add_tmp(gsl::not_null{res});
 }
 

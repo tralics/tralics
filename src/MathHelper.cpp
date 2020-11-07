@@ -58,10 +58,6 @@ void MathHelper::set_type(bool b) {
     pos_att      = b ? "inline" : "display";
 }
 
-// Destroys all math lists, and resets pointers,
-// for use with another math object
-void MathHelper::finish_math_mem() { math_data.finish_math_mem(); }
-
 // Defines how many equation numbers are to be created
 // If multi is true, more than one is allowed
 void MathHelper::check_for_eqnum(subtypes type, bool multi) {
