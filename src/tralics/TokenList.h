@@ -15,6 +15,7 @@ struct TokenList : public std::list<Token> {
     void fast_get_block(TokenList &res); // \todo rename
     auto get_a_param() -> TokenList;
     void prepend(TokenList &L) { splice(begin(), L); }
+    void url_hack();
 };
 
 auto operator<<(std::ostream &fp, const TokenList &L) -> std::ostream &;

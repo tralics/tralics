@@ -1418,23 +1418,6 @@ void Parser::new_xref(Xml *val, std::string v, bool err) {
     if (err && (v.empty() || v[0] == '(')) parse_error("Invalid URL value");
 }
 
-// Inserts a \allowbreak after dot and slash
-void Parser::url_hack(TokenList &L) {
-    TokenList R;
-    for (;;) {
-        if (L.empty()) {
-            L.swap(R);
-            return;
-        }
-        Token T = L.front();
-        R.push_back(T);
-        L.pop_front();
-        if (L.empty()) continue;                                        // no break needed at end.
-        if (T.is_slash_token() && L.front().is_slash_token()) continue; // no break at the start of http://
-        if ((T.is_slash_token() || T.val == other_t_offset + '.') && bib_allow_break) R.push_back(hash_table.allowbreak_token);
-    }
-}
-
 // Translates \url. If cur_chr !=0, it is rrrt
 // \rrrt{foo} is the same as \url{http://www.inria.fr/rrrt/foo.html}
 // \url{\rrrt{foo}} is the same as \rrrt{foo}
@@ -1472,12 +1455,12 @@ void Parser::T_url(subtypes c) {
     }
     X.push_front(hash_table.urlfont_token);
     if (in_href) {
-        if (!no_hack) url_hack(X);
+        if (!no_hack) X.url_hack();
         brace_me(X);
         T_translate(X);
     } else {
         std::string x = translate_list(Y)->convert_to_string();
-        if (!no_hack) url_hack(X);
+        if (!no_hack) X.url_hack();
         brace_me(X);
         Xml *y = translate_list(X);
         new_xref(y, x, true);

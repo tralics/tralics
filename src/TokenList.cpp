@@ -142,3 +142,17 @@ auto TokenList::get_a_param() -> TokenList {
     }
     return res;
 }
+
+// Inserts a \allowbreak after dot and slash
+void TokenList::url_hack() {
+    TokenList R;
+    while (!empty()) {
+        Token T = front();
+        pop_front();
+        R.push_back(T);
+        if (empty()) continue;                                        // no break needed at end.
+        if (T.is_slash_token() && front().is_slash_token()) continue; // no break at the start of http://
+        if ((T.is_slash_token() || T.val == other_t_offset + '.') && bib_allow_break) R.push_back(hash_table.allowbreak_token);
+    }
+    swap(R);
+}

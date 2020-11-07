@@ -990,7 +990,6 @@ private:
     void        unexpected_close_brace();
     void        unskip_group(String s);
     void        upn_eval(TokenList &l);
-    static void url_hack(TokenList &L);
     void        use_a_package(const std::string &name, bool type, const std::string &date, bool builtin);
     void        user_XML_fetch();
     void        user_XML_modify(subtypes c);
