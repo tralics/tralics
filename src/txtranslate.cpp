@@ -26,9 +26,6 @@ void readline_newprompt(std::string s); // in readline.cpp, but only used here
 
 namespace {
     Buffer current_head;
-    Buffer Tbuf;
-    Buffer Abuf;
-    Buffer tpa_buffer;
     Xml *  unfinished_par{nullptr};
     Token  T_theequation, T_theparentequation, T_at_theparentequation;
 
@@ -828,7 +825,6 @@ void Parser::T_keywords() {
 }
 
 // Handle the case of an argument of \includegraphics
-// Extension is in Abuf, if needed
 void Parser::no_extension(AttList &AL, const std::string &s) {
     long k  = -1;
     bool ok = true;
@@ -1526,9 +1522,9 @@ auto Parser::special_tpa_arg(const std::string &name, const std::string &y, bool
     bool        has_atts = tpa_buffer.look_at_space(y);
     std::string Y;
     if (!has_atts)
-        Y = std::string(y);
+        Y = y;
     else
-        Y = std::string(tpa_buffer);
+        Y = tpa_buffer;
     if (par) the_stack.set_v_mode();
     the_stack.push(Y, new Xml(Y, nullptr));
     if (has_q) the_stack.mark_omit_cell();
@@ -1630,8 +1626,8 @@ void Parser::T_reevaluate() {
         pop_level(bt_env); // closes current env
     }
     Tbuf.clear();
-    T_reevaluate0(L1, in_env);
-    T_reevaluate0(L2, in_env);
+    L1.reevaluate0(in_env);
+    L2.reevaluate0(in_env);
     if (tracing_commands()) {
         Logger::finish_seq();
         the_log << "{Reeval: " << Tbuf << "}\n";
@@ -1639,18 +1635,6 @@ void Parser::T_reevaluate() {
     push_input_stack("(reevaluate)", false, false);
     lines.push_front(Line(-1));
     lines.split_string(Tbuf, 0);
-}
-
-void Parser::T_reevaluate0(TokenList &L1, bool in_env) {
-    Abuf.clear();
-    while (!L1.empty()) {
-        Abuf << L1.front();
-        L1.pop_front();
-    }
-    if (in_env)
-        Tbuf.format("\\begin{{{}}}{}\\end{{{}}}%\n", Abuf, tpa_buffer, Abuf);
-    else
-        Tbuf.format("{}{{{}}}%\n", Abuf, tpa_buffer);
 }
 
 // Translates \uppercase, \MakeUpperCase, etc

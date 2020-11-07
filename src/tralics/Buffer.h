@@ -156,4 +156,4 @@ template <typename T> auto operator<<(Buffer &B, const T &t) -> Buffer & {
 }
 
 inline Buffer err_buf, name_buffer, field_buf, shbuf, scbuf, Thbuf1, errbuf, Trace, sec_buffer, tp_main_buf, aux_buffer,
-    txparser2_local_buf, tp_local_buf, tkbuf;
+    txparser2_local_buf, tp_local_buf, tkbuf, Tbuf, tpa_buffer;

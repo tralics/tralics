@@ -190,3 +190,15 @@ void TokenList::latex_ctr_fnsymbol(long n) {
     Parser::brace_me(*this);
     push_front(hash_table.ensuremath_token);
 }
+
+void TokenList::reevaluate0(bool in_env) {
+    Buffer Abuf;
+    while (!empty()) { // \todo range for loop and clear
+        Abuf << front();
+        pop_front();
+    }
+    if (in_env)
+        Tbuf.format("\\begin{{{}}}{}\\end{{{}}}%\n", Abuf, tpa_buffer, Abuf);
+    else
+        Tbuf.format("{}{{{}}}%\n", Abuf, tpa_buffer);
+}

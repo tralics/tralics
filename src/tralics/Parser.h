@@ -412,8 +412,6 @@ private:
     static void create_aux_file_and_run_pgm();
     static void mk_hi(String X, char c);
     static void show_box(Xml *X);
-    static void T_reevaluate0(TokenList &L1, bool in_env);
-    static void trace_scan_expr(String s, const SthInternal &v, char t, Token T);
     void        accent_err1();
     void        accent_err2(Token Y);
     void        accent_err3();

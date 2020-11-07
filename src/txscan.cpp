@@ -82,6 +82,13 @@ namespace {
         if ('a' <= c && c <= 'f') return c - 'a' + 10;
         return {};
     }
+
+    void trace_scan_expr(String s, const SthInternal &v, char t, Token T) {
+        if (the_parser.tracing_commands() && t != ' ') {
+            Logger::finish_seq();
+            the_log << "+" << s << " so far for " << T << t << ' ' << v << "\n";
+        }
+    }
 } // namespace
 
 namespace io_ns {
@@ -2259,13 +2266,6 @@ void Parser::scan_expr_arg(Token T, internal_type x) {
         scan_glue(it_glue, T);
     else
         scan_glue(it_mu, T);
-}
-
-void Parser::trace_scan_expr(String s, const SthInternal &v, char t, Token T) {
-    if (the_parser.tracing_commands() && t != ' ') {
-        Logger::finish_seq();
-        the_log << "+" << s << " so far for " << T << t << ' ' << v << "\n";
-    }
 }
 
 auto Parser::scan_expr(Token T, internal_type et) -> bool {

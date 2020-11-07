@@ -17,6 +17,7 @@ struct TokenList : public std::list<Token> {
     void prepend(TokenList &L) { splice(begin(), L); }
     void url_hack();
     void latex_ctr_fnsymbol(long n);
+    void reevaluate0(bool in_env);
 };
 
 auto operator<<(std::ostream &fp, const TokenList &L) -> std::ostream &;
