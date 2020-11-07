@@ -24,7 +24,7 @@ auto ConfigData::find_one_key(const std::string &name, const std::string &key) c
         the_parser.parse_error(the_parser.err_tok, "Configuration file does not define ", name, "no list");
         return "";
     }
-    auto &X = it->second;
+    const auto &X = it->second;
     if (auto it2 = X.find(key); it2 != X.end()) return it2->second;
     err_buf = fmt::format("Illegal value '{}' for {}\nUse one of:", key, name);
     for (const auto &i : X) err_buf += " " + i.first;

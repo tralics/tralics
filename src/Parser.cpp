@@ -831,7 +831,7 @@ auto operator<<(std::ostream &X, const Image &Y) -> std::ostream &; // \todo els
 auto Parser::cur_line_to_istring() const -> std::string { return std::string(fmt::format("{}", get_cur_line())); }
 
 // This is the TeX command \string ; if esc is false, no escape char is inserted
-void Parser::tex_string(Buffer &B, Token T, bool esc) const {
+void Parser::tex_string(Buffer &B, Token T, bool esc) {
     if (T.not_a_cmd())
         B.push_back(T.char_val());
     else {

@@ -182,8 +182,8 @@ auto Bibtex::find_field_pos(const std::string &s) -> field_pos {
 
 // This finds a citation that matches exactly S
 auto Bibtex::find_entry(const CitationKey &s) -> BibEntry * {
-    for (size_t i = 0; i < all_entries.size(); i++)
-        if (all_entries[i]->cite_key.is_same(s)) return all_entries[i];
+    for (auto &e : all_entries)
+        if (e->cite_key.is_same(s)) return e;
     return nullptr;
 }
 

@@ -193,7 +193,7 @@ void XkvSetkeys::run_key(Token mac, XkvToken &cur, const std::string &fam) {
         TokenList LL = cur.value;
         replace_pointers(LL);
         action.push_back(mac);
-        P->brace_me(LL);
+        Parser::brace_me(LL);
         more_action(LL);
     }
 }
@@ -274,7 +274,7 @@ void XkvSetkeys::run_default(const std::string &Key, Token mac, bool s) {
     if (s) save_key(Key, args);
     replace_pointers(args);
     action.push_back(mac);
-    P->brace_me(args);
+    Parser::brace_me(args);
     more_action(args);
 }
 

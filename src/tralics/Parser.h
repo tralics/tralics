@@ -21,6 +21,8 @@ class SaveAuxEnv;
 
 // This file holds the definition of the Parser class, which is the main
 // data structure of the Tralics translator.
+// \todo this should be broken up
+// \todo move the static methods where they would fit better
 
 class Parser {
     // Make all tables public
@@ -135,7 +137,7 @@ public:
     void               back_input() { TL.push_front(cur_tok); }
     void               back_input(Token t) { TL.push_front(t); }
     void               back_input(TokenList &L) { TL.splice(TL.begin(), L); }
-    void               brace_me(TokenList &L) const;
+    static void        brace_me(TokenList &L);
     [[nodiscard]] auto cur_centering() const -> size_t { return to_unsigned(eqtb_int_table[incentering_code].val); }
     [[nodiscard]] auto cur_lang_fr() const -> bool { return eqtb_int_table[language_code].val == 1; }
     [[nodiscard]] auto cur_lang_german() const -> bool { return eqtb_int_table[language_code].val == 2; }
@@ -500,7 +502,7 @@ private:
     void        E_ignore_n_args(bool vb, subtypes c);
     void        E_input(subtypes q);
     void        E_iwhile(subtypes cc);
-    void        E_latex_ctr_fnsymbol(long n, TokenList &res) const;
+    static void E_latex_ctr_fnsymbol(long n, TokenList &res);
     void        E_latex_ctr();
     void        E_loop();
     void        E_mathversion();
@@ -647,7 +649,7 @@ private:
     void        M_xray(subtypes c);
     void        mac_define(Token a, Macro *b, bool gbl, rd_flag redef, symcodes what);
     void        make_catcodes();
-    void        make_constants();
+    static void make_constants();
     void        make_token(String s);
     void        make_uclc_table();
     void        makelabel();
@@ -988,7 +990,7 @@ private:
     void        unexpected_close_brace();
     void        unskip_group(String s);
     void        upn_eval(TokenList &l);
-    void        url_hack(TokenList &L) const;
+    static void url_hack(TokenList &L);
     void        use_a_package(const std::string &name, bool type, const std::string &date, bool builtin);
     void        user_XML_fetch();
     void        user_XML_modify(subtypes c);
@@ -1060,9 +1062,10 @@ private:
     void l3_token_check(subtypes c);
     void L3_user_split_next_name(bool base);
     void T_scantokens(TokenList &L);
-    void tex_string(Buffer &B, Token T, bool esc) const;
     void tl_set_rescan(subtypes c);
     void Tl3_gen_from_ac(subtypes c);
+
+    static void tex_string(Buffer &B, Token T, bool esc);
 };
 
 inline Parser the_parser;

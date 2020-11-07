@@ -1419,7 +1419,7 @@ void Parser::new_xref(Xml *val, std::string v, bool err) {
 }
 
 // Inserts a \allowbreak after dot and slash
-void Parser::url_hack(TokenList &L) const {
+void Parser::url_hack(TokenList &L) {
     TokenList R;
     for (;;) {
         if (L.empty()) {

@@ -428,11 +428,11 @@ void classes_ns::unknown_option(KeyAndVal &cur, TokenList &res, TokenList &spec,
                 w.push_back(hash_table.relax_token);
             else
                 w.pop_front();
-            the_parser.brace_me(w);
+            Parser::brace_me(w);
             spec.push_back(hash_table.def_token);
             spec.push_back(hash_table.CurrentOptionValue_token);
             spec.splice(spec.end(), w);
-            the_parser.brace_me(u);
+            Parser::brace_me(u);
             spec.push_back(hash_table.def_token);
             spec.push_back(hash_table.CurrentOption_token);
             spec.splice(spec.end(), u);
@@ -442,7 +442,7 @@ void classes_ns::unknown_option(KeyAndVal &cur, TokenList &res, TokenList &spec,
             if (!res.empty()) res.push_back(Token(other_t_offset, ','));
             res.splice(res.end(), u);
         } else {
-            the_parser.brace_me(u);
+            Parser::brace_me(u);
             res.push_back(hash_table.def_token);
             res.push_back(hash_table.CurrentOption_token);
             res.splice(res.end(), u);

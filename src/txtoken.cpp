@@ -261,7 +261,7 @@ auto token_ns::string_to_list(const std::string &s, bool b) -> TokenList {
     Buffer &B   = buffer_for_log;
     B           = s;
     TokenList L = B.str_toks(nlt_space);
-    if (b) the_parser.brace_me(L);
+    if (b) Parser::brace_me(L);
     return L;
 }
 
@@ -391,7 +391,7 @@ void token_ns::get_unique(TokenList &L, Token &t1, Token &t2) {
 }
 
 // insert an open brace at the beginning, a close brace at the end.
-void Parser::brace_me(TokenList &L) const {
+void Parser::brace_me(TokenList &L) {
     L.push_front(hash_table.OB_token);
     L.push_back(hash_table.CB_token);
 }
