@@ -502,7 +502,6 @@ private:
     void        E_ignore_n_args(bool vb, subtypes c);
     void        E_input(subtypes q);
     void        E_iwhile(subtypes cc);
-    static void E_latex_ctr_fnsymbol(long n, TokenList &res);
     void        E_latex_ctr();
     void        E_loop();
     void        E_mathversion();
@@ -649,7 +648,6 @@ private:
     void        M_xray(subtypes c);
     void        mac_define(Token a, Macro *b, bool gbl, rd_flag redef, symcodes what);
     void        make_catcodes();
-    static void make_constants();
     void        make_token(String s);
     void        make_uclc_table();
     void        makelabel();

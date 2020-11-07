@@ -3573,7 +3573,7 @@ void Parser::E_latex_ctr() {
         if (n <= 0 || n > 9)
             counter_overflow(T, n, 9);
         else
-            E_latex_ctr_fnsymbol(n, res);
+            res.latex_ctr_fnsymbol(n);
     default:;
     }
     if (tracing_commands()) {
@@ -3581,40 +3581,6 @@ void Parser::E_latex_ctr() {
         the_log << T << "->" << res << "\n";
     }
     back_input(res);
-}
-
-// In some cases,  we must enter math mode.
-void Parser::E_latex_ctr_fnsymbol(long n, TokenList &res) {
-    if (n == 1) {
-        res.push_back(hash_table.star_token);
-        return;
-    }
-    if (n == 4) {
-        res.push_back(Token(other_t_offset, uchar('\247')));
-        return;
-    }
-    if (n == 5) {
-        res.push_back(Token(other_t_offset, uchar('\266')));
-        return;
-    }
-    if (n == 7) {
-        res.push_back(hash_table.star_token);
-        res.push_back(hash_table.star_token);
-        return;
-    }
-    if (n == 2) { res.push_back(hash_table.dagger_token); }
-    if (n == 6) { res.push_back(hash_table.vbar_token); }
-    if (n == 3) { res.push_back(hash_table.ddagger_token); }
-    if (n == 8) {
-        res.push_back(hash_table.dagger_token);
-        res.push_back(hash_table.dagger_token);
-    }
-    if (n == 9) {
-        res.push_back(hash_table.ddagger_token);
-        res.push_back(hash_table.ddagger_token);
-    }
-    brace_me(res);
-    res.push_front(hash_table.ensuremath_token);
 }
 
 // Implementation of \ifthenelse ------------------------------

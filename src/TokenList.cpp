@@ -156,3 +156,37 @@ void TokenList::url_hack() {
     }
     swap(R);
 }
+
+// In some cases, we must enter math mode.
+void TokenList::latex_ctr_fnsymbol(long n) {
+    if (n == 1) {
+        push_back(hash_table.star_token);
+        return;
+    }
+    if (n == 4) {
+        push_back(Token(other_t_offset, uchar('\247')));
+        return;
+    }
+    if (n == 5) {
+        push_back(Token(other_t_offset, uchar('\266')));
+        return;
+    }
+    if (n == 7) {
+        push_back(hash_table.star_token);
+        push_back(hash_table.star_token);
+        return;
+    }
+    if (n == 2) { push_back(hash_table.dagger_token); }
+    if (n == 6) { push_back(hash_table.vbar_token); }
+    if (n == 3) { push_back(hash_table.ddagger_token); }
+    if (n == 8) {
+        push_back(hash_table.dagger_token);
+        push_back(hash_table.dagger_token);
+    }
+    if (n == 9) {
+        push_back(hash_table.ddagger_token);
+        push_back(hash_table.ddagger_token);
+    }
+    Parser::brace_me(*this);
+    push_front(hash_table.ensuremath_token);
+}

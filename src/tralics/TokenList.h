@@ -16,6 +16,7 @@ struct TokenList : public std::list<Token> {
     auto get_a_param() -> TokenList;
     void prepend(TokenList &L) { splice(begin(), L); }
     void url_hack();
+    void latex_ctr_fnsymbol(long n);
 };
 
 auto operator<<(std::ostream &fp, const TokenList &L) -> std::ostream &;

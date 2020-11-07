@@ -806,6 +806,24 @@ namespace {
         if (acc == 't' && chr == '*') return special_double[19];
         return Token();
     }
+
+    // Creates some little constants.
+    void make_constants() {
+        hash_table.OB_token     = make_char_token('{', 1);
+        hash_table.CB_token     = make_char_token('}', 2);
+        hash_table.dollar_token = make_char_token('$', 3);
+        hash_table.hat_token    = Token(hat_t_offset, '^');
+        hash_table.zero_token   = Token(other_t_offset, '0');
+        Token(other_t_offset, '1');
+        hash_table.comma_token   = Token(other_t_offset, ',');
+        hash_table.equals_token  = Token(other_t_offset, '=');
+        hash_table.dot_token     = Token(other_t_offset, '.');
+        hash_table.star_token    = Token(other_t_offset, '*');
+        hash_table.plus_token    = Token(other_t_offset, '+');
+        hash_table.minus_token   = Token(other_t_offset, '-');
+        hash_table.space_token   = Token(space_token_val);
+        hash_table.newline_token = Token(newline_token_val);
+    }
 } // namespace
 
 // This command puts a double accent on a letter.
@@ -937,24 +955,6 @@ void Parser::boot_time() {
 void Parser::set_default_language(int v) {
     eqtb_int_table[language_code] = {v, 1};
     set_def_language_num(v);
-}
-
-// Creates some little constants.
-void Parser::make_constants() {
-    hash_table.OB_token     = make_char_token('{', 1);
-    hash_table.CB_token     = make_char_token('}', 2);
-    hash_table.dollar_token = make_char_token('$', 3);
-    hash_table.hat_token    = Token(hat_t_offset, '^');
-    hash_table.zero_token   = Token(other_t_offset, '0');
-    Token(other_t_offset, '1');
-    hash_table.comma_token   = Token(other_t_offset, ',');
-    hash_table.equals_token  = Token(other_t_offset, '=');
-    hash_table.dot_token     = Token(other_t_offset, '.');
-    hash_table.star_token    = Token(other_t_offset, '*');
-    hash_table.plus_token    = Token(other_t_offset, '+');
-    hash_table.minus_token   = Token(other_t_offset, '-');
-    hash_table.space_token   = Token(space_token_val);
-    hash_table.newline_token = Token(newline_token_val);
 }
 
 // This is for lower-case upper-case conversions.
