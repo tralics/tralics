@@ -294,7 +294,7 @@ void Parser::T_cst2(subtypes c) {
     if (c == Numero_code) process_string("N");
     flush_buffer();
     {
-        Xml *  res = Stack::fonts1("sup");
+        Xml *  res = fonts1("sup");
         String s   = "o";
         if (c == ier_code)
             s = "er";

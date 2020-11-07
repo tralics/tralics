@@ -5,10 +5,6 @@
 #include "tralics/globals.h"
 #include <spdlog/spdlog.h>
 
-void Stats::io_convert_stats() {
-    if (bad_chars != 0) spdlog::warn("Input conversion errors: {} char{}.", bad_chars, bad_chars > 1 ? "s" : "");
-}
-
 // Prints some statistics at end of run.
 void Stats::token_stats() const {
     spdlog::trace("Math stats: {} formulas, {} kernels, {} trivial, {} \\mbox, {} large, {} small.", m_cv, m_k, m_trivial, m_spec_box,
@@ -27,5 +23,5 @@ void Stats::token_stats() const {
         log_and_tty << file_list;
         log_and_tty << " ***********\n";
     }
-    io_convert_stats();
+    if (bad_chars != 0) spdlog::warn("Input conversion errors: {} char{}.", bad_chars, bad_chars > 1 ? "s" : "");
 }

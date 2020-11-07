@@ -72,16 +72,6 @@ void Stack::T_hline() {
     if (rid.has_attribute(the_names["cell_topborder"]).empty()) rid.add_top_rule();
 }
 
-// As above, but if B1 is not empty, adds b1 as attribute with value true.
-auto Stack::xml2_space(std::string elt, const std::string &b1, Xml *first_arg, Xml *second_arg) -> gsl::not_null<Xml *> {
-    auto tmp = gsl::not_null{new Xml(std::move(elt), nullptr)};
-    if (!b1.empty()) tmp->add_att(b1, the_names["true"]);
-    tmp->add_tmp(gsl::not_null{first_arg});
-    tmp->push_back_unless_nullptr(new Xml(std::string(" ")));
-    tmp->add_tmp(gsl::not_null{second_arg});
-    return tmp;
-}
-
 // Increases xid, makes sure that the attribute table is big enough
 auto Stack::next_xid(Xml *elt) -> Xid {
     attributes.emplace_back();
@@ -347,14 +337,6 @@ auto Stack::push_par(size_t k) -> Xid {
     check_font();
     if (k > 0) id.add_attribute(the_names["rend"], the_names.center(k));
     return id;
-}
-
-auto Stack::fonts1(const std::string &x) -> Xml * {
-    bool     w   = the_main->use_font_elt;
-    Xml *    res = new Xml(the_names[w ? x : "hi"], nullptr);
-    AttList &W   = res->id.get_att();
-    if (!w) W.push_back(the_names["rend"], the_names[x]);
-    return res;
 }
 
 // Fonts without argument like \it, (still ok ?)

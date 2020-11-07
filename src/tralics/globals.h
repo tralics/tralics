@@ -61,6 +61,7 @@ inline std::vector<std::string>                                     omitcite_lis
 auto        next_label_id() -> std::string;
 auto        null_cs_name() -> std::string;
 inline auto math_to_sub(math_list_type x) -> subtypes { return subtypes(x - fml_offset); }
+auto        fonts1(const std::string &x) -> Xml *;
 
 namespace arith_ns {
     auto nx_plus_y(long n, long x, long y) -> long;

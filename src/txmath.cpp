@@ -185,6 +185,16 @@ namespace {
         default: return del_invalid;
         }
     }
+
+    // As above, but if B1 is not empty, adds b1 as attribute with value true.
+    auto xml2_space(std::string elt, const std::string &b1, Xml *first_arg, Xml *second_arg) -> gsl::not_null<Xml *> {
+        auto tmp = gsl::not_null{new Xml(std::move(elt), nullptr)};
+        if (!b1.empty()) tmp->add_att(b1, the_names["true"]);
+        tmp->add_tmp(gsl::not_null{first_arg});
+        tmp->push_back_unless_nullptr(new Xml(std::string(" ")));
+        tmp->add_tmp(gsl::not_null{second_arg});
+        return tmp;
+    }
 } // namespace
 
 using namespace math_ns;
@@ -1906,10 +1916,10 @@ auto Math::trivial_math_index(symcodes cmd) -> Xml * {
         }
     } else
         return nullptr;
-    Xml *tmp  = Stack::fonts1(loc);
+    Xml *tmp  = fonts1(loc);
     Xml *xval = new Xml(std::string(B));
     if (have_font) {
-        Xml *tmp2 = Stack::fonts1(font_pos);
+        Xml *tmp2 = fonts1(font_pos);
         tmp2->push_back_unless_nullptr(xval);
         xval = tmp2;
     }
@@ -2506,7 +2516,7 @@ auto math_ns::finish_cv_special(bool isfrac, std::string s, const std::string &p
                                 int denalign, int style, size_t open, size_t close) -> Xml * {
     std::string Pos;
     if (pos != "cst_empty") Pos = the_names[pos];
-    auto R = Stack::xml2_space(std::move(s), Pos, a, b);
+    auto R = xml2_space(std::move(s), Pos, a, b);
     if (!sz.empty()) R->add_att(the_names["np_linethickness"], sz);
     if (isfrac) {
         if (numalign == 1) R->add_att(the_names["numalign"], the_names["left"]);

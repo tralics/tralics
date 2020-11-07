@@ -342,7 +342,7 @@ void Parser::arg_font(subtypes c) {
 // \textsuperscript, \textsubscript, etc.
 void Parser::T_fonts(const std::string &x) {
     leave_v_mode();
-    Xml *res = Stack::fonts1(x);
+    Xml *res = fonts1(x);
     the_stack.push(the_names["fonts"], res);
     T_arg();
     the_stack.pop(the_names["fonts"]);

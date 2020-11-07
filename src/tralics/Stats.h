@@ -49,8 +49,6 @@ public:
     void one_more_allocated() { m_allocated++; }
     void more_math_destroy(int k) { m_destroyed += k; }
     void one_more_merge() { m_merge++; }
-
-    void        token_stats() const;
-    static void io_convert_stats();
-    void        print_module_stats();
+    void token_stats() const;
+    void print_module_stats();
 };
