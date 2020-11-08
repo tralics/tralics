@@ -72,24 +72,6 @@ Parser::Parser() : cur_env_name("document") { // \todo move more to the header
 
 // saving and restoring things
 
-// Implements \currentgrouptype.
-// (see online doc for the meaning of the numbers).
-auto Parser::cur_group_type() -> int {
-    auto V = first_boundary();
-    switch (V) {
-    case bt_impossible: return 0;
-    case bt_brace: return 1;
-    case bt_math: return 9;
-    case bt_semisimple: return 14;
-    case bt_esemisimple: return 17;
-    case bt_env: return 18;
-    case bt_cell: return 19;
-    case bt_local: return 20;
-    case bt_tpa: return 21;
-    default: return 17;
-    }
-}
-
 auto operator<<(std::ostream &fp, const boundary_type &x) -> std::ostream & { return fp << bt_to_string(x); }
 
 // This adds a new element to the save stack.

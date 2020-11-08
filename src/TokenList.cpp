@@ -62,7 +62,7 @@ auto TokenList::expand_nct(size_t n, uchar c, int &MX, TokenList &body) -> bool 
         MX--;
         if (MX < 0) return true;
         for (size_t k = 0; k < n; k++) Table[k + 1] = get_a_param();
-        TokenList W = Parser::expand_mac_inner(body, Table.data());
+        TokenList W = body.expand_mac_inner(Table.data());
         splice(begin(), W);
     }
     splice(end(), res);
@@ -201,4 +201,25 @@ void TokenList::reevaluate0(bool in_env) {
         Tbuf.format("\\begin{{{}}}{}\\end{{{}}}%\n", Abuf, tpa_buffer, Abuf);
     else
         Tbuf.format("{}{{{}}}%\n", Abuf, tpa_buffer);
+}
+
+// This is the code that replaces arguments by values in the body.
+// note that Tex uses a completely different method (there is a stack with
+// all arguments of all macros; here we have just one table).
+auto TokenList::expand_mac_inner(TokenList *arguments) const -> TokenList {
+    const auto &W = *this;
+    auto        C = W.begin();
+    auto        E = W.end();
+    TokenList   res;
+    while (C != E) {
+        Token x = *C;
+        ++C;
+        if (x.is_a_char() && x.cmd_val() == eol_catcode) {
+            auto      k  = x.chr_val();
+            TokenList ww = arguments[k];
+            res.splice(res.end(), ww);
+        } else
+            res.push_back(x);
+    }
+    return res;
 }

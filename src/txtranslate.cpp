@@ -48,6 +48,19 @@ namespace {
         }
         return k;
     }
+
+    // Reads the tokens, converts them to dimension.
+    auto dimen_attrib(ScaledInt A) -> std::string {
+        Buffer B;
+        B.push_back(A, glue_spec_empty);
+        auto i = B.size();
+        if (i > 0 && B[i - 1] == '0') {
+            B.pop_back();
+            i--;
+        }
+        if (i > 0 && B[i - 1] == '.') B.pop_back();
+        return std::string(B);
+    }
 } // namespace
 
 namespace translate_ns {
@@ -1744,19 +1757,6 @@ void Parser::T_twoints(TokenList &A, TokenList &B) {
     if (cur_tok != match) bad_macro_prefix(cur_tok, match);
     A = read_until_nopar(hash_table.comma_token);
     B = read_until_nopar(Token(other_t_offset, ')'));
-}
-
-// Reads the tokens, converts them to dimension.
-auto Parser::dimen_attrib(ScaledInt A) -> std::string {
-    Buffer B;
-    B.push_back(A, glue_spec_empty);
-    auto i = B.size();
-    if (i > 0 && B[i - 1] == '0') {
-        B.pop_back();
-        i--;
-    }
-    if (i > 0 && B[i - 1] == '.') B.pop_back();
-    return std::string(B);
 }
 
 void Parser::back_input_pt(bool spec) {

@@ -1433,29 +1433,9 @@ void Parser::expand_mac(Macro &X) {
         }
         if (tracing_macros()) the_log << "#" << i << "<-" << arguments[i] << "\n";
     }
-    TokenList res = expand_mac_inner(X.body, arguments.data()); // \todo pass the array instead
+    TokenList res = X.body.expand_mac_inner(arguments.data()); // \todo pass the array instead
     if (spec == dt_brace) res.push_back(hash_table.OB_token);
     back_input(res);
-}
-
-// This is the code that replaces arguments by values in the body.
-// note that Tex uses a completely different method (there is a stack with
-// all arguments of all macros; here we have just one table).
-auto Parser::expand_mac_inner(const TokenList &W, TokenList *arguments) -> TokenList {
-    auto      C = W.begin();
-    auto      E = W.end();
-    TokenList res;
-    while (C != E) {
-        Token x = *C;
-        ++C;
-        if (x.is_a_char() && x.cmd_val() == eol_catcode) {
-            auto      k  = x.chr_val();
-            TokenList ww = arguments[k];
-            res.splice(res.end(), ww);
-        } else
-            res.push_back(x);
-    }
-    return res;
 }
 
 // -------------------
