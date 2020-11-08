@@ -40,19 +40,19 @@ void XkvToken::prepare(const std::string &fam) {
     action.push_back(H.xkv_tkey_token);
     B           = keyname;
     TokenList L = B.str_toks11(false);
-    Parser::brace_me(L);
+    L.brace_me();
     action.splice(action.end(), L);
     action.push_back(H.def_token);
     action.push_back(H.xkv_tfam_token);
     B = fam;
     L = B.str_toks11(false);
-    Parser::brace_me(L);
+    L.brace_me();
     action.splice(action.end(), L);
     action.push_back(H.def_token);
     action.push_back(H.xkv_header_token);
     xkv_ns::makehd(fam);
     L = B.str_toks11(false);
-    Parser::brace_me(L);
+    L.brace_me();
     action.splice(action.end(), L);
 }
 

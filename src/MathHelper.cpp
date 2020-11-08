@@ -80,7 +80,7 @@ void MathHelper::add_tag(TokenList &L) {
 void MathHelper::handle_tags() {
     TokenList L = tag_list;
     token_ns::remove_first_last_space(L);
-    Parser::brace_me(L);
+    L.brace_me();
     L.push_front(is_tag_starred ? hash_table.ytag1_token : hash_table.xtag1_token);
     the_parser.back_input(L);
     tag_list = TokenList();

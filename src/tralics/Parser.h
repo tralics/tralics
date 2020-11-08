@@ -139,7 +139,6 @@ public:
     void               back_input() { TL.push_front(cur_tok); }
     void               back_input(Token t) { TL.push_front(t); }
     void               back_input(TokenList &L) { TL.splice(TL.begin(), L); }
-    static void        brace_me(TokenList &L);
     [[nodiscard]] auto cur_centering() const -> size_t { return to_unsigned(eqtb_int_table[incentering_code].val); }
     [[nodiscard]] auto cur_lang_fr() const -> bool { return eqtb_int_table[language_code].val == 1; }
     [[nodiscard]] auto cur_lang_german() const -> bool { return eqtb_int_table[language_code].val == 2; }
@@ -218,7 +217,6 @@ public:
     void               parse_error(Token T, const std::string &s1, const std::string &s2);
     void               parse_error(Token T, const std::string &s1, Token s2, const std::string &s3, const std::string &s4);
     void               parse_error(Token T, const std::string &s1, const std::string &s2, const std::string &s3);
-    static void        print_cmd_chr(CmdChr X);
     void               remove_junk();
     void               scan_eqno(math_list_type type);
     void               scan_glue(internal_type level);

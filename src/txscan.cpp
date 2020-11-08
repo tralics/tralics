@@ -2420,7 +2420,7 @@ void Parser::scan_prime() {
         back_input();
         break;
     }
-    brace_me(L);
+    L.brace_me();
     back_input(L);
     back_input(hash_table.hat_token);
 }

@@ -19,6 +19,7 @@ struct TokenList : public std::list<Token> {
     void url_hack();
     void latex_ctr_fnsymbol(long n);
     void reevaluate0(bool in_env);
+    void brace_me();
 };
 
 auto operator<<(std::ostream &fp, const TokenList &L) -> std::ostream &;

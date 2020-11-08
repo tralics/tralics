@@ -187,7 +187,7 @@ void TokenList::latex_ctr_fnsymbol(long n) {
         push_back(hash_table.ddagger_token);
         push_back(hash_table.ddagger_token);
     }
-    Parser::brace_me(*this);
+    brace_me();
     push_front(hash_table.ensuremath_token);
 }
 
@@ -207,13 +207,8 @@ void TokenList::reevaluate0(bool in_env) {
 // note that Tex uses a completely different method (there is a stack with
 // all arguments of all macros; here we have just one table).
 auto TokenList::expand_mac_inner(TokenList *arguments) const -> TokenList {
-    const auto &W = *this;
-    auto        C = W.begin();
-    auto        E = W.end();
-    TokenList   res;
-    while (C != E) {
-        Token x = *C;
-        ++C;
+    TokenList res;
+    for (const auto &x : *this) {
         if (x.is_a_char() && x.cmd_val() == eol_catcode) {
             auto      k  = x.chr_val();
             TokenList ww = arguments[k];
@@ -222,4 +217,10 @@ auto TokenList::expand_mac_inner(TokenList *arguments) const -> TokenList {
             res.push_back(x);
     }
     return res;
+}
+
+// insert an open brace at the beginning, a close brace at the end.
+void TokenList::brace_me() {
+    push_front(hash_table.OB_token);
+    push_back(hash_table.CB_token);
 }

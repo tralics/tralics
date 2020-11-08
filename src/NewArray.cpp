@@ -260,7 +260,7 @@ void NewArray::run(Xid ID, bool main_fct) {
     cell.splice(cell.end(), v_list);
     u_list.clear();
     v_list.clear();
-    Parser::brace_me(cell);
+    cell.brace_me();
     P->back_input(cell);
 }
 

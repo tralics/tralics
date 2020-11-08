@@ -634,7 +634,7 @@ auto Parser::vb_tokens(char32_t test, TokenList &L, bool before) -> bool {
     }
     if (res.empty() && !before) res.push_back(hash_table.tilda_token);
     res.push_front(hash_table.verbatim_font);
-    brace_me(res);
+    res.brace_me();
     if (before)
         res.push_front(hash_table.verb_prefix_token);
     else
@@ -1179,7 +1179,7 @@ void Parser::M_declare_math_operator() {
     auto *     X = new Macro;
     TokenList &L = X->body;
     read_mac_body(L, false, 0);
-    brace_me(L);
+    L.brace_me();
     if (see_star) L.push_front(hash_table.star_token);
     L.push_front(hash_table.operatorname_token);
     mac_define(name, X, true, rd_if_undef, user_cmd);
@@ -1209,7 +1209,7 @@ void Parser::M_new_thm() {
     find_env_token(name, false);
     M_let_fast(cur_tok, hash_table.eth_token, true); // defines \endname
     Token thename_cmd;
-    brace_me(text);
+    text.brace_me();
     if (which_case == 4) {
         text.push_back(hash_table.OB_token);
         text.push_back(hash_table.CB_token);
@@ -1220,18 +1220,18 @@ void Parser::M_new_thm() {
         text.push_back(thename_cmd);
     }
     TokenList aux = toks_registers[theorem_bodyfont_code].val;
-    brace_me(aux);
+    aux.brace_me();
     text.splice(text.end(), aux);
     aux = token_ns::string_to_list(name, true);
     text.splice(text.end(), aux);
     if (which_case == 3) {
         aux = ctr;
-        brace_me(aux);
+        aux.brace_me();
     } else
         aux = token_ns::string_to_list(name, true);
     text.splice(text.end(), aux);
     aux = toks_registers[theorem_style_code].val;
-    brace_me(aux);
+    aux.brace_me();
     text.splice(text.end(), aux);
     text.push_front(hash_table.bth_token);
     new_macro(text, y, true); // This defines \name
@@ -1307,10 +1307,10 @@ void Parser::T_start_theorem(subtypes c) {
             name.splice(name.end(), opt);
             name.push_back(Token(other_t_offset, ')'));
         }
-        brace_me(name);
+        name.brace_me();
         TokenList font1 = toks_registers[theorem_headerfont_code].val;
         name.splice(name.begin(), font1);
-        brace_me(name);
+        name.brace_me();
         name.push_back(hash_table.space_token);
         name.splice(name.end(), font2);
         back_input(name);
@@ -1718,14 +1718,14 @@ void Parser::E_while(subtypes cc) {
         res.push_back(hash_table.fi_token);
         res.push_back(hash_table.fi_token);
         TokenList C = A;
-        brace_me(C);
+        C.brace_me();
         res.splice(res.begin(), C);
         res.push_front(hash_table.iwhilesw_token);
         res.splice(res.begin(), A);
     } else {
         if (cc == 0) A.push_back(hash_table.relax_token);
         TokenList D = A;
-        brace_me(D);
+        D.brace_me();
         res.push_front(hash_table.fi_token);
         res.splice(res.begin(), D);
         res.push_front(cc == 1 ? hash_table.iwhiledim_token : hash_table.iwhilenum_token);
@@ -1743,7 +1743,7 @@ void Parser::E_iwhile(subtypes cc) {
     Token     T = cur_tok;
     TokenList A = cc == 2 ? read_until(hash_table.fi_token) : read_arg();
     TokenList B = A;
-    brace_me(B);
+    B.brace_me();
     TokenList w;
     if (cc == 2) {
         w.push_front(hash_table.fi_token);
@@ -1900,7 +1900,7 @@ void Parser::E_addtoreset() {
     TokenList foo_list = read_arg_nopar();
     TokenList L        = read_arg_nopar();
     if (ne != nb_errs) return;
-    brace_me(foo_list);
+    foo_list.brace_me();
     if (my_csname("cl@", "", L, "\\@addtoreset")) return;
     Token cl_token = cur_tok; // \cl@bar
     get_token();              // get the \cl@bar token
@@ -1980,7 +1980,7 @@ void Parser::E_counter(subtypes c) {
     } else if (c == killcounter_code)
         L.push_back(hash_table.at_zero_token);
     else if (calc_loaded) {
-        brace_me(L);
+        L.brace_me();
         L.push_front(hash_table.calc_token);
     } else
         L.push_back(hash_table.relax_token);
@@ -2013,7 +2013,7 @@ void Parser::E_setlength(subtypes c) {
     if (calc_loaded) {
         L.push_back(t);
         if (c != 0) L.push_front(hash_table.advance_token);
-        brace_me(L);
+        L.brace_me();
         L.push_front(hash_table.calc_token);
     } else {
         L = read_arg();
@@ -2408,8 +2408,8 @@ void Parser::E_scan_up_down(TokenList &A, TokenList &B, TokenList &C, TokenList 
     } else
         back_input();
     read_until(hash_table.relax_token); // read all unused tokens
-    brace_me(df_up);
-    brace_me(df_down);
+    df_up.brace_me();
+    df_down.brace_me();
     res.splice(res.end(), df_down);
     res.splice(res.end(), df_up);
 }
@@ -2429,10 +2429,10 @@ void Parser::E_sideset() {
             C.push_back(hash_table.mmlprescripts_token);
             E_scan_up_down(none, none, A, C);
         }
-        brace_me(C);
+        C.brace_me();
         C.push_front(hash_table.mmlmultiscripts_token);
     }
-    brace_me(C);
+    C.brace_me();
     C.push_front(hash_table.mathop_token);
     C.push_back(hash_table.limits_token);
     if (tracing_commands()) {

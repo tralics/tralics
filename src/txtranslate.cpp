@@ -61,6 +61,28 @@ namespace {
         if (i > 0 && B[i - 1] == '.') B.pop_back();
         return std::string(B);
     }
+
+    // This prints a control sequence value on the log file.
+    // Used when tracing a command (catcode not 11 nor 12)
+    // used in the case {\let\x\y}, after the closing brace.
+    // It it's not a char, it's a command, with a plain ASCII name.
+    void print_cmd_chr(CmdChr X) {
+        String a = X.special_name();
+        auto   b = X.name();
+        if (a != nullptr) { // print both values
+            the_log << "\\" << b << " " << a;
+            return;
+        }
+        if (a != nullptr) { // chr
+            the_log << a;
+            char32_t y = X.chr;
+            Buffer & B = buffer_for_log;
+            B.clear();
+            B.out_log(y, the_main->log_encoding);
+            return;
+        }
+        the_log << "\\" << b;
+    }
 } // namespace
 
 namespace translate_ns {
@@ -454,7 +476,7 @@ void Parser::T_xmlelt(subtypes w) {
 void Parser::T_arg1(const std::string &y) {
     the_stack.push1(y);
     TokenList L = read_arg();
-    brace_me(L);
+    L.brace_me();
     T_translate(L);
     the_stack.pop(y);
 }
@@ -490,7 +512,7 @@ auto Parser::T_item_label(unsigned c) -> std::string {
         else
             return std::string();
     }
-    brace_me(L); // \item[\bf x] puts only x in \bf
+    L.brace_me(); // \item[\bf x] puts only x in \bf
     the_stack.push1(the_names["labelitem"]);
     the_stack.set_arg_mode();
     T_translate(L);
@@ -539,7 +561,7 @@ void Parser::start_paras(int y, const std::string &Y, bool star) {
     Xml *     title = the_stack.top_stack();
     TokenList L     = read_arg();
     if (module_p) check_module_title(L);
-    brace_me(L);
+    L.brace_me();
     T_translate(L);
     current_head.clear();
     title->put_in_buffer(current_head);
@@ -886,7 +908,7 @@ void Parser::no_extension(AttList &AL, const std::string &s) {
     }
     if (!ok) {
         TokenList L = Tbuf.str_toks11(false);
-        brace_me(L);
+        L.brace_me();
         back_input(L);
         back_input(hash_table.locate("@filedoterr"));
     }
@@ -1202,7 +1224,7 @@ auto Parser::internal_makebox() -> Xml * {
     the_stack.push1(the_names["mbox"]);
     Xml *     mbox = the_stack.top_stack();
     TokenList d    = read_arg();
-    brace_me(d);
+    d.brace_me();
     T_translate(d);
     the_stack.pop(the_names["mbox"]);
     return mbox;
@@ -1315,7 +1337,7 @@ void Parser::T_save_box(bool simple) {
         the_stack.set_arg_mode();
         Xml *     mbox = the_stack.top_stack();
         TokenList d    = read_arg();
-        brace_me(d);
+        d.brace_me();
         T_translate(d);
         the_stack.pop(the_names["mbox"]);
         if (ipos && ipos->empty()) ipos.reset();       // \todo this is ugly
@@ -1472,17 +1494,17 @@ void Parser::T_url(subtypes c) {
     bool      in_href = the_stack.is_frame2("hanl"); // \todo what is hanl?
     if (!in_href) {
         Y = X;
-        brace_me(Y);
+        Y.brace_me();
     }
     X.push_front(hash_table.urlfont_token);
     if (in_href) {
         if (!no_hack) X.url_hack();
-        brace_me(X);
+        X.brace_me();
         T_translate(X);
     } else {
         std::string x = translate_list(Y)->convert_to_string();
         if (!no_hack) X.url_hack();
-        brace_me(X);
+        X.brace_me();
         Xml *y = translate_list(X);
         new_xref(y, x, true);
     }
@@ -1563,9 +1585,9 @@ auto Parser::special_tpa_arg(const std::string &name, const std::string &y, bool
         if (!hash_table.eqtb[cur_tok.eqtb_loc()].val.is_undef()) {
             Token     T = cur_tok;
             TokenList L = read_arg();
-            brace_me(L);
+            L.brace_me();
             L.push_front(T);
-            brace_me(L);
+            L.brace_me();
             back_input(L);
         }
     }
@@ -1970,7 +1992,7 @@ void Parser::T_multiput() {
     back_input(w);
     auto      r = scan_int(C);
     TokenList L = read_arg();
-    brace_me(L);
+    L.brace_me();
     while (r > 0) {
         TokenList Lc = L;
         back_input(Lc);

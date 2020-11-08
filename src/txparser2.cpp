@@ -94,7 +94,7 @@ void Parser::T_fancy(String s, TokenList &L) {
     hash_table.eval_let("thepage", "inert@thepage");
     back_input(hash_table.CB_token);
     TokenList tmp = L; // make a copy of the list
-    brace_me(tmp);
+    tmp.brace_me();
     back_input(tmp);
     TokenList sl = token_ns::string_to_list(s, true);
     back_input(sl);
@@ -483,7 +483,7 @@ void Parser::T_xkv_for(subtypes c) {
         TokenList function = read_arg();
         expand_first(L);
         if (L.empty()) break;
-        brace_me(function);
+        function.brace_me();
         res.push_back(hash_table.forloop_token);
         res.splice(res.end(), L);
         res.push_back(comma);
@@ -506,9 +506,9 @@ void Parser::T_xkv_for(subtypes c) {
         TokenList aux = function;
         res.splice(res.end(), aux);
         if (token_ns::has_a_single_token(next_entry, nil)) break;
-        brace_me(next_entry);
+        next_entry.brace_me();
         TokenList aux2 = function;
-        brace_me(function);
+        function.brace_me();
         res.push_back(hash_table.def_token);
         res.push_back(cmd);
         res.splice(res.end(), next_entry);
@@ -526,7 +526,7 @@ void Parser::T_xkv_for(subtypes c) {
         TokenList L        = read_until(hash_table.do_token);
         TokenList function = read_arg();
         if (token_ns::has_a_single_token(L, hash_table.space_token)) break;
-        brace_me(function);
+        function.brace_me();
         res.push_back(hash_table.tforloop_token);
         res.splice(res.end(), L);
         res.push_back(nil);
@@ -561,7 +561,7 @@ void Parser::T_xkv_for(subtypes c) {
         new_macro(entry, cmd);
         TokenList aux = function;
         res.splice(res.end(), aux);
-        brace_me(function);
+        function.brace_me();
         res.push_back(hash_table.relax_token);
         res.push_back(c == iforloop_code ? hash_table.iforloop_token : hash_table.tforloop_token);
         res.splice(res.end(), remainder);
@@ -579,7 +579,7 @@ void Parser::T_xkv_for(subtypes c) {
         TokenList cmd      = read_arg();
         TokenList function = read_arg();
         if (L.empty() && (c == xkv_for_n_code || c == xkv_for_o_code)) break;
-        brace_me(function);
+        function.brace_me();
         res.push_front(hash_table.xkv_for_i_token);
         res.splice(res.end(), cmd);
         res.splice(res.end(), function);
@@ -596,7 +596,7 @@ void Parser::T_xkv_for(subtypes c) {
         if (token_ns::has_a_single_token(entry, nil)) break;
         new_macro(entry, cmd);
         TokenList aux = function;
-        brace_me(function);
+        function.brace_me();
         res.splice(res.end(), aux);
         res.push_back(hash_table.xkv_for_i_token);
         res.push_back(cmd);
@@ -647,7 +647,7 @@ void Parser::T_testopt() {
     skip_initial_space();
     if (cur_tok.is_valid()) back_input();
     if (!cur_tok.is_open_bracket()) {
-        brace_me(R);
+        R.brace_me();
         R.push_front(Token(other_t_offset, '['));
         R.push_back(Token(other_t_offset, ']'));
         back_input(R);
@@ -680,8 +680,8 @@ void Parser::expand_twoargs() {
     TokenList L = read_arg();
     TokenList M = read_arg();
     TokenList N = read_arg();
-    brace_me(M);
-    brace_me(N);
+    M.brace_me();
+    N.brace_me();
     M.splice(M.end(), N);
     read_toks_edef(M);
     back_input(M);
@@ -821,7 +821,7 @@ void Parser::define_cmd_key(subtypes c) {
         LL.push_front(hash_table.OB_token);
         LL.push_front(cmd);
         LL.push_front(hash_table.locate("def"));
-        brace_me(LL);
+        LL.brace_me();
         back_input(LL);
         auto *X = new Macro;
         X->set_nbargs(1);
@@ -849,13 +849,13 @@ void Parser::define_choice_key() {
     if (if_plus) {
         TokenList x = read_arg();
         TokenList y = read_arg();
-        brace_me(x);
-        brace_me(y);
+        x.brace_me();
+        y.brace_me();
         F.splice(F.end(), x);
         F.splice(F.end(), y);
     } else {
         F = read_arg();
-        brace_me(F);
+        F.brace_me();
     }
     TokenList body;
     body.push_back(hash_table.xkv_cc_token);
@@ -867,12 +867,12 @@ void Parser::define_choice_key() {
     TokenList argument;
     argument.push_back(make_char_token('#', 6));
     argument.push_back(Token(other_t_offset, '1'));
-    brace_me(argument);
+    argument.brace_me();
     body.splice(body.end(), argument);
-    brace_me(allowed);
+    allowed.brace_me();
     body.splice(body.end(), allowed);
     body.splice(body.end(), F);
-    brace_me(body);
+    body.brace_me();
     back_input(body);
     internal_define_key(T);
 }
@@ -965,15 +965,15 @@ void Parser::define_bool_key(subtypes c) {
             TokenList add1 = read_arg();
             u.splice(u.end(), add1);
         }
-        brace_me(u);
+        u.brace_me();
         TokenList LL;
         LL.splice(LL.end(), u);
         if (if_plus) {
             TokenList add2 = read_arg();
-            brace_me(add2);
+            add2.brace_me();
             LL.splice(LL.end(), add2);
         }
-        brace_me(v);
+        v.brace_me();
         LL.splice(LL.begin(), v);
         LL.push_front(hash_table.CB_token);
         LL.push_front(Token(other_t_offset, '1'));
@@ -985,7 +985,7 @@ void Parser::define_bool_key(subtypes c) {
         if (if_plus) LL.push_front(Token(other_t_offset, '+'));
         LL.push_front(Token(other_t_offset, '*'));
         LL.push_front(hash_table.xkv_cc_token);
-        brace_me(LL);
+        LL.brace_me();
         back_input(LL);
         auto *X = new Macro;
         X->set_nbargs(1);
@@ -1033,13 +1033,13 @@ void Parser::disable_keys() {
             B.append("@default");
             if (hash_table.is_defined(B)) {
                 TokenList L;
-                brace_me(L);
+                L.brace_me();
                 L.push_front(T);
                 new_macro(L, hash_table.last_tok);
             }
             B           = "Key `" + Key + "' has been disabled";
             TokenList L = B.str_toks(nlt_space); // should be irrelevant
-            brace_me(L);
+            L.brace_me();
             L.push_front(hash_table.xkv_warn_token);
             auto *X = new Macro(L);
             X->set_nbargs(1);
@@ -1202,7 +1202,7 @@ void Parser::xkv_merge(bool gbl, int type, TokenList &L, bool mg) {
 
 // Assume txparser2_local_buf contains the name of T without the extension
 void Parser::internal_define_key_default(Token T, TokenList &L) {
-    brace_me(L);
+    L.brace_me();
     L.push_front(T);
     txparser2_local_buf.append("@default");
     cur_tok = hash_table.locate(txparser2_local_buf);
@@ -1338,7 +1338,7 @@ void Parser::xkv_process_options() {
     data.special_fams();
     TokenList uo;
     TokenList L = classes_ns::cur_options(s, uo, false);
-    brace_me(L);
+    L.brace_me();
     back_input(L);
     data.fetch_keys(true);
     data.set_aux();
@@ -1758,7 +1758,7 @@ void Parser::dbl_arg() {
     if (cur_tok.is_valid()) back_input();
     if (!cur_tok.is_open_bracket()) {
         TokenList A = read_arg();
-        brace_me(A);
+        A.brace_me();
         TokenList B = A;
         B.push_front(Token(other_t_offset, '['));
         B.push_back(Token(other_t_offset, ']'));
@@ -1793,7 +1793,7 @@ void Parser::numberwithin() {
     auto barname      = b.substr(2);
     b                 = "cl@" + barname;
     Token clbar_token = hash_table.locate(b);
-    brace_me(A);
+    A.brace_me();
     TokenList B = A;
     M_cons(clbar_token, B);
     b            = "the" + barname;
@@ -1826,7 +1826,7 @@ auto Parser::make_label_inner(const std::string &name) -> std::string {
 // the name of the counter is in txparser2_local_buf abd L
 void Parser::refstepcounter_inner(TokenList &L, bool star) {
     std::string name = txparser2_local_buf;
-    brace_me(L);
+    L.brace_me();
     L.push_front(hash_table.stepcounter_token);
     T_translate(L);
     std::string v = make_label_inner(name);
@@ -1959,7 +1959,7 @@ auto Parser::optional_enumerate(TokenList &L, const std::string &ctr) -> bool {
     mac_define(t, X, false, rd_always, user_cmd);
     B                       = ctr;
     TokenList the_ctr_value = B.str_toks11(true);
-    brace_me(the_ctr_value);
+    the_ctr_value.brace_me();
     the_ctr_value.push_front(cmd);
     auto *Y = new Macro(the_ctr_value);
     mac_define(the_ctr, Y, false, rd_always, user_cmd);

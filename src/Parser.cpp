@@ -1538,7 +1538,7 @@ void Parser::more_bootstrap() {
     L.push_back(hash_table.locate("sloppy"));
     new_prim("sloppypar", L);
     L.clear();
-    brace_me(L);
+    L.brace_me();
     T = hash_table.locate("hbox");
     L.push_front(T);
     new_prim("null", L);
@@ -1809,7 +1809,7 @@ void Parser::E_accent() {
     expansion.push_back(res);
     if (spec) {
         expansion.push_front(Y);
-        brace_me(expansion);
+        expansion.brace_me();
         expansion.push_front(hash_table.composite_token);
     }
 

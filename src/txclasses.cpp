@@ -428,11 +428,11 @@ void classes_ns::unknown_option(KeyAndVal &cur, TokenList &res, TokenList &spec,
                 w.push_back(hash_table.relax_token);
             else
                 w.pop_front();
-            Parser::brace_me(w);
+            w.brace_me();
             spec.push_back(hash_table.def_token);
             spec.push_back(hash_table.CurrentOptionValue_token);
             spec.splice(spec.end(), w);
-            Parser::brace_me(u);
+            u.brace_me();
             spec.push_back(hash_table.def_token);
             spec.push_back(hash_table.CurrentOption_token);
             spec.splice(spec.end(), u);
@@ -442,7 +442,7 @@ void classes_ns::unknown_option(KeyAndVal &cur, TokenList &res, TokenList &spec,
             if (!res.empty()) res.push_back(Token(other_t_offset, ','));
             res.splice(res.end(), u);
         } else {
-            Parser::brace_me(u);
+            u.brace_me();
             res.push_back(hash_table.def_token);
             res.push_back(hash_table.CurrentOption_token);
             res.splice(res.end(), u);
@@ -1009,7 +1009,7 @@ void Parser::finish_kvo_bool(Token T, const std::string &fam, const std::string 
     aux           = string_to_list(s, true);
     L.splice(L.begin(), aux);
     L.push_front(hash_table.locate("KVO@boolkey"));
-    brace_me(L);
+    L.brace_me();
     aux = string_to_list("[true]", false);
     L.splice(L.begin(), aux);
     call_define_key(L, T, arg, fam);
@@ -1056,9 +1056,9 @@ void Parser::kvo_string_opt() {
     add_sharp(L);
     L.push_front(T);
     L.push_front(hash_table.locate("def"));
-    brace_me(L);
+    L.brace_me();
     if (has_default) {
-        brace_me(defval);
+        defval.brace_me();
         defval.push_front(Token(other_t_offset, '['));
         defval.push_back(Token(other_t_offset, ']'));
         L.splice(L.begin(), defval);
@@ -1080,7 +1080,7 @@ void Parser::kvo_process() {
     std::string fam = ok ? kvo_getfam() : sE_arg_nopar();
     TokenList   spec;
     TokenList   L = classes_ns::cur_options(true, spec, true);
-    brace_me(L);
+    L.brace_me();
     back_input(L);
     TokenList aux = string_to_list(fam, true);
     back_input(aux);
@@ -1111,7 +1111,7 @@ void Parser::kvo_void_opt() {
     aux           = string_to_list(s, true);
     L.splice(L.begin(), aux);
     L.push_front(hash_table.locate("KVO@voidkey"));
-    brace_me(L);
+    L.brace_me();
     aux = string_to_list("[@VOID@]", false);
     L.splice(L.begin(), aux);
     call_define_key(L, cmd, arg, fam);

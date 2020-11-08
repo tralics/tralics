@@ -297,7 +297,7 @@ void Parser::L3_generate_form(subtypes c, TokenList parms, TokenList body, subty
     default:;
     }
     B.l3_fabricate_cond(tok_base, tok_sig, c);
-    brace_me(body);
+    body.brace_me();
     back_input(body);
     back_input(parms);
     back_input(hash_table.locate(B));
@@ -1142,7 +1142,7 @@ void Parser::E_l3expand_aux(subtypes c) {
     case l3expo_code: // \::o  argument is processed
     case l3expf_code: // \::f ditto
     case l3expx_code: // \::x ditto
-        brace_me(L3);
+        L3.brace_me();
         break;
     case l3expc_code: // \::c is \csname#3\csname
         get_token();
@@ -1151,7 +1151,7 @@ void Parser::E_l3expand_aux(subtypes c) {
     case l3expV_code: // \::V case of a list
     case l3expv_code: // \::v case of a csname unread
         l3_expand_Vv(L3, c == l3expv_code);
-        brace_me(L3);
+        L3.brace_me();
         break;
     case l3expVu_code: // \::v_unbraced idem, unbraced
     case l3expvu_code: l3_expand_Vv(L3, c == l3expvu_code); break;
@@ -1164,7 +1164,7 @@ void Parser::E_l3expand_aux(subtypes c) {
     if (!L1.empty()) {
         res.splice(res.end(), L1);
         res.push_back(T3col_tok);
-        brace_me(L2);
+        L2.brace_me();
     }
     res.splice(res.end(), L2);
     if (tracing_macros()) {
@@ -1213,7 +1213,7 @@ void Parser::E_l3noexpand(subtypes c) {
         //  case l3expx_code: not needed, everything is expanded
     default: return; // should not happen
     }
-    brace_me(L3);
+    L3.brace_me();
     res.push_back(T_exp_notn);
     res.splice(res.end(), L3);
     if (b) {
@@ -1284,7 +1284,7 @@ void Parser::l3_expand_Vv(TokenList &L, bool spec) {
 // used in the next function
 #define INSERT res.splice(res.end(), L)
 #define INSERT_B                                                                                                                           \
-    brace_me(L);                                                                                                                           \
+    (L.brace_me());                                                                                                                        \
     INSERT
 #define EXPAND_o                                                                                                                           \
     l3_expand_o(L);                                                                                                                        \

@@ -1037,10 +1037,10 @@ void Parser::scan_math(size_t res, math_list_type type) {
                 if (h) {
                     c           = mathlabel_code;
                     TokenList L = token_ns::string_to_list(a, true);
-                    // brace_me(L);
+                    // L.brace_me();
                     back_input(L);
                     TokenList L1 = token_ns::string_to_list(s, true);
-                    // brace_me(L1);
+                    // L1.brace_me();
                     back_input(L1);
                     math_list_type cc = sub_to_math(c);
                     Token          ct = cur_tok;
@@ -1378,7 +1378,7 @@ void Parser::scan_math_tag(subtypes c) {
         L.push_front(hash_table.relax_token);
         L.push_front(hash_table.ref_token);
         L.push_front(hash_table.let_token);
-        brace_me(L);
+        L.brace_me();
         std::string val = sT_translate(L);
         cmi.new_multi_label(val, (is_star ? 3 : 2));
         return;
@@ -1388,7 +1388,7 @@ void Parser::scan_math_tag(subtypes c) {
         return;
     }
     if (c == 0) {
-        brace_me(L);
+        L.brace_me();
         L.remove_if([](const Token &m) { return m.is_math_shift(); });
         L.push_front(is_star ? hash_table.ytag_token : hash_table.xtag_token);
         back_input(L);
@@ -1426,7 +1426,7 @@ void Parser::scan_eqno(math_list_type type) {
         L.push_back(cur_tok);
     }
     back_input();
-    brace_me(L);
+    L.brace_me();
     L.push_front(hash_table.ytag_token);
     back_input(L);
 }
@@ -1607,7 +1607,7 @@ void Parser::scan_math_mi(size_t res, subtypes c, subtypes k, CmdChr W) {
         if (!cur_tok.is_open_bracket()) break;
         TokenList L;
         read_optarg_nopar(L);
-        brace_me(L);
+        L.brace_me();
         back_input(L);
         subtypes r1 = math_argument(0, ct);
         T.emplace_back(CmdChr(math_list_cmd, r1), subtypes(math_argument_cd));
@@ -1643,7 +1643,7 @@ void Parser::interpret_mathchoice_cmd(size_t res, subtypes k, CmdChr W) {
 void Parser::opt_to_mandatory() {
     TokenList L;
     read_optarg(L);
-    brace_me(L);
+    L.brace_me();
     back_input(L);
 }
 
