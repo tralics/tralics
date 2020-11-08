@@ -18,10 +18,11 @@
 #include <fmt/format.h>
 
 namespace {
-    std::vector<std::unique_ptr<SaveAuxBase>> the_save_stack;
+    void mk_hi(String x, char c) {
+        the_parser.LC();
+        the_parser.unprocessed_xml.format("<hi rend='{}'>{}</hi>", x, c);
+    }
 } // namespace
-
-// --------------------------------------------------
 
 auto to_string(save_type v) -> String { // \todo std::string
     switch (v) {
@@ -314,42 +315,6 @@ void Parser::save_font() {
     cur_font.set_level(cur_level);
 }
 
-// returns the type of the first boundary
-// sets first_boundary_loc if a boundary has been seen.
-
-static int first_boundary_loc = 0;
-auto       Parser::first_boundary() -> boundary_type {
-    auto n = the_save_stack.size();
-    for (size_t i = n; i > 0; i--) {
-        SaveAuxBase *p = the_save_stack[i - 1].get();
-        if (p == nullptr) continue;
-        if (p->type != st_boundary) continue;
-        first_boundary_loc = p->line;
-        return dynamic_cast<SaveAuxBoundary *>(p)->val;
-    }
-    return bt_impossible;
-}
-
-// case where a table preamble says  >{}c<{xx$yy} and we see &
-// here xy can be } or \endgroup
-auto Parser::stack_math_in_cell() -> bool {
-    auto n     = the_save_stack.size();
-    bool first = true;
-    for (size_t i = n; i > 0; i--) {
-        SaveAuxBase *p = the_save_stack[i - 1].get();
-        if (p->type != st_boundary) continue;
-        auto cur = dynamic_cast<SaveAuxBoundary *>(p)->val;
-        if (cur == bt_brace || cur == bt_semisimple) continue;
-        if (first) {
-            if (cur != bt_math) return false;
-            first = false;
-            continue;
-        }
-        return cur == bt_cell;
-    }
-    return false;
-}
-
 void Parser::dump_save_stack() const {
     int  L = cur_level - 1;
     auto n = the_save_stack.size();
@@ -492,30 +457,6 @@ void Parser::final_checks() {
     the_log << B << ".\n";
 }
 
-// Returns the slot associated to the env S
-auto Parser::is_env_on_stack(const std::string &s) -> SaveAuxEnv * {
-    auto n = the_save_stack.size();
-    for (size_t i = n; i > 0; i--) {
-        SaveAuxBase *p = the_save_stack[i - 1].get();
-        if (p == nullptr) continue; // \todo this should never happen but it does on linux+clang9
-        if (p->type != st_env) continue;
-        auto *q = dynamic_cast<SaveAuxEnv *>(p);
-        if (q->name == s) return q;
-    }
-    return nullptr;
-}
-
-// Returns the number of environments
-auto Parser::nb_env_on_stack() -> int {
-    auto n = the_save_stack.size();
-    int  k = 0;
-    for (size_t i = n; i > 0; i--) {
-        SaveAuxBase *p = the_save_stack[i - 1].get();
-        if (p->type == st_env) ++k;
-    }
-    return k;
-}
-
 // ----------------------------------------------------------------------
 // TIPA macros
 void Parser::T_ipa(subtypes c) {
@@ -524,11 +465,6 @@ void Parser::T_ipa(subtypes c) {
     if (c == 2) tipa_colon();
     if (c == 3) tipa_exclam();
     if (c == 4) tipa_normal();
-}
-
-void Parser::mk_hi(String x, char c) {
-    the_parser.LC();
-    the_parser.unprocessed_xml.format("<hi rend='{}'>{}</hi>", x, c);
 }
 
 void Parser::tipa_star() {

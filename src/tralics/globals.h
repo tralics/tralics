@@ -12,6 +12,7 @@
 
 struct WordList;
 class LabelInfo;
+class SaveAuxEnv;
 
 inline bool                                                         bad_minus{false};
 inline bool                                                         bib_allow_break{true};
@@ -30,6 +31,7 @@ inline bool                                                         xkv_is_save;
 inline char32_t                                                     leftquote_val{'`'};
 inline char32_t                                                     rightquote_val{'\''};
 inline int                                                          bad_chars{0};
+inline int                                                          first_boundary_loc = 0;
 inline int                                                          cur_entry_line;    // position of entry in source file
 inline int                                                          cur_file_line{0};  // current line number
 inline int                                                          init_file_pos = 0; // position in init file
@@ -59,9 +61,10 @@ inline std::vector<std::string>                                     omitcite_lis
 // \todo next are global functions, should we do something with them?
 
 auto        next_label_id() -> std::string;
-auto        null_cs_name() -> std::string;
 inline auto math_to_sub(math_list_type x) -> subtypes { return subtypes(x - fml_offset); }
 auto        fonts1(const std::string &x) -> Xml *;
+auto        first_boundary() -> boundary_type;
+auto        is_env_on_stack(const std::string &s) -> SaveAuxEnv *;
 
 namespace arith_ns {
     auto nx_plus_y(long n, long x, long y) -> long;

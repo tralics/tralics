@@ -16,6 +16,7 @@
 #include "tralics/MathDataP.h"
 #include "tralics/MathHelper.h"
 #include "tralics/Parser.h"
+#include "tralics/SaveAux.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include <algorithm>
@@ -194,6 +195,26 @@ namespace {
         tmp->push_back_unless_nullptr(new Xml(std::string(" ")));
         tmp->add_tmp(gsl::not_null{second_arg});
         return tmp;
+    }
+
+    // case where a table preamble says  >{}c<{xx$yy} and we see &
+    // here xy can be } or \endgroup
+    auto stack_math_in_cell() -> bool {
+        auto n     = the_save_stack.size();
+        bool first = true;
+        for (size_t i = n; i > 0; i--) {
+            SaveAuxBase *p = the_save_stack[i - 1].get();
+            if (p->type != st_boundary) continue;
+            auto cur = dynamic_cast<SaveAuxBoundary *>(p)->val;
+            if (cur == bt_brace || cur == bt_semisimple) continue;
+            if (first) {
+                if (cur != bt_math) return false;
+                first = false;
+                continue;
+            }
+            return cur == bt_cell;
+        }
+        return false;
     }
 } // namespace
 
@@ -792,9 +813,6 @@ void Parser::finish_trivial_math(Xml *res) {
     math_data.finish_math_mem();
     the_stack.top_stack()->add_tmp(gsl::not_null{res});
 }
-
-// Needed for implementation of \ifinner
-auto Parser::is_inner_math() -> bool { return cmi.is_inline(); }
 
 // Toplevel function. Reads and translates a formula.
 // Argument as in start_scan_math

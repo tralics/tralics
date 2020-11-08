@@ -17,6 +17,8 @@ public:
     virtual ~SaveAuxBase() = default;
 };
 
+inline std::vector<std::unique_ptr<SaveAuxBase>> the_save_stack;
+
 // A boundary object is created when we see an open brace, or something
 // like that.
 class SaveAuxBoundary : public SaveAuxBase {

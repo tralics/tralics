@@ -107,33 +107,6 @@ void tralics_ns::add_ref(long v, const std::string &s, bool idx) {
     if (V->filename.empty()) V->filename = the_parser.get_cur_filename();
 }
 
-// In ref_list, we have  (e,v), (e,v), (e,v) etc
-// where E is the xid of a <ref> element, and V is an entry in the
-// hash table of the label. After the translation is complete,
-// we know the value of the label, and can add the attribute target=...
-void Parser::check_all_ids() {
-    for (auto &i : ref_list) {
-        auto        E = i.first;
-        std::string V = i.second;
-        auto *      L = labinfo(V);
-        if (!L->defined) {
-            Logger::finish_seq();
-            log_and_tty << "Error signaled in postprocessor\n"
-                        << "undefined label `" << V << "' (first use at line " << L->lineno << " in file " << L->filename << ")";
-            Xid(E).add_attribute(the_names["target"], V);
-            std::string B = L->id;
-            for (auto &removed_label : removed_labels) {
-                if (removed_label.second == B) log_and_tty << "\n(Label was removed with `" << removed_label.first << "')";
-                break;
-            }
-            log_and_tty << "\n";
-            nb_errs++;
-        }
-        std::string B = L->id;
-        if (!B.empty()) Xid(E).add_attribute(the_names["target"], B);
-    }
-}
-
 //
 void tralics_ns::find_index_labels(std::vector<std::string> &W) {
     for (auto &i : refindex_list) {

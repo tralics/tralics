@@ -26,6 +26,30 @@ namespace accent_ns {
 namespace {
     std::string saved_dim;
 
+    // This creates the bbl file by running an external program.
+    void create_aux_file_and_run_pgm() {
+        if (!the_main->shell_escape_allowed) {
+            spdlog::warn("Cannot call external program unless using option -shell-escape");
+            return;
+        }
+        Buffer B;
+        bbl.lines.clear();
+        Bibliography &T = the_bibliography;
+        T.dump(B);
+        if (B.empty()) return;
+        T.dump_data(B);
+        std::string auxname = file_name + ".aux";
+        try {
+            std::ofstream(auxname) << B;
+        } catch (...) {
+            spdlog::warn("Cannot open file {} for output, bibliography will be missing", auxname);
+            return;
+        }
+        spdlog::info("Executing bibliography command: {}", T.cmd);
+        system(T.cmd.c_str());
+        bbl.lines.read(file_name + ".bbl", 1);
+    }
+
     // This creates a <ref target='bidN'/> element. This is the REF that needs
     // to be solved later. In the case of \footcite[p.25]{Knuth},
     // the arguments of the function are foot and Knuth; the `p.25' will be
@@ -823,6 +847,33 @@ namespace {
         hash_table.minus_token   = Token(other_t_offset, '-');
         hash_table.space_token   = Token(space_token_val);
         hash_table.newline_token = Token(newline_token_val);
+    }
+
+    // In ref_list, we have  (e,v), (e,v), (e,v) etc
+    // where E is the xid of a <ref> element, and V is an entry in the
+    // hash table of the label. After the translation is complete,
+    // we know the value of the label, and can add the attribute target=...
+    void check_all_ids() {
+        for (auto &i : ref_list) {
+            auto        E = i.first;
+            std::string V = i.second;
+            auto *      L = labinfo(V);
+            if (!L->defined) {
+                Logger::finish_seq();
+                log_and_tty << "Error signaled in postprocessor\n"
+                            << "undefined label `" << V << "' (first use at line " << L->lineno << " in file " << L->filename << ")";
+                Xid(E).add_attribute(the_names["target"], V);
+                std::string B = L->id;
+                for (auto &removed_label : removed_labels) {
+                    if (removed_label.second == B) log_and_tty << "\n(Label was removed with `" << removed_label.first << "')";
+                    break;
+                }
+                log_and_tty << "\n";
+                nb_errs++;
+            }
+            std::string B = L->id;
+            if (!B.empty()) Xid(E).add_attribute(the_names["target"], B);
+        }
     }
 } // namespace
 
@@ -1841,30 +1892,6 @@ void Parser::T_biblio() {
         if (w.empty()) continue;
         the_bibliography.push_back_src(w);
     }
-}
-
-// This creates the bbl file by running an external program.
-void Parser::create_aux_file_and_run_pgm() {
-    if (!the_main->shell_escape_allowed) {
-        spdlog::warn("Cannot call external program unless using option -shell-escape");
-        return;
-    }
-    Buffer B;
-    bbl.lines.clear();
-    Bibliography &T = the_bibliography;
-    T.dump(B);
-    if (B.empty()) return;
-    T.dump_data(B);
-    std::string auxname = file_name + ".aux";
-    try {
-        std::ofstream(auxname) << B;
-    } catch (...) {
-        spdlog::warn("Cannot open file {} for output, bibliography will be missing", auxname);
-        return;
-    }
-    spdlog::info("Executing bibliography command: {}", T.cmd);
-    system(T.cmd.c_str());
-    bbl.lines.read(file_name + ".bbl", 1);
 }
 
 void Parser::after_main_text() {

@@ -11,6 +11,7 @@
 // This file contains the TeX parser of tralics
 
 #include "tralics/Logger.h"
+#include "tralics/MathHelper.h"
 #include "tralics/SaveAux.h"
 #include "tralics/Saver.h"
 #include "tralics/util.h"
@@ -31,6 +32,13 @@ namespace {
             return {};
         }
     };
+
+    void show_box(Xml *X) {
+        if (X != nullptr)
+            log_and_tty << X << "\n";
+        else
+            log_and_tty << "empty.\n";
+    }
 
     Buffer trace_buffer, Thbuf2;
 } // namespace
@@ -2977,7 +2985,7 @@ auto Parser::eval_condition(subtypes test) -> bool {
     case if_hbox_code:
     case if_vbox_code: scan_reg_num(); return false; // pretend it's neither H nor V
     case if_inner_code:
-        if (the_stack.get_mode() == mode_math) return is_inner_math();
+        if (the_stack.get_mode() == mode_math) return cmi.is_inline();
         return false;
     default: return false;
     }
@@ -4249,13 +4257,6 @@ void Parser::M_xray(subtypes c) {
     }
     default: return;
     }
-}
-
-void Parser::show_box(Xml *X) {
-    if (X != nullptr)
-        log_and_tty << X << "\n";
-    else
-        log_and_tty << "empty.\n";
 }
 
 void Parser::E_useverb() {

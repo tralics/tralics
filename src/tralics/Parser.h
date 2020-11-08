@@ -85,10 +85,12 @@ private:
     std::string year_string;  // the year (effective number)
     std::string job_name;     // the name, without extensions
 
-    Buffer                input_buffer;                          // input buffer
-    Buffer                mac_buffer;                            // buffer the current macro
-    Buffer                group_buffer;                          // buffer for arg of \begin{...} \end(...)
-    Buffer                unprocessed_xml;                       // chars to be converted into an XML element
+    Buffer input_buffer; // input buffer
+    Buffer mac_buffer;   // buffer the current macro
+    Buffer group_buffer; // buffer for arg of \begin{...} \end(...)
+public:
+    Buffer unprocessed_xml; // chars to be converted into an XML element
+private:
     Buffer                fetch_name_res;                        // used by fetch_name
     LineList              lines;                                 // the lines to  be read
     TokenList             TL;                                    // list of tokens to be read again
@@ -242,6 +244,7 @@ public:
     void               expand_nct(TokenList &L);
     void               token_for_show(const CmdChr &val);
     void               create_label(const std::string &X, const std::string &S);
+    void               LC();
 
     // private functions, alphabetic order
 private:
@@ -304,7 +307,6 @@ private:
     auto        math_dimen_attrib(Token C, String s) -> int;
     auto        math_lr_value() -> del_pos;
     auto        my_csname(String s1, String s2, TokenList &L, String s) -> bool;
-    auto        nb_env_on_stack(const std::string &s) -> int;
     auto        new_line_for_read(bool spec) -> bool;
     auto        new_math_list(size_t cur_math, math_list_type c, subtypes s) -> subtypes;
     auto        next_from_line() -> bool;
@@ -403,15 +405,6 @@ private:
     auto        xT_optarg_nopar() -> Xml *;
     static auto cur_group_type() -> int;
     static auto dimen_attrib(ScaledInt A) -> std::string;
-    static auto first_boundary() -> boundary_type;
-    static auto is_env_on_stack(const std::string &s) -> SaveAuxEnv *;
-    static auto is_inner_math() -> bool;
-    static auto nb_env_on_stack() -> int;
-    static auto stack_math_in_cell() -> bool;
-    static void check_all_ids();
-    static void create_aux_file_and_run_pgm();
-    static void mk_hi(String X, char c);
-    static void show_box(Xml *X);
     void        accent_err1();
     void        accent_err2(Token Y);
     void        accent_err3();
@@ -618,7 +611,6 @@ private:
     void        kvo_string_opt();
     void        kvo_void_key();
     void        kvo_void_opt();
-    void        LC();
     void        leave_h_mode();
     void        leave_v_mode();
     void        lost_if(Token T, int L);

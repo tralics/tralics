@@ -12,6 +12,7 @@
 
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"
+#include "tralics/SaveAux.h"
 #include "tralics/Saver.h"
 #include <fmt/format.h>
 #include <fmt/ostream.h>
@@ -36,6 +37,17 @@ namespace {
 #endif
 
     auto st_bool(bool x) -> std::string { return x ? the_names["true"] : the_names["false"]; }
+
+    // Returns the number of environments
+    auto nb_env_on_stack() -> int {
+        auto n = the_save_stack.size();
+        int  k = 0;
+        for (size_t i = n; i > 0; i--) {
+            SaveAuxBase *p = the_save_stack[i - 1].get();
+            if (p->type == st_env) ++k;
+        }
+        return k;
+    }
 } // namespace
 
 namespace translate_ns {

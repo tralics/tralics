@@ -47,22 +47,22 @@ namespace {
 
     /// Returns the current escape char (used for printing)
     auto current_escape_char() -> long { return the_parser.eqtb_int_table[escapechar_code].val; }
-} // namespace
 
-/// Returns a temporary string, corresponding to the command with
-/// an empty name, without initial escape char.
-auto null_cs_name() -> std::string {
-    auto c = current_escape_char();
-    if (c == '\\') return "csname\\endcsname";
-    if (c > 0 && c < int(nb_characters)) {
-        Buffer B = "csname";
-        B.out_log(char32_t(c), the_main->log_encoding);
-        B.append("endcsname");
-        return std::move(B);
+    /// Returns a temporary string, corresponding to the command with
+    /// an empty name, without initial escape char.
+    auto null_cs_name() -> std::string {
+        auto c = current_escape_char();
+        if (c == '\\') return "csname\\endcsname";
+        if (c > 0 && c < int(nb_characters)) {
+            Buffer B = "csname";
+            B.out_log(char32_t(c), the_main->log_encoding);
+            B.append("endcsname");
+            return std::move(B);
+        }
+        if (c == 0) return "csname^^@endcsname";
+        return "csnameendcsname";
     }
-    if (c == 0) return "csname^^@endcsname";
-    return "csnameendcsname";
-}
+} // namespace
 
 auto Buffer::next_non_space(size_t j) const -> size_t {
     while (is_spaceh(j)) j++;
