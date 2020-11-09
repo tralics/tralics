@@ -10,6 +10,7 @@
 
 // This file contains a big part of the Tralics translator
 
+#include "tralics/ColSpec.h"
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/SaveAux.h"
@@ -89,26 +90,6 @@ namespace translate_ns {
     auto find_color(const std::string &model, const std::string &value) -> std::string;
 } // namespace translate_ns
 
-class ColSpec {
-    std::string name;
-    std::string model;
-    std::string value;
-    std::string id;
-    Xml *       xval;
-    bool        used;
-
-public:
-    ColSpec(std::string a, std::string b, std::string c);
-    auto compare(const std::string &a, const std::string &b) -> bool { return model == a && value == b; }
-    auto get_id() -> std::string { // \todo weird name
-        used = true;
-        return id;
-    }
-    [[nodiscard]] auto is_used() const -> bool { return used; }
-    [[nodiscard]] auto get_val() const -> Xml * { return xval; }
-};
-std::vector<ColSpec *> all_colors;
-
 // This code translates everything, until end of file.
 void Parser::translate_all() {
     unprocessed_xml.clear();
@@ -187,8 +168,7 @@ void Parser::leave_v_mode() {
 }
 
 auto Parser::ileave_v_mode() -> Xid {
-    auto k   = cur_centering();
-    Xid  res = the_stack.push_par(k);
+    Xid res = the_stack.push_par(cur_centering());
     if (unfinished_par != nullptr) {
         res.add_attribute(unfinished_par->id.get_att(), true);
         unfinished_par = nullptr;
@@ -1066,34 +1046,6 @@ void Parser::append_glue(Token T, ScaledInt dimen, bool vert) {
     if (!the_stack.in_v_mode()) return;
     Xid cp = ileave_v_mode();
     add_vspace(T, dimen, cp);
-}
-
-//  Colors.
-// This creates a new color item, to be pushed on the color stack
-// Note that used is false, set to true by get_id.
-ColSpec::ColSpec(std::string a, std::string b, std::string c) : name(std::move(a)), model(std::move(b)), value(std::move(c)), used(false) {
-    xval = new Xml(the_names["color"], nullptr);
-    if (!name.empty()) xval->id.add_attribute(std::string("name"), name);
-    xval->id.add_attribute(std::string("model"), std::string(model));
-    xval->id.add_attribute(std::string("value"), std::string(value));
-    static int n = 0;
-    id           = std::string(fmt::format("colid{}", ++n)); // This is a unique id
-    xval->id.add_attribute(the_names["id"], id);
-}
-
-void Parser::finish_color() {
-    auto n = all_colors.size();
-    int  k = 0;
-    for (size_t i = 0; i < n; i++)
-        if (all_colors[i]->is_used()) k++;
-    if (k == 0) return;
-    Xml *res = new Xml(std::string("colorpool"), nullptr);
-    for (size_t i = 0; i < n; i++)
-        if (all_colors[i]->is_used()) {
-            res->push_back_unless_nullptr(all_colors[i]->get_val());
-            res->add_nl();
-        }
-    the_stack.document_element()->replace_first(res);
 }
 
 // Find a color in the stack, returns the id;

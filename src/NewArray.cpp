@@ -172,12 +172,12 @@ void NewArray::run(Xid ID, bool main_fct) {
     first_bar     = true;
     bool seen     = false;
     cur_h_pos     = "cell_center";
-    if (Parser::tracing_commands()) the_log << "array preamble parse: ";
+    if (tracing_commands()) the_log << "array preamble parse: ";
     for (;;) {
         if (preamble.empty()) break;
         if (ac_next()) continue;
         test_pach();
-        if (Parser::tracing_commands()) the_log << dump_slot();
+        if (tracing_commands()) the_log << dump_slot();
         switch (ch_class) {
         case chc_cell:
             if (main_fct)
@@ -246,7 +246,7 @@ void NewArray::run(Xid ID, bool main_fct) {
         P->parse_error(errbuf);
     }
     }
-    if (Parser::tracing_commands()) the_log << "\n";
+    if (tracing_commands()) the_log << "\n";
     if (main_fct) {
         ac_maybe_finish();
         return;

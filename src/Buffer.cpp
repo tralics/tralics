@@ -224,7 +224,7 @@ auto Buffer::push_back(Token T) -> bool {
     if (!T.char_or_active()) insert_escape_char();
     if (T.active_or_single()) {
         out_log(T.char_val(), enc);
-        return Parser::has_letter_catcode(T.char_val());
+        return get_catcode(T.char_val()) == letter_catcode;
     }
     if (T.is_in_hash()) {
         Buffer Tmp = hash_table[T.hash_loc()];
@@ -276,7 +276,7 @@ void Buffer::insert_token(Token T, bool sw) {
             append("^^@");
         else
             push_back(c);
-        bool need_space = sw ? (std::isalpha(static_cast<int>(c)) != 0) : Parser::has_letter_catcode(c);
+        bool need_space = sw ? (std::isalpha(static_cast<int>(c)) != 0) : (get_catcode(c) == letter_catcode);
         if (need_space) push_back(' ');
     } else if (T.is_in_hash()) { // multichar
         append(hash_table[T.hash_loc()]);

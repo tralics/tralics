@@ -2,6 +2,7 @@
 #include "tralics/Bbl.h"
 #include "tralics/Bibliography.h"
 #include "tralics/Bibtex.h"
+#include "tralics/ColSpec.h"
 #include "tralics/LineList.h"
 #include "tralics/Logger.h"
 #include "tralics/NameMapper.h"
@@ -875,6 +876,37 @@ namespace {
             if (!B.empty()) Xid(E).add_attribute(the_names["target"], B);
         }
     }
+
+    // This is for lower-case upper-case conversions.
+    // Defines values for the character c
+    void mklcuc(size_t c, size_t lc, size_t uc) {
+        eqtb_int_table[c + lc_code_offset].val = to_signed(lc);
+        eqtb_int_table[c + uc_code_offset].val = to_signed(uc);
+    }
+
+    // This is for lower-case upper-case conversions.
+    // Defines values for the pair lc, uc
+    void mklcuc(size_t lc, size_t uc) {
+        eqtb_int_table[lc + lc_code_offset].val = to_signed(lc);
+        eqtb_int_table[lc + uc_code_offset].val = to_signed(uc);
+        eqtb_int_table[uc + lc_code_offset].val = to_signed(lc);
+        eqtb_int_table[uc + uc_code_offset].val = to_signed(uc);
+    }
+
+    void finish_color() {
+        auto n = all_colors.size();
+        int  k = 0;
+        for (size_t i = 0; i < n; i++)
+            if (all_colors[i]->is_used()) k++;
+        if (k == 0) return;
+        Xml *res = new Xml(std::string("colorpool"), nullptr);
+        for (size_t i = 0; i < n; i++)
+            if (all_colors[i]->is_used()) {
+                res->push_back_unless_nullptr(all_colors[i]->get_val());
+                res->add_nl();
+            }
+        the_stack.document_element()->replace_first(res);
+    }
 } // namespace
 
 // This command puts a double accent on a letter.
@@ -1006,22 +1038,6 @@ void Parser::boot_time() {
 void Parser::set_default_language(int v) {
     eqtb_int_table[language_code] = {v, 1};
     set_def_language_num(v);
-}
-
-// This is for lower-case upper-case conversions.
-// Defines values for the character c
-void Parser::mklcuc(size_t c, size_t lc, size_t uc) {
-    eqtb_int_table[c + lc_code_offset].val = to_signed(lc);
-    eqtb_int_table[c + uc_code_offset].val = to_signed(uc);
-}
-
-// This is for lower-case upper-case conversions.
-// Defines values for the pair lc, uc
-void Parser::mklcuc(size_t lc, size_t uc) {
-    eqtb_int_table[lc + lc_code_offset].val = to_signed(lc);
-    eqtb_int_table[lc + uc_code_offset].val = to_signed(uc);
-    eqtb_int_table[uc + lc_code_offset].val = to_signed(lc);
-    eqtb_int_table[uc + uc_code_offset].val = to_signed(uc);
 }
 
 // This creates the lc and uc tables.
@@ -1612,28 +1628,28 @@ void Parser::more_bootstrap() {
 // Fills the catcode table. Catcodes are at the start of eqtb_int_table
 void Parser::make_catcodes() {
     for (unsigned i = 0; i < nb_characters; i++) {
-        set_cat(i, other_catcode);
+        set_catcode(i, other_catcode);
         eqtb_int_table[i].level = 1;
     }
-    for (unsigned i = 'a'; i <= 'z'; i++) set_cat(i, letter_catcode);
-    for (unsigned i = 'A'; i <= 'Z'; i++) set_cat(i, letter_catcode);
-    set_cat('\\', 0);
-    set_cat('{', 1);
-    set_cat('}', 2);
-    set_cat('$', 3);
-    set_cat('&', 4);
-    set_cat('\r', 5);
-    set_cat('\n', 12);
-    set_cat('#', 6);
-    set_cat('^', 7);
-    set_cat('_', 8);
-    set_cat('\t', 10);
-    set_cat(' ', 10);
-    set_cat(160, 13); // non breaking space
-    set_cat('~', 13);
-    set_cat('%', 14);
+    for (unsigned i = 'a'; i <= 'z'; i++) set_catcode(i, letter_catcode);
+    for (unsigned i = 'A'; i <= 'Z'; i++) set_catcode(i, letter_catcode);
+    set_catcode('\\', 0);
+    set_catcode('{', 1);
+    set_catcode('}', 2);
+    set_catcode('$', 3);
+    set_catcode('&', 4);
+    set_catcode('\r', 5);
+    set_catcode('\n', 12);
+    set_catcode('#', 6);
+    set_catcode('^', 7);
+    set_catcode('_', 8);
+    set_catcode('\t', 10);
+    set_catcode(' ', 10);
+    set_catcode(160, 13); // non breaking space
+    set_catcode('~', 13);
+    set_catcode('%', 14);
     for (unsigned i = 0; i < nb_shortverb_values; i++) old_catcode[i] = eqtb_int_table[i].val;
-    set_cat('@', 11);
+    set_catcode('@', 11);
 }
 
 // This is the main bootstrap code
