@@ -22,7 +22,6 @@ class SaveAuxEnv;
 // This file holds the definition of the Parser class, which is the main
 // data structure of the Tralics translator.
 // \todo this should be broken up
-// \todo move the static methods where they would fit better
 
 class Parser {
     // Make all tables public

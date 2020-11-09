@@ -41,10 +41,10 @@ void MathHelper::reset(bool dual) {
     is_tag_starred = false;
     math_env_ctr   = 0;
     all_env_ctr    = 0;
-    cur_math_id    = the_main->the_stack->next_xid(nullptr);
-    cur_formula_id = the_main->the_stack->next_xid(nullptr);
+    cur_math_id    = the_main->the_main_stack->next_xid(nullptr);
+    cur_formula_id = the_main->the_main_stack->next_xid(nullptr);
     if (dual)
-        cur_texmath_id = the_main->the_stack->next_xid(nullptr);
+        cur_texmath_id = the_main->the_main_stack->next_xid(nullptr);
     else
         cur_texmath_id = cur_math_id;
     multi_labels.clear();

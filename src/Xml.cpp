@@ -108,7 +108,7 @@ namespace {
                     texte->add_non_empty_to(junk);
                 }
                 to->push_back_unless_nullptr(sf);
-                to->push_back_unless_nullptr(the_main->the_stack->newline_xml);
+                to->push_back_unless_nullptr(the_main->the_main_stack->newline_xml);
             }
         }
     }
@@ -243,7 +243,7 @@ namespace {
 
 // Returns a new element named N, initialised with z (if not empty...)
 Xml::Xml(std::string N, Xml *z) : name(std::move(N)) {
-    id = the_main->the_stack->next_xid(this);
+    id = the_main->the_main_stack->next_xid(this);
     if (z != nullptr) add_tmp(gsl::not_null{z});
 }
 
@@ -694,12 +694,12 @@ void Xml::postprocess_fig_table(bool is_fig) {
     if (C != nullptr) {
         push_back(gsl::not_null{C}); // copy caption
         C->change_name("caption");
-        push_back(gsl::not_null{the_main->the_stack->newline_xml});
+        push_back(gsl::not_null{the_main->the_main_stack->newline_xml});
     }
     C = T->get_first_env("alt_caption");
     if (C != nullptr) {
         push_back(gsl::not_null{C});
-        push_back(gsl::not_null{the_main->the_stack->newline_xml});
+        push_back(gsl::not_null{the_main->the_main_stack->newline_xml});
     }
 
     // Move all data from T to this
@@ -830,7 +830,7 @@ void Xml::add_last_string(const Buffer &B) {
 void Xml::add_last_nl(Xml *x) {
     if (x != nullptr) {
         push_back_unless_nullptr(x);
-        push_back_unless_nullptr(the_main->the_stack->newline_xml);
+        push_back_unless_nullptr(the_main->the_main_stack->newline_xml);
     }
 }
 
@@ -848,8 +848,8 @@ void Xml::remove_last_space() {
 
 // This adds a NL to the end of the element
 void Xml::add_nl() {
-    if (!all_empty() && back_or_nullptr() == the_main->the_stack->newline_xml) return;
-    push_back_unless_nullptr(the_main->the_stack->newline_xml);
+    if (!all_empty() && back_or_nullptr() == the_main->the_main_stack->newline_xml) return;
+    push_back_unless_nullptr(the_main->the_main_stack->newline_xml);
 }
 
 // This returns the span of the current cell; -1 in case of trouble
