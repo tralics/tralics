@@ -101,11 +101,9 @@ private:
     Xml *                 the_xmlA{nullptr}, *the_xmlB{nullptr}; // for XML tree manipulations
     // private inline functions
 
-    auto               at_eol() -> bool { return input_line_pos >= input_line.size(); }
-    auto               get_next_char() -> char32_t { return input_line[input_line_pos++]; }
-    [[nodiscard]] auto get_catcode(size_t x) const -> symcodes { return symcodes(eqtb_int_table[x].val); }
-    void               set_catcode(size_t x, long v) { eqtb_int_table[x].val = v; }
-    auto               get_after_ass_tok() -> Token {
+    auto at_eol() -> bool { return input_line_pos >= input_line.size(); }
+    auto get_next_char() -> char32_t { return input_line[input_line_pos++]; }
+    auto get_after_ass_tok() -> Token {
         Token x = after_assignment_token;
         after_assignment_token.kill();
         return x;
@@ -113,7 +111,6 @@ private:
     [[nodiscard]] auto get_def_language_num() const -> int { return default_language_num; }
     [[nodiscard]] auto get_projet_val() const -> std::string { return the_projetval; }
     auto               get_ur_val() -> std::string { return the_url_val; }
-    [[nodiscard]] auto is_pos_par(size_t k) const { return eqtb_int_table[k].val > 0; }
     void               kill_line() { input_line.clear(); }
     void               see_cs_token() { cur_cmd_chr = hash_table.eqtb[cur_tok.eqtb_loc()].val; }
     void               see_cs_token(Token T) {
@@ -124,11 +121,8 @@ private:
         cur_cmd_chr.cmd = t.cmd_val();
         cur_cmd_chr.chr = t.chr_val();
     }
-    void               set_after_ass_tok(Token x) { after_assignment_token = x; }
-    void               set_cat(size_t c, int v) { eqtb_int_table[c].val = v; }
-    void               set_def_language_num(int x) { default_language_num = x; }
-    [[nodiscard]] auto tracing_io() const -> bool { return is_pos_par(tracingoutput_code); }
-    [[nodiscard]] auto tracing_macros() const -> bool { return is_pos_par(tracingmacros_code); }
+    void set_after_ass_tok(Token x) { after_assignment_token = x; }
+    void set_def_language_num(int x) { default_language_num = x; }
     // public inline functions
 public:
     auto get_cur_env_name() -> std::string & { return cur_env_name; }
@@ -136,9 +130,6 @@ public:
     void               back_input() { TL.push_front(cur_tok); }
     void               back_input(Token t) { TL.push_front(t); }
     void               back_input(TokenList &L) { TL.splice(TL.begin(), L); }
-    [[nodiscard]] auto cur_centering() const -> size_t { return to_unsigned(eqtb_int_table[incentering_code].val); }
-    [[nodiscard]] auto cur_lang_fr() const -> bool { return eqtb_int_table[language_code].val == 1; }
-    [[nodiscard]] auto cur_lang_german() const -> bool { return eqtb_int_table[language_code].val == 2; }
     [[nodiscard]] auto cur_line_to_istring() const -> std::string;
     void               decr_cur_level() { cur_level--; }
     [[nodiscard]] auto get_cur_filename() const -> std::string { return lines.file_name; }
@@ -161,84 +152,76 @@ public:
         cur_env_name   = std::move(s);
         begin_env_line = x;
     }
-    void               set_job_name(std::string s) { job_name = std::move(s); }
-    void               set_year_string(std::string s) { year_string = std::move(s); }
-    [[nodiscard]] auto tracing_commands() const -> bool { // \todo remove eventually
-        static const auto ans = is_pos_par(tracingcommands_code);
-        return ans;
-    }
-    [[nodiscard]] auto tracing_assigns() const -> bool { return is_pos_par(tracingassigns_code); }
-    [[nodiscard]] auto tracing_math() const -> bool { return is_pos_par(tracingmath_code); }
-    [[nodiscard]] auto tracing_stack() const -> bool { return is_pos_par(tracingrestores_code); }
-    void               unexpected_font() { unexpected_seen_hi = true; }
-    void               L3_load(bool preload);
+    void set_job_name(std::string s) { job_name = std::move(s); }
+    void set_year_string(std::string s) { year_string = std::move(s); }
+    void unexpected_font() { unexpected_seen_hi = true; }
+    void L3_load(bool preload);
     // public functions
 
     Parser();
 
-    void               add_buffer_to_document_hook(Buffer &b, const std::string &name);
-    void               add_language_att();
-    void               after_main_text();
-    void               boot();
-    void               boot_special_names();
-    void               box_end(Xml *res, size_t pos);
-    auto               list_to_string0(Buffer &b) -> bool;
-    auto               list_to_string(TokenList &L, Buffer &b) -> bool;
-    auto               list_to_string_cv(TokenList &L, Buffer &b) -> bool;
-    void               list_to_string_c(TokenList &x, const std::string &s1, const std::string &s2, const std::string &msg, Buffer &B);
-    auto               list_to_string_c(TokenList &x, String s1, String s2, String msg) -> Token;
-    auto               list_to_string_c(TokenList &x, String msg) -> std::string;
-    auto               csname_aux(String s1, String s2, TokenList &L, bool cs, Buffer &b) -> bool;
-    auto               csname_aux(TokenList &L, bool cs, Buffer &b) -> bool;
-    auto               csname_ctr(TokenList &L, Buffer &b) -> bool;
-    void               eq_define(size_t a, CmdChr bc, bool gbl);
-    void               titlepage_evaluate(const std::string &s, const std::string &cmd);
-    void               final_checks();
-    void               finish_images();
-    void               flush_buffer();
-    void               font_has_changed1();
-    auto               fp_read_value() -> FpNum;
-    void               fp_send_one_arg(TokenList &res);
-    [[nodiscard]] auto has_letter_catcode(size_t x) const { return get_catcode(x) == letter_catcode; }
-    void               init_all(const std::string &doc_elt);
-    void               load_latex();
-    auto               read_arg() -> TokenList;
-    auto               read_arg_nopar() -> TokenList;
-    auto               nct_aux(Token T, TokenList &body) -> std::optional<size_t>;
-    auto               nE_arg_nopar() -> std::string;
-    auto               nT_arg_nopar() -> std::string;
-    auto               nT_optarg_nopar() -> std::optional<std::string>;
-    void               parse_error(Token T, const std::string &s, TokenList &L);
-    void               parse_error(Token T, const std::string &s);
-    void               parse_error(const std::string &s);
-    void               parse_error(Token T, const std::string &s1, const std::string &s2);
-    void               parse_error(Token T, const std::string &s1, Token s2, const std::string &s3, const std::string &s4);
-    void               parse_error(Token T, const std::string &s1, const std::string &s2, const std::string &s3);
-    void               remove_junk();
-    void               scan_eqno(math_list_type type);
-    void               scan_glue(internal_type level);
-    void               scan_glue(internal_type level, Token T);
-    void               scan_glue(internal_type level, Token T, bool opt);
-    void               list_to_glue(internal_type level, Token t, TokenList &L);
-    void               set_default_language(int v);
-    void               signal_error();
-    void               signal_error(const std::string &s);
-    void               signal_error(Token T, const std::string &s);
-    void               signal_ovf(Token T, String h, long cur, long max);
-    auto               special_expand(TokenList *args) -> TokenList;
-    auto               special_tpa_arg(const std::string &name, const std::string &y, bool par, bool env, bool has_q) -> Xml *;
-    void               T_titlepage_finish(size_t v);
-    auto               tpa_exec(const std::string &cmd) -> Xml *;
-    void               M_tracingall();
-    void               translate0();
-    void               translate_all();
-    void               word_define(size_t a, long c, bool gbl);
-    auto               find_a_save_key(const std::string &mykey) -> bool;
-    void               mu_error(String s, int i);
-    void               expand_nct(TokenList &L);
-    void               token_for_show(const CmdChr &val);
-    void               create_label(const std::string &X, const std::string &S);
-    void               LC();
+    void add_buffer_to_document_hook(Buffer &b, const std::string &name);
+    void add_language_att();
+    void after_main_text();
+    void boot();
+    void boot_special_names();
+    void box_end(Xml *res, size_t pos);
+    auto list_to_string0(Buffer &b) -> bool;
+    auto list_to_string(TokenList &L, Buffer &b) -> bool;
+    auto list_to_string_cv(TokenList &L, Buffer &b) -> bool;
+    void list_to_string_c(TokenList &x, const std::string &s1, const std::string &s2, const std::string &msg, Buffer &B);
+    auto list_to_string_c(TokenList &x, String s1, String s2, String msg) -> Token;
+    auto list_to_string_c(TokenList &x, String msg) -> std::string;
+    auto csname_aux(String s1, String s2, TokenList &L, bool cs, Buffer &b) -> bool;
+    auto csname_aux(TokenList &L, bool cs, Buffer &b) -> bool;
+    auto csname_ctr(TokenList &L, Buffer &b) -> bool;
+    void eq_define(size_t a, CmdChr bc, bool gbl);
+    void titlepage_evaluate(const std::string &s, const std::string &cmd);
+    void final_checks();
+    void finish_images();
+    void flush_buffer();
+    void font_has_changed1();
+    auto fp_read_value() -> FpNum;
+    void fp_send_one_arg(TokenList &res);
+    void init_all(const std::string &doc_elt);
+    void load_latex();
+    auto read_arg() -> TokenList;
+    auto read_arg_nopar() -> TokenList;
+    auto nct_aux(Token T, TokenList &body) -> std::optional<size_t>;
+    auto nE_arg_nopar() -> std::string;
+    auto nT_arg_nopar() -> std::string;
+    auto nT_optarg_nopar() -> std::optional<std::string>;
+    void parse_error(Token T, const std::string &s, TokenList &L);
+    void parse_error(Token T, const std::string &s);
+    void parse_error(const std::string &s);
+    void parse_error(Token T, const std::string &s1, const std::string &s2);
+    void parse_error(Token T, const std::string &s1, Token s2, const std::string &s3, const std::string &s4);
+    void parse_error(Token T, const std::string &s1, const std::string &s2, const std::string &s3);
+    void remove_junk();
+    void scan_eqno(math_list_type type);
+    void scan_glue(internal_type level);
+    void scan_glue(internal_type level, Token T);
+    void scan_glue(internal_type level, Token T, bool opt);
+    void list_to_glue(internal_type level, Token t, TokenList &L);
+    void set_default_language(int v);
+    void signal_error();
+    void signal_error(const std::string &s);
+    void signal_error(Token T, const std::string &s);
+    void signal_ovf(Token T, String h, long cur, long max);
+    auto special_expand(TokenList *args) -> TokenList;
+    auto special_tpa_arg(const std::string &name, const std::string &y, bool par, bool env, bool has_q) -> Xml *;
+    void T_titlepage_finish(size_t v);
+    auto tpa_exec(const std::string &cmd) -> Xml *;
+    void M_tracingall();
+    void translate0();
+    void translate_all();
+    void word_define(size_t a, long c, bool gbl);
+    auto find_a_save_key(const std::string &mykey) -> bool;
+    void mu_error(String s, int i);
+    void expand_nct(TokenList &L);
+    void token_for_show(const CmdChr &val);
+    void create_label(const std::string &X, const std::string &S);
+    void LC();
 
     // private functions, alphabetic order
 private:
@@ -285,7 +268,6 @@ private:
     auto grab_env_comma(TokenList &v) -> bool;
     auto group_to_string_spec(bool) -> std::string;
     auto group_to_string() -> std::string;
-    auto ileave_v_mode() -> Xid;
     auto index_aux(TokenList &L, std::optional<size_t> father, size_t g) -> size_t;
     auto internal_makebox() -> Xml *;
     auto is_delimiter(const TokenList &L) -> bool;
@@ -293,7 +275,6 @@ private:
     auto is_not_a_math_env(String s) -> bool;
     auto is_verbatim_end() -> bool;
     auto kvo_getfam() -> std::string;
-    auto last_att_list() -> AttList &;
     auto latex_input(subtypes q) -> std::string;
     auto M_counter(bool def) -> bool;
     auto make_label_inner(const std::string &name) -> std::string;
@@ -401,7 +382,6 @@ private:
     void accent_err2(Token Y);
     void accent_err3();
     void accent_err4();
-    void add_bib_marker(bool force);
     void add_math_label(Xml *res);
     void add_vspace(Token T, ScaledInt dimen, Xid X);
     void after_math(bool is_inline);
@@ -529,11 +509,9 @@ private:
     void fetch_box_id(Xml *X);
     void fetch_name2();
     void finish_a_cell(Token T, const std::string &a);
-    void finish_color();
     void finish_counter_cmd(Token first, TokenList &L);
     void finish_csname(Buffer &b, const std::string &s);
     void finish_csname(const std::string &b);
-    void finish_index();
     void finish_iwhile(TokenList &A, Token D);
     void finish_kvo_bool(Token T, const std::string &fam, const std::string &arg);
     void finish_no_mathml(bool is_inline, size_t vp);
@@ -641,8 +619,6 @@ private:
     void missing_flush();
     void missing_number();
     void missing_open_brace();
-    void mklcuc(size_t c, size_t lc, size_t uc);
-    void mklcuc(size_t lc, size_t uc);
     void month_day(subtypes c);
     void more_bootstrap();
     void multiple_label(const std::string &name, int L, const std::string &f);
@@ -787,7 +763,6 @@ private:
     void T_cite(subtypes sw);
     void T_cititem();
     void T_class_error(subtypes c);
-    void T_cline();
     void T_color(subtypes c);
     void T_cr();
     void T_cst1(subtypes c);
@@ -902,7 +877,6 @@ private:
     void T_subequations(bool start);
     void T_subfigure();
     void T_testopt();
-    void T_titlepage(size_t v) const;
     void T_translate(TokenList &X);
     void T_trees(subtypes c);
     void T_twodims(std::string &A, std::string &B, Token C);
@@ -954,8 +928,6 @@ private:
     void token_list_define(size_t p, TokenList &c, bool gbl);
     void token_show(int what, Buffer &B);
     void trace_if(int k);
-    void trace_if(String a, int k, long b) const;
-    void trace_if(String a, int k, String b) const;
     void translate_char(CmdChr X);
     void translate_char(uchar c1, uchar c2);
     void translate_font_size();
@@ -1043,6 +1015,37 @@ private:
     void T_scantokens(TokenList &L);
     void tl_set_rescan(subtypes c);
     void Tl3_gen_from_ac(subtypes c);
+
+public: // \todo static methods that would fit better elsewhere
+    [[nodiscard]] static auto get_catcode(size_t x) -> symcodes { return symcodes(eqtb_int_table[x].val); }
+    static void               set_catcode(size_t x, long v) { eqtb_int_table[x].val = v; }
+    [[nodiscard]] static auto is_pos_par(size_t k) { return eqtb_int_table[k].val > 0; }
+    static void               set_cat(size_t c, int v) { eqtb_int_table[c].val = v; }
+    [[nodiscard]] static auto tracing_io() -> bool { return is_pos_par(tracingoutput_code); }
+    [[nodiscard]] static auto tracing_macros() -> bool { return is_pos_par(tracingmacros_code); }
+    [[nodiscard]] static auto cur_centering() -> size_t { return to_unsigned(eqtb_int_table[incentering_code].val); }
+    [[nodiscard]] static auto cur_lang_fr() -> bool { return eqtb_int_table[language_code].val == 1; }
+    [[nodiscard]] static auto cur_lang_german() -> bool { return eqtb_int_table[language_code].val == 2; }
+    [[nodiscard]] static auto tracing_assigns() -> bool { return is_pos_par(tracingassigns_code); }
+    [[nodiscard]] static auto tracing_math() -> bool { return is_pos_par(tracingmath_code); }
+    [[nodiscard]] static auto tracing_stack() -> bool { return is_pos_par(tracingrestores_code); }
+    [[nodiscard]] static auto has_letter_catcode(size_t x) { return get_catcode(x) == letter_catcode; }
+    static auto               ileave_v_mode() -> Xid;
+    static auto               last_att_list() -> AttList &;
+    static void               add_bib_marker(bool force);
+    static void               finish_color();
+    static void               finish_index();
+    static void               mklcuc(size_t c, size_t lc, size_t uc);
+    static void               mklcuc(size_t lc, size_t uc);
+    static void               T_cline();
+    static void               T_titlepage(size_t v);
+    static void               trace_if(String a, int k, long b);
+    static void               trace_if(String a, int k, String b);
+
+    [[nodiscard]] static auto tracing_commands() -> bool { // \todo remove eventually
+        static const auto ans = is_pos_par(tracingcommands_code);
+        return ans;
+    }
 };
 
 inline Parser the_parser;

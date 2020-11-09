@@ -84,7 +84,7 @@ namespace {
     }
 
     void trace_scan_expr(String s, const SthInternal &v, char t, Token T) {
-        if (the_parser.tracing_commands() && t != ' ') {
+        if (Parser::tracing_commands() && t != ' ') {
             Logger::finish_seq();
             the_log << "+" << s << " so far for " << T << t << ' ' << v << "\n";
         }
@@ -2247,7 +2247,7 @@ void Parser::scan_expr(subtypes m) {
         parse_error(T, "Arithmetic overflow");
         cur_val.kill();
     }
-    if (the_parser.tracing_commands()) {
+    if (Parser::tracing_commands()) {
         Logger::finish_seq();
         the_log << "+scan for " << T << "= " << cur_val << "\n";
     }

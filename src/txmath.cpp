@@ -1832,7 +1832,7 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
             cmi.cur_cell_id = cid;
             cell.clear();
             first_cell = false;
-            if (numbered) cmi.ml_second_pass(row, the_parser.tracing_math());
+            if (numbered) cmi.ml_second_pass(row, Parser::tracing_math());
 
             n              = 0;
             row            = new Xml(the_names["mtr"], nullptr);
@@ -1853,7 +1853,7 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
     if (row->empty()) // kill the last empty row
         res->pop_back();
     else {
-        if (numbered) cmi.ml_second_pass(row, the_parser.tracing_math());
+        if (numbered) cmi.ml_second_pass(row, Parser::tracing_math());
     }
 
     Xid w = the_stack.next_xid(res);
@@ -2640,7 +2640,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
     res.handle_cmd_Big(cms);
     Math       res1     = res.M_cv3(cms);
     math_types res_type = mt_flag_small;
-    if (res1.finish_translate1(the_parser.tracing_math())) res_type = mt_flag_big;
+    if (res1.finish_translate1(Parser::tracing_math())) res_type = mt_flag_big;
     if (res1.size() == 1) {
         Xml *W = res1.front().get_xml_val();
         if (need_row == 2) W = new Xml(the_names["mrow"], W);
@@ -2860,7 +2860,7 @@ auto Math::large1(MathElt &cl, math_style cms) -> Xml * {
     } else
         pop_front();
     Math res0 = M_cv3(cms);
-    res0.finish_translate1(the_parser.tracing_math());
+    res0.finish_translate1(Parser::tracing_math());
     Xml *res1 = new Xml(the_names["temporary"], nullptr);
     res0.concat_space(res1);
     if (bad) {

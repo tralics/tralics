@@ -189,7 +189,7 @@ auto Stack::get_cur_par() const -> Xml * {
 void Stack::add_center_to_p() const {
     Xml *x = get_cur_par();
     if (x == nullptr) return;
-    auto w = the_parser.cur_centering();
+    auto w = Parser::cur_centering();
     x->id.get_att().push_back(the_names["rend"], the_names.center(w), false);
 }
 
@@ -227,7 +227,7 @@ auto Stack::is_float() -> bool {
 
 // Prints something in trace mode when we push a non-empty frame.
 void Stack::push_trace() {
-    if (the_parser.tracing_stack()) {
+    if (Parser::tracing_stack()) {
         auto        ptr = size() - 1;
         std::string fr  = at(ptr).frame;
         if (fr != " ") {
@@ -281,7 +281,7 @@ void Stack::init_all(const std::string &a) {
 
 // Tracing of stack when popping
 void Stack::trace_pop(bool sw) {
-    if (the_parser.tracing_stack()) {
+    if (Parser::tracing_stack()) {
         Logger::finish_seq();
         the_log << "{Pop ";
         if (sw) the_log << "(module) ";

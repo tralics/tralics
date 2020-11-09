@@ -131,7 +131,7 @@ void Parser::T_titlepage_finish(size_t v) {
     }
 }
 
-void Parser::T_titlepage(size_t v) const {
+void Parser::T_titlepage(size_t v) {
     if (tracing_commands()) {
         Logger::finish_seq();
         the_log << "{\\titlepage " << v << "}\n";

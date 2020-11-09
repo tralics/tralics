@@ -2778,7 +2778,7 @@ void Parser::trace_if(int k) {
     }
 }
 
-void Parser::trace_if(String a, int k, String b) const {
+void Parser::trace_if(String a, int k, String b) {
     if (tracing_commands()) {
         Logger::finish_seq();
         the_log << "+" << a << k << " " << b << "\n";
@@ -2786,7 +2786,7 @@ void Parser::trace_if(String a, int k, String b) const {
 }
 
 // same code
-void Parser::trace_if(String a, int k, long b) const {
+void Parser::trace_if(String a, int k, long b) {
     if (tracing_commands()) {
         Logger::finish_seq();
         the_log << "+" << a << k << " " << b << "\n";

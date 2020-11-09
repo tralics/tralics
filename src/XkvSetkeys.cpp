@@ -46,7 +46,7 @@ void XkvSetkeys::fetch_keys(bool c) {
         keyvals = P->get_mac_value(rm_token); // case of \setrmkeys
     else
         keyvals = P->read_arg();
-    if (the_parser.tracing_commands()) {
+    if (Parser::tracing_commands()) {
         Logger::finish_seq();
         the_log << "setkeys -> " << keyvals << "\n";
     }
@@ -59,7 +59,7 @@ void XkvSetkeys::finish() {
     P->new_macro(fams, fams_token);
     P->new_macro(na, na_token);
     if (!delayed.empty()) delayed.pop_back(); // remove trailing comma
-    if (the_parser.tracing_commands()) {
+    if (Parser::tracing_commands()) {
         Logger::finish_seq();
         the_log << "setkeys <- " << action << "\n";
     }
