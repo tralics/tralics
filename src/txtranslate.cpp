@@ -1053,9 +1053,9 @@ void Parser::append_glue(Token T, ScaledInt dimen, bool vert) {
 auto translate_ns::find_color(const std::string &model, const std::string &value) -> std::string {
     auto n = all_colors.size();
     for (size_t i = 0; i < n; i++)
-        if (all_colors[i]->compare(model, value)) return all_colors[i]->get_id();
-    all_colors.push_back(new ColSpec("", model, value));
-    return all_colors[n]->get_id();
+        if (all_colors[i].compare(model, value)) return all_colors[i].get_id();
+    all_colors.emplace_back("", model, value);
+    return all_colors[n].get_id();
 }
 
 // case of \color{red} or \color[rgb]{1,0,0}
@@ -1068,7 +1068,7 @@ auto Parser::scan_color(const std::string &opt, const std::string &name) -> std:
         token_from_list(hash_table.locate(B));
         if ((cur_cmd_chr.cmd == color_cmd) && (cur_cmd_chr.chr >= color_offset)) {
             auto k = cur_cmd_chr.chr - color_offset;
-            if (k < all_colors.size()) return all_colors[k]->get_id();
+            if (k < all_colors.size()) return all_colors[k].get_id();
         }
         parse_error(err_tok, "Undefined color ", name, "undefined color");
         return std::string();
@@ -1138,7 +1138,7 @@ void Parser::T_color(subtypes c) {
         // case \definecolor{myred}{rgb}{1,2,3}
         // is \global\let \color@myred \colorN
         auto n = all_colors.size();
-        all_colors.push_back(new ColSpec(name, model, value));
+        all_colors.emplace_back(name, model, value);
         CmdChr v(color_cmd, subtypes(n + color_offset));
         eq_define(C.eqtb_loc(), v, true);
         if (tracing_assigns()) {
@@ -1150,7 +1150,7 @@ void Parser::T_color(subtypes c) {
     if (c >= color_offset) {
         auto k = c - color_offset;
         if (k < all_colors.size()) {
-            std::string C = all_colors[k]->get_id();
+            std::string C = all_colors[k].get_id();
             cur_font.set_color(C);
             font_has_changed();
         }

@@ -22,4 +22,4 @@ struct ColSpec {
     }
 };
 
-inline std::vector<ColSpec *> all_colors;
+inline std::vector<ColSpec> all_colors;
