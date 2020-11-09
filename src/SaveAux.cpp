@@ -32,7 +32,7 @@ void SaveAuxBoundary::dump(int n) {
 // box0.
 SaveAuxBoxend::~SaveAuxBoxend() {
     P.flush_buffer();
-    P.the_stack.pop(the_names["hbox"]);
+    the_stack.pop(the_names["hbox"]);
     the_box_to_end   = val;
     the_box_position = pos;
 }

@@ -204,7 +204,7 @@ void MathHelper::ml_second_pass(Xml *row, bool vb) {
     }
     if (stag) {
         std::string id = next_label_id();
-        the_parser.the_stack.create_new_anchor(row->id, id, std::string(tag));
+        the_stack.create_new_anchor(row->id, id, std::string(tag));
         if (slabel) the_parser.create_label(label, id);
     } else if (slabel)
         the_parser.parse_error("Internal error");

@@ -946,7 +946,7 @@ void MainClass::more_boot() const {
     res.emplace_back(1, "\\message{File ignored^^J}\\endinput", false);
     res.register_file();
     the_parser.my_stats.after_boot();
-    the_parser.the_stack.set_xid_boot();
+    the_stack.set_xid_boot();
 }
 
 void MainClass::run(int argc, char **argv) {
@@ -966,7 +966,7 @@ void MainClass::run(int argc, char **argv) {
     the_parser.init(input_content);
     the_parser.translate_all();
     the_parser.after_main_text();
-    if (seen_enddocument) the_parser.the_stack.add_nl();
+    if (seen_enddocument) the_stack.add_nl();
     the_parser.final_checks();
     if (!no_xml) {
         the_parser.my_stats.token_stats();
@@ -987,7 +987,7 @@ void MainClass::out_xml() {
         fmt::print(fp, "<?xml-stylesheet href=\"{}\" type=\"{}\"?>\n", sl, the_names["stylesheettype"]);
     fmt::print(fp, "<!DOCTYPE {} SYSTEM '{}'>\n", dtd, std::string(dtdfile)); // \todo keep double quotes from fs::path
     fmt::print(fp, "<!-- Translated from LaTeX by tralics {}, date: {} -->\n", tralics_version, short_date);
-    fp << the_parser.the_stack.document_element() << "\n";
+    fp << the_stack.document_element() << "\n";
 
     spdlog::info("Output written on {} ({} bytes).", p, fp.tellp());
 }

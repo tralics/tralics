@@ -164,7 +164,7 @@ void NewArray::run(Xid ID, bool main_fct) {
     preamble = P->read_arg(); // read the preamble
     preamble.expand_star();
     P->expand_nct(preamble);
-    if (main_fct) AI = &P->the_stack.new_array_info(id);
+    if (main_fct) AI = &the_stack.new_array_info(id);
     u_list.clear();
     v_list.clear();
     ac_cell_no    = 0;

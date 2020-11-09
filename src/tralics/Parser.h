@@ -29,7 +29,6 @@ class Parser {
 
 public:
     Mactab                                    mac_table;          // the table of macros
-    Stack                                     the_stack;          // the stack
     std::array<EqtbString, 10>                eqtb_string_table;  // eqtb strings
     std::array<EqtbInt, integer_table_size>   eqtb_int_table;     // EQTB, integers
     std::array<EqtbDim, dimension_table_size> eqtb_dim_table;     // EQTB, dimensions

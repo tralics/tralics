@@ -2224,7 +2224,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         Xml *       x   = new Xml(the_names["mrow"], nullptr);
         std::string id  = next_label_id();
         Xid         xid = x->id;
-        the_parser.the_stack.create_new_anchor(xid, id, std::string(s1));
+        the_stack.create_new_anchor(xid, id, std::string(s1));
         the_parser.create_label(s2, id);
         return MathElt(x, mt_flag_small);
     }

@@ -117,3 +117,5 @@ public:
     void trace_stack();
     void unbox(Xml *x);
 };
+
+inline Stack the_stack;
