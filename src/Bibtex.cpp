@@ -755,7 +755,7 @@ void Bibtex::boot(std::string S) {
 }
 
 void Bibtex::bootagain() {
-    if (the_parser.cur_lang_fr()) { // french
+    if (Parser::cur_lang_fr()) { // french
         define_a_macro("jan", "janvier");
         define_a_macro("feb", "f\\'evrier");
         define_a_macro("mar", "mars");
@@ -771,7 +771,7 @@ void Bibtex::bootagain() {
         my_constant_table[0] = "th\\`ese de doctorat";
         my_constant_table[1] = "rapport technique";
         my_constant_table[2] = "m\\'emoire";
-    } else if (the_parser.cur_lang_german()) { //	      german
+    } else if (Parser::cur_lang_german()) { //	      german
         define_a_macro("jan", "Januar");
         define_a_macro("feb", "Februar");
         define_a_macro("mar", "M\\\"arz");

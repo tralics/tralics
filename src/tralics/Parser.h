@@ -609,7 +609,6 @@ private:
     void mac_define(Token a, Macro *b, bool gbl, rd_flag redef, symcodes what);
     void make_catcodes();
     void make_token(String s);
-    void make_uclc_table();
     void makelabel();
     void math_only();
     void minus_sign(CmdChr X);
@@ -1017,26 +1016,27 @@ private:
     void Tl3_gen_from_ac(subtypes c);
 
 public: // \todo static methods that would fit better elsewhere
-    [[nodiscard]] static auto get_catcode(size_t x) -> symcodes { return symcodes(eqtb_int_table[x].val); }
-    static void               set_catcode(size_t x, long v) { eqtb_int_table[x].val = v; }
-    [[nodiscard]] static auto is_pos_par(size_t k) { return eqtb_int_table[k].val > 0; }
-    static void               set_cat(size_t c, int v) { eqtb_int_table[c].val = v; }
-    [[nodiscard]] static auto tracing_io() -> bool { return is_pos_par(tracingoutput_code); }
-    [[nodiscard]] static auto tracing_macros() -> bool { return is_pos_par(tracingmacros_code); }
     [[nodiscard]] static auto cur_centering() -> size_t { return to_unsigned(eqtb_int_table[incentering_code].val); }
     [[nodiscard]] static auto cur_lang_fr() -> bool { return eqtb_int_table[language_code].val == 1; }
     [[nodiscard]] static auto cur_lang_german() -> bool { return eqtb_int_table[language_code].val == 2; }
+    [[nodiscard]] static auto get_catcode(size_t x) -> symcodes { return symcodes(eqtb_int_table[x].val); }
+    [[nodiscard]] static auto has_letter_catcode(size_t x) { return get_catcode(x) == letter_catcode; }
+    [[nodiscard]] static auto is_pos_par(size_t k) { return eqtb_int_table[k].val > 0; }
     [[nodiscard]] static auto tracing_assigns() -> bool { return is_pos_par(tracingassigns_code); }
+    [[nodiscard]] static auto tracing_io() -> bool { return is_pos_par(tracingoutput_code); }
+    [[nodiscard]] static auto tracing_macros() -> bool { return is_pos_par(tracingmacros_code); }
     [[nodiscard]] static auto tracing_math() -> bool { return is_pos_par(tracingmath_code); }
     [[nodiscard]] static auto tracing_stack() -> bool { return is_pos_par(tracingrestores_code); }
-    [[nodiscard]] static auto has_letter_catcode(size_t x) { return get_catcode(x) == letter_catcode; }
     static auto               ileave_v_mode() -> Xid;
     static auto               last_att_list() -> AttList &;
     static void               add_bib_marker(bool force);
     static void               finish_color();
     static void               finish_index();
+    static void               make_uclc_table();
     static void               mklcuc(size_t c, size_t lc, size_t uc);
     static void               mklcuc(size_t lc, size_t uc);
+    static void               set_cat(size_t c, int v) { eqtb_int_table[c].val = v; }
+    static void               set_catcode(size_t x, long v) { eqtb_int_table[x].val = v; }
     static void               T_cline();
     static void               T_titlepage(size_t v);
     static void               trace_if(String a, int k, long b);
