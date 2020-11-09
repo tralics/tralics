@@ -895,13 +895,13 @@ namespace {
 
     void finish_color() {
         int k = 0;
-        for (size_t i = 0; i < all_colors.size(); i++)
-            if (all_colors[i].used) k++;
+        for (auto &color : all_colors)
+            if (color.used) k++;
         if (k == 0) return;
         Xml *res = new Xml(std::string("colorpool"), nullptr);
-        for (size_t i = 0; i < all_colors.size(); i++)
-            if (all_colors[i].used) {
-                res->push_back_unless_nullptr(all_colors[i].xval);
+        for (auto &color : all_colors)
+            if (color.used) {
+                res->push_back_unless_nullptr(color.xval);
                 res->add_nl();
             }
         the_stack.document_element()->replace_first(res);

@@ -14,7 +14,7 @@ struct ColSpec {
 
     ColSpec(std::string a, std::string b, std::string c);
 
-    auto compare(const std::string &a, const std::string &b) const -> bool { return model == a && value == b; }
+    [[nodiscard]] auto compare(const std::string &a, const std::string &b) const -> bool { return model == a && value == b; }
 
     auto get_id() -> std::string { // \todo weird name
         used = true;
