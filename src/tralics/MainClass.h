@@ -48,8 +48,6 @@ class MainClass {
     bool verbose{false}; ///< Are we verbose ?
 
 public:
-    Stack *the_main_stack{}; ///< pointer to the stack
-
     std::string default_class; ///< The default class
     std::string short_date;    ///< Date of start of run (short format)
     std::string year_string;   // is 2003

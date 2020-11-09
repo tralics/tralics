@@ -1856,7 +1856,7 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
         if (numbered) cmi.ml_second_pass(row, the_parser.tracing_math());
     }
 
-    Xid w = the_main.the_main_stack->next_xid(res);
+    Xid w = the_stack.next_xid(res);
     w.add_attribute(cmi.cur_table_id); // move the attributes
     cmi.cur_row_id   = rid;
     cmi.cur_table_id = taid;
@@ -2213,7 +2213,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         auto        A  = std::string(s1);
         auto        B  = std::string(s2);
         if (c == math_attribute_code)
-            the_main.the_main_stack->add_att_to_last(A, B, true);
+            the_stack.add_att_to_last(A, B, true);
         else
             cmi.add_attribute(A, B, c);
         return MathElt(CmdChr(error_cmd, zero_code), zero_code);
