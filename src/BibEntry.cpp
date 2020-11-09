@@ -272,7 +272,7 @@ void BibEntry::copy_from(BibEntry *Y, size_t k) {
     for (size_t i = k; i < fp_unknown; i++) {
         if (all_fields[i].empty()) all_fields[i] = Y->all_fields[i];
     }
-    auto n = the_main->bibtex_fields.size();
+    auto n = the_main.bibtex_fields.size();
     for (size_t i = 0; i < n; i++)
         if (user_fields[i].empty()) user_fields[i] = Y->user_fields[i];
 }
@@ -394,7 +394,7 @@ void BibEntry::call_type() {
     bbl.format("{{{}}}", cite_key.full_key);
     bbl.format("{{{}}}", unique_id);
     bbl.format("{{{}}}", from_to_string());
-    const auto &my_name = (is_extension > 0) ? the_main->bibtex_extensions[is_extension - 1] : the_names[type_to_string(type_int)];
+    const auto &my_name = (is_extension > 0) ? the_main.bibtex_extensions[is_extension - 1] : the_names[type_to_string(type_int)];
     bbl.format("{{{}}}", my_name);
     bbl.append(aux_label);
     bbl.flush();
@@ -416,7 +416,7 @@ void BibEntry::call_type() {
         }
         bbl.flush();
     }
-    std::vector<std::string> &Bib        = the_main->bibtex_fields;
+    std::vector<std::string> &Bib        = the_main.bibtex_fields;
     auto                      additional = Bib.size();
     for (size_t i = 0; i < additional; i++) {
         auto ss = user_fields[i];

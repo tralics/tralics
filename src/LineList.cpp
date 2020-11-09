@@ -253,11 +253,11 @@ auto LineList::find_documentclass() -> std::string {
     for (auto C = begin(); C != end(); ++C) {
         if (C->find("%%") != std::string::npos) continue;
         if (auto match = ctre::match<pattern>(*C)) {
-            the_main->doc_class_pos = C;
+            the_main.doc_class_pos = C;
             return match.get<1>().to_string();
         }
     }
-    the_main->doc_class_pos = end();
+    the_main.doc_class_pos = end();
     return "";
 }
 
@@ -468,9 +468,9 @@ void LineList::read(const std::string &x, int spec) {
     std::string   old_name = cur_file_name;
     cur_file_name          = x;
     Buffer B;
-    auto   wc        = the_main->input_encoding; // \todo redundant with encoding?
+    auto   wc        = the_main.input_encoding; // \todo redundant with encoding?
     bool   converted = spec < 2;
-    encoding         = the_main->input_encoding;
+    encoding         = the_main.input_encoding;
     int co_try       = spec == 3 ? 0 : 20;
     for (;;) {
         int  c    = fp.get();

@@ -155,4 +155,4 @@ private:
     void trans0(); ///< Start the latex to XML translation
 };
 
-inline MainClass *the_main;
+inline MainClass the_main;

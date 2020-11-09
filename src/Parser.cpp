@@ -28,7 +28,7 @@ namespace {
 
     // This creates the bbl file by running an external program.
     void create_aux_file_and_run_pgm() {
-        if (!the_main->shell_escape_allowed) {
+        if (!the_main.shell_escape_allowed) {
             spdlog::warn("Cannot call external program unless using option -shell-escape");
             return;
         }
@@ -996,7 +996,7 @@ void Parser::boot_time() {
     Buffer    b            = long_date;
     TokenList today_tokens = b.str_toks(nlt_space);
     new_prim("today", today_tokens);
-    the_main->short_date = short_date;
+    the_main.short_date = short_date;
     // Default year for the raweb. Until April its last year \todo remove RA stuff
     if (month <= 4) year--;
     the_parser.ra_year = year;

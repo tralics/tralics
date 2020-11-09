@@ -38,7 +38,7 @@ auto TitlePageAux::classify(tpi_vals w, int &state) -> bool {
             B = "\\" + T1;
             B.format("{{{}}}", T4);
             B.append("%\n");
-            the_main->add_to_from_config(1, B);
+            the_main.add_to_from_config(1, B);
         }
         return true;
     case tpi_CEES: // \author +<aulist> <au> "default"

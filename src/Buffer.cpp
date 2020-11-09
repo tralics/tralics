@@ -55,7 +55,7 @@ namespace {
         if (c == '\\') return "csname\\endcsname";
         if (c > 0 && c < int(nb_characters)) {
             Buffer B = "csname";
-            B.out_log(char32_t(c), the_main->log_encoding);
+            B.out_log(char32_t(c), the_main.log_encoding);
             B.append("endcsname");
             return std::move(B);
         }
@@ -161,7 +161,7 @@ void Buffer::remove_space_at_end() {
 void Buffer::insert_escape_char() {
     auto c = current_escape_char();
     if (c >= 0 && c < int(nb_characters))
-        out_log(char32_t(char32_t(c)), the_main->log_encoding);
+        out_log(char32_t(char32_t(c)), the_main.log_encoding);
     else if (c == 0)
         append("^^@");
 }
@@ -189,10 +189,10 @@ auto Token::tok_to_str() const -> std::string {
     if ((c >= 128) && cat == 12) good_cat = true;
     if ((std::isalpha(static_cast<int>(c)) != 0) && cat == 11) good_cat = true;
     if (good_cat)
-        B.out_log(c, the_main->log_encoding);
+        B.out_log(c, the_main.log_encoding);
     else {
         B.append("{Character ");
-        B.out_log(c, the_main->log_encoding);
+        B.out_log(c, the_main.log_encoding);
         B.format(" of catcode {}}}", cat);
     }
     return std::move(B);
@@ -203,7 +203,7 @@ auto Token::tok_to_str() const -> std::string {
 
 // returns true if a space could be added after the token
 auto Buffer::push_back(Token T) -> bool {
-    output_encoding_type enc = the_main->log_encoding;
+    output_encoding_type enc = the_main.log_encoding;
     if (T.is_null()) {
         append("\\invalid.");
         return false;

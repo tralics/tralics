@@ -78,7 +78,7 @@ namespace {
             char32_t y = X.chr;
             Buffer & B = buffer_for_log;
             B.clear();
-            B.out_log(y, the_main->log_encoding);
+            B.out_log(y, the_main.log_encoding);
             return;
         }
         the_log << "\\" << b;
@@ -1294,7 +1294,7 @@ void Parser::T_cap_or_note(bool cap) {
     the_stack.pop(the_names[name]);
     if (opt != nullptr) the_stack.add_last(new Xml(the_names["alt_caption"], opt));
     pop_level(bt_local);
-    if (the_main->footnote_hack) note->remove_par_bal_if_ok();
+    if (the_main.footnote_hack) note->remove_par_bal_if_ok();
 }
 
 void Parser::T_makebox(bool framed, Token C) {

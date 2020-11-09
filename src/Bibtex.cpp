@@ -32,7 +32,7 @@ namespace {
     auto find_type(const std::string &s) -> entry_type {
         if (s.empty()) return type_comment; // in case of error.
 
-        std::vector<std::string> &Bib2 = the_main->bibtex_extensions_s;
+        std::vector<std::string> &Bib2 = the_main.bibtex_extensions_s;
         for (auto &i : Bib2)
             if (i == s) return type_comment;
         if (s == the_names["article"]) return type_article;
@@ -55,7 +55,7 @@ namespace {
         if (s == the_names["string"]) return type_string;
         if (s == the_names["unpublished"]) return type_unpublished;
 
-        std::vector<std::string> &Bib = the_main->bibtex_extensions;
+        std::vector<std::string> &Bib = the_main.bibtex_extensions;
         for (size_t i = 0; i < Bib.size(); i++)
             if (Bib[i] == s) return entry_type(type_extension + i + 1);
         return type_unknown;
@@ -136,7 +136,7 @@ void Bibtex::define_a_macro(String name, String value) {
 auto Bibtex::find_field_pos(const std::string &s) -> field_pos {
     auto S = std::string(s);
     // Check is this has to be ignored
-    std::vector<std::string> &Bib_s        = the_main->bibtex_fields_s;
+    std::vector<std::string> &Bib_s        = the_main.bibtex_fields_s;
     size_t                    additional_s = Bib_s.size();
     for (size_t i = 0; i < additional_s; i++)
         if (Bib_s[i] == S) return fp_unknown;
@@ -173,7 +173,7 @@ auto Bibtex::find_field_pos(const std::string &s) -> field_pos {
     if (S == the_names["year"]) return fp_year;
     if (S == the_names["crossref"]) return fp_crossref;
     // Check is this is additional
-    std::vector<std::string> &Bib        = the_main->bibtex_fields;
+    std::vector<std::string> &Bib        = the_main.bibtex_fields;
     size_t                    additional = Bib.size();
     for (size_t i = 0; i < additional; i++)
         if (Bib[i] == S) return field_pos(fp_unknown + i + 1);

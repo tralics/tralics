@@ -19,7 +19,7 @@ auto AllIndex::find_index(const std::string &s) -> size_t {
 void AllIndex::new_index(const std::string &s, const std::string &title) {
     for (size_t i = 0; i < size(); i++)
         if (at(i).name == s) return;
-    auto id = the_main->the_main_stack->next_xid(nullptr).value;
+    auto id = the_main.the_main_stack->next_xid(nullptr).value;
     emplace_back(s, title, id);
 }
 
@@ -28,6 +28,6 @@ void AllIndex::new_index(const std::string &s, const std::string &title) {
 void AllIndex::mark_print(size_t g) {
     Xml *mark = new Xml(std::string(), nullptr);
     Xml *Foo  = new Xml(std::string(), mark);
-    the_main->the_main_stack->add_last(Foo);
+    the_main.the_main_stack->add_last(Foo);
     at(g).position = mark;
 }

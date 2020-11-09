@@ -21,8 +21,8 @@ void AttList::push_back(const std::string &name, const std::string &value, bool 
 
 auto operator<<(std::ostream &o, const AttPair &a) -> std::ostream & {
     if (a.name[0] == '\'') return o;
-    const char  quote = the_main->double_quote_att ? '\"' : '\'';
-    const char *repl  = the_main->double_quote_att ? "&quot;" : "&apos;";
+    const char  quote = the_main.double_quote_att ? '\"' : '\'';
+    const char *repl  = the_main.double_quote_att ? "&quot;" : "&apos;";
 
     fmt::print(o, " {}={}", a.name, quote);
     for (char c : encode(a.value)) {

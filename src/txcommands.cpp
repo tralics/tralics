@@ -236,7 +236,7 @@ void Parser::english_quotes(CmdChr X) {
         else
             unprocessed_xml.push_back(static_cast<char>(c));
     }
-    if (X.is_letter() && !the_main->no_zerowidthspace) process_string(the_main->no_zerowidthelt ? "&#x200B;" : "<zws/>");
+    if (X.is_letter() && !the_main.no_zerowidthspace) process_string(the_main.no_zerowidthelt ? "&#x200B;" : "<zws/>");
 }
 
 // This translates -, --, or ---.
@@ -245,7 +245,7 @@ void Parser::minus_sign(CmdChr X) {
         process_char('-');
     else if (X.is_letter()) {
         process_char('-');
-        if (!the_main->no_zerowidthspace) process_string(the_main->no_zerowidthelt ? "&#x200B;" : "<zws/>");
+        if (!the_main.no_zerowidthspace) process_string(the_main.no_zerowidthelt ? "&#x200B;" : "<zws/>");
     } else {
         get_x_token();
         if (cur_cmd_chr.is_minus_sign()) {
@@ -750,7 +750,7 @@ void Parser::T_begindocument() {
     cur_tok.kill();
     pop_level(bt_env);
     cur_level = 1; // this is the outer level...
-    if (the_main->dverbose) M_tracingall();
+    if (the_main.dverbose) M_tracingall();
     if (tracing_commands()) {
         Logger::finish_seq();
         the_log << "+stack: level set to 1\n";
@@ -881,7 +881,7 @@ void Parser::translate03() {
     case bibliographystyle_cmd: T_bibliostyle(); return;
     case insertbibliohere_cmd: add_bib_marker(true); return;
     case inhibit_xml_cmd:
-        the_main->no_xml = true;
+        the_main.no_xml = true;
         log_and_tty << "\nsyntaxonly: no XML file will be produced\n";
         return;
     case endcsname_cmd: parse_error("Extra \\endcsname"); return;

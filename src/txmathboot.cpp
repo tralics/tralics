@@ -1399,7 +1399,7 @@ void MathDataP::boot2() {
 }
 
 void MathDataP::boot() {
-    no_ent_names = the_main->no_entnames;
+    no_ent_names = the_main.no_entnames;
     for (auto &i : built_in_table) i = nullptr;     // \todo useless?
     for (auto &i : built_in_table_alt) i = nullptr; // \todo useless?
     boot_table();
@@ -1428,7 +1428,7 @@ void MathDataP::boot() {
     mk_icb("sigma", "&sigma;", "&#x3C3;", sigma_code);
     mk_icb("tau", "&tau;", "&#x3C4;", tau_code);
     mk_icb("upsilon", "&upsi;", "&#x3C5;", upsilon_code);
-    if (the_main->old_phi) {
+    if (the_main.old_phi) {
         mk_icb("varphi", "&phi;", "&#x3D5;", varphi_code);
         mk_icb("phi", "&phiv;", "&#x3C6;", phi_code);
     } else {

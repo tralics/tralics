@@ -115,7 +115,7 @@ void FontInfo::change_size(long c) {
     if (c < 0) c = 0;
     if (c > 12) c = 12;
     size = c << 11;
-    if (!the_main->use_all_sizes) {
+    if (!the_main.use_all_sizes) {
         if (c < 6)
             tsize = fi_small_size;
         else if (c > 6)

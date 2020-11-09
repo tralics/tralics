@@ -42,7 +42,7 @@ public:
     std::string label, sort_label, aux_label; // cite label and sort label
     std::string unique_id;
 
-    BibEntry() : user_fields(the_main->bibtex_fields.size()) {}
+    BibEntry() : user_fields(the_main.bibtex_fields.size()) {}
 
 private:
     [[nodiscard]] auto from_to_string() const -> std::string { return cite_key.from_to_string(); };

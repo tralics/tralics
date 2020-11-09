@@ -349,7 +349,7 @@ void Stack::fonts0(const std::string &x) {
 // Adds font info when required
 void Stack::check_font() {
     while (back().frame == " ") pop_back();
-    bool        w = the_main->pack_font_elt;
+    bool        w = the_main.pack_font_elt;
     std::string s;
     if (w) {
         Buffer aux;

@@ -215,44 +215,44 @@ void NameMapper::assign(const std::string &sa, const std::string &sb) {
     if (sa == "lang_en") { set("english", sb); }
     if (sa == "distinguish_refer_in_rabib") {
         if ((sb == "true") || (sb == "yes"))
-            the_main->distinguish_refer = true;
+            the_main.distinguish_refer = true;
         else if ((sb == "false") || (sb == "no"))
-            the_main->distinguish_refer = false;
+            the_main.distinguish_refer = false;
         else
             spdlog::warn("distinguish_refer_in_rabib = {} ignored");
     }
-    if (sa == "entity_names") { the_main->set_ent_names(sb); }
-    if (sa == "default_class") { the_main->default_class = sb; }
+    if (sa == "entity_names") { the_main.set_ent_names(sb); }
+    if (sa == "default_class") { the_main.default_class = sb; }
     if (sa == "alternate_item") {
         if (sb == "false")
             hash_table.eval_let("item", "@@item");
         else if (sb == "true")
             hash_table.eval_let("item", "@item");
     }
-    if (sa == "url_font") { the_main->add_to_from_config(1, "\\def\\urlfont{" + sb + "}"); }
+    if (sa == "url_font") { the_main.add_to_from_config(1, "\\def\\urlfont{" + sb + "}"); }
     if (sa == "everyjob") { everyjob_string = fmt::format("\\everyjob={{{}}}", sb); }
     if (sa == "no_footnote_hack") {
-        if (sb == "true") the_main->footnote_hack = false;
-        if (sb == "false") the_main->footnote_hack = true;
+        if (sb == "true") the_main.footnote_hack = false;
+        if (sb == "false") the_main.footnote_hack = true;
     }
     if (sa == "use_font_elt") {
-        if (sb == "true") the_main->use_font_elt = true;
-        if (sb == "false") the_main->use_font_elt = false;
+        if (sb == "true") the_main.use_font_elt = true;
+        if (sb == "false") the_main.use_font_elt = false;
     }
     if (sa == "use_all_sizes") {
-        if (sb == "true") the_main->use_all_sizes = true;
-        if (sb == "false") the_main->use_all_sizes = false;
+        if (sb == "true") the_main.use_all_sizes = true;
+        if (sb == "false") the_main.use_all_sizes = false;
     }
     if (sa == "bibtex_fields") {
         the_log << "bibtex_fields: ";
-        std::vector<std::string> &bib  = the_main->bibtex_fields;
-        std::vector<std::string> &bib1 = the_main->bibtex_fields_s;
+        std::vector<std::string> &bib  = the_main.bibtex_fields;
+        std::vector<std::string> &bib1 = the_main.bibtex_fields_s;
         Buffer(sb).interpret_aux(bib, bib1); // \todo without Buffer
     }
     if (sa == "bibtex_extensions") {
         the_log << "bibtex_extensions: ";
-        std::vector<std::string> &bib  = the_main->bibtex_extensions;
-        std::vector<std::string> &bib2 = the_main->bibtex_extensions_s;
+        std::vector<std::string> &bib  = the_main.bibtex_extensions;
+        std::vector<std::string> &bib2 = the_main.bibtex_extensions_s;
         Buffer(sb).interpret_aux(bib, bib2); // \todo without Buffer
     }
     if (sa == "mfenced_separator_val") {
@@ -283,8 +283,8 @@ void NameMapper::assign_name(const std::string &A, const std::string &B) {
     spdlog::trace("Setting XML element name `{}' to \"{}\" (assign_name)", A, B);
 
     if (A == "pack_font_att") {
-        if (B == "true") the_main->pack_font_elt = true;
-        if (B == "false") the_main->pack_font_elt = false;
+        if (B == "true") the_main.pack_font_elt = true;
+        if (B == "false") the_main.pack_font_elt = false;
         return;
     }
 
@@ -303,8 +303,8 @@ void NameMapper::assign_name(const std::string &A, const std::string &B) {
     }
 
     if (A == "use_font_elt") {
-        if (B == "true") the_main->use_font_elt = true;
-        if (B == "false") the_main->use_font_elt = false;
+        if (B == "true") the_main.use_font_elt = true;
+        if (B == "false") the_main.use_font_elt = false;
         return;
     }
 

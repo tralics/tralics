@@ -626,7 +626,7 @@ void Parser::use_a_package(const std::string &name, bool type, const std::string
     auto   res                         = find_in_confdir(name + (type ? ".clt"s : ".plt"s));
     the_class_data.using_default_class = false;
     if (!res) {
-        std::string D = the_main->default_class;
+        std::string D = the_main.default_class;
         if (type && !D.empty()) {
             res = find_in_confdir(D + ".clt");
             if (res) {
@@ -683,7 +683,7 @@ auto Parser::check_builtin_pack(const std::string &pack) -> bool {
 // Built-in class handler. Class name unused
 void Parser::check_builtin_class() {
     Xid doc_att(1);
-    if (is_raw_option(cur_opt_list, "useallsizes")) the_main->use_all_sizes = true;
+    if (is_raw_option(cur_opt_list, "useallsizes")) the_main.use_all_sizes = true;
     if (is_raw_option(cur_opt_list, "french")) set_default_language(1);
     if (is_raw_option(cur_opt_list, "english")) set_default_language(0);
 }

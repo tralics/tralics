@@ -157,7 +157,7 @@ void Parser::M_extension(subtypes cc) {
             chan = negative_out_slot;
         else if (chan > max_openout && chan != write18_slot)
             chan = positive_out_slot;
-        if (chan == write18_slot && !the_main->shell_escape_allowed) chan = positive_out_slot;
+        if (chan == write18_slot && !the_main.shell_escape_allowed) chan = positive_out_slot;
     }
     auto uchan = to_unsigned(chan);
     if (cc == openout_code) {
@@ -1376,7 +1376,7 @@ void Parser::scan_something_internal(internal_type level) {
         else if (m == 2)
             cur_val.set_int(to_signed(lines.encoding));
         else if (m == 3)
-            cur_val.set_int(to_signed(the_main->input_encoding));
+            cur_val.set_int(to_signed(the_main.input_encoding));
         else if (m == 4)
             cur_val.set_int(cur_font.get_size());
         return;
@@ -1931,7 +1931,7 @@ void Parser::M_prefixed_aux(bool gbl) {
         else {
             q = scan_int(T); // \spacefactor or \input@encoding
             if (chr == 2) lines.change_encoding(q);
-            if (chr == 3) the_main->set_input_encoding(q >= 0 ? to_unsigned(q) : 0);
+            if (chr == 3) the_main.set_input_encoding(q >= 0 ? to_unsigned(q) : 0);
             if (chr == 4) {
                 cur_font.change_size(q);
                 font_has_changed();
