@@ -141,8 +141,6 @@ private:
     void out_gathered_math();
     void out_sep();
     void out_xml(); ///< Ouput the XML and compute the word list
-    void run_ra();
-    void run_simple_ra();
     void see_aux_info(int k);
     void see_name(std::string s); ///< Extract versions of a filename with and without ext
     void see_name1();             ///< Post-process file names
