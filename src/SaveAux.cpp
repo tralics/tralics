@@ -39,8 +39,8 @@ SaveAuxBoxend::~SaveAuxBoxend() {
 
 // This done when we restore an integer value
 SaveAuxInt::~SaveAuxInt() {
-    bool rt = P.eqtb_int_table[pos].level != 1;
-    if (rt) P.eqtb_int_table[pos] = {val, level};
+    bool rt = eqtb_int_table[pos].level != 1;
+    if (rt) eqtb_int_table[pos] = {val, level};
 }
 
 // This done when we restore a string value

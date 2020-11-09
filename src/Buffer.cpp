@@ -46,7 +46,7 @@ namespace {
     }
 
     /// Returns the current escape char (used for printing)
-    auto current_escape_char() -> long { return the_parser.eqtb_int_table[escapechar_code].val; }
+    auto current_escape_char() -> long { return eqtb_int_table[escapechar_code].val; }
 
     /// Returns a temporary string, corresponding to the command with
     /// an empty name, without initial escape char.

@@ -602,7 +602,7 @@ void Math::push_front(CmdChr X, subtypes c) { std::list<MathElt>::push_front(Mat
 
 // Adds a character (cmd+chr). Uses current math font.
 void Math::push_back(CmdChr X) {
-    auto font = subtypes(the_parser.eqtb_int_table[math_font_pos].val);
+    auto font = subtypes(eqtb_int_table[math_font_pos].val);
     std::list<MathElt>::push_back(MathElt(X, font));
 }
 
@@ -2000,7 +2000,7 @@ auto Math::trivial_math(long action) -> Xml * {
 
 // Inserts the current font in the list
 void Math::add_cur_font() {
-    auto c = the_parser.eqtb_int_table[math_font_pos].val;
+    auto c = eqtb_int_table[math_font_pos].val;
     push_back_font(subtypes(c), zero_code);
 }
 
@@ -2053,7 +2053,7 @@ auto MathElt::cv_char() const -> MathElt {
     else if ((std::isalpha(static_cast<char>(c)) != 0) && F < 2) {
         a = math_char_normal_loc + F * nb_mathchars + c;
     } else if (std::isalpha(static_cast<char>(c)) != 0) {
-        auto w = the_parser.eqtb_int_table[mathprop_ctr_code].val;
+        auto w = eqtb_int_table[mathprop_ctr_code].val;
         if ((w & (1 << F)) != 0) return MathElt(math_ns::mk_mi(static_cast<uchar>(c), F), mt);
         return MathElt(math_ns::make_math_char(static_cast<uchar>(c), F), mt);
     } else {

@@ -30,7 +30,6 @@ class Parser {
 public:
     Mactab                                    mac_table;          // the table of macros
     std::array<EqtbString, 10>                eqtb_string_table;  // eqtb strings
-    std::array<EqtbInt, integer_table_size>   eqtb_int_table;     // EQTB, integers
     std::array<EqtbDim, dimension_table_size> eqtb_dim_table;     // EQTB, dimensions
     std::array<EqtbToken, toks_register_size> toks_registers;     // EQTB, token lists
     std::array<EqtbBox, nb_registers>         box_table;          // EQTB, boxes

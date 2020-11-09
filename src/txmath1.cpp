@@ -1468,7 +1468,7 @@ auto MathElt::maybe_iseq(subtypes f) const -> bool {
 // the list
 auto Math::convert_char_seq(const MathElt &W) -> MathElt {
     subtypes f = W.get_font();
-    auto     w = the_parser.eqtb_int_table[mathprop_ctr_code].val;
+    auto     w = eqtb_int_table[mathprop_ctr_code].val;
     Xml *    res{nullptr};
     Buffer & B = aux_buffer;
     B.clear();

@@ -1731,12 +1731,12 @@ void Parser::fp_setseed() {
 void FpNum::random() {
     Digit cst_q = 127773;
     Digit cst_m = 2147483647;
-    auto  S     = static_cast<Digit>(the_parser.eqtb_int_table[fpseed_code].val);
+    auto  S     = static_cast<Digit>(eqtb_int_table[fpseed_code].val);
     Digit xia   = S / cst_q;
     Digit xib   = S % cst_q;
     auto  w     = to_signed(xib * 16807) - to_signed(xia * 2836);
     if (w <= 0) w += to_signed(cst_m);
-    the_parser.eqtb_int_table[fpseed_code].val = w;
+    eqtb_int_table[fpseed_code].val = w;
     fp_rand2.data[1]                           = to_unsigned(w);
     div(fp_rand2, fp_rand1);
 }

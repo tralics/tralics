@@ -13,7 +13,7 @@ public:
 
 inline auto InLoadHandler() { return Saver(global_in_load, true); }
 inline auto InUrlHandler() { return Saver(global_in_url, true); }
-inline auto SaveCatcode(char32_t c, long nc) { return Saver(the_parser.eqtb_int_table[c].val, nc); }
+inline auto SaveCatcode(char32_t c, long nc) { return Saver(eqtb_int_table[c].val, nc); }
 inline auto SaveErrTok(Token t) { return Saver(the_parser.err_tok, t); }
 inline auto SaveLongState(l_state c) { return Saver(the_parser.long_state, c); }
 inline auto SaveScannerStatus(scan_stat c) { return Saver(the_parser.scanner_status, c); }

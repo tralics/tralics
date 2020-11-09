@@ -155,7 +155,7 @@ namespace {
         case 2: // a subfigure
             //    T->remove_empty_par();
             X = new Xml(the_names["cst_p"], nullptr); // will contain junk
-            if (the_parser.eqtb_int_table[use_subfigure_code].val != 0)
+            if (eqtb_int_table[use_subfigure_code].val != 0)
                 raw_subfigure(from, to, X);
             else
                 table_subfigure(from, to, X);

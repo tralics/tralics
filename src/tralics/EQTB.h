@@ -1,4 +1,6 @@
 #pragma once
+#include "enums.h"
+#include <array>
 #include <string>
 
 // Every eqtb entry has a level. Level_zero means undefined
@@ -14,3 +16,5 @@ template <typename T> struct EQTB {
 
 using EqtbInt    = EQTB<long>;
 using EqtbString = EQTB<std::string>;
+
+inline std::array<EqtbInt, integer_table_size> eqtb_int_table;

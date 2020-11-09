@@ -1288,7 +1288,7 @@ void token_ns::lower_case(TokenList &L) {
         Token a = *P;
         if (a.val < single_offset) {
             auto b  = a.chr_val();
-            auto cx = the_parser.eqtb_int_table[b + offset].val;
+            auto cx = eqtb_int_table[b + offset].val;
             if (cx != 0) *P = Token(a.val - b + to_unsigned(cx));
         }
         ++P;
