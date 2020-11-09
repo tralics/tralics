@@ -3,7 +3,7 @@
 
 // This creates a new color item, to be pushed on the color stack
 // Note that used is false, set to true by get_id.
-ColSpec::ColSpec(std::string a, std::string b, std::string c) : name(std::move(a)), model(std::move(b)), value(std::move(c)), used(false) {
+ColSpec::ColSpec(std::string a, std::string b, std::string c) : name(std::move(a)), model(std::move(b)), value(std::move(c)) {
     xval = new Xml(the_names["color"], nullptr);
     if (!name.empty()) xval->id.add_attribute(std::string("name"), name);
     xval->id.add_attribute(std::string("model"), std::string(model));

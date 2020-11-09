@@ -897,12 +897,12 @@ namespace {
         auto n = all_colors.size();
         int  k = 0;
         for (size_t i = 0; i < n; i++)
-            if (all_colors[i]->is_used()) k++;
+            if (all_colors[i]->used) k++;
         if (k == 0) return;
         Xml *res = new Xml(std::string("colorpool"), nullptr);
         for (size_t i = 0; i < n; i++)
-            if (all_colors[i]->is_used()) {
-                res->push_back_unless_nullptr(all_colors[i]->get_val());
+            if (all_colors[i]->used) {
+                res->push_back_unless_nullptr(all_colors[i]->xval);
                 res->add_nl();
             }
         the_stack.document_element()->replace_first(res);
