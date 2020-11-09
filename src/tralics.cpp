@@ -28,8 +28,8 @@
 auto main(int argc, char **argv) -> int {
     spdlog::info("This is tralics {}, a LaTeX to XML translator", tralics_version);
     spdlog::info("Copyright INRIA/MIAOU/APICS/MARELLE 2002-2015, Jos\\'e Grimm");
-    the_parser.boot(); // create the hash table and all that
     spdlog::info("Licensed under the CeCILL Free Software Licensing Agreement");
+    the_parser.boot(); // create the hash table and all that
     the_main.run(argc, argv);
     return nb_errs == 0 ? 0 : 2;
 }
