@@ -2,7 +2,6 @@
 #include "tralics/Parser.h"
 
 auto ConfigData::find_one_key(const std::string &name, const std::string &key) const -> std::string {
-    if (name == "section") return key.empty() ? "default" : key;
     auto it = find(name);
     if (it == end()) {
         the_parser.parse_error(the_parser.err_tok, "Configuration file does not define ", name, "no list");
