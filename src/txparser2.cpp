@@ -264,18 +264,18 @@ auto Parser::T_xmllatex() -> std::string {
 }
 
 void Parser::E_get_config(unsigned c) {
-    Token       T        = cur_tok;
-    TokenList   L1       = read_arg();
-    std::string resource = list_to_string_c(L1, "Problem scanning resource name");
-    std::string key;
-    std::string res;
+    Token                      T        = cur_tok;
+    TokenList                  L1       = read_arg();
+    std::string                resource = list_to_string_c(L1, "Problem scanning resource name");
+    std::string                key;
+    std::optional<std::string> res;
     if (c != 0) {
         TokenList L2 = read_arg();
         key          = list_to_string_c(L2, "Problem scanning key");
         res          = config_data.find_one_key(resource, key);
     } else
         res = config_data.format_keys(resource);
-    TokenList L = Buffer(res).str_toks11(false);
+    TokenList L = Buffer(res ? *res : "").str_toks11(false);
     if (tracing_macros()) {
         Logger::finish_seq();
         the_log << T << " #1=" << resource;
