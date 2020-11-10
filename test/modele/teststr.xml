@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE unknown SYSTEM 'unknown.dtd'>
-<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/06 -->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/10 -->
 <unknown>
 <p>This tests also a certain number of errors</p>
 <p>OK
@@ -140,14 +140,14 @@ Today is Tuesday 25th March 2008.</p>
 <participantes><pers prenom='a' nom='b'/>
 <pers prenom='c' nom='d'/>
 </participantes>
-<error n='\tralics@get@config' l='256' c='illegal data'/><error n='\tralics@get@config' l='256' c='illegal data'/><pers prenom='Jean B' nom='Dupond' affiliation='' profession='' hdr='not yet' research-centre='Lyon'>Ok</pers>
-<pers prenom='Jean A' nom='Dupond' affiliation='cnrs' profession='Research' hdr='not yet' research-centre='Sophia'>Ok</pers>
-<pers prenom='Jean B' nom='Dupond' affiliation='inria' profession='Engineer' hdr='not yet' research-centre='Lyon'>Ok</pers>
-<error n='\tralics@get@config' l='260' c='illegal data'/><pers prenom='Jean C' nom='Dupond' affiliation='ibm' profession='' research-centre='Paris'>Ok</pers>
-<error n='\tralics@get@config' l='260' c='illegal data'/><pers prenom='Jean D' nom='Dupond' affiliation='' profession='Teaching' hdr='not yet' research-centre='Paris'>Ok</pers>
+<error n='\tralics@get@config' l='256' c='illegal data'/><error n='\tralics@get@config' l='256' c='illegal data'/><error n='\tralics@get@config' l='256' c='illegal data'/><pers prenom='Jean B' nom='Dupond' affiliation='' profession='' hdr='not yet'>Ok</pers>
+<pers prenom='Jean A' nom='Dupond' affiliation='cnrs' profession='Research' hdr='not yet' research-centre='Sophia Antipolis'>Ok</pers>
+<error n='\tralics@get@config' l='258' c='illegal data'/><pers prenom='Jean B' nom='Dupond' affiliation='inria' profession='Engineer' hdr='not yet'>Ok</pers>
+<error n='\tralics@get@config' l='260' c='illegal data'/><error n='\tralics@get@config' l='260' c='illegal data'/><pers prenom='Jean C' nom='Dupond' affiliation='ibm' profession=''>Ok</pers>
+<error n='\tralics@get@config' l='260' c='illegal data'/><error n='\tralics@get@config' l='260' c='illegal data'/><pers prenom='Jean D' nom='Dupond' affiliation='' profession='Teaching' hdr='not yet'>Ok</pers>
 <p>Paris
 
-rennes</p>
+<error n='\error' l='264' c=''/><error n='\tralics@get@config' l='265' c='illegal data'/></p>
 <p><ref target='mod:panorama'/>
 <ref target='mod:telecom'/>
 <ref target='mod:logi1'/>

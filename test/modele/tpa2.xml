@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE document SYSTEM 'devnul.dtd'>
-<!-- Translated from latex by tralics 2.15.4, date: 2015/11/05-->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/10 -->
 <document Language='English' part='true'>
 <Frontmatter>
 <Xdiv1 Rend='NoNumber'><Head>Chapter one</Head>
@@ -143,8 +143,7 @@ tata
 <participants><pers prenom='a' nom='b'/>
 <pers prenom='c' nom='d'/>
 </participants>
-<catperso><head>xx</head><pers prenom='jean' nom='dupond' affiliation='Cnrs' profession='PHD' hdr='not yet'>Ok</pers>
-</catperso><List type='Gloss'><Head>The famous glossary</Head><Glolabel>aa</Glolabel><Item><p>bb</p>
+<catperso><head>xx</head></catperso><List type='Gloss'><Head>The famous glossary</Head><Glolabel>aa</Glolabel><Item><p>bb</p>
 </Item><Glolabel>cc</Glolabel><Item><p>dd</p>
 </Item></List><p>Text
 <Leaders><foo>bar</foo></Leaders><hfil/><Cleaders><foo>bar</foo></Cleaders><hfil/><Xleaders><foo>bar</foo></Xleaders><hfil/></p>
