@@ -1,4 +1,4 @@
-image: ubuntu:focal
+image: ubuntu:groovy
 
 before_script:
   - export DEBIAN_FRONTEND=noninteractive
@@ -16,6 +16,9 @@ everything:
       - CC: clang-10
         CXX: clang++-10
         PACKAGE: clang-10
+      - CC: clang-11
+        CXX: clang++-11
+        PACKAGE: clang-11
       - CC: gcc-9
         CXX: g++-9
         PACKAGE: g++-9
