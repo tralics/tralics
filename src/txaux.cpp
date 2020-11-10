@@ -29,20 +29,6 @@ void arith_ns::start_err(String s) {
 // Signals the error in the buffer.
 void arith_ns::end_err() { the_parser.signal_error(the_parser.err_tok, "Arithmetic overflow"); }
 
-// If this is a TeX token representing a valid digit in base radix,
-// returns the value,
-// otherwise return -1.
-auto Token::tex_is_digit(unsigned radix) const -> long {
-    auto w = val_as_other();
-    if ('0' <= w && w <= radix + '0' && w <= '9') // do not use is_digit...
-        return to_signed(w) - '0';
-    if (radix != 16) return -1;
-    if (w <= 'F' && w >= 'A') return to_signed(w) - 'A' + 10;
-    w = val_as_letter(); // allow category code 11 digits
-    if (w <= 'F' && w >= 'A') return to_signed(w) - 'A' + 10;
-    return -1;
-}
-
 // --------------------------------------------------
 // Division
 

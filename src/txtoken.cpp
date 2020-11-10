@@ -121,15 +121,6 @@ auto token_ns::replace_space(TokenList &A, Token x2, Token x3) -> int {
     return n;
 }
 
-// True if the Token is upper case or lower case x
-auto Token::no_case_letter(char x) const -> bool {
-    if (cmd_val() != letter_catcode) return false;
-    auto c = to_signed(val_as_letter());
-    if (c == x) return true;
-    if (c == x + 'A' - 'a') return true;
-    return false;
-}
-
 auto token_ns::compare(const TokenList &A, const TokenList &B) -> bool {
     auto C1 = A.begin();
     auto E1 = A.end();

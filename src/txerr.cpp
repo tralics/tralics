@@ -82,12 +82,10 @@ void Parser::signal_error(Token T, const std::string &s) {
     signal_error();
     if (no_xml_error) return;
     if (T.is_null()) return;
-    auto str = std::string(s);
     the_stack.add_newid0("error");
-    std::string cmd = convert_for_xml_err(T);
-    the_stack.add_att_to_last(the_names["c"], str);
+    the_stack.add_att_to_last(the_names["c"], s);
     the_stack.add_att_to_last(the_names["l"], cur_line_to_istring());
-    the_stack.add_att_to_last(the_names["n"], cmd);
+    the_stack.add_att_to_last(the_names["n"], convert_for_xml_err(T));
 }
 
 // identical to  ostream& operator<<(ostream&fp, const TokenList& L)

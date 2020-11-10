@@ -174,30 +174,6 @@ void Buffer::insert_escape_char_raw() {
         append("^^@");
 }
 
-// Returns a temporary string: the name of the token
-// This is used for printing errors in the transcript file
-// Uses the function below, except for characters
-auto Token::tok_to_str() const -> std::string {
-    Buffer B;
-    if (!is_a_char() || cmd_val() == eol_catcode) {
-        B.push_back(*this);
-        return std::move(B);
-    }
-    unsigned cat      = cmd_val();
-    char32_t c        = char_val();
-    bool     good_cat = false;
-    if ((c >= 128) && cat == 12) good_cat = true;
-    if ((std::isalpha(static_cast<int>(c)) != 0) && cat == 11) good_cat = true;
-    if (good_cat)
-        B.out_log(c, the_main.log_encoding);
-    else {
-        B.append("{Character ");
-        B.out_log(c, the_main.log_encoding);
-        B.format(" of catcode {}}}", cat);
-    }
-    return std::move(B);
-}
-
 // This puts the name of the token in the buffer.
 // This is used when printing a token list
 
@@ -355,8 +331,6 @@ void Buffer::push_back(const SthInternal &x) {
     default: append("??");
     }
 }
-
-auto operator<<(std::ostream &fp, Token x) -> std::ostream & { return fp << x.tok_to_str(); }
 
 auto operator<<(std::ostream &fp, const Glue &x) -> std::ostream & {
     Buffer B;
