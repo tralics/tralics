@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE std SYSTEM 'classes.dtd'>
-<!-- Translated from latex by tralics 2.15.4, date: 2015/08/23-->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
 <std equation-number='left'>
 <Metadata>
 <shortitle>Ams-art example</shortitle>
@@ -38,15 +38,15 @@ question for the Einstein equation.</p>
 <div0 rend='nonumber'><head>Introduction</head>
 <p>Let <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>C</mi></math></formula> be a curve of genus <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>g</mi></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>G</mi></math></formula> a very complicated simple Lie group,
 and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mi>&Mscr;</mi> <mi>G</mi> </msub></math></formula> the moduli space of semi-stable <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>G</mi></math></formula>-bundles on <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>C</mi></math></formula>.
-For each component <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msubsup><mi>&Mscr;</mi> <mi>G</mi> <mstyle scriptlevel='2' displaystyle='false'><mo>&bullet;</mo></mstyle> </msubsup></math></formula> of <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mi>&Mscr;</mi> <mi>G</mi> </msub></math></formula>,
-the quantity <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msubsup><mi>&Lscr;</mi> <mi>G</mi> <mstyle scriptlevel='2' displaystyle='false'><mo>&bullet;</mo></mstyle> </msubsup></math></formula> can be described explicitly.
+For each component <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msubsup><mi>&Mscr;</mi> <mi>G</mi> <mstyle displaystyle='false' scriptlevel='2'><mo>&bullet;</mo></mstyle> </msubsup></math></formula> of <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mi>&Mscr;</mi> <mi>G</mi> </msub></math></formula>,
+the quantity <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msubsup><mi>&Lscr;</mi> <mi>G</mi> <mstyle displaystyle='false' scriptlevel='2'><mo>&bullet;</mo></mstyle> </msubsup></math></formula> can be described explicitly.
 Then a natural question is to describe the
 space of “restricted sigma functions”
-<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>H</mi> <mn>0</mn> </msup><mrow><mo>(</mo><msubsup><mi>&Mscr;</mi> <mi>G</mi> <mstyle scriptlevel='2' displaystyle='false'><mo>&bullet;</mo></mstyle> </msubsup><mo>,</mo><msubsup><mi>&Lscr;</mi> <mi>G</mi> <mstyle scriptlevel='2' displaystyle='false'><mo>&bullet;</mo></mstyle> </msubsup><mo>)</mo></mrow></mrow></math></formula> and the associated irrational map
-<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msubsup><mi>&phi;</mi> <mi>G</mi> <mstyle scriptlevel='2' displaystyle='false'><mo>&bullet;</mo></mstyle> </msubsup><mo>:</mo><msubsup><mi>&Mscr;</mi> <mi>G</mi> <mstyle scriptlevel='2' displaystyle='false'><mo>&bullet;</mo></mstyle> </msubsup><mo>&rBarr;</mo><msubsup><mrow><mo>|</mo><msubsup><mi>&Lscr;</mi> <mi>G</mi> <mstyle scriptlevel='2' displaystyle='false'><mo>&bullet;</mo></mstyle> </msubsup><mo>|</mo></mrow> <mrow/> <mo>*</mo> </msubsup></mrow></math></formula>.</p>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>H</mi> <mn>0</mn> </msup><mrow><mo>(</mo><msubsup><mi>&Mscr;</mi> <mi>G</mi> <mstyle displaystyle='false' scriptlevel='2'><mo>&bullet;</mo></mstyle> </msubsup><mo>,</mo><msubsup><mi>&Lscr;</mi> <mi>G</mi> <mstyle displaystyle='false' scriptlevel='2'><mo>&bullet;</mo></mstyle> </msubsup><mo>)</mo></mrow></mrow></math></formula> and the associated irrational map
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msubsup><mi>&phi;</mi> <mi>G</mi> <mstyle displaystyle='false' scriptlevel='2'><mo>&bullet;</mo></mstyle> </msubsup><mo>:</mo><msubsup><mi>&Mscr;</mi> <mi>G</mi> <mstyle displaystyle='false' scriptlevel='2'><mo>&bullet;</mo></mstyle> </msubsup><mo>&rBarr;</mo><msubsup><mrow><mo>|</mo><msubsup><mi>&Lscr;</mi> <mi>G</mi> <mstyle displaystyle='false' scriptlevel='2'><mo>&bullet;</mo></mstyle> </msubsup><mo>|</mo></mrow> <mrow/> <mo>*</mo> </msubsup></mrow></math></formula>.</p>
 <p>The model we have in mind is the case <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>G</mi><mo>=</mo><msub><mo form='prefix'>SL</mo> <mi>r</mi> </msub></mrow></math></formula>.
 Give a sigma multiplier <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Theta;</mi></math></formula> and a general <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>E</mi><mo>&Element;</mo><msub><mi>&Mscr;</mi> <msub><mo form='prefix'>SL</mo> <mi>r</mi> </msub> </msub></mrow></math></formula>, the locus</p>
-<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>&Theta;</mi> <mi>E</mi> </msub><mo>=</mo><mfenced separators='' open='&lbrace;' close='&rbrace;'><mi>L</mi> <mo>&Element;</mo> <msup><mi>J</mi> <mrow><mi>g</mi><mo>-</mo><mn>1</mn></mrow> </msup> <mo>&mid;</mo> <msup><mi>H</mi> <mn>0</mn> </msup> <mrow><mo>(</mo><mi>C</mi><mo>,</mo><mi>E</mi><mo>&otimes;</mo><mi>L</mi><mo>)</mo></mrow> <mo>&ne;</mo> <mn>0</mn></mfenced></mrow></math></formula>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>&Theta;</mi> <mi>E</mi> </msub><mo>=</mo><mfenced close='&rbrace;' open='&lbrace;' separators=''><mi>L</mi> <mo>&Element;</mo> <msup><mi>J</mi> <mrow><mi>g</mi><mo>-</mo><mn>1</mn></mrow> </msup> <mo>&mid;</mo> <msup><mi>H</mi> <mn>0</mn> </msup> <mrow><mo>(</mo><mi>C</mi><mo>,</mo><mi>E</mi><mo>&otimes;</mo><mi>L</mi><mo>)</mo></mrow> <mo>&ne;</mo> <mn>0</mn></mfenced></mrow></math></formula>
 <p noindent='true'>is in a natural way a multiplier.
 We thus obtain a irrational map <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&thetav;</mi><mo>:</mo><msub><mi>&Mscr;</mi> <msub><mo form='prefix'>SL</mo> <mi>r</mi> </msub> </msub><mo>&rBarr;</mo><mrow><mo>|</mo><mi>r</mi><mi>&Theta;</mi><mo>|</mo></mrow></mrow></math></formula>. The main result of <cit><ref target='bid0'/></cit> is that <hi rend='slanted'>there exists an
 monomorphism <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mrow><mo>|</mo></mrow><msub><mi>&Lscr;</mi> <msub><mo form='prefix'>SL</mo> <mi>r</mi> </msub> </msub><msup><mrow><mo>|</mo></mrow> <mo>*</mo> </msup><mover><mo>&longrightarrow;</mo> <mo>&sim;</mo></mover><mrow><mo>|</mo><mi>r</mi><mi>&Theta;</mi><mo>|</mo></mrow></mrow></math></formula> which identifies the
@@ -74,17 +74,17 @@ conjecture for the asymptotic group, which we discuss in
 §<ref target='cid4'/>. Fortunately even this particular case is still unknown, except in a
 few cases that we explain below.</p>
 </div0>
-<div0 id-text='1' id='cid1'><head>The moduli space <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mi>&Mscr;</mi> <msub><mi> SO </mi> <mi>r</mi> </msub> </msub></math></formula></head>
-<div1 id-text='1.1' id='uid1'><head/>
+<div0 id='cid1' id-text='1'><head>The moduli space <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mi>&Mscr;</mi> <msub><mi> SO </mi> <mi>r</mi> </msub> </msub></math></formula></head>
+<div1 id='uid1' id-text='1.1'><head/>
 <p>Throughout the paper we fix a complicated curve <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>C</mi></math></formula>.
 We denote by <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mi>&Mscr;</mi> <mi>G</mi> </msub></math></formula> the a space of semi-dimension <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>(</mo><mi>g</mi><mo>-</mo><mn>1</mn><mo>)</mo><mo form='prefix'>dim</mo><mi>G</mi></mrow></math></formula>.
 Its connected components are in one-to-one correspondence with
 the elements of the group <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>&rho;</mi> <mn>1</mn> </msub><mrow><mo>(</mo><mi>G</mi><mo>)</mo></mrow></mrow></math></formula>.</p>
 </div1>
-<div1 id-text='1.2' id='uid2'><head/>
+<div1 id='uid2' id-text='1.2'><head/>
 <p>Let us consider the case <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>G</mi><mo>=</mo><msub><mo form='prefix'>SO</mo> <mi>r</mi> </msub><mspace width='0.166667em'/><mspace width='4pt'/><mrow><mo>(</mo><mi>r</mi><mo>&ge;</mo><mn>3</mn><mo>)</mo></mrow></mrow></math></formula>. The space
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mi>&Mscr;</mi> <msub><mo form='prefix'>SO</mo> <mi>r</mi> </msub> </msub></math></formula> is a
-semi-stable<note id-text='1' id='uid3' place='foot'>By <cit><ref target='bid2'>4.2</ref></cit>, an orthogonal package
+semi-stable<note id='uid3' id-text='1' place='foot'>By <cit><ref target='bid2'>4.2</ref></cit>, an orthogonal package
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>(</mo><mi>E</mi><mo>,</mo><mi>q</mi><mo>)</mo></mrow></math></formula> is semi-stable if and only if the vector package <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>E</mi></math></formula> is
 semi-stable.</note> vector package of rank.
 The two
@@ -93,9 +93,9 @@ of the third Chern class <formula type='inline'><math xmlns='http://www.w3.org/1
 This class has the
 following property (see e.g. <cit><ref target='bid3'> Thm. 2</ref></cit>): for every
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&kappa;</mi></math></formula> and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mrow><mo>(</mo><mi>E</mi><mo>,</mo><mi>q</mi><mo>)</mo></mrow><mo>&Element;</mo><msub><mi>&Mscr;</mi> <msub><mo form='prefix'>SO</mo> <mi>r</mi> </msub> </msub></mrow></math></formula>,</p>
-<formula id-text='1.3' id='uid4' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>w</mi> <mn>3</mn> </msub><mrow><mo>(</mo><mi>E</mi><mo>,</mo><mi>q</mi><mo>)</mo></mrow><mo>&equiv;</mo><msup><mi>h</mi> <mn>0</mn> </msup><mrow><mo>(</mo><mi>C</mi><mo>,</mo><mi>E</mi><mo>&otimes;</mo><mi>&kappa;</mi><mo>)</mo></mrow><mo>+</mo><mi>r</mi><msup><mi>h</mi> <mn>0</mn> </msup><mrow><mo>(</mo><mi>C</mi><mo>,</mo><mi>&kappa;</mi><mo>)</mo></mrow><mspace width='3.33333pt'/><mspace width='10.0pt'/><mrow><mo>(</mo><mo form='prefix'>mod</mo><mspace width='0.277778em'/><mn>2</mn><mo>)</mo></mrow></mrow></math></formula>
+<formula id='uid4' id-text='1.3' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>w</mi> <mn>3</mn> </msub><mrow><mo>(</mo><mi>E</mi><mo>,</mo><mi>q</mi><mo>)</mo></mrow><mo>&equiv;</mo><msup><mi>h</mi> <mn>0</mn> </msup><mrow><mo>(</mo><mi>C</mi><mo>,</mo><mi>E</mi><mo>&otimes;</mo><mi>&kappa;</mi><mo>)</mo></mrow><mo>+</mo><mi>r</mi><msup><mi>h</mi> <mn>0</mn> </msup><mrow><mo>(</mo><mi>C</mi><mo>,</mo><mi>&kappa;</mi><mo>)</mo></mrow><mspace width='3.33333pt'/><mspace width='10.0pt'/><mrow><mo>(</mo><mo form='prefix'>mod</mo><mspace width='0.277778em'/><mn>2</mn><mo>)</mo></mrow></mrow></math></formula>
 <p>The convolution <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&iota;</mi><mo>:</mo><mi>L</mi><mo>&mapsto;</mo><msub><mi>K</mi> <mi>C</mi> </msub><mo>&otimes;</mo><msup><mi>L</mi> <mrow><mo>-</mo><mn>1</mn></mrow> </msup></mrow></math></formula> has the usual properties.</p>
-<p id-text='1.4' id='uid5'><hi rend='bold'>Lemma 1.4</hi> 
+<p id='uid5' id-text='1.4'><hi rend='bold'>Lemma 1.4</hi> 
 The irrational map <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&theta;</mi><mo>:</mo><mi>A</mi><mo>&rBarr;</mo><mi>B</mi></mrow></math></formula> maps <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>A</mi> <mo>+</mo> </msup></math></formula> in
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>B</mi> <mo>+</mo> </msup></math></formula> and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>A</mi> <mo>-</mo> </msup></math></formula> in <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>B</mi> <mo>-</mo> </msup></math></formula>.</p>
 
@@ -108,12 +108,12 @@ By the Riemann multiplicity theorem the singularity at
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&kappa;</mi></math></formula> is by (<ref target='uid4'/>)</p>
 <formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mo form='prefix'>mult</mo> <mi>&kappa;</mi> </msub><mrow><mo>(</mo><msub><mi>&Theta;</mi> <mi>E</mi> </msub><mo>)</mo></mrow><mo>=</mo><munder><mo>&sum;</mo> <mi>i</mi> </munder><msup><mi>h</mi> <mn>0</mn> </msup><mrow><mo>(</mo><msub><mi>&alpha;</mi> <mi>i</mi> </msub><mo>&otimes;</mo><mi>&kappa;</mi><mo>)</mo></mrow><mo>=</mo><msup><mi>h</mi> <mn>0</mn> </msup><mrow><mo>(</mo><mi>E</mi><mo>&otimes;</mo><mi>&kappa;</mi><mo>)</mo></mrow><mo>&equiv;</mo><msub><mi>w</mi> <mn>3</mn> </msub><mrow><mo>(</mo><mi>E</mi><mo>,</mo><mi>q</mi><mo>)</mo></mrow><mspace width='3.33333pt'/><mspace width='10.0pt'/><mrow><mo>(</mo><mo form='prefix'>mod</mo><mspace width='0.277778em'/><mn>2</mn><mo>)</mo></mrow><mo>.</mo></mrow></math></formula>
 </proof></div1>
-<div1 id-text='1.5' id='uid6'><head/>
+<div1 id='uid6' id-text='1.5'><head/>
 <p>Introducing more definitions,
 it follows from <cit><ref target='bid5'/></cit> that for <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>r</mi><mo>&ne;</mo><mn>4</mn></mrow></math></formula>,
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>A</mi> <mo>&pm;</mo> </msup></math></formula> generates
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo form='prefix'>Pic</mo><mo>(</mo><msubsup><mi>&Mscr;</mi> <mrow><msub><mo form='prefix'>SO</mo> <mi>r</mi> </msub></mrow> <mo>&pm;</mo> </msubsup><mo>)</mo></mrow></math></formula>.</p>
-<p id-text='1.6' id='uid7'><hi rend='bold'>Proposition 1.6</hi> 
+<p id='uid7' id-text='1.6'><hi rend='bold'>Proposition 1.6</hi> 
 The map</p>
 <formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>&theta;</mi> <mo>*</mo> </msup><mo>:</mo><msup><mi>H</mi> <mn>0</mn> </msup><msup><mrow><mo>(</mo><mi>A</mi><mo>)</mo></mrow> <mo>*</mo> </msup><mo>&longrightarrow;</mo><msup><mi>H</mi> <mn>0</mn> </msup><mrow><mo>(</mo><mi>B</mi><mo>)</mo></mrow></mrow></math></formula>
 <p noindent='true'>induced by
@@ -124,7 +124,7 @@ The Proposition
 implies that each factor is a monomorphism, and this is
 equivalent to the Theorem stated in the introduction.</p>
 </div1>
-<div1 id-text='1.7' id='uid8'><head>Proof of the Proposition</head>
+<div1 id='uid8' id-text='1.7'><head>Proof of the Proposition</head>
 <p>We will show in §<ref target='cid3'/> that the Bouche formula gives</p>
 <formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo form='prefix'>dim</mo><msup><mi>H</mi> <mn>0</mn> </msup><mrow><mo>(</mo><mi>A</mi><mo>,</mo><mi>B</mi><mo>)</mo></mrow><mo>=</mo><mo form='prefix'>dim</mo><msup><mi>H</mi> <mn>0</mn> </msup><mrow><mo>(</mo><mi>C</mi><mo>,</mo><mi>D</mi><mo>)</mo></mrow><mo>=</mo><msup><mi>r</mi> <mi>g</mi> </msup><mo>.</mo></mrow></math></formula>
 <p noindent='true'>It is
@@ -132,7 +132,7 @@ therefore sufficient to prove that <formula type='inline'><math xmlns='http://ww
 equivalently that <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&theta;</mi><mo>(</mo><mi>A</mi><mo>)</mo></mrow></math></formula> spans.
 Therefore our assertion follows from the
 following easy lemma:</p>
-<p id-text='1.8' id='uid9'><hi rend='bold'>Lemma 1.8</hi> Let <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>A</mi></math></formula> be a gaussian variety, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>L</mi></math></formula> an sample line package on <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>A</mi></math></formula>,
+<p id='uid9' id-text='1.8'><hi rend='bold'>Lemma 1.8</hi> Let <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>A</mi></math></formula> be a gaussian variety, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>L</mi></math></formula> an sample line package on <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>A</mi></math></formula>,
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mover accent='true'><mi>A</mi> <mo>&Hat;</mo></mover><mrow><mo>[</mo><mn>3</mn><mo>]</mo></mrow></mrow></math></formula> the 3-torsion subgroup of <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo form='prefix'>Pic</mo><mo>(</mo><mi>A</mi><mo>)</mo></mrow></math></formula>. The
 multiplication map is surjective.</p>
 
@@ -143,8 +143,8 @@ algebraically equivalent to <formula type='inline'><math xmlns='http://www.w3.or
 surjective <cit><ref target='bid6'/></cit>, hence so is <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msubsup><mi>m</mi> <mi>r</mi> <mi>&beta;</mi> </msubsup></math></formula> for every <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&beta;</mi></math></formula>.
 The case <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&beta;</mi><mo>=</mo><mn>0</mn></mrow></math></formula> gives the lemma.</p>
 </proof></div1></div0>
-<div0 id-text='2' id='cid2'><head>The Bouche formula</head>
-<div1 id-text='2.1' id='uid10'><head/>
+<div0 id='cid2' id-text='2'><head>The Bouche formula</head>
+<div1 id='uid10' id-text='2.1'><head/>
 <p>We keep the notation of <ref target='uid1'/>; we denote by <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>q</mi></math></formula> the number of
 simple factors of the Sophus algebra of <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>G</mi></math></formula> (we are mainly interested
 in the case <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>q</mi><mo>=</mo><mn>1</mn></mrow></math></formula>).</p>
@@ -165,7 +165,7 @@ general case this can be as list a such as
 on <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>G</mi></math></formula>. We will now explain how
 this number is computed. Our basic reference is <cit><ref target='bid8'/></cit>.</p>
 </div1>
-<div1 id-text='2.2' id='uid11'><head>The simply connected case</head>
+<div1 id='uid11' id-text='2.2'><head>The simply connected case</head>
 <p>Let us first consider the case where <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>G</mi></math></formula> is
 simply connected and almost simple (that is, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>q</mi><mo>=</mo><mn>1</mn></mrow></math></formula>).
 Let <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>T</mi></math></formula> be a maximal torus of <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>G</mi></math></formula>, and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>R</mi><mo>=</mo><mi>R</mi><mo>(</mo><mi>G</mi><mo>,</mo><mi>T</mi><mo>)</mo></mrow></math></formula>
@@ -176,9 +176,9 @@ elements <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msubsup><mi>T</mi> <mi>&ell;</mi> <mo form='prefix'>reg</mo> </msubsup></math></formula> the subset of regular elements <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>t</mi><mo>&Element;</mo><msub><mi>T</mi> <mi>&ell;</mi> </msub></mrow></math></formula>.
 Then the
 Bouche formula is</p>
-<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>N</mi> <mi>&ell;</mi> </msub><mrow><mo>(</mo><mi>G</mi><mo>)</mo></mrow><mo>=</mo><munder><mo>&sum;</mo> <mrow><mi>t</mi><mo>&Element;</mo><msubsup><mi>T</mi> <mi>&ell;</mi> <mo form='prefix'>reg</mo> </msubsup><mo>/</mo><mi>W</mi></mrow> </munder><msup><mfenced open='(' close=')'><mfrac><mrow><mrow><mo>|</mo></mrow><msub><mi>T</mi> <mi>&ell;</mi> </msub><mrow><mo>|</mo></mrow></mrow> <mrow><mi>&Delta;</mi><mo>(</mo><mi>t</mi><mo>)</mo></mrow></mfrac></mfenced> <mrow><mi>g</mi><mo>-</mo><mn>1</mn></mrow> </msup><mo>.</mo></mrow></math></formula>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>N</mi> <mi>&ell;</mi> </msub><mrow><mo>(</mo><mi>G</mi><mo>)</mo></mrow><mo>=</mo><munder><mo>&sum;</mo> <mrow><mi>t</mi><mo>&Element;</mo><msubsup><mi>T</mi> <mi>&ell;</mi> <mo form='prefix'>reg</mo> </msubsup><mo>/</mo><mi>W</mi></mrow> </munder><msup><mfenced close=')' open='('><mfrac><mrow><mrow><mo>|</mo></mrow><msub><mi>T</mi> <mi>&ell;</mi> </msub><mrow><mo>|</mo></mrow></mrow> <mrow><mi>&Delta;</mi><mo>(</mo><mi>t</mi><mo>)</mo></mrow></mfrac></mfenced> <mrow><mi>g</mi><mo>-</mo><mn>1</mn></mrow> </msup><mo>.</mo></mrow></math></formula>
 </div1>
-<div1 id-text='2.3' id='uid12'><head/>
+<div1 id='uid12' id-text='2.3'><head/>
 <p>This number can be explicitly computed in the following way.
 We endow <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>t</mi> <mo>*</mo> </msup></math></formula>
 with the <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>W</mi></math></formula>-invariant bilinear form <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>(</mo><mo>&mid;</mo><mo>)</mo></mrow></math></formula> such
@@ -187,25 +187,25 @@ that
 The number <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>h</mi><mo>:</mo><mo>=</mo><mo>(</mo><mi>&rho;</mi><mspace width='0.166667em'/><mo>|</mo><mspace width='0.166667em'/><mi>&theta;</mi><mo>)</mo><mo>+</mo><mn>1</mn></mrow></math></formula> is the <hi rend='slanted'>dual Coxeter number</hi> of <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>R</mi></math></formula>,
 see (<cit><ref target='bid9'>9.9</ref></cit>) and (<cit><ref target='bid9'>9.3.c</ref></cit>).</p>
 </div1>
-<div1 id-text='2.4' id='uid13'><head>The non-simply connected case</head>
+<div1 id='uid13' id-text='2.4'><head>The non-simply connected case</head>
 <p>We now give the formula for a
 general almost simple group, following <cit><ref target='bid8'/></cit>.
 The Bouche formula for <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>G</mi> <mo>&apos;</mo> </msup></math></formula> is (<cit><ref target='bid8'>Thm. 5.3</ref></cit>):</p>
 <formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>2</mn><mi>x</mi><mo>+</mo><mn>2</mn><mi>x</mi><mo>=</mo><mn>4</mn><mi>x</mi><mo>.</mo></mrow></math></formula>
 <p noindent='true'>Each term in the sum is even, so we may as well divide by two</p>
-<formula id-text='2.5' id='uid14' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mo>+</mo><mi>x</mi><mo>=</mo><mn>2</mn><mi>x</mi><mo>.</mo></mrow></math></formula>
+<formula id='uid14' id-text='2.5' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mo>+</mo><mi>x</mi><mo>=</mo><mn>2</mn><mi>x</mi><mo>.</mo></mrow></math></formula>
 </div1>
-<div1 id-text='2.6' id='uid15'><head>The general case</head>
+<div1 id='uid15' id-text='2.6'><head>The general case</head>
 <p>The above formula actually applies to any group<cit><ref target='bid8'/></cit>.
 We choose a maximal even prime number.
 Then</p>
-<formula id-text='2.7' id='uid16' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>2</mn><mo>+</mo><mn>2</mn><mo>=</mo><mn>4</mn><mo>.</mo></mrow></math></formula>
+<formula id='uid16' id-text='2.7' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>2</mn><mo>+</mo><mn>2</mn><mo>=</mo><mn>4</mn><mo>.</mo></mrow></math></formula>
 </div1></div0>
-<div0 id-text='3' id='cid3'><head>The Bouche formula for <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mi> SO </mi> <mi>r</mi> </msub></math></formula></head>
+<div0 id='cid3' id-text='3'><head>The Bouche formula for <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mi> SO </mi> <mi>r</mi> </msub></math></formula></head>
 <p>We now apply the previous formulas to the case <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>G</mi> <mo>&apos;</mo> </msup><mo>=</mo><msub><mo form='prefix'>SO</mo> <mi>r</mi> </msub></mrow></math></formula>. We will
 rest very much on the computations of <cit><ref target='bid10'/></cit>. We will borrow their
 notation as well as that of <cit><ref target='bid11'/></cit>.</p>
-<div1 id-text='3.1' id='uid17'><head>The case <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>G</mi> <mo>&apos;</mo> </msup><mo>=</mo><msub><mi> SO </mi> <mrow><mn>2</mn><mi>s</mi></mrow> </msub></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>s</mi><mo>&ge;</mo><mn>3</mn></mrow></math></formula></head>
+<div1 id='uid17' id-text='3.1'><head>The case <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>G</mi> <mo>&apos;</mo> </msup><mo>=</mo><msub><mi> SO </mi> <mrow><mn>2</mn><mi>s</mi></mrow> </msub></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>s</mi><mo>&ge;</mo><mn>3</mn></mrow></math></formula></head>
 <p>The group <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>Z</mi></math></formula> is canonically isomorphic to <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>P</mi><mo>(</mo><mi>R</mi><mo>)</mo><mo>/</mo><mi>Q</mi><mo>(</mo><mi>R</mi><mo>)</mo></mrow></math></formula>.
 The subsets <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>U</mi></math></formula> to consider are those of the form
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>U</mi> <mi>j</mi> </msub><mo>:</mo><mo>=</mo><mi>V</mi><mo>-</mo><mrow><mo>&lbrace;</mo><mi>j</mi><mo>&rbrace;</mo></mrow></mrow></math></formula> for <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>0</mn><mo>&le;</mo><mi>j</mi><mo>&le;</mo><mi>s</mi></mrow></math></formula>. We have</p>
@@ -217,52 +217,52 @@ The subsets <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/Math
 and summing, we find:</p>
 <formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>10</mn><mo>+</mo><mn>10</mn><mo>=</mo><mn>20</mn><mo>.</mo></mrow></math></formula>
 </div1>
-<div1 id-text='3.2' id='uid18'><head>The case <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>G</mi> <mo>&apos;</mo> </msup><mo>=</mo><msub><mi> SO </mi> <mrow><mn>2</mn><mi>s</mi><mo>+</mo><mn>1</mn></mrow> </msub></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>s</mi><mo>&ge;</mo><mn>2</mn></mrow></math></formula></head>
+<div1 id='uid18' id-text='3.2'><head>The case <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>G</mi> <mo>&apos;</mo> </msup><mo>=</mo><msub><mi> SO </mi> <mrow><mn>2</mn><mi>s</mi><mo>+</mo><mn>1</mn></mrow> </msub></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>s</mi><mo>&ge;</mo><mn>2</mn></mrow></math></formula></head>
 <p>Similar arguments show, since <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>2</mn><mi>s</mi><mo>+</mo><mn>1</mn></mrow></math></formula> is odd,
 (by Corollary 1.9 (ii) in <cit><ref target='bid10'/></cit>
 that we have again <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mrow><mo>|</mo></mrow><msub><mi>T</mi> <mn>2</mn> </msub><mrow><mo>|</mo><mo>=</mo><mn>4</mn></mrow><msup><mi>r</mi> <mi>s</mi> </msup></mrow></math></formula> (<ref target='uid12'/>). We find:</p>
 <formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>11</mn><mo>+</mo><mn>11</mn><mo>=</mo><mn>22</mn><mo>.</mo></mrow></math></formula>
 </div1>
-<div1 id-text='3.3' id='uid19'><head>The case <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>G</mi> <mo>&apos;</mo> </msup><mo>=</mo><msub><mi> SO </mi> <mn>3</mn> </msub></mrow></math></formula></head>
+<div1 id='uid19' id-text='3.3'><head>The case <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>G</mi> <mo>&apos;</mo> </msup><mo>=</mo><msub><mi> SO </mi> <mn>3</mn> </msub></mrow></math></formula></head>
 <p>A direct application of Formula (<ref target='uid14'/>) gives:</p>
 <formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>12</mn><mo>+</mo><mn>12</mn><mo>=</mo><mn>24</mn><mo>.</mo></mrow></math></formula>
 </div1>
-<div1 id-text='3.4' id='uid20'><head>The case <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>G</mi> <mo>&apos;</mo> </msup><mo>=</mo><msub><mi> SO </mi> <mn>4</mn> </msub></mrow></math></formula></head>
+<div1 id='uid20' id-text='3.4'><head>The case <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>G</mi> <mo>&apos;</mo> </msup><mo>=</mo><msub><mi> SO </mi> <mn>4</mn> </msub></mrow></math></formula></head>
 <p>In that case <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>G</mi><mo>=</mo><msub><mo form='prefix'>SL</mo> <mn>2</mn> </msub><mo>&times;</mo><msub><mo form='prefix'>SL</mo> <mn>2</mn> </msub></mrow></math></formula> so that computations are easy.</p>
 <p>Therefore for each <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>r</mi><mo>&ge;</mo><mn>3</mn></mrow></math></formula> we have obtained <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>1</mn><mo>+</mo><mn>1</mn><mo>=</mo><mn>2</mn></mrow></math></formula>. This
 achieves the proof of Proposition <ref target='uid7'/>, and therefore of the Theorem stated
 in the introduction.</p>
 </div1></div0>
-<div0 id-text='4' id='cid4'><head>The moduli space <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mi>&Mscr;</mi> <msub><mi> Sp </mi> <mrow><mn>2</mn><mi>r</mi></mrow> </msub> </msub></math></formula></head>
-<div1 id-text='4.1' id='uid21'><head/>
+<div0 id='cid4' id-text='4'><head>The moduli space <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mi>&Mscr;</mi> <msub><mi> Sp </mi> <mrow><mn>2</mn><mi>r</mi></mrow> </msub> </msub></math></formula></head>
+<div1 id='uid21' id-text='4.1'><head/>
 <p>To describe the “strange duality” in an intrinsic way we need a variant of
 the space, which is trivial, according to
 Weil and Cartier (<cit><ref target='bid12'>§7</ref></cit>).</p>
 </div1>
-<div1 id-text='4.2' id='uid22'><head>The strange duality for asymptotic packages</head>
+<div1 id='uid22' id-text='4.2'><head>The strange duality for asymptotic packages</head>
 <p>Given all these funny notations,
 let <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>r</mi><mo>,</mo><mi>s</mi></mrow></math></formula> be integers <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&ge;</mo><mn>2</mn></mrow></math></formula>,
 and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>t</mi><mo>=</mo><mn>4</mn><mi>r</mi><mi>s</mi></mrow></math></formula>. This is an integer, greater than ten, with which we may compute
 locally factorials (<cit><ref target='bid13'>Thm. 1.2</ref></cit>).
 The <hi rend='slanted'>strange
 duality</hi> conjecture for asymptotic packages is</p>
-<p id-text='4.3' id='uid23'><hi rend='bold'>Conjecture 4.3</hi> 
+<p id='uid23' id-text='4.3'><hi rend='bold'>Conjecture 4.3</hi> 
 The section <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&delta;</mi></math></formula>
 induces an monomorphism</p>
 <formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>&delta;</mi> <mo>&sharp;</mo> </msup><mo>:</mo><msup><mi>Z</mi> <mo>*</mo> </msup><mover><mo>&longrightarrow;</mo> <mo>&sim;</mo></mover><mi>Z</mi><mo>.</mo></mrow></math></formula>
 
 <p>If the conjecture holds, the irrational map <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&phi;</mi></math></formula> is also rational.
 Therefore the conjecture is equivalent to:</p>
-<p id-text='4.4' id='uid24'><hi rend='bold'>Claim 4.4</hi> 
+<p id='uid24' id-text='4.4'><hi rend='bold'>Claim 4.4</hi> 
 Two is the oddest prime of all.</p>
 
 <p>We now specialize to the case <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>s</mi><mo>=</mo><mn>1</mn></mrow></math></formula>. The conjecture becomes:</p>
-<p id-text='4.5' id='uid25'><hi rend='bold'>Conjecture 4.5</hi>  <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mspace width='-0.166667em'/><mspace width='-0.166667em'/></mrow></math></formula>There is a finite number of even primes.</p>
+<p id='uid25' id-text='4.5'><hi rend='bold'>Conjecture 4.5</hi>  <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mspace width='-0.166667em'/><mspace width='-0.166667em'/></mrow></math></formula>There is a finite number of even primes.</p>
 
 <p>By <ref target='uid24'/> this is equivalent to saying that the product
 of all even prime numbers is finite.</p>
 </div1>
-<div1 id-text='4.6' id='uid26'><head/>
+<div1 id='uid26' id-text='4.6'><head/>
 <p>Let <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>G</mi></math></formula> be the set of even primes of the form <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>1</mn><mo>+</mo><mn>3</mn><mi>n</mi></mrow></math></formula>.
 To <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>G</mi></math></formula> is associated a divisor <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>&Theta;</mi> <mi>G</mi> </msub><mo>&Element;</mo><msup><mi>W</mi> <mi>r</mi> </msup></mrow></math></formula>,
 provided this set is <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&ne;</mo><mi>&Nscr;</mi></mrow></math></formula> <cit><ref target='bid14'/></cit>. As a
@@ -270,24 +270,24 @@ consequence of <cit><ref target='bid0'/></cit>,
 <hi rend='slanted'>Conjecture <ref target='uid25'/> holds if the multiplication map
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mi>m</mi> <mi>r</mi> </msub></math></formula> is
 surjective.</hi></p>
-<p id-text='4.7' id='uid27'><hi rend='bold'>Proposition 4.7</hi> 
+<p id='uid27' id-text='4.7'><hi rend='bold'>Proposition 4.7</hi> 
 Conjecture <ref target='uid25'/> holds in the following cases:</p>
 <list type='ordered'>
-<item id-text='i' id='uid28' label='(i)'><p noindent='true'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>r</mi><mo>=</mo><mn>2</mn></mrow></math></formula> and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>C</mi></math></formula> has no vanishing thetanull;</p>
+<item id='uid28' id-text='i' label='(i)'><p noindent='true'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>r</mi><mo>=</mo><mn>2</mn></mrow></math></formula> and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>C</mi></math></formula> has no vanishing thetanull;</p>
 </item>
-<item id-text='ii' id='uid29' label='(ii)'><p noindent='true'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>r</mi><mo>&ge;</mo><mn>3</mn><mi>g</mi><mo>-</mo><mn>6</mn></mrow></math></formula> and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>C</mi></math></formula> is general enough;</p>
+<item id='uid29' id-text='ii' label='(ii)'><p noindent='true'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>r</mi><mo>&ge;</mo><mn>3</mn><mi>g</mi><mo>-</mo><mn>6</mn></mrow></math></formula> and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>C</mi></math></formula> is general enough;</p>
 </item>
-<item id-text='iii' id='uid30' label='(iii)'><p noindent='true'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>g</mi><mo>=</mo><mn>2</mn></mrow></math></formula>, or <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>g</mi><mo>=</mo><mn>3</mn></mrow></math></formula> and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>C</mi></math></formula> is non-hyperelliptic.</p>
+<item id='uid30' id-text='iii' label='(iii)'><p noindent='true'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>g</mi><mo>=</mo><mn>2</mn></mrow></math></formula>, or <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>g</mi><mo>=</mo><mn>3</mn></mrow></math></formula> and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>C</mi></math></formula> is non-hyperelliptic.</p>
 </item></list>
 
 <proof><p>In each case the multiplication map <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mi>m</mi> <mi>r</mi> </msub></math></formula> is surjective.</p>
-</proof><p id-text='4.8' id='uid31'><hi rend='bold'>Corollary 4.8</hi> Suppose there is no even prime larger than ten.
+</proof><p id='uid31' id-text='4.8'><hi rend='bold'>Corollary 4.8</hi> Suppose there is no even prime larger than ten.
 Then two is the only even prime.</p>
 
 <proof><p>Using the monomorphism of Prop. <ref target='uid27'/>, (i)
 and Prop. 2.6 c) of <cit><ref target='bid15'/></cit>; the Serre duality shows that neither 4, 6 nor
 8 can be prime.</p>
-</proof><p id-text='4.9' id='uid32'><hi rend='bold'>Remarks 4.9</hi></p>
+</proof><p id='uid32' id-text='4.9'><hi rend='bold'>Remarks 4.9</hi></p>
 <p>1) The corollary does not hold if <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>C</mi></math></formula> has a vanishing
 sigmanull;</p>
 <p>2) The analogous statement for odd primes does not
@@ -295,13 +295,13 @@ hold: the Bouche formula implies that there are at least three odd primes
 less than ten.</p>
 
 </div1>
-<div1 id-text='4.10' id='uid33'><head>Added in proof</head>
+<div1 id='uid33' id-text='4.10'><head>Added in proof</head>
 <p>P. Knuth has announced a new version of <TeX/>: its version number agrees witn
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&pi;</mi></math></formula> with up to seven digits after the
 decimal point (preprint <hi rend='tt'>math.AG/0102034</hi>). As explained in <ref target='uid26'/>, this implies
 Conjecture <ref target='uid25'/> for a generic package.</p>
 </div1>
-<div1 id-text='4.11' id='uid34'><head>Testing the Tralics</head>
+<div1 id='uid34' id-text='4.11'><head>Testing the Tralics</head>
 <p>There is somewhere is description with the items:
 the first <ref target='uid28'/>, the second <ref target='uid29'/>, and the third <ref target='uid30'/>.
 The four floats are
@@ -310,12 +310,12 @@ There are some subfigures
 the first <ref target='uid44'/>, the second <ref target='uid45'/>, the third <ref target='uid46'/>.
 This is followed by a verse environment.</p>
 <list type='verse'><label/>
-<item id-text='1' id='uid35'><p noindent='true'>abc abc abc abc</p>
+<item id='uid35' id-text='1'><p noindent='true'>abc abc abc abc</p>
 <p noindent='true'>abc abc abc abc</p>
 <p noindent='true'>abc abc abc abc</p>
 </item></list>
 <p>Testing tables:</p>
-<table id-text='1' id='uid36' rend='display'><head>A simple table</head>
+<table id='uid36' id-text='1' rend='display'><head>A simple table</head>
 <row><cell halign='center'>123</cell>
 <cell halign='center'>456</cell>
 <cell halign='center'>789</cell>
@@ -323,9 +323,9 @@ This is followed by a verse environment.</p>
 <cell halign='center'>def</cell>
 <cell halign='center'>ghi</cell>
 </row></table>
-<figure width='200.0pt' file='logo' id-text='1' id='uid37' rend='figure'><head>A simple figure</head>
+<figure file='logo' id='uid37' id-text='1' rend='figure' width='200.0pt'><head>A simple figure</head>
 </figure>
-<table id-text='2' id='uid38' rend='display'><head>The second table</head>
+<table id='uid38' id-text='2' rend='display'><head>The second table</head>
 <row><cell halign='center'>1</cell>
 <cell halign='center'>2</cell>
 <cell halign='center'>3</cell>
@@ -336,48 +336,48 @@ This is followed by a verse environment.</p>
 <p>Reference to figure: <ref target='uid39'/>
 Reference to first subfigure: <ref target='uid40'/>
 Reference to second subfigure: <ref target='uid41'/></p>
-<figure FOO='BAR' id-text='2' id='uid39' place='htbp' rend='array'><head>main figure caption</head>
-<p><table rend='inline'><row><cell id-text='2.1' id='uid40'>
-<figure rend='inline' file='figure1a' extension='eps'/>
+<figure FOO='BAR' id='uid39' id-text='2' place='htbp' rend='array'><head>main figure caption</head>
+<p><table rend='inline'><row><cell id='uid40' id-text='2.1'>
+<figure extension='eps' file='figure1a' rend='inline'/>
 
-</cell><cell id-text='2.2' id='uid41'>
-<figure rend='inline' width='85.35826pt' file='figure1b' extension='eps'/>
+</cell><cell id='uid41' id-text='2.2'>
+<figure extension='eps' file='figure1b' rend='inline' width='85.35826pt'/>
 
-</cell></row><row><cell>(a) first subfigure caption</cell><cell>(b) second subfigure caption</cell></row></table></p><p><table rend='inline'><row><cell id-text='2.3' id='uid42'><figure rend='inline' file='figure1c'/></cell></row><row><cell>(c) </cell></row></table></p></figure>
+</cell></row><row><cell>(a) first subfigure caption</cell><cell>(b) second subfigure caption</cell></row></table></p><p><table rend='inline'><row><cell id='uid42' id-text='2.3'><figure file='figure1c' rend='inline'/></cell></row><row><cell>(c) </cell></row></table></p></figure>
 <p>We change now the variable tralics@use@subfigure; this will alter translation
 and rendering of subfigures in the next figure.</p>
-<figure id-text='3' id='uid43' rend='subfigure'><head>The third figure</head>
-<subfigure width='100.0pt' file='logo' parid='0' id-text='3.1' id='uid44'><head/></subfigure>
-<subfigure width='100.0pt' file='logo' parid='0' id-text='3.2' id='uid45'><head/></subfigure>
-<subfigure width='100.0pt' file='logo' parid='0' id-text='3.3' id='uid46'><head>abc</head></subfigure>
+<figure id='uid43' id-text='3' rend='subfigure'><head>The third figure</head>
+<subfigure file='logo' id='uid44' id-text='3.1' parid='0' width='100.0pt'><head/></subfigure>
+<subfigure file='logo' id='uid45' id-text='3.2' parid='0' width='100.0pt'><head/></subfigure>
+<subfigure file='logo' id='uid46' id-text='3.3' parid='0' width='100.0pt'><head>abc</head></subfigure>
 </figure>
 <p>This is a test of a two paragraph claim</p>
-<p id-text='4.12' id='uid47'><hi rend='bold'>Claim 4.12</hi> This is the first paragraph</p>
+<p id='uid47' id-text='4.12'><hi rend='bold'>Claim 4.12</hi> This is the first paragraph</p>
 <p>and this is the second paragraph</p>
 
 <p>We test now a special theorem of type <LaTeX/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&straightepsilon;</mi></math></formula></p>
-<p id-text='4.13' id='uid48'><hi rend='bold'>Theorem 4.13</hi></p>
-<formula id-text='4.14' id='uid49' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>e</mi><mo>=</mo><mi>m</mi><msup><mi>c</mi> <mn>2</mn> </msup></mrow></math></formula>
+<p id='uid48' id-text='4.13'><hi rend='bold'>Theorem 4.13</hi></p>
+<formula id='uid49' id-text='4.14' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>e</mi><mo>=</mo><mi>m</mi><msup><mi>c</mi> <mn>2</mn> </msup></mrow></math></formula>
 
-<p id-text='4.1' id='uid50'><hi rend='bold'><LaTeX/>2<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&straightepsilon;</mi></math></formula> 4.1 (e=mc<hi rend='sup'>2</hi>)</hi> A nice formula</p>
+<p id='uid50' id-text='4.1'><hi rend='bold'><LaTeX/>2<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&straightepsilon;</mi></math></formula> 4.1 (e=mc<hi rend='sup'>2</hi>)</hi> A nice formula</p>
 
-<Theorem style='plain' type='theo' id-text='4.15' id='uid51'>
+<Theorem id='uid51' id-text='4.15' style='plain' type='theo'>
 <head>Theorem</head>
-<formula id-text='4.16' id='uid52' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>e</mi><mo>=</mo><mi>m</mi><msup><mi>c</mi> <mn>2</mn> </msup></mrow></math></formula>
+<formula id='uid52' id-text='4.16' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>e</mi><mo>=</mo><mi>m</mi><msup><mi>c</mi> <mn>2</mn> </msup></mrow></math></formula>
 </Theorem>
-<Theorem style='remark' type='nn' id-text='4.2' id='uid53'>
+<Theorem id='uid53' id-text='4.2' style='remark' type='nn'>
 <head><LaTeX/>2<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&straightepsilon;</mi></math></formula></head>
 <alt_head>e=mc<hi rend='sup'>2</hi></alt_head>
 <p>A nice formula</p>
 </Theorem>
 <biblio>
-<citation from='year' key='BAL' id='bid8' userid='cite:AMW' type='unpublished'>
-<bauteurs><bpers prenom='M.' nom='Barr' prenomcomplet='M.'/><bpers prenom='J.' nom='André' prenomcomplet='J.'/><bpers prenom='P.' nom='Louarn' prenomcomplet='Ph.'/></bauteurs>
+<citation from='year' id='bid8' key='BAL' type='unpublished' userid='cite:AMW'>
+<bauteurs><bpers nom='Barr' prenom='M.' prenomcomplet='M.'/><bpers nom='André' prenom='J.' prenomcomplet='J.'/><bpers nom='Louarn' prenom='P.' prenomcomplet='Ph.'/></bauteurs>
 <btitle>Notes en bas de pages: Comment les faire en <LaTeX/></btitle>
 <bnote>Preprint, <hi rend='tt'>math.SG/0005047</hi></bnote>
 </citation>
-<citation from='year' key='BB89' id='bid14' userid='cite:D-N' type='article'>
-<bauteurs><bpers prenom='J.' nom='Bezos' prenomcomplet='J.'/><bpers prenom='M.S.' nom='Borceux' prenomcomplet='M.S.'/></bauteurs>
+<citation from='year' id='bid14' key='BB89' type='article' userid='cite:D-N'>
+<bauteurs><bpers nom='Bezos' prenom='J.' prenomcomplet='J.'/><bpers nom='Borceux' prenom='M.S.' prenomcomplet='M.S.'/></bauteurs>
 <btitle>De la construction de diagrammes</btitle>
 <bjournal>Invent. Math.</bjournal>
 <bnumber>1</bnumber>
@@ -385,8 +385,8 @@ and rendering of subfigures in the next figure.</p>
 <byear>1989</byear>
 <bpages>53–94</bpages>
 </citation>
-<citation from='year' key='BB97' id='bid12' userid='cite:L-S' type='article'>
-<bauteurs><bpers prenom='Y.' nom='Bringhurst' prenomcomplet='Y.'/><bpers prenom='C.' nom='Butcher' prenomcomplet='C.'/></bauteurs>
+<citation from='year' id='bid12' key='BB97' type='article' userid='cite:L-S'>
+<bauteurs><bpers nom='Bringhurst' prenom='Y.' prenomcomplet='Y.'/><bpers nom='Butcher' prenom='C.' prenomcomplet='C.'/></bauteurs>
 <btitle>Copy-editing: the Cambridge handbook for editors, authors and publishers</btitle>
 <bjournal>Ann. Sci. École Norm. Sup. (4)</bjournal>
 <bnumber>4</bnumber>
@@ -394,8 +394,8 @@ and rendering of subfigures in the next figure.</p>
 <byear>1997</byear>
 <bpages>499–525</bpages>
 </citation>
-<citation from='year' key='BBB98' id='bid5' userid='cite:BLS' type='article'>
-<bauteurs><bpers prenom='N.' nom='Beebe' prenomcomplet='N.'/><bpers prenom='B.' nom='Beeton' prenomcomplet='B.'/><bpers prenom='F.' nom='Bennet' prenomcomplet='Franck'/></bauteurs>
+<citation from='year' id='bid5' key='BBB98' type='article' userid='cite:BLS'>
+<bauteurs><bpers nom='Beebe' prenom='N.' prenomcomplet='N.'/><bpers nom='Beeton' prenom='B.' prenomcomplet='B.'/><bpers nom='Bennet' prenom='F.' prenomcomplet='Franck'/></bauteurs>
 <btitle>User's Guide to the <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>G</mi></math></formula>-bundles citator</btitle>
 <bjournal>Compositio Math.</bjournal>
 <bnumber>2</bnumber>
@@ -403,16 +403,16 @@ and rendering of subfigures in the next figure.</p>
 <byear>1998</byear>
 <bpages>183–216</bpages>
 </citation>
-<citation from='year' key='BBL89' id='bid0' userid='cite:BNR' type='article'>
-<bauteurs><bpers prenom='N.' nom='Beebe' prenomcomplet='N.'/><bpers prenom='A.' nom='Berdnikov' prenomcomplet='A.'/><bpers prenom='O.' nom='Lapko' prenomcomplet='O.'/></bauteurs>
+<citation from='year' id='bid0' key='BBL89' type='article' userid='cite:BNR'>
+<bauteurs><bpers nom='Beebe' prenom='N.' prenomcomplet='N.'/><bpers nom='Berdnikov' prenom='A.' prenomcomplet='A.'/><bpers nom='Lapko' prenom='O.' prenomcomplet='O.'/></bauteurs>
 <btitle>Cyrillic encodings for <LaTeX/>2<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&straightepsilon;</mi></math></formula> multi-language documents</btitle>
 <bjournal>J. Reine Angew. Math.</bjournal>
 <bvolume>398</bvolume>
 <byear>1989</byear>
 <bpages>169–179</bpages>
 </citation>
-<citation from='year' key='Bec91' id='bid15' userid='cite:B1' type='article'>
-<bauteurs><bpers prenom='C.' nom='Becarri' prenomcomplet='Claudio'/></bauteurs>
+<citation from='year' id='bid15' key='Bec91' type='article' userid='cite:B1'>
+<bauteurs><bpers nom='Becarri' prenom='C.' prenomcomplet='Claudio'/></bauteurs>
 <btitle>New Greek fonts and the <hi rend='tt'>greek</hi> option of the <hi rend='sansserif'>babel</hi> package</btitle>
 <bjournal>Bull. Soc. Math. France</bjournal>
 <bnumber>3</bnumber>
@@ -420,13 +420,13 @@ and rendering of subfigures in the next figure.</p>
 <byear>1991</byear>
 <bpages>259–291</bpages>
 </citation>
-<citation from='year' key='Bee' id='bid1' userid='cite:B3' type='unpublished'>
-<bauteurs><bpers prenom='N.' nom='Beebe' prenomcomplet='N.'/></bauteurs>
+<citation from='year' id='bid1' key='Bee' type='unpublished' userid='cite:B3'>
+<bauteurs><bpers nom='Beebe' prenom='N.' prenomcomplet='N.'/></bauteurs>
 <btitle>Mathematical symbols and Cyrillic fonts ready for distribution</btitle>
 <bnote>Preprint, <hi rend='tt'>math.AG/0502179</hi>, Proc. of the conf. "Moduli spaces and arithmetic geometry"(Kyoto, 2004). Advanced studies in pure math, to appear</bnote>
 </citation>
-<citation from='year' key='Bee96' id='bid9' userid='cite:B2' type='inproceedings'>
-<bauteurs><bpers prenom='A.' nom='Beebe' prenomcomplet='A.'/></bauteurs>
+<citation from='year' id='bid9' key='Bee96' type='inproceedings' userid='cite:B2'>
+<bauteurs><bpers nom='Beebe' prenom='A.' prenomcomplet='A.'/></bauteurs>
 <btitle>Bibliography prettyprinting and syntax checking</btitle>
 <bbooktitle>Proceedings of the Hirzebruch 65 Conference on Algebraic Geometry (Ramat Gan, 1993)</bbooktitle>
 <bseries>Israel Math. Conf. Proc.</bseries>
@@ -434,31 +434,31 @@ and rendering of subfigures in the next figure.</p>
 <bpages>75–96</bpages>
 <byear>1996</byear>
 </citation>
-<citation from='year' key='Ber68' id='bid11' userid='cite:Bo' type='book'>
-<bauteurs><bpers prenom='K.' nom='Berry' prenomcomplet='K.'/></bauteurs>
+<citation from='year' id='bid11' key='Ber68' type='book' userid='cite:Bo'>
+<bauteurs><bpers nom='Berry' prenom='K.' prenomcomplet='K.'/></bauteurs>
 <btitle>Filenames for fonts</btitle>
 <bpublisher>Hermann</bpublisher>
 <baddress>Paris</baddress>
 <byear>1968</byear>
 </citation>
-<citation from='year' key='Bou57' id='bid7' userid='cite:D' type='article'>
-<bauteurs><bpers prenom='T.' nom='Bouche' prenomcomplet='T.'/></bauteurs>
+<citation from='year' id='bid7' key='Bou57' type='article' userid='cite:D'>
+<bauteurs><bpers nom='Bouche' prenom='T.' prenomcomplet='T.'/></bauteurs>
 <btitle>Diversity in math fonts</btitle>
 <bjournal>Amer. Math. Soc. Translations (II)</bjournal>
 <bvolume>6</bvolume>
 <byear>1957</byear>
 <bpages>111–244</bpages>
 </citation>
-<citation from='year' key='Car66' id='bid4' userid='cite:M1' type='article'>
-<bauteurs><bpers prenom='D.' nom='Carlisle' prenomcomplet='D.'/></bauteurs>
+<citation from='year' id='bid4' key='Car66' type='article' userid='cite:M1'>
+<bauteurs><bpers nom='Carlisle' prenom='D.' prenomcomplet='D.'/></bauteurs>
 <btitle>A <LaTeX/> tour, Part 1 : The basic distribution</btitle>
 <bjournal>Invent. Math.</bjournal>
 <bvolume>1</bvolume>
 <byear>1966</byear>
 <bpages>287–354</bpages>
 </citation>
-<citation from='year' key='Car70' id='bid6' userid='cite:M2' type='incollection'>
-<bauteurs><bpers prenom='D.' nom='Carlisle' prenomcomplet='D.'/></bauteurs>
+<citation from='year' id='bid6' key='Car70' type='incollection' userid='cite:M2'>
+<bauteurs><bpers nom='Carlisle' prenom='D.' prenomcomplet='D.'/></bauteurs>
 <btitle>A <LaTeX/> tour, Part 2: The tools and graphics distributions</btitle>
 <bbooktitle>Questions on Algebraic Varieties (C.I.M.E., III Ciclo, Varenna, 1969)</bbooktitle>
 <bpublisher>Edizioni Cremonese</bpublisher>
@@ -466,8 +466,8 @@ and rendering of subfigures in the next figure.</p>
 <byear>1970</byear>
 <bpages>29–100</bpages>
 </citation>
-<citation from='year' key='Cla99' id='bid13' userid='cite:S' type='article'>
-<bauteurs><bpers prenom='A.' nom='Clark' prenomcomplet='A.'/></bauteurs>
+<citation from='year' id='bid13' key='Cla99' type='article' userid='cite:S'>
+<bauteurs><bpers nom='Clark' prenom='A.' prenomcomplet='A.'/></bauteurs>
 <btitle>Practical halftoning with <TeX/></btitle>
 <bjournal>Ann. Sci. École Norm. Sup. (4)</bjournal>
 <bnumber>1</bnumber>
@@ -475,8 +475,8 @@ and rendering of subfigures in the next figure.</p>
 <byear>1999</byear>
 <bpages>127–133</bpages>
 </citation>
-<citation from='year' key='IM96' id='bid10' userid='cite:O-W' type='article'>
-<bauteurs><bpers prenom='P.' nom='Ion' prenomcomplet='P.'/><bpers prenom='R.' nom='Miner' prenomcomplet='R.'/></bauteurs>
+<citation from='year' id='bid10' key='IM96' type='article' userid='cite:O-W'>
+<bauteurs><bpers nom='Ion' prenom='P.' prenomcomplet='P.'/><bpers nom='Miner' prenom='R.' prenomcomplet='R.'/></bauteurs>
 <btitle>Mathematical Markup Language (MathML) Version 2.0</btitle>
 <bjournal>Trans. Amer. Math. Soc.</bjournal>
 <bnumber>7</bnumber>
@@ -484,8 +484,8 @@ and rendering of subfigures in the next figure.</p>
 <byear>1996</byear>
 <bpages>2689–2710</bpages>
 </citation>
-<citation from='year' key='Pop81' id='bid2' userid='cite:R' type='article'>
-<bauteurs><bpers prenom='N.' nom='Poppelier' prenomcomplet='N.'/></bauteurs>
+<citation from='year' id='bid2' key='Pop81' type='article' userid='cite:R'>
+<bauteurs><bpers nom='Poppelier' prenom='N.' prenomcomplet='N.'/></bauteurs>
 <btitle>Index preparation and processing</btitle>
 <bjournal>Proc. Indian Acad. Sci. Math. Sci.</bjournal>
 <bnumber>2</bnumber>
@@ -493,8 +493,8 @@ and rendering of subfigures in the next figure.</p>
 <byear>1981</byear>
 <bpages>151–166</bpages>
 </citation>
-<citation from='year' key='Rol90' id='bid3' userid='cite:Se' type='article'>
-<bauteurs><bpers prenom='J.-P.' nom='Rolland' prenomcomplet='J.-P.'/></bauteurs>
+<citation from='year' id='bid3' key='Rol90' type='article' userid='cite:Se'>
+<bauteurs><bpers nom='Rolland' prenom='J.-P.' prenomcomplet='J.-P.'/></bauteurs>
 <btitle><LaTeX/> par la pratique</btitle>
 <bjournal>C. R. Acad. Sci. Paris Sér. I Math.</bjournal>
 <bnumber>9</bnumber>

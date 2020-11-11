@@ -1,13 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE ramain SYSTEM 'raweb.dtd'>
-<!-- Translated from latex by tralics 2.14.5, date: 2012/05/14-->
-<ramain creator='Tralics version 2.14.5'>
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
+<ramain creator='Tralics version 2.15.4'>
 <p>DOCSTART</p>
-<div0 id-text='I' id='cid1'><head>testing fp</head>
-<div3 id-text='0.0.0.1' id='uid1'><head>Testing fp</head>
+<div0 id='cid1' id-text='I'><head>testing fp</head>
+<div3 id='uid1' id-text='0.0.0.1'><head>Testing fp</head>
 <p>-8.9=-8.9</p>
 </div3></div0>
-<div0 id-text='1' id='cid2'><head>Characters</head>
+<div0 id='cid2' id-text='1'><head>Characters</head>
 <table rend='inline'><row><cell halign='center'>&#x400;</cell>
 <cell halign='center'>&#x401;</cell>
 <cell halign='center'>&#x402;</cell>

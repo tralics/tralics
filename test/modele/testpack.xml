@@ -1,48 +1,48 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE std SYSTEM 'classes.dtd'>
-<!-- Translated from latex by tralics 2.15.3, date: 2015/08/06-->
-<std><colorpool><color id='colid3' value='1,0,0' model='rgb' name='red'/>
-<color id='colid4' value='0,1,0' model='rgb' name='green'/>
-<color id='colid10' value='0,0,1,0' model='cmyk' name='Yellow'/>
-<color id='colid24' value='0,1,1,0' model='cmyk' name='Red'/>
-<color id='colid27' value='0,0.96,0.39,0' model='cmyk' name='WildStrawberry'/>
-<color id='colid51' value='1,1,0,0' model='cmyk' name='Blue'/>
-<color id='colid77' value='.1,.2,.3' model='rgb'/>
-<color id='colid78' value='.1,.2,.3' model='rgb' name='mygreen'/>
-<color id='colid79' value='0,1,1,1' model='cmyk'/>
-<color id='colid80' value='.1,.2,.3,.4' model='cmyk'/>
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
+<std><colorpool><color id='colid3' model='rgb' name='red' value='1,0,0'/>
+<color id='colid4' model='rgb' name='green' value='0,1,0'/>
+<color id='colid10' model='cmyk' name='Yellow' value='0,0,1,0'/>
+<color id='colid24' model='cmyk' name='Red' value='0,1,1,0'/>
+<color id='colid27' model='cmyk' name='WildStrawberry' value='0,0.96,0.39,0'/>
+<color id='colid51' model='cmyk' name='Blue' value='1,1,0,0'/>
+<color id='colid77' model='rgb' value='.1,.2,.3'/>
+<color id='colid78' model='rgb' name='mygreen' value='.1,.2,.3'/>
+<color id='colid79' model='cmyk' value='0,1,1,1'/>
+<color id='colid80' model='cmyk' value='.1,.2,.3,.4'/>
 </colorpool><epigraphhead width='70'><epigraph><epitext rend='flushleft'>Star crossed lovers.</epitext><episource rend='flushright'><hi rend='it'>The Bard</hi></episource></epigraph></epigraphhead><epigraph><epitext rend='flushleft'>Example is the school of mankind, and they will learn at no other</epitext><episource rend='flushright'><hi rend='it'>Letters on a Regicide Peace</hi><newline/> <hi rend='sc'>Edmond Burke</hi></episource></epigraph><p><epigraphs><epitext rend='flushleft'>A text</epitext><episource rend='flushright'>An author</episource>
 <epitext rend='flushleft'>A second text</epitext><episource rend='flushright'>An author</episource>
 </epigraphs></p>
 <p><Foo>AXB</Foo>
 <special>AXB</special>
 <VerySpecial>AXB</VerySpecial></p>
-<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mstyle scriptlevel='0' displaystyle='true'><mfrac><mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><mi>x</mi></mrow></mfrac></mstyle> <msup><mstyle scriptlevel='1' displaystyle='false'><mfrac><mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><mi>x</mi></mrow></mfrac></mstyle> <mstyle scriptlevel='1' displaystyle='false'><mfrac><mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><mi>x</mi></mrow></mfrac></mstyle> </msup> </msub></math></formula>
-<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mstyle scriptlevel='0' displaystyle='true'><mfrac><mrow><msup><mi mathvariant='normal'>d</mi> <mn>2</mn> </msup><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><msup><mi>x</mi> <mn>2</mn> </msup></mrow></mfrac></mstyle> <msup><mstyle scriptlevel='1' displaystyle='false'><mfrac><mrow><msup><mi mathvariant='normal'>d</mi> <mn>2</mn> </msup><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><msup><mi>x</mi> <mn>2</mn> </msup></mrow></mfrac></mstyle> <mstyle scriptlevel='1' displaystyle='false'><mfrac><mrow><msup><mi mathvariant='normal'>d</mi> <mn>2</mn> </msup><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><msup><mi>x</mi> <mn>2</mn> </msup></mrow></mfrac></mstyle> </msup> </msub></math></formula>
-<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mstyle scriptlevel='0' displaystyle='true'><msub><mfenced separators='' open='(' close=')'><mfrac><mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><mi>x</mi></mrow></mfrac></mfenced> <msub><mi>x</mi> <mn>0</mn> </msub> </msub></mstyle> <msup><mstyle scriptlevel='1' displaystyle='false'><msub><mfenced separators='' open='(' close=')'><mfrac><mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><mi>x</mi></mrow></mfrac></mfenced> <msub><mi>x</mi> <mn>0</mn> </msub> </msub></mstyle> <mstyle scriptlevel='1' displaystyle='false'><msub><mfenced separators='' open='(' close=')'><mfrac><mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><mi>x</mi></mrow></mfrac></mfenced> <msub><mi>x</mi> <mn>0</mn> </msub> </msub></mstyle> </msup> </msub></math></formula>
-<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mstyle scriptlevel='0' displaystyle='true'><msub><mfenced separators='' open='(' close=')'><mfrac><mrow><msup><mi mathvariant='normal'>d</mi> <mn>2</mn> </msup><mspace width='0.0pt'/><mi>g</mi></mrow> <mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><msup><mi>y</mi> <mn>2</mn> </msup></mrow></mfrac></mfenced> <mn>0</mn> </msub></mstyle> <msup><mstyle scriptlevel='1' displaystyle='false'><msub><mfenced separators='' open='(' close=')'><mfrac><mrow><msup><mi mathvariant='normal'>d</mi> <mn>2</mn> </msup><mspace width='0.0pt'/><mi>g</mi></mrow> <mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><msup><mi>y</mi> <mn>2</mn> </msup></mrow></mfrac></mfenced> <mn>0</mn> </msub></mstyle> <mstyle scriptlevel='1' displaystyle='false'><msub><mfenced separators='' open='(' close=')'><mfrac><mrow><msup><mi mathvariant='normal'>d</mi> <mn>2</mn> </msup><mspace width='0.0pt'/><mi>g</mi></mrow> <mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><msup><mi>y</mi> <mn>2</mn> </msup></mrow></mfrac></mfenced> <mn>0</mn> </msub></mstyle> </msup> </msub></math></formula></p>
-<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mstyle scriptlevel='0' displaystyle='true'><mfrac><mrow><mi>&part;</mi><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mrow><mi>&part;</mi><mspace width='0.0pt'/><mi>x</mi></mrow><mspace width='0.0pt'/></mrow></mfrac></mstyle><mo>=</mo><mstyle scriptlevel='0' displaystyle='true'><mfrac><mrow><msup><mi>&part;</mi> <mn>2</mn> </msup><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mi>&part;</mi><mspace width='0.0pt'/><msup><mi>x</mi> <mn>2</mn> </msup></mrow></mfrac></mstyle><mo>=</mo><mstyle scriptlevel='0' displaystyle='true'><msub><mfenced separators='' open='(' close=')'><mfrac><mrow><mi>&part;</mi><mspace width='0.0pt'/><mi>p</mi></mrow> <mrow><mrow><mi>&part;</mi><mspace width='0.0pt'/><mi>V</mi></mrow><mspace width='0.0pt'/></mrow></mfrac></mfenced> <mi>T</mi> </msub></mstyle><mo>=</mo><mstyle scriptlevel='0' displaystyle='true'><mfrac><mrow><msup><mi>&part;</mi> <mn>3</mn> </msup><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mrow><mi>&part;</mi><mspace width='0.0pt'/><mi>x</mi></mrow><mspace width='0.0pt'/><mrow><mi>&part;</mi><mspace width='0.0pt'/><msup><mi>y</mi> <mn>2</mn> </msup></mrow><mspace width='0.0pt'/></mrow></mfrac></mstyle><mo>=</mo><mstyle scriptlevel='0' displaystyle='true'><mfrac><mrow><msup><mi>&part;</mi> <mn>2</mn> </msup><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mrow><mi>&part;</mi><mspace width='0.0pt'/><msup><mi>x</mi> <mn>2</mn> </msup></mrow><mspace width='0.0pt'/></mrow></mfrac></mstyle><mo>=</mo><mstyle scriptlevel='0' displaystyle='true'><msub><mfenced separators='' open='(' close=')'><mfrac><mrow><msup><mi>&part;</mi> <mn>5</mn> </msup><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mrow><mi>&part;</mi><mspace width='0.0pt'/><msup><mi>x</mi> <mn>2</mn> </msup></mrow><mspace width='0.0pt'/><mrow><mi>&part;</mi><mspace width='0.0pt'/><msup><mi>y</mi> <mn>3</mn> </msup></mrow><mspace width='0.0pt'/></mrow></mfrac></mfenced> <mi>z</mi> </msub></mstyle></mrow></math></formula></p>
-<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mfrac><mrow><mi>&part;</mi><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mrow><mi>&part;</mi><mspace width='0.0pt'/><mi>x</mi></mrow><mspace width='0.0pt'/></mrow></mfrac><mo>=</mo><mfrac><mrow><msup><mi>&part;</mi> <mn>2</mn> </msup><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mi>&part;</mi><mspace width='0.0pt'/><msup><mi>x</mi> <mn>2</mn> </msup></mrow></mfrac><mo>=</mo><msub><mfenced separators='' open='(' close=')'><mfrac><mrow><mi>&part;</mi><mspace width='0.0pt'/><mi>p</mi></mrow> <mrow><mrow><mi>&part;</mi><mspace width='0.0pt'/><mi>V</mi></mrow><mspace width='0.0pt'/></mrow></mfrac></mfenced> <mi>T</mi> </msub><mo>=</mo><mfrac><mrow><msup><mi>&part;</mi> <mn>3</mn> </msup><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mrow><mi>&part;</mi><mspace width='0.0pt'/><mi>x</mi></mrow><mspace width='0.0pt'/><mrow><mi>&part;</mi><mspace width='0.0pt'/><msup><mi>y</mi> <mn>2</mn> </msup></mrow><mspace width='0.0pt'/></mrow></mfrac><mo>=</mo><mfrac><mrow><msup><mi>&part;</mi> <mn>2</mn> </msup><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mrow><mi>&part;</mi><mspace width='0.0pt'/><msup><mi>x</mi> <mn>2</mn> </msup></mrow><mspace width='0.0pt'/></mrow></mfrac><mo>=</mo><msub><mfenced separators='' open='(' close=')'><mfrac><mrow><msup><mi>&part;</mi> <mn>5</mn> </msup><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mrow><mi>&part;</mi><mspace width='0.0pt'/><msup><mi>x</mi> <mn>2</mn> </msup></mrow><mspace width='0.0pt'/><mrow><mi>&part;</mi><mspace width='0.0pt'/><msup><mi>y</mi> <mn>3</mn> </msup></mrow><mspace width='0.0pt'/></mrow></mfrac></mfenced> <mi>z</mi> </msub></mrow></math></formula>
-<p><figure rend='inline' width='427.0pt' height='426.79134pt' file='A'/>
-<figure rend='inline' totalwidth='427.0pt' height='426.79134pt' file='A'/>
-<figure rend='inline' width='570.0pt' height='569.05511pt' file='AA'/>
-<figure rend='inline' width='513.0945pt' height='512.1496pt' file='AA'/>
-<figure rend='inline' width='42.7026pt' height='42.67912pt' file='B'/>
-<figure rend='inline' width='213.5pt' height='213.39566pt' file='C'/>
-<figure rend='inline' width='213.5pt' height='213.39566pt' file='C'/>
-<figure rend='inline' origin='c' hiresbb='true' draft='true' keepaspectratio='true' clip='true' bb='10.03749pt 20.075pt 30.11249pt 40.15pt' file='D'/>
-<figure rend='inline' draft='true' keepaspectratio='true' clip='true' bb='10.0pt 20.0pt 30.0pt 40.0pt' file='D'/>
-<figure rend='inline' hiresbb='false' command='dd' read='cc' ext='bb' type='aa' draft='false' keepaspectratio='false' clip='false' bbury='40.15pt' bburx='30.11249pt' bblly='20.0pt' bbllx='9.99995pt' file='E'/>
-<figure rend='inline' draft='true' scale='.3' keepaspectratio='true' hiresbb='true' clip='true' natheight='40.15pt' natwidth='3.01125pt' file='F'/></p>
-<p><figure rend='inline' width='20.0pt' file='G'/></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mstyle displaystyle='true' scriptlevel='0'><mfrac><mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><mi>x</mi></mrow></mfrac></mstyle> <msup><mstyle displaystyle='false' scriptlevel='1'><mfrac><mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><mi>x</mi></mrow></mfrac></mstyle> <mstyle displaystyle='false' scriptlevel='1'><mfrac><mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><mi>x</mi></mrow></mfrac></mstyle> </msup> </msub></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mstyle displaystyle='true' scriptlevel='0'><mfrac><mrow><msup><mi mathvariant='normal'>d</mi> <mn>2</mn> </msup><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><msup><mi>x</mi> <mn>2</mn> </msup></mrow></mfrac></mstyle> <msup><mstyle displaystyle='false' scriptlevel='1'><mfrac><mrow><msup><mi mathvariant='normal'>d</mi> <mn>2</mn> </msup><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><msup><mi>x</mi> <mn>2</mn> </msup></mrow></mfrac></mstyle> <mstyle displaystyle='false' scriptlevel='1'><mfrac><mrow><msup><mi mathvariant='normal'>d</mi> <mn>2</mn> </msup><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><msup><mi>x</mi> <mn>2</mn> </msup></mrow></mfrac></mstyle> </msup> </msub></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mstyle displaystyle='true' scriptlevel='0'><msub><mfenced close=')' open='(' separators=''><mfrac><mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><mi>x</mi></mrow></mfrac></mfenced> <msub><mi>x</mi> <mn>0</mn> </msub> </msub></mstyle> <msup><mstyle displaystyle='false' scriptlevel='1'><msub><mfenced close=')' open='(' separators=''><mfrac><mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><mi>x</mi></mrow></mfrac></mfenced> <msub><mi>x</mi> <mn>0</mn> </msub> </msub></mstyle> <mstyle displaystyle='false' scriptlevel='1'><msub><mfenced close=')' open='(' separators=''><mfrac><mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><mi>x</mi></mrow></mfrac></mfenced> <msub><mi>x</mi> <mn>0</mn> </msub> </msub></mstyle> </msup> </msub></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mstyle displaystyle='true' scriptlevel='0'><msub><mfenced close=')' open='(' separators=''><mfrac><mrow><msup><mi mathvariant='normal'>d</mi> <mn>2</mn> </msup><mspace width='0.0pt'/><mi>g</mi></mrow> <mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><msup><mi>y</mi> <mn>2</mn> </msup></mrow></mfrac></mfenced> <mn>0</mn> </msub></mstyle> <msup><mstyle displaystyle='false' scriptlevel='1'><msub><mfenced close=')' open='(' separators=''><mfrac><mrow><msup><mi mathvariant='normal'>d</mi> <mn>2</mn> </msup><mspace width='0.0pt'/><mi>g</mi></mrow> <mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><msup><mi>y</mi> <mn>2</mn> </msup></mrow></mfrac></mfenced> <mn>0</mn> </msub></mstyle> <mstyle displaystyle='false' scriptlevel='1'><msub><mfenced close=')' open='(' separators=''><mfrac><mrow><msup><mi mathvariant='normal'>d</mi> <mn>2</mn> </msup><mspace width='0.0pt'/><mi>g</mi></mrow> <mrow><mi mathvariant='normal'>d</mi><mspace width='0.0pt'/><msup><mi>y</mi> <mn>2</mn> </msup></mrow></mfrac></mfenced> <mn>0</mn> </msub></mstyle> </msup> </msub></math></formula></p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mstyle displaystyle='true' scriptlevel='0'><mfrac><mrow><mi>&part;</mi><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mrow><mi>&part;</mi><mspace width='0.0pt'/><mi>x</mi></mrow><mspace width='0.0pt'/></mrow></mfrac></mstyle><mo>=</mo><mstyle displaystyle='true' scriptlevel='0'><mfrac><mrow><msup><mi>&part;</mi> <mn>2</mn> </msup><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mi>&part;</mi><mspace width='0.0pt'/><msup><mi>x</mi> <mn>2</mn> </msup></mrow></mfrac></mstyle><mo>=</mo><mstyle displaystyle='true' scriptlevel='0'><msub><mfenced close=')' open='(' separators=''><mfrac><mrow><mi>&part;</mi><mspace width='0.0pt'/><mi>p</mi></mrow> <mrow><mrow><mi>&part;</mi><mspace width='0.0pt'/><mi>V</mi></mrow><mspace width='0.0pt'/></mrow></mfrac></mfenced> <mi>T</mi> </msub></mstyle><mo>=</mo><mstyle displaystyle='true' scriptlevel='0'><mfrac><mrow><msup><mi>&part;</mi> <mn>3</mn> </msup><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mrow><mi>&part;</mi><mspace width='0.0pt'/><mi>x</mi></mrow><mspace width='0.0pt'/><mrow><mi>&part;</mi><mspace width='0.0pt'/><msup><mi>y</mi> <mn>2</mn> </msup></mrow><mspace width='0.0pt'/></mrow></mfrac></mstyle><mo>=</mo><mstyle displaystyle='true' scriptlevel='0'><mfrac><mrow><msup><mi>&part;</mi> <mn>2</mn> </msup><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mrow><mi>&part;</mi><mspace width='0.0pt'/><msup><mi>x</mi> <mn>2</mn> </msup></mrow><mspace width='0.0pt'/></mrow></mfrac></mstyle><mo>=</mo><mstyle displaystyle='true' scriptlevel='0'><msub><mfenced close=')' open='(' separators=''><mfrac><mrow><msup><mi>&part;</mi> <mn>5</mn> </msup><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mrow><mi>&part;</mi><mspace width='0.0pt'/><msup><mi>x</mi> <mn>2</mn> </msup></mrow><mspace width='0.0pt'/><mrow><mi>&part;</mi><mspace width='0.0pt'/><msup><mi>y</mi> <mn>3</mn> </msup></mrow><mspace width='0.0pt'/></mrow></mfrac></mfenced> <mi>z</mi> </msub></mstyle></mrow></math></formula></p>
+<formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mfrac><mrow><mi>&part;</mi><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mrow><mi>&part;</mi><mspace width='0.0pt'/><mi>x</mi></mrow><mspace width='0.0pt'/></mrow></mfrac><mo>=</mo><mfrac><mrow><msup><mi>&part;</mi> <mn>2</mn> </msup><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mi>&part;</mi><mspace width='0.0pt'/><msup><mi>x</mi> <mn>2</mn> </msup></mrow></mfrac><mo>=</mo><msub><mfenced close=')' open='(' separators=''><mfrac><mrow><mi>&part;</mi><mspace width='0.0pt'/><mi>p</mi></mrow> <mrow><mrow><mi>&part;</mi><mspace width='0.0pt'/><mi>V</mi></mrow><mspace width='0.0pt'/></mrow></mfrac></mfenced> <mi>T</mi> </msub><mo>=</mo><mfrac><mrow><msup><mi>&part;</mi> <mn>3</mn> </msup><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mrow><mi>&part;</mi><mspace width='0.0pt'/><mi>x</mi></mrow><mspace width='0.0pt'/><mrow><mi>&part;</mi><mspace width='0.0pt'/><msup><mi>y</mi> <mn>2</mn> </msup></mrow><mspace width='0.0pt'/></mrow></mfrac><mo>=</mo><mfrac><mrow><msup><mi>&part;</mi> <mn>2</mn> </msup><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mrow><mi>&part;</mi><mspace width='0.0pt'/><msup><mi>x</mi> <mn>2</mn> </msup></mrow><mspace width='0.0pt'/></mrow></mfrac><mo>=</mo><msub><mfenced close=')' open='(' separators=''><mfrac><mrow><msup><mi>&part;</mi> <mn>5</mn> </msup><mspace width='0.0pt'/><mi>f</mi></mrow> <mrow><mrow><mi>&part;</mi><mspace width='0.0pt'/><msup><mi>x</mi> <mn>2</mn> </msup></mrow><mspace width='0.0pt'/><mrow><mi>&part;</mi><mspace width='0.0pt'/><msup><mi>y</mi> <mn>3</mn> </msup></mrow><mspace width='0.0pt'/></mrow></mfrac></mfenced> <mi>z</mi> </msub></mrow></math></formula>
+<p><figure file='A' height='426.79134pt' rend='inline' width='427.0pt'/>
+<figure file='A' height='426.79134pt' rend='inline' totalwidth='427.0pt'/>
+<figure file='AA' height='569.05511pt' rend='inline' width='570.0pt'/>
+<figure file='AA' height='512.1496pt' rend='inline' width='513.0945pt'/>
+<figure file='B' height='42.67912pt' rend='inline' width='42.7026pt'/>
+<figure file='C' height='213.39566pt' rend='inline' width='213.5pt'/>
+<figure file='C' height='213.39566pt' rend='inline' width='213.5pt'/>
+<figure bb='10.03749pt 20.075pt 30.11249pt 40.15pt' clip='true' draft='true' file='D' hiresbb='true' keepaspectratio='true' origin='c' rend='inline'/>
+<figure bb='10.0pt 20.0pt 30.0pt 40.0pt' clip='true' draft='true' file='D' keepaspectratio='true' rend='inline'/>
+<figure bbllx='9.99995pt' bblly='20.0pt' bburx='30.11249pt' bbury='40.15pt' clip='false' command='dd' draft='false' ext='bb' file='E' hiresbb='false' keepaspectratio='false' read='cc' rend='inline' type='aa'/>
+<figure clip='true' draft='true' file='F' hiresbb='true' keepaspectratio='true' natheight='40.15pt' natwidth='3.01125pt' rend='inline' scale='.3'/></p>
+<p><figure file='G' rend='inline' width='20.0pt'/></p>
 <p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mspace width='3.30002pt'/></math></formula>
 
 
 <pic-rotatebox angle='30'>Text</pic-rotatebox>
-<pic-rotatebox origin='c' y='2.0pt' x='1.0pt' angle='30'>Text</pic-rotatebox>
-<pic-rotatebox angle='30'><figure rend='inline' file='x'/></pic-rotatebox>
-<pic-rotatebox units='-360' origin='c' y='2.0pt' x='1.0pt' angle='30'><figure rend='inline' file='x'/></pic-rotatebox>
-<scalebox vscale='1' scale='-1'>foo</scalebox>
+<pic-rotatebox angle='30' origin='c' x='1.0pt' y='2.0pt'>Text</pic-rotatebox>
+<pic-rotatebox angle='30'><figure file='x' rend='inline'/></pic-rotatebox>
+<pic-rotatebox angle='30' origin='c' units='-360' x='1.0pt' y='2.0pt'><figure file='x' rend='inline'/></pic-rotatebox>
+<scalebox scale='-1' vscale='1'>foo</scalebox>
 <resizebox height='144.54pt' width='72.26999pt'>Some text</resizebox>
 <resizebox width='72.26999pt'>Some text</resizebox>
 <resizebox height='0.0pt' width='72.26999pt'>Some text</resizebox></p>
@@ -55,17 +55,17 @@
 
 <mbox color='colid3'>textH etc<hi color='colid27'>redtext</hi>etc<hi color='colid78'>greentext</hi></mbox>
 <mbox color='colid79'>textI</mbox>
-<mbox color2='colid4' color='colid3'>textJ</mbox>
-<mbox color2='colid80' color='colid79'>textK</mbox></p>
+<mbox color='colid3' color2='colid4'>textJ</mbox>
+<mbox color='colid79' color2='colid80'>textK</mbox></p>
 <p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mspace width='0.166667em'/><mi>y</mi><mspace width='0.166667em'/><mi>z</mi></mrow></math></formula> a b</p>
 <p><char name='compwordmark'/><char name='copyleft'/></p>
-<p>Text. <anchor id-text='1' id='uid1'/>
+<p>Text. <anchor id='uid1' id-text='1'/>
 <ref target='uid1' value='1_1'>Introduction</ref><ref target='uid2' value='1.2'>Continuation</ref>
-<anchor id-text='2' id='uid2'/></p>
+<anchor id='uid2' id-text='2'/></p>
 <p>A1B1C2=3
 A1B1C2=3A12B12C2=3</p>
-<p><bib_entry user-id='foo^bar' id='A2' doctype='A4'>textETC</bib_entry>
-<bib_entry user-id='ab' id='A2' doctype='A4'>textFOOETC</bib_entry></p>
+<p><bib_entry doctype='A4' id='A2' user-id='foo^bar'>textETC</bib_entry>
+<bib_entry doctype='A4' id='A2' user-id='ab'>textFOOETC</bib_entry></p>
 <p>XYX M̂( (
 blabla. (taratata)
 blabla. (taratata)
@@ -78,24 +78,24 @@ blabla. (taratata)
 <fbox rend='boxed'><minipage width='150.0pt'><p>Since the former doesn't use braces to delimit
 the context of the box, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>...</mo></math></formula>
 </p></minipage></fbox></p>
-<formula id-text='1' id='uid3' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mstyle scriptlevel='0' displaystyle='true'><mo>&int;</mo></mstyle></math></formula>
+<formula id='uid3' id-text='1' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mstyle displaystyle='true' scriptlevel='0'><mo>&int;</mo></mstyle></math></formula>
 <p>x<fbox rend='boxed'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>y</mi></math></formula></fbox>z</p>
 <p><fbox rend='boxed'><formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mi>x</mi></math></formula>
 </fbox></p>
 <p><fbox rend='boxed'><formula textype='Beqnarray*' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mi>x</mi></mtd><mtd><mo>=</mo></mtd><mtd columnalign='left'><mi>y</mi></mtd></mtr><mtr><mtd columnalign='right'><mi>y</mi></mtd><mtd><mo>&gt;</mo></mtd><mtd columnalign='left'><mi>x</mi></mtd></mtr><mtr><mtd columnalign='right'><mrow><msubsup><mo>&int;</mo> <mn>4</mn> <mn>5</mn> </msubsup><mi>f</mi><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mi>d</mi><mi>x</mi></mrow></mtd><mtd><mo>=</mo></mtd><mtd columnalign='left'><mrow><munder><mo>&sum;</mo> <mrow><mi>i</mi><mo>&Element;</mo><mi>F</mi></mrow> </munder><msub><mi>x</mi> <mi>i</mi> </msub></mrow></mtd></mtr></mtable></math></formula>
 
 </fbox>
-<fbox rend='boxed'><formula id-text='mid1' id='uid4' textype='Beqnarray' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mi>x</mi></mtd><mtd><mo>=</mo></mtd><mtd columnalign='left'><mi>y</mi></mtd></mtr><mtr><mtd columnalign='right'><mi>y</mi></mtd><mtd><mo>&gt;</mo></mtd><mtd columnalign='left'><mi>x</mi></mtd></mtr><mtr><mtd columnalign='right'><mrow><msubsup><mo>&int;</mo> <mn>4</mn> <mn>5</mn> </msubsup><mi>f</mi><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mi>d</mi><mi>x</mi></mrow></mtd><mtd><mo>=</mo></mtd><mtd columnalign='left'><mrow><munder><mo>&sum;</mo> <mrow><mi>i</mi><mo>&Element;</mo><mi>F</mi></mrow> </munder><msub><mi>x</mi> <mi>i</mi> </msub></mrow></mtd></mtr></mtable></math></formula>
+<fbox rend='boxed'><formula id='uid4' id-text='mid1' textype='Beqnarray' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mi>x</mi></mtd><mtd><mo>=</mo></mtd><mtd columnalign='left'><mi>y</mi></mtd></mtr><mtr><mtd columnalign='right'><mi>y</mi></mtd><mtd><mo>&gt;</mo></mtd><mtd columnalign='left'><mi>x</mi></mtd></mtr><mtr><mtd columnalign='right'><mrow><msubsup><mo>&int;</mo> <mn>4</mn> <mn>5</mn> </msubsup><mi>f</mi><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mi>d</mi><mi>x</mi></mrow></mtd><mtd><mo>=</mo></mtd><mtd columnalign='left'><mrow><munder><mo>&sum;</mo> <mrow><mi>i</mi><mo>&Element;</mo><mi>F</mi></mrow> </munder><msub><mi>x</mi> <mi>i</mi> </msub></mrow></mtd></mtr></mtable></math></formula>
 
 </fbox></p>
 <p rend='verse'>etc</p>
-<table id-text='1' id='uid5' place='h' rend='display'><head>A table of foo and bar</head>
+<table id='uid5' id-text='1' place='h' rend='display'><head>A table of foo and bar</head>
 <unexpected><fbox rend='boxed'><minipage width='341.6013pt'>
 <p rend='center'><table rend='inline'><row><cell halign='right'>foo</cell>
 <cell halign='left'>bar</cell>
 </row></table></p>
 </minipage></fbox></unexpected></table>
-<table id-text='2' id='uid6' place='h' rend='display'><head>A table of foo and bar</head>
+<table id='uid6' id-text='2' place='h' rend='display'><head>A table of foo and bar</head>
 <unexpected><fbox rend='boxed'>
 
 
@@ -117,7 +117,7 @@ the context of the box, <formula type='inline'><math xmlns='http://www.w3.org/19
 </row><row><cell halign='center'>Coconot</cell>
 </row><row><cell halign='center'>Tempeh</cell>
 </row></table>x</fbox></p>
-<table id-text='3' id='uid7' place='p' rend='display'><unexpected><landfloat roration='left'>
+<table id='uid7' id-text='3' place='p' rend='display'><unexpected><landfloat roration='left'>
 Hello, world
 </landfloat></unexpected></table>
 <FiXme type='fatal'>A</FiXme><FiXme type='note'>B</FiXme><FiXme type='warning'>C</FiXme><FiXme type='error'>D</FiXme><p><FiXmeEnv note='A' type='fxnote'>aa</FiXmeEnv>
@@ -128,7 +128,7 @@ Hello, world
 <p noindent='true'>happy as can be<footref target='fid1'/></p>
 <clearpage/><p noindent='true'>all good friends<footref target='fid1'/>OK</p>
 <p noindent='true'>and jolly good company<footref target='fid1'/><footref target='fid2'/> OK
-<note id-text='1' id='uid8' place='foot'>xyz</note></p>
+<note id='uid8' id-text='1' place='foot'>xyz</note></p>
 <fixfoot id='fid1'>blah di blah</fixfoot>
 <fixfoot id='fid2'>blih da blih</fixfoot>
 </std>

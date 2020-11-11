@@ -607,7 +607,8 @@ auto Xml::is_empty_p() const -> bool {
     AttList &X = id.get_att();
     if (X.empty()) return true;
     if (X.size() != 1) return false;
-    if (X.front().name == the_names["noindent"]) return true;
+    for (const auto &i : X)
+        if (i.first == the_names["noindent"]) return true; // \todo std::any_of?
     return false;
 }
 

@@ -5,18 +5,18 @@
 #include "tralics/util.h"
 #include <fmt/ostream.h>
 
-auto AttList::lookup(const std::string &x) -> AttPair * {
-    for (auto &i : *this)
-        if (i.name == x) return &i;
+auto AttList::lookup(const std::string &x) -> std::string * {
+    auto i = find(x);
+    if (i != end()) return &(i->second);
     return nullptr;
 }
 
 void AttList::push_back(const std::string &name, const std::string &value, bool force) {
     if (auto T = lookup(name)) {
-        if (force) T->value = value;
+        if (force) *T = value;
         return;
     }
-    push_back({name, value});
+    emplace(name, value);
 }
 
 auto operator<<(std::ostream &o, const AttPair &a) -> std::ostream & {
@@ -34,13 +34,7 @@ auto operator<<(std::ostream &o, const AttPair &a) -> std::ostream & {
     return o << quote;
 }
 
-// We can have Foo="bar'", printed as Foo='bar&apos;'
-// The case Foo'bar="&gee" is not handled.
-// nothing is printed in case the name starts with an apostrophe.
-// Print in reverse order, because this was in the previous version
-// \todo revert that inverse order thing
-
 auto operator<<(std::ostream &o, const AttList &a) -> std::ostream & {
-    for (auto i = a.size(); i > 0; i--) o << a[i - 1];
+    for (const auto &i : a) o << AttPair{i.first, i.second};
     return o;
 }

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE std SYSTEM 'classes.dtd'>
-<!-- Translated from latex by tralics 2.15.4, date: 2015/08/24-->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
 <std filename='txtc'>
 <title>A sample file for Tralics</title><author>José Grimm</author><abstract><p>This document shows some commands of <hi rend='it'>Tralics</hi>.
 We use it also to show that characters are converted into the right encoding
@@ -11,9 +11,9 @@ and available on the web
 Source document can be found at
 <xref url='http://www-sop.inria.fr/marelle/tralics/doc-step.html'>http://<allowbreak/>www-sop.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>marelle/<allowbreak/>tralics/<allowbreak/>doc-step.<allowbreak/>html</xref>.</p>
 </abstract><keyword>Latex, XML, HTML, UTF8, Hàn</keyword><tableofcontents depth='2'/>
-<div0 id-text='1' id='cid1'><head>Who is Hàn</head>
+<div0 id='cid1' id-text='1'><head>Who is Hàn</head>
 <p>If you call tralics with options -te1a ou -te8a, the terminal should show
-<hi rend='tt'>^^e0</hi><anchor id-text='lid1' id='uid1'/><note id-text='1' id='uid2' place='foot'>Index here</note> for the section title;
+<hi rend='tt'>^^e0</hi><anchor id='uid1' id-text='lid1'/><note id='uid2' id-text='1' place='foot'>Index here</note> for the section title;
 if you say -te1, there is a single byte, if you say
 -te8, there are two bytes. If you say -e1a or -e8a, the XML file should
 contain <hi rend='tt'>&amp;#E0;</hi>, in the case -oe1 ou -oe8, the XML file contains the
@@ -26,11 +26,11 @@ exclamation point (a space is allowed between the command and the exclamation
 point).
 
 
-<error n='\catcode' l='52' c='number too big'/>
+<error c='number too big' l='52' n='\catcode'/>
 123! 123! 312!</p>
 <p>This is standard verbatim: <hi rend='tt'>a _bç</hi>, <hi rend='tt'>a␣_bç</hi>, <hi rend='tt'>a _bç</hi>,
 <hi rend='tt'>\verb+ { } $$</hi>, <hi rend='tt'>+x+</hi>. Think about this last example.
-We index here a word<anchor id-text='lid2' id='uid3'/>. Location is just before period.
+We index here a word<anchor id='uid3' id-text='lid2'/>. Location is just before period.
 This is a verbatim environment</p>
 <p noindent='true'><hi rend='tt'>{\let\rm\bf \bf totoé}</hi></p>
 <p noindent='true'><hi rend='tt'>&lt;&#x200B;!-&#x200B;-&#x200B;this is a comment -&#x200B;-&#x200B;&gt;&#x200B;</hi></p>
@@ -43,7 +43,7 @@ The last line of the verbatim environment should start with an ampersand
 character; since this is a special character in XML, it is represented as
 <hi rend='tt'>&amp;amp;</hi> or <hi rend='tt'>&amp;#x26;</hi>. Lines can be numbered; spaces can be replaced
 by non-breaking ones; lines can use special fonts; paragraphs can be
-no-indented, etc.<anchor id-text='lid3' id='uid4'/></p>
+no-indented, etc.<anchor id='uid4' id-text='lid3'/></p>
 <p>On the other hand, a rawxml environment is left unchanged. Remember however
 that end-of-line characters and spaces are removed from the end of the line; a
 new line character is added at the end of the line. If you remove the comment
@@ -52,39 +52,39 @@ environment will be in vertical mode. Otherwise, the end of the verbatim
 environment inserts a <hi rend='tt'>\noindent</hi>, and the environment that follows is in
 horizontal mode. As a consequence, there will be a P element on the first
 line of the raw xml; moreover, since the final space in a paragraph is
-removed, you will find the end-P element at the end of the line.<anchor id-text='lid4' id='uid5'/></p>
+removed, you will find the end-P element at the end of the line.<anchor id='uid5' id-text='lid4'/></p>
 <p>The translation of the environment contains e-acute (its representation
 depends on the output encoding), three ampersand characters, a less than sign,
 a greater than sign. The second line is a valid XML comment, the third line is
 well-formed XML (it contains three entities, so that the XML is valid only if
 the DTD defines these entities); it is very easy to produce invalid and
-ill-formed XML.<anchor id-text='lid5' id='uid6'/></p>
+ill-formed XML.<anchor id='uid6' id-text='lid5'/></p>
 <p>The xmllatex command is to be used with care. It can produce
-Hàn Th&#x1ebf; Thành<note id-text='2' id='uid7' place='foot'>Hàn is the author of
+Hàn Th&#x1ebf; Thành<note id='uid7' id-text='2' place='foot'>Hàn is the author of
 pdftex</note>. The second argument is meant to be translated by <LaTeX/>, it is
 ignored by Tralics. Instead of <hi rend='tt'>\xmllatex{foo}{bar}</hi>, define a command,
-use it in the text, and overwrite it in a ult file (user configuration file).<anchor id-text='lid6' id='uid8'/></p>
+use it in the text, and overwrite it in a ult file (user configuration file).<anchor id='uid8' id-text='lid6'/></p>
 <p>In the current version, you can say ế because the double-accent
 mechanism is implemented, or ế, this is a character, as valid as the
-other ones. This is possible and dangerous too <TeX/>.<anchor id-text='lid7' id='uid9'/></p>
+other ones. This is possible and dangerous too <TeX/>.<anchor id='uid9' id-text='lid7'/></p>
 </div0>
-<div0 id-text='2' id='cid2'><head>Index</head>
+<div0 id='cid2' id-text='2'><head>Index</head>
 <p>This demonstrates how accents work in the index
-<anchor id-text='lid8' id='uid10'/>a
-<anchor id-text='lid9' id='uid11'/>b
-<anchor id-text='lid10' id='uid12'/>c
-<anchor id-text='lid11' id='uid13'/>d
-<anchor id-text='lid12' id='uid14'/>e
-<anchor id-text='lid13' id='uid15'/>f
-<anchor id-text='lid14' id='uid16'/>g
-<anchor id-text='lid15' id='uid17'/>h
+<anchor id='uid10' id-text='lid8'/>a
+<anchor id='uid11' id-text='lid9'/>b
+<anchor id='uid12' id-text='lid10'/>c
+<anchor id='uid13' id-text='lid11'/>d
+<anchor id='uid14' id-text='lid12'/>e
+<anchor id='uid15' id-text='lid13'/>f
+<anchor id='uid16' id-text='lid14'/>g
+<anchor id='uid17' id-text='lid15'/>h
 OK</p>
 <p>These words are in the glossary
-<anchor id-text='lid16' id='uid18'/>1<anchor id-text='lid17' id='uid19'/>2
-<anchor id-text='lid18' id='uid20'/>3<anchor id-text='lid19' id='uid21'/>4
+<anchor id='uid18' id-text='lid16'/>1<anchor id='uid19' id-text='lid17'/>2
+<anchor id='uid20' id-text='lid18'/>3<anchor id='uid21' id-text='lid19'/>4
 These are in the second index
-<anchor id-text='lid20' id='uid22'/>1<anchor id-text='lid21' id='uid23'/>2
-<anchor id-text='lid22' id='uid24'/>3<anchor id-text='lid23' id='uid25'/>4</p>
+<anchor id='uid22' id-text='lid20'/>1<anchor id='uid23' id-text='lid21'/>2
+<anchor id='uid24' id-text='lid22'/>3<anchor id='uid25' id-text='lid23'/>4</p>
 <p>A verbatim test. We put some stuff in English and French before, in order
 to show how it is translated differently. The end of the environment can
 contain spaces (see example above), but nothing else.
@@ -135,7 +135,7 @@ and demonstrate the counting possibilities</p>
 <p noindent='true'><vbnumber>4</vbnumber> <hi rend='tt'>inherited from the definition.</hi></p>
 </pre><p rend='center'>In French, centré means centered.</p>
 </div0>
-<div0 id-text='3' id='cid3'><head>Short Verb, as in <hi rend='tt'>$_</hi></head>
+<div0 id='cid3' id-text='3'><head>Short Verb, as in <hi rend='tt'>$_</hi></head>
 <p>Test of <hi rend='sansserif'>\DefineShortVerb</hi> and <hi rend='sansserif'>\UndefineShortVerb</hi>. Normally
 the bar is used, but 16bit characters are possible. Example, with itrema :
 
@@ -178,33 +178,33 @@ bad accent ̀ on x bad accent ̆ on z</p>
 <hi rend='large'>x</hi><hi rend='large'>x</hi>
 <hi rend='large'>x</hi>y<hi rend='small'>z</hi><hi rend='large'>xy</hi>z</p>
 <p>Switch to English, for colons in URLs</p>
-<biblio natpos='a' natcmt=', ' natyrsep=',' nataysep=',' natsep=';' natclose=')' natopen='('>
-<citation from='year' key='CIMP01' id='bid2' userid='cite:mathml2' type='misc'>
-<bauteurs><bpers prenom='D.' nom='Carlisle' prenomcomplet='David'/><bpers prenom='P.' nom='Ion' prenomcomplet='Patrick'/><bpers prenom='R.' nom='Miner' prenomcomplet='Robert'/><bpers prenom='N.' nom='Poppelier (editors)' prenomcomplet='Nico'/></bauteurs>
+<biblio nataysep=',' natclose=')' natcmt=', ' natopen='(' natpos='a' natsep=';' natyrsep=','>
+<citation from='year' id='bid2' key='CIMP01' type='misc' userid='cite:mathml2'>
+<bauteurs><bpers nom='Carlisle' prenom='D.' prenomcomplet='David'/><bpers nom='Ion' prenom='P.' prenomcomplet='Patrick'/><bpers nom='Miner' prenom='R.' prenomcomplet='Robert'/><bpers nom='Poppelier (editors)' prenom='N.' prenomcomplet='Nico'/></bauteurs>
 <btitle>Mathematical Markup Language (MathML) Version 2.0</btitle>
 <byear>2001</byear>
 <xref url='http://www.w3.org/TR/MathML2/'>http://<allowbreak/>www.<allowbreak/>w3.<allowbreak/>org/<allowbreak/>TR/<allowbreak/>MathML2/</xref></citation>
-<citation from='year' key='HP99' id='bid0' userid='cite:place99' type='inproceedings'>
-<bauteurs><bpers prenom='Y.' nom='Haralambous' prenomcomplet='Yannis'/><bpers prenom='J.' nom='Place' prenomcomplet='John'/></bauteurs>
+<citation from='year' id='bid0' key='HP99' type='inproceedings' userid='cite:place99'>
+<bauteurs><bpers nom='Haralambous' prenom='Y.' prenomcomplet='Yannis'/><bpers nom='Place' prenom='J.' prenomcomplet='John'/></bauteurs>
 <btitle>Produire du MathML et autres ...ML à partir d'<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Omega;</mi></math></formula> : <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Omega;</mi></math></formula> se généralise</btitle>
 <bbooktitle>Cahiers Gutenberg</bbooktitle>
 <bnumber>33-34</bnumber>
 <bpages>173-182</bpages>
 <byear>1999</byear>
 </citation>
-<citation from='year' key='Kay01' id='bid1' userid='cite:mKay' type='book'>
-<bauteurs><bpers prenom='M.' nom='Kay' prenomcomplet='Michael'/></bauteurs>
+<citation from='year' id='bid1' key='Kay01' type='book' userid='cite:mKay'>
+<bauteurs><bpers nom='Kay' prenom='M.' prenomcomplet='Michael'/></bauteurs>
 <btitle>XSLT, Programmer's Reference</btitle>
 <bedition>2nd</bedition>
 <bpublisher>Wrox Press Ltd</bpublisher>
 <byear>2001</byear>
-</citation></biblio></div0><theindex title='First Index'><index target='uid1 uid4 uid5 uid10 uid12 uid13' level='1'>verb</index>
-<index target='uid3 uid6 uid8 uid11 uid14 uid15' level='1'>vérb</index>
-<index target='uid9 uid16 uid17' level='2'>vèrb</index>
-</theindex><theindex head='Second Index' title='Second Index'><index target='uid22 uid24' level='1'>I1</index>
-<index target='uid23' level='1'>I2</index>
-<index target='uid25' level='2'>I3</index>
-</theindex><theglossary title='A glossary'><index target='uid18 uid20' level='1'>G1</index>
-<index target='uid19 uid21' level='1'>G2</index>
+</citation></biblio></div0><theindex title='First Index'><index level='1' target='uid1 uid4 uid5 uid10 uid12 uid13'>verb</index>
+<index level='1' target='uid3 uid6 uid8 uid11 uid14 uid15'>vérb</index>
+<index level='2' target='uid9 uid16 uid17'>vèrb</index>
+</theindex><theindex head='Second Index' title='Second Index'><index level='1' target='uid22 uid24'>I1</index>
+<index level='1' target='uid23'>I2</index>
+<index level='2' target='uid25'>I3</index>
+</theindex><theglossary title='A glossary'><index level='1' target='uid18 uid20'>G1</index>
+<index level='1' target='uid19 uid21'>G2</index>
 </theglossary>
 </std>

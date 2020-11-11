@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE unknown SYSTEM 'unknown.dtd'>
-<!-- Translated from latex by tralics 2.14.5, date: 2012/05/14-->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
 <unknown page-numbering='false'>
 <abstract pos='center'>
 <p><hi rend='small'>This file tests the html package.</hi></p>
 <p><hi rend='small'>It also tests abstract and keyval</hi></p>
 </abstract>
-<anchor id-text='1' id='uid1'/><p>Some font tests</p>
+<anchor id='uid1' id-text='1'/><p>Some font tests</p>
 <p><hi rend='it,sansserif,boldextended'>B
  C </hi><hi rend='it,sansserif,semibold'>D
 </hi><hi rend='sc,sansserif,semibold'>E
@@ -24,8 +24,8 @@ Some dummy tex file</p>
 <xref url='url/bar_x'>foo</xref></p>
 <p>A<ref target='uid1'/>B
 A<ref target='uid1'/>B
-A<ref target='uid1' rend='page'/>B
-A<ref target='uid1' rend='page'/>B
+A<ref rend='page' target='uid1'/>B
+A<ref rend='page' target='uid1'/>B
 A
 A
 foo
@@ -48,30 +48,30 @@ a</p>
 <p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msubsup><mi>a</mi> <mn>2</mn> <mn>3</mn> </msubsup></math></formula></p>
 <p>seen 1 in Fooseen 2 in Barseen dbar in Bar</p>
 <biblio>
-<citation from='year' key='CGR00' id='bid2' userid='cite:CGR2000' type='inproceedings'>
-<bauteurs><bpers prenom='D.' nom='Carlisle' prenomcomplet='David'/><bpers prenom='M.' nom='Goossens' prenomcomplet='Michel'/><bpers prenom='S.' nom='Rahtz' prenomcomplet='Sebastian'/></bauteurs>
+<citation from='year' id='bid2' key='CGR00' type='inproceedings' userid='cite:CGR2000'>
+<bauteurs><bpers nom='Carlisle' prenom='D.' prenomcomplet='David'/><bpers nom='Goossens' prenom='M.' prenomcomplet='Michel'/><bpers nom='Rahtz' prenom='S.' prenomcomplet='Sebastian'/></bauteurs>
 <btitle>De XML à PDF avec <hi rend='tt'>xmltex</hi> et Passive<TeX/></btitle>
 <bbooktitle>Cahiers Gutenberg</bbooktitle>
 <bnumber>35-36</bnumber>
 <bpages>79-114</bpages>
 <byear>2000</byear>
 </citation>
-<citation from='year' key='HP99' id='bid1' userid='cite:place99' type='inproceedings'>
-<bauteurs><bpers prenom='Y.' nom='Haralambous' prenomcomplet='Yannis'/><bpers prenom='J.' nom='Place' prenomcomplet='John'/></bauteurs>
+<citation from='year' id='bid1' key='HP99' type='inproceedings' userid='cite:place99'>
+<bauteurs><bpers nom='Haralambous' prenom='Y.' prenomcomplet='Yannis'/><bpers nom='Place' prenom='J.' prenomcomplet='John'/></bauteurs>
 <btitle>Produire du MathML et autres ...ML à partir d'<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Omega;</mi></math></formula> : <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Omega;</mi></math></formula> se généralise</btitle>
 <bbooktitle>Cahiers Gutenberg</bbooktitle>
 <bnumber>33-34</bnumber>
 <bpages>173-182</bpages>
 <byear>1999</byear>
 </citation>
-<citation from='year' key='Knu84' id='bid0' userid='cite:texbook' type='book'>
-<bauteurs><bpers prenom='D. E.' nom='Knuth' prenomcomplet='Donald E.'/></bauteurs>
+<citation from='year' id='bid0' key='Knu84' type='book' userid='cite:texbook'>
+<bauteurs><bpers nom='Knuth' prenom='D. E.' prenomcomplet='Donald E.'/></bauteurs>
 <btitle>The <TeX/>book</btitle>
 <bpublisher>Addison Wesley</bpublisher>
 <byear>1984</byear>
 </citation>
-<citation from='year' key='Lou88' id='bid3' userid='cite:louarn88' type='article'>
-<bauteurs><bpers prenom='P.' nom='Louarn' prenomcomplet='Philippe'/></bauteurs>
+<citation from='year' id='bid3' key='Lou88' type='article' userid='cite:louarn88'>
+<bauteurs><bpers nom='Louarn' prenom='P.' prenomcomplet='Philippe'/></bauteurs>
 <btitle>Une expérience d'utilisation de LaTeX : le Rapport d'activité de l'INRIA</btitle>
 <bjournal>Cahiers Gutenberg</bjournal>
 <bnumber>0</bnumber>

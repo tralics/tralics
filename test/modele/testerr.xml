@@ -1,311 +1,311 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE book SYSTEM 'classes.dtd'>
-<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/10 -->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
 <book>
-<error n='\DeclareStringOption' l='13' c='bad redef'/><error n='\DeclareVoidOption' l='13' c='bad redef'/><error n='\DeclareBoolOption' l='14' c='bad redef'/><error n='\DeclareBoolOption' l='15' c='bad redef'/><error n='\DeclareBoolOption' l='16' c='bad redef'/><error n='\DeclareComplementaryOption' l='17' c='bad redef'/><error n='\DeclareComplementaryOption' l='18' c='bad redef'/><error n='\DeclareComplementaryOption' l='19' c='bad redef'/><error n='\KVO@boolkey' l='20' c='bad bool'/><error n='\KVO@voidkey' l='20' c='bad opt'/><error n='\PackageError' l='26' c='uerror'/><error n='\PackageError' l='27' c='uerror'/><error n='\PackageError' l='29' c='uerror'/><p>This document contains a number of errors.
-<error n='\For' l='70' c='Undefined command'/><error n='\instance' l='70' c='Undefined command'/><error n='\this' l='70' c='Undefined command'/><error n='\sentence' l='70' c='Undefined command'/>.
+<error c='bad redef' l='13' n='\DeclareStringOption'/><error c='bad redef' l='13' n='\DeclareVoidOption'/><error c='bad redef' l='14' n='\DeclareBoolOption'/><error c='bad redef' l='15' n='\DeclareBoolOption'/><error c='bad redef' l='16' n='\DeclareBoolOption'/><error c='bad redef' l='17' n='\DeclareComplementaryOption'/><error c='bad redef' l='18' n='\DeclareComplementaryOption'/><error c='bad redef' l='19' n='\DeclareComplementaryOption'/><error c='bad bool' l='20' n='\KVO@boolkey'/><error c='bad opt' l='20' n='\KVO@voidkey'/><error c='uerror' l='26' n='\PackageError'/><error c='uerror' l='27' n='\PackageError'/><error c='uerror' l='29' n='\PackageError'/><p>This document contains a number of errors.
+<error c='Undefined command' l='70' n='\For'/><error c='Undefined command' l='70' n='\instance'/><error c='Undefined command' l='70' n='\this'/><error c='Undefined command' l='70' n='\sentence'/>.
 This is a normal
  line</p>
-<p>F1<error n='\Verbatim' l='76' c='Bad end env'/></p>
+<p>F1<error c='Bad end env' l='76' n='\Verbatim'/></p>
 <p noindent='true'><hi rend='tt'>Line1</hi></p>
 <p noindent='true'><hi rend='tt'>Line2</hi></p>
 <p noindent='true'>after F1
-F2<error n='\rawxml' l='77' c='Bad end env'/><hi rend='tt'>Line3
+F2<error c='Bad end env' l='77' n='\rawxml'/><hi rend='tt'>Line3
 Line4</hi>
 after F2
-F3<error n='\comment' l='78' c='Bad end env'/>after F3
+F3<error c='Bad end env' l='78' n='\comment'/>after F3
 Line after input should be OK</p>
-<p>x<error n='\foo' l='82' c='Runaway argument'/></p>
-<p>y<error n='}' l='82' c='Extra }'/>
-x<error n='\lfoo' l='83' c='Runaway argument'/></p>
-<p>y<error n='}' l='83' c='Extra }'/></p>
-<p>x<error n='\else' l='86' c='Runaway argument'/> incomplete <error n='\fi' l='86' c='extra fi or else'/><error n='\or' l='86' c='extra fi or else'/><error n='\else' l='86' c='extra fi or else'/>
+<p>x<error c='Runaway argument' l='82' n='\foo'/></p>
+<p>y<error c='Extra }' l='82' n='}'/>
+x<error c='Runaway argument' l='83' n='\lfoo'/></p>
+<p>y<error c='Extra }' l='83' n='}'/></p>
+<p>x<error c='Runaway argument' l='86' n='\else'/> incomplete <error c='extra fi or else' l='86' n='\fi'/><error c='extra fi or else' l='86' n='\or'/><error c='extra fi or else' l='86' n='\else'/>
 
 
 A=a</p>
-<p>b=c<error n='\fooB' l='92' c='Runaway argument'/>b]c
+<p>b=c<error c='Runaway argument' l='92' n='\fooB'/>b]c
 A=axparb=c</p>
-<p>d<error n='\fooB' l='93' c='Runaway argument'/>d<error n='}' l='93' c='Extra }'/>
-<error n='\fooA' l='94' c='Runaway argument'/>b]c<error n='\fooB' l='94' c='Runaway argument'/>b]c
-<error n='\fooA' l='95' c='Runaway argument'/>d<error n='}' l='95' c='Extra }'/><error n='\fooB' l='95' c='Runaway argument'/>d<error n='}' l='95' c='Extra }'/></p>
+<p>d<error c='Runaway argument' l='93' n='\fooB'/>d<error c='Extra }' l='93' n='}'/>
+<error c='Runaway argument' l='94' n='\fooA'/>b]c<error c='Runaway argument' l='94' n='\fooB'/>b]c
+<error c='Runaway argument' l='95' n='\fooA'/>d<error c='Extra }' l='95' n='}'/><error c='Runaway argument' l='95' n='\fooB'/>d<error c='Extra }' l='95' n='}'/></p>
 <p>Test outer
-<error n='\iffalse' l='98' c='Runaway argument'/><error n='\fi' l='98' c='extra fi or else'/><error n='\loop' l='99' c='Runaway argument'/>
-<error n='\strip@prefix' l='101' c='Runaway argument'/></p>
-<p>Some math only commands <error n='\dot' l='108' c='Mathonly command'/>x <error n='\tilde' l='108' c='Mathonly command'/>y <error n='\undertilde' l='108' c='Mathonly command'/><error n='\eqno' l='109' c='Mathonly command'/><error n='\mathstrut' l='109' c='Mathonly command'/><error n='\alpha' l='109' c='Mathonly command'/><error n='\uparrow' l='109' c='Mathonly command'/><error n='\colon' l='109' c='Mathonly command'/><error n='\strut' l='109' c='Mathonly command'/><error n='\land' l='109' c='Mathonly command'/><error n='\mid' l='109' c='Mathonly command'/><error n='\Vert' l='109' c='Mathonly command'/><error n='\lVert' l='110' c='Mathonly command'/><error n='\rVert' l='110' c='Mathonly command'/><error n='\&gt;' l='110' c='Mathonly command'/> <error n='\mml@font@normal' l='110' c='Mathonly command'/><error n='\mathit' l='110' c='Mathonly command'/><error n='\left' l='110' c='Mathonly command'/><error n='\right' l='110' c='Mathonly command'/><error n='\ddots' l='110' c='Mathonly command'/></p>
+<error c='Runaway argument' l='98' n='\iffalse'/><error c='extra fi or else' l='98' n='\fi'/><error c='Runaway argument' l='99' n='\loop'/>
+<error c='Runaway argument' l='101' n='\strip@prefix'/></p>
+<p>Some math only commands <error c='Mathonly command' l='108' n='\dot'/>x <error c='Mathonly command' l='108' n='\tilde'/>y <error c='Mathonly command' l='108' n='\undertilde'/><error c='Mathonly command' l='109' n='\eqno'/><error c='Mathonly command' l='109' n='\mathstrut'/><error c='Mathonly command' l='109' n='\alpha'/><error c='Mathonly command' l='109' n='\uparrow'/><error c='Mathonly command' l='109' n='\colon'/><error c='Mathonly command' l='109' n='\strut'/><error c='Mathonly command' l='109' n='\land'/><error c='Mathonly command' l='109' n='\mid'/><error c='Mathonly command' l='109' n='\Vert'/><error c='Mathonly command' l='110' n='\lVert'/><error c='Mathonly command' l='110' n='\rVert'/><error c='Mathonly command' l='110' n='\&gt;'/> <error c='Mathonly command' l='110' n='\mml@font@normal'/><error c='Mathonly command' l='110' n='\mathit'/><error c='Mathonly command' l='110' n='\left'/><error c='Mathonly command' l='110' n='\right'/><error c='Mathonly command' l='110' n='\ddots'/></p>
 <p>Counter overflow
-<error n='\@alph' l='114' c='counter overflow'/>az<error n='\@alph' l='114' c='counter overflow'/><error n='\@Alph' l='115' c='counter overflow'/>AZ<error n='\@Alph' l='115' c='counter overflow'/><error n='\@fnsymbol' l='116' c='counter overflow'/>*<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&ddagger;</mo><mo>&ddagger;</mo></mrow></math></formula><error n='\@fnsymbol' l='116' c='counter overflow'/>Newcommand
+<error c='counter overflow' l='114' n='\@alph'/>az<error c='counter overflow' l='114' n='\@alph'/><error c='counter overflow' l='115' n='\@Alph'/>AZ<error c='counter overflow' l='115' n='\@Alph'/><error c='counter overflow' l='116' n='\@fnsymbol'/>*<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&ddagger;</mo><mo>&ddagger;</mo></mrow></math></formula><error c='counter overflow' l='116' n='\@fnsymbol'/>Newcommand
 
-<error n='\foo' l='119' c='Bad optional in \newcommand'/>
-<error n='\foo' l='120' c='Bad optional in \newcommand'/>
-<error n='\foo' l='121' c='Bad optional in \newcommand'/>
-<error n='\foo' l='122' c='bad char after #'/><error n='\foo' l='122' c='bad char after #'/>
-<error n='\csname' l='123' c='missing endcsname'/>bar<error n='\endcsname' l='123' c='Extra \endcsname'/><error n='\value' l='124' c='invalid cmd'/>bar<error n='\endcsname' l='124' c='Extra \endcsname'/>
-<error n='\value' l='125' c='bad counter'/>
-<error n='\value' l='126' c='bad counter'/>
-<error n='\undefined_env' l='127' c='Undefined environment'/> <error n='\end' l='127' c='bad \end'/>
-<error n='\UndefinedCommand' l='128' c='Undefined command'/><error n='\global' l='129' c='bad prefix'/></p>
-<p>WW<error n='\global' l='129' c='bad prefix'/>X <error n='\outer' l='129' c='bad prefix'/></p>
-<p>WW<error n='\outer' l='129' c='bad prefix'/>X
-<error n='\outer' l='130' c='bad prefix'/><error n='\count' l='133' c='bad alpha'/><error n='\endgroup' l='134' c='wrong pop'/><error n='}' l='134' c='wrong pop'/>
-<error n='}' l='135' c='extra brace'/><error n='\endgroup' l='135' c='extra brace'/> <error n='\foo' l='136' c='bad prefix'/> <error n='\foo' l='137' c='bad prefix'/><error n='\foo' l='137' c='bad prefix'/><figure rend='inline' file='gee'/><error n='\includegraphics' l='138' c='invalid key'/>
-<error n='\verb' l='139' c='bad \verb'/>
-<error n='\verb' l='141' c='bad \verb'/>=x=<error n='\verb' l='141' c='bad \verb'/></p>
-<p>Acc<error n='\a' l='144' c='bad accent'/>
-<error n='\&apos;' l='145' c='bad accent'/> <error n='\~' l='145' c='bad accent'/><error n='\&apos;' l='145' c='bad accent'/><error n='\&apos;' l='145' c='bad accent'/><error n='\&apos;' l='145' c='bad accent'/><error n='\&apos;' l='145' c='bad accent'/><error n='\&apos;' l='145' c='bad accent'/><error n='\&apos;' l='145' c='bad accent'/><error n='\&apos;' l='145' c='bad accent'/>
+<error c='Bad optional in \newcommand' l='119' n='\foo'/>
+<error c='Bad optional in \newcommand' l='120' n='\foo'/>
+<error c='Bad optional in \newcommand' l='121' n='\foo'/>
+<error c='bad char after #' l='122' n='\foo'/><error c='bad char after #' l='122' n='\foo'/>
+<error c='missing endcsname' l='123' n='\csname'/>bar<error c='Extra \endcsname' l='123' n='\endcsname'/><error c='invalid cmd' l='124' n='\value'/>bar<error c='Extra \endcsname' l='124' n='\endcsname'/>
+<error c='bad counter' l='125' n='\value'/>
+<error c='bad counter' l='126' n='\value'/>
+<error c='Undefined environment' l='127' n='\undefined_env'/> <error c='bad \end' l='127' n='\end'/>
+<error c='Undefined command' l='128' n='\UndefinedCommand'/><error c='bad prefix' l='129' n='\global'/></p>
+<p>WW<error c='bad prefix' l='129' n='\global'/>X <error c='bad prefix' l='129' n='\outer'/></p>
+<p>WW<error c='bad prefix' l='129' n='\outer'/>X
+<error c='bad prefix' l='130' n='\outer'/><error c='bad alpha' l='133' n='\count'/><error c='wrong pop' l='134' n='\endgroup'/><error c='wrong pop' l='134' n='}'/>
+<error c='extra brace' l='135' n='}'/><error c='extra brace' l='135' n='\endgroup'/> <error c='bad prefix' l='136' n='\foo'/> <error c='bad prefix' l='137' n='\foo'/><error c='bad prefix' l='137' n='\foo'/><figure file='gee' rend='inline'/><error c='invalid key' l='138' n='\includegraphics'/>
+<error c='bad \verb' l='139' n='\verb'/>
+<error c='bad \verb' l='141' n='\verb'/>=x=<error c='bad \verb' l='141' n='\verb'/></p>
+<p>Acc<error c='bad accent' l='144' n='\a'/>
+<error c='bad accent' l='145' n='\&apos;'/> <error c='bad accent' l='145' n='\~'/><error c='bad accent' l='145' n='\&apos;'/><error c='bad accent' l='145' n='\&apos;'/><error c='bad accent' l='145' n='\&apos;'/><error c='bad accent' l='145' n='\&apos;'/><error c='bad accent' l='145' n='\&apos;'/><error c='bad accent' l='145' n='\&apos;'/><error c='bad accent' l='145' n='\&apos;'/>
 ế
-<error n='\ifnum' l='147' c='Missing = inserted for comparison '/><error n='\ifnum' l='147' c='Missing = inserted for comparison '/><error n='\ifdim' l='148' c='Missing = inserted for comparison '/><error n='\DefineShortVerb' l='149' c='onearg'/>
-<error n='\UndefineShortVerb' l='150' c='Bad argument to Define/Undefine ShortVerb'/>
-<error n='\DefineShortVerb' l='151' c='Bad argument to Define/Undefine ShortVerb'/><error n='\DefineShortVerb' l='151' c='Bad argument to Define/Undefine ShortVerb'/>
+<error c='Missing = inserted for comparison ' l='147' n='\ifnum'/><error c='Missing = inserted for comparison ' l='147' n='\ifnum'/><error c='Missing = inserted for comparison ' l='148' n='\ifdim'/><error c='onearg' l='149' n='\DefineShortVerb'/>
+<error c='Bad argument to Define/Undefine ShortVerb' l='150' n='\UndefineShortVerb'/>
+<error c='Bad argument to Define/Undefine ShortVerb' l='151' n='\DefineShortVerb'/><error c='Bad argument to Define/Undefine ShortVerb' l='151' n='\DefineShortVerb'/>
 
-<error n='\DefineShortVerb' l='153' c='Bad argument to Define/Undefine ShortVerb'/>
+<error c='Bad argument to Define/Undefine ShortVerb' l='153' n='\DefineShortVerb'/>
 
-<error n='\a' l='155' c='wanted a single token as argument to \a'/> <error n='\a' l='155' c='wanted a single token as argument to \a'/><error n='\a' l='155' c='bad accent'/><error n='\a' l='155' c='bad accent'/></p>
+<error c='wanted a single token as argument to \a' l='155' n='\a'/> <error c='wanted a single token as argument to \a' l='155' n='\a'/><error c='bad accent' l='155' n='\a'/><error c='bad accent' l='155' n='\a'/></p>
 <p>Arrays
-<error n='\newcolumntype' l='158' c='onearg'/>
-<error n='\newcolumntype' l='159' c='onearg'/>
-<error n='\newcolumntype' l='160' c='Argument to \newcolumntype is not a 7bit character'/>
-<error n='\newcolumntype' l='161' c='Argument to \newcolumntype is not a 7bit character'/>
-<error n='\array' l='162' c='Environment array should only be used in math mode'/></p>
+<error c='onearg' l='158' n='\newcolumntype'/>
+<error c='onearg' l='159' n='\newcolumntype'/>
+<error c='Argument to \newcolumntype is not a 7bit character' l='160' n='\newcolumntype'/>
+<error c='Argument to \newcolumntype is not a 7bit character' l='161' n='\newcolumntype'/>
+<error c='Environment array should only be used in math mode' l='162' n='\array'/></p>
 <formula textype='array' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable/></math></formula>
-<table id-text='1' id='uid1' rend='array'><p><table rend='inline'><error n='\tabular' l='164' c='Wrong char'/></table><table rend='inline'/><table rend='inline'><error n='\tabular' l='166' c='Array preamble: argument missing for @'/></table><table rend='inline'><error n='\tabular' l='167' c='unexpected less-than sign'/><error n='\tabular' l='167' c='Array preamble: argument missing for <'/></table><table rend='inline'><error n='\tabular' l='168' c='Array preamble: argument missing for >'/></table><table rend='inline'><error n='\tabular' l='169' c='Array preamble: argument missing for p'/></table><table rend='inline'><error n='\tabular' l='170' c='Array preamble: argument missing for m'/></table><table rend='inline'><error n='\tabular' l='171' c='Array preamble: argument missing for b'/></table><table rend='inline'><error n='\tabular' l='172' c='unexpected less-than sign'/></table><table rend='inline'><row><cell halign='center' right-border='true' cols=''/>
-</row><row><cell halign='center' cols='2'><error n='\cr ' l='175' c='multi specs in \multicolumn'/>xx</cell>
-</row><row><cell right-border='true' halign='center' cols='cc'><error n='\cr ' l='176' c='Wrong char'/>xx</cell>
+<table id='uid1' id-text='1' rend='array'><p><table rend='inline'><error c='Wrong char' l='164' n='\tabular'/></table><table rend='inline'/><table rend='inline'><error c='Array preamble: argument missing for @' l='166' n='\tabular'/></table><table rend='inline'><error c='unexpected less-than sign' l='167' n='\tabular'/><error c='Array preamble: argument missing for <' l='167' n='\tabular'/></table><table rend='inline'><error c='Array preamble: argument missing for >' l='168' n='\tabular'/></table><table rend='inline'><error c='Array preamble: argument missing for p' l='169' n='\tabular'/></table><table rend='inline'><error c='Array preamble: argument missing for m' l='170' n='\tabular'/></table><table rend='inline'><error c='Array preamble: argument missing for b' l='171' n='\tabular'/></table><table rend='inline'><error c='unexpected less-than sign' l='172' n='\tabular'/></table><table rend='inline'><row><cell cols='' halign='center' right-border='true'/>
+</row><row><cell cols='2' halign='center'><error c='multi specs in \multicolumn' l='175' n='\cr '/>xx</cell>
+</row><row><cell cols='cc' halign='center' right-border='true'><error c='Wrong char' l='176' n='\cr '/>xx</cell>
 </row></table></p></table>
 <p>Testing Optional Argument. These functions signal an error rather
 than cite@one which moreover complains for an extra brace.
-<error n='\footcite' l='184' c='Runaway argument'/> <cit rend='foot'><ref target='bid0'>t</ref></cit>xt]x is Ok
-<error n='\yearcite' l='185' c='Runaway argument'/><cit><ref target='bid1'>t</ref></cit>xt]x is Ok
-<error n='\refercite' l='186' c='Runaway argument'/><cit rend='refer'><ref target='bid2'>t</ref></cit>xt]x is Ok
-<error n='\cite' l='187' c='Runaway argument'/><cit><ref target='bid1'>t</ref></cit>xt]x
-<error n='\cite' l='188' c='Runaway argument'/><cit><ref target='bid1'>y</ref></cit>ar][text]x</p>
-<error n='\thebibliography' l='190' c='Runaway argument'/><Bibliography><Box>val</Box></Bibliography><error n='\thebibliography' l='191' c='Runaway argument'/><Bibliography><Box>val</Box>
-<citation from='F' key='K' id='I' userid='U' type='T'>
-<bpers prenom='x' part='y' nom='z' junior='t'/><error n='\bpers' l='195' c='Runaway argument'/><bpers prenom='y' part=']' nom='x' junior='y' prenomcomplet='x'/>z</citation>t</Bibliography><p>ok</p>
+<error c='Runaway argument' l='184' n='\footcite'/> <cit rend='foot'><ref target='bid0'>t</ref></cit>xt]x is Ok
+<error c='Runaway argument' l='185' n='\yearcite'/><cit><ref target='bid1'>t</ref></cit>xt]x is Ok
+<error c='Runaway argument' l='186' n='\refercite'/><cit rend='refer'><ref target='bid2'>t</ref></cit>xt]x is Ok
+<error c='Runaway argument' l='187' n='\cite'/><cit><ref target='bid1'>t</ref></cit>xt]x
+<error c='Runaway argument' l='188' n='\cite'/><cit><ref target='bid1'>y</ref></cit>ar][text]x</p>
+<error c='Runaway argument' l='190' n='\thebibliography'/><Bibliography><Box>val</Box></Bibliography><error c='Runaway argument' l='191' n='\thebibliography'/><Bibliography><Box>val</Box>
+<citation from='F' id='I' key='K' type='T' userid='U'>
+<bpers junior='t' nom='z' part='y' prenom='x'/><error c='Runaway argument' l='195' n='\bpers'/><bpers junior='y' nom='x' part=']' prenom='y' prenomcomplet='x'/>z</citation>t</Bibliography><p>ok</p>
 <p>ok
-<error n='\ProvidesPackage' l='200' c='Runaway argument'/><error n='\ProvidesPackage' l='200' c='Runaway argument'/><error n='\minipage' l='201' c='Runaway argument'/><error n='\minipage' l='201' c='Runaway argument'/><error n='\minipage' l='202' c='missing unit'/><minipage inner-pos='c' pos='c' width='2.0pt'><p>runaway errors signaled above, and a missing unit here
+<error c='Runaway argument' l='200' n='\ProvidesPackage'/><error c='Runaway argument' l='200' n='\ProvidesPackage'/><error c='Runaway argument' l='201' n='\minipage'/><error c='Runaway argument' l='201' n='\minipage'/><error c='missing unit' l='202' n='\minipage'/><minipage inner-pos='c' pos='c' width='2.0pt'><p>runaway errors signaled above, and a missing unit here
 </p></minipage>
 xxx
-<error n='\minipage' l='205' c='Runaway argument'/><error n='\minipage' l='205' c='Runaway argument'/><minipage width='3.0pt'/></p>
+<error c='Runaway argument' l='205' n='\minipage'/><error c='Runaway argument' l='205' n='\minipage'/><minipage width='3.0pt'/></p>
 <p>Is current mode ok here
-<error n='\figure' l='209' c='Runaway argument'/></p>
-<figure id-text='1' id='uid2' place='x' rend='figure'><p rend='center'>etc</p></figure>
-<error n='\wrapfigure' l='210' c='Runaway argument'/><error n='\wrapfigure' l='210' c='Runaway argument'/><error n='\wrapfigure' l='210' c='Runaway argument'/><figure id-text='2' id='uid3' width='z' place='y' narrow='x'><p rend='center'>3 errors</p></figure>
+<error c='Runaway argument' l='209' n='\figure'/></p>
+<figure id='uid2' id-text='1' place='x' rend='figure'><p rend='center'>etc</p></figure>
+<error c='Runaway argument' l='210' n='\wrapfigure'/><error c='Runaway argument' l='210' n='\wrapfigure'/><error c='Runaway argument' l='210' n='\wrapfigure'/><figure id='uid3' id-text='2' narrow='x' place='y' width='z'><p rend='center'>3 errors</p></figure>
 <p>This is new par
-<error n='\nolinebreak' l='213' c='Runaway argument'/><error n='\linebreak' l='213' c='Runaway argument'/><error n='\NeedsTeXFormat' l='214' c='Runaway argument'/><error n='\NeedsTeXFormat' l='214' c='Runaway argument'/><error n='\fancyhead' l='215' c='Runaway argument'/><headings type='orh'>a b</headings><headings type='och'>a b</headings><headings type='olh'>a b</headings><headings type='erh'>a b</headings><headings type='ech'>a b</headings><headings type='elh'>a b</headings>
-<error n='\lhead' l='216' c='Runaway argument'/><headings type='olh'>a b</headings><headings type='elh'>[a</headings>
-<error n='\raisebox' l='217' c='Runaway argument'/><error n='\raisebox' l='217' c='Runaway argument'/><error n='\raisebox' l='217' c='Runaway argument'/><raisebox depth='3cm' height='2cm' val='1cm'>a box</raisebox></p>
+<error c='Runaway argument' l='213' n='\nolinebreak'/><error c='Runaway argument' l='213' n='\linebreak'/><error c='Runaway argument' l='214' n='\NeedsTeXFormat'/><error c='Runaway argument' l='214' n='\NeedsTeXFormat'/><error c='Runaway argument' l='215' n='\fancyhead'/><headings type='orh'>a b</headings><headings type='och'>a b</headings><headings type='olh'>a b</headings><headings type='erh'>a b</headings><headings type='ech'>a b</headings><headings type='elh'>a b</headings>
+<error c='Runaway argument' l='216' n='\lhead'/><headings type='olh'>a b</headings><headings type='elh'>[a</headings>
+<error c='Runaway argument' l='217' n='\raisebox'/><error c='Runaway argument' l='217' n='\raisebox'/><error c='Runaway argument' l='217' n='\raisebox'/><raisebox depth='3cm' height='2cm' val='1cm'>a box</raisebox></p>
 <p>Testing get_r_token
-<error n='\@onlypreamble' l='222' c='bad definition'/>
-<error n='\@tfor' l='223' c='bad definition'/> <error n='\@cons' l='223' c='bad definition'/><error n='\frozen_cs' l='223' c='Undefined command'/> <error n='\tralics@addtolist@n' l='223' c='bad definition'/>
-<error n='\@removeelement' l='224' c='bad definition'/><error n='\@selective@sanitize' l='224' c='bad definition'/>
-<error n='\DeclareMathOperator' l='225' c='bad definition'/><error n='\newcommand' l='225' c='bad definition'/> <error n='\newcount' l='225' c='bad definition'/> <error n='\newif' l='225' c='bad definition'/><error n='\newif' l='225' c='token list \newif does not start with if'/>
-<error n='\let' l='226' c='bad definition'/> <error n='\futurelet' l='226' c='bad definition'/>mm <error n='\chardef' l='226' c='bad definition'/>10
-Cannot define <error n='\def' l='227' c='bad definition'/><error n='\newcommand' l='227' c='bad definition'/><error n='\setlength' l='227' c='bad definition'/>10<error n='\edef' l='227' c='bad definition'/>
-Bad redefinition <error n='\renewcommand' l='228' c='bad definition'/><error n='\newcommand' l='228' c='bad definition'/>
-<error n='\newcounter' l='229' c='bad definition'/>
-Multiple labels <error n='\label' l='230' c='already defined label'/><error n='\label' l='230' c='already defined label'/></p>
+<error c='bad definition' l='222' n='\@onlypreamble'/>
+<error c='bad definition' l='223' n='\@tfor'/> <error c='bad definition' l='223' n='\@cons'/><error c='Undefined command' l='223' n='\frozen_cs'/> <error c='bad definition' l='223' n='\tralics@addtolist@n'/>
+<error c='bad definition' l='224' n='\@removeelement'/><error c='bad definition' l='224' n='\@selective@sanitize'/>
+<error c='bad definition' l='225' n='\DeclareMathOperator'/><error c='bad definition' l='225' n='\newcommand'/> <error c='bad definition' l='225' n='\newcount'/> <error c='bad definition' l='225' n='\newif'/><error c='token list \newif does not start with if' l='225' n='\newif'/>
+<error c='bad definition' l='226' n='\let'/> <error c='bad definition' l='226' n='\futurelet'/>mm <error c='bad definition' l='226' n='\chardef'/>10
+Cannot define <error c='bad definition' l='227' n='\def'/><error c='bad definition' l='227' n='\newcommand'/><error c='bad definition' l='227' n='\setlength'/>10<error c='bad definition' l='227' n='\edef'/>
+Bad redefinition <error c='bad definition' l='228' n='\renewcommand'/><error c='bad definition' l='228' n='\newcommand'/>
+<error c='bad definition' l='229' n='\newcounter'/>
+Multiple labels <error c='already defined label' l='230' n='\label'/><error c='already defined label' l='230' n='\label'/></p>
 <p>Checking some math errors
-<error n='$' l='236' c='Unexpected \right'/><error n='$' l='236' c='Unexpected }'/><texmath textype='inline' type='inline'>x</texmath>=1
-<error n='$' l='237' c='wrong pop'/><error n='$' l='237' c='Unexpected par'/><error n='$' l='237' c='wrong pop'/><texmath textype='inline' type='inline'>x=2</texmath><error n='$' l='238' c='Unexpected par'/><error n='$' l='238' c='Unexpected }'/><texmath textype='inline' type='inline'>\frac{3}{4}5</texmath>
-<error n='$' l='239' c='bad left/right'/><error n='$' l='239' c='bad left/right'/><texmath textype='inline' type='inline'>\left.=\right.</texmath>
-<error n='$' l='240' c='missing \right'/><texmath textype='inline' type='inline'>\left(\right.</texmath>
-<error n='$' l='241' c='Unexpected }'/><texmath textype='inline' type='inline'></texmath>
-<error n='$' l='242' c='bad end'/><texmath textype='inline' type='inline'></texmath> <error n='\alpha' l='242' c='Mathonly command'/>we are out of math
-<error n='$' l='243' c='label-lost'/><error n='$' l='243' c='label-lost'/><error n='$' l='243' c='Display math should end with $$'/></p>
+<error c='Unexpected \right' l='236' n='$'/><error c='Unexpected }' l='236' n='$'/><texmath textype='inline' type='inline'>x</texmath>=1
+<error c='wrong pop' l='237' n='$'/><error c='Unexpected par' l='237' n='$'/><error c='wrong pop' l='237' n='$'/><texmath textype='inline' type='inline'>x=2</texmath><error c='Unexpected par' l='238' n='$'/><error c='Unexpected }' l='238' n='$'/><texmath textype='inline' type='inline'>\frac{3}{4}5</texmath>
+<error c='bad left/right' l='239' n='$'/><error c='bad left/right' l='239' n='$'/><texmath textype='inline' type='inline'>\left.=\right.</texmath>
+<error c='missing \right' l='240' n='$'/><texmath textype='inline' type='inline'>\left(\right.</texmath>
+<error c='Unexpected }' l='241' n='$'/><texmath textype='inline' type='inline'></texmath>
+<error c='bad end' l='242' n='$'/><texmath textype='inline' type='inline'></texmath> <error c='Mathonly command' l='242' n='\alpha'/>we are out of math
+<error c='label-lost' l='243' n='$'/><error c='label-lost' l='243' n='$'/><error c='Display math should end with $$' l='243' n='$'/></p>
 <texmath textype='display' type='display'> x = </texmath>
-<p noindent='true'>out of math <error n='$' l='244' c='extra $'/><error n='$' l='244' c='extra $'/><error n='$' l='244' c='bad \eqno'/><texmath textype='inline' type='inline'>a{bc}\frac{x}{yz}(17)</texmath></p>
-<error n='$' l='248' c='multicol garbage'/><p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd columnspan='2'><mi>x</mi></mtd></mtr><mtr><mtd><mi>z</mi></mtd></mtr></mtable></math></formula>
-<error n='$' l='249' c='Too many commands of type \over'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac><mi>a</mi> <mfrac><mi>b</mi> <mi>c</mi></mfrac></mfrac></math></formula>
-<error n='$' l='250' c='bad env'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>a</mi><mtable displaystyle='true'/></mrow></math></formula>
-<error n='$' l='251' c='Math formula should not finish with _'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>x</mi></math></formula> <error n='$' l='251' c='Two consecutive _ or ^ characters'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mi>x</mi> <mi>y</mi> </msub></math></formula> <error n='$' l='251' c='Math formula should not finish with ^'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>x</mi></math></formula> <error n='$' l='251' c='Two consecutive _ or ^ characters'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>x</mi> <mi>y</mi> </msup></math></formula> <error n='$' l='251' c='double subscript'/><error n='$' l='251' c='double superscript'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>x</mi> <mi>y</mi> </msub><msup><mi>z</mi> <mi>u</mi> </msup><mi>v</mi></mrow></math></formula>
+<p noindent='true'>out of math <error c='extra $' l='244' n='$'/><error c='extra $' l='244' n='$'/><error c='bad \eqno' l='244' n='$'/><texmath textype='inline' type='inline'>a{bc}\frac{x}{yz}(17)</texmath></p>
+<error c='multicol garbage' l='248' n='$'/><p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd columnspan='2'><mi>x</mi></mtd></mtr><mtr><mtd><mi>z</mi></mtd></mtr></mtable></math></formula>
+<error c='Too many commands of type \over' l='249' n='$'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac><mi>a</mi> <mfrac><mi>b</mi> <mi>c</mi></mfrac></mfrac></math></formula>
+<error c='bad env' l='250' n='$'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>a</mi><mtable displaystyle='true'/></mrow></math></formula>
+<error c='Math formula should not finish with _' l='251' n='$'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>x</mi></math></formula> <error c='Two consecutive _ or ^ characters' l='251' n='$'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mi>x</mi> <mi>y</mi> </msub></math></formula> <error c='Math formula should not finish with ^' l='251' n='$'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>x</mi></math></formula> <error c='Two consecutive _ or ^ characters' l='251' n='$'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mi>x</mi> <mi>y</mi> </msup></math></formula> <error c='double subscript' l='251' n='$'/><error c='double superscript' l='251' n='$'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>x</mi> <mi>y</mi> </msub><msup><mi>z</mi> <mi>u</mi> </msup><mi>v</mi></mrow></math></formula>
 
 This is out of math mode</p>
 <p>More tests
-<error n='\middle' l='257' c='unimp'/><pers prenom='first' nom='Pers1'>option</pers>
+<error c='unimp' l='257' n='\middle'/><pers nom='Pers1' prenom='first'>option</pers>
 Ok outside RA
 RC is tested outside RA
-<pers prenom='first' nom='pers2' affiliation='ibm' profession='Research' hdr='hdr' research-centre='Paris'>d</pers>
-<pers prenom='a' nom='de Pers3' affiliation='inria' profession='Engineer' hdr='hdr' research-centre='Paris'>d</pers>
+<pers affiliation='ibm' hdr='hdr' nom='pers2' prenom='first' profession='Research' research-centre='Paris'>d</pers>
+<pers affiliation='inria' hdr='hdr' nom='de Pers3' prenom='a' profession='Engineer' research-centre='Paris'>d</pers>
 Error here
-<error n='\tralics@get@config' l='263' c='illegal data'/><error n='\tralics@get@config' l='263' c='illegal data'/><error n='\tralics@get@config' l='263' c='illegal data'/><pers prenom='first' nom='pers2' affiliation='' profession='' hdr='hdr'>d</pers>
-<error n='\tralics@get@config' l='264' c='illegal data'/><error n='\tralics@get@config' l='264' c='illegal data'/><error n='\tralics@get@config' l='264' c='illegal data'/><pers prenom='a' nom='de Pers3' affiliation='' profession='' hdr='hdr'>d</pers></p>
-<p>X<error n='&amp;' l='266' c='Unexpected ampersand'/><error n='\\' l='266' c='Bad use of \\'/>and <error n='\newline' l='266' c='Bad use of \newline'/>
-<figure rend='inline' file='a.b.c'/><error n='\error' l='267' c='Wrong dots in graphic file a.b.c'/>
+<error c='illegal data' l='263' n='\tralics@get@config'/><error c='illegal data' l='263' n='\tralics@get@config'/><error c='illegal data' l='263' n='\tralics@get@config'/><pers affiliation='' hdr='hdr' nom='pers2' prenom='first' profession=''>d</pers>
+<error c='illegal data' l='264' n='\tralics@get@config'/><error c='illegal data' l='264' n='\tralics@get@config'/><error c='illegal data' l='264' n='\tralics@get@config'/><pers affiliation='' hdr='hdr' nom='de Pers3' prenom='a' profession=''>d</pers></p>
+<p>X<error c='Unexpected ampersand' l='266' n='&amp;'/><error c='Bad use of \\' l='266' n='\\'/>and <error c='Bad use of \newline' l='266' n='\newline'/>
+<figure file='a.b.c' rend='inline'/><error c='Wrong dots in graphic file a.b.c' l='267' n='\error'/>
 <ref target='mod:a'/>
-<error n='\PackageError' l='269' c='uerror'/></p>
-<accueil isproject='true' html='testerr'>
-<theme><error n='\tralics@get@config' l='279' c='no list'/></theme>
-<error n='\PackageError' l='279' c='uerror'/><projet>ProjB</projet>
+<error c='uerror' l='269' n='\PackageError'/></p>
+<accueil html='testerr' isproject='true'>
+<theme><error c='no list' l='279' n='\tralics@get@config'/></theme>
+<error c='uerror' l='279' n='\PackageError'/><projet>ProjB</projet>
 <projetdeveloppe>ProjC</projetdeveloppe>
 </accueil>
-<p>x<xref url='()'>()</xref><error n='\url' l='280' c='Invalid URL value'/> 
+<p>x<xref url='()'>()</xref><error c='Invalid URL value' l='280' n='\url'/> 
 
 
 fooAgeefooBgee
 fooAgeefooBgee
 fooAetcA.fooBetcB.
-<error n='\AtBeginDocument' l='288' c='noprerr'/></p>
+<error c='noprerr' l='288' n='\AtBeginDocument'/></p>
 <p>Check for some unimplemented commands
-<error n='\accent' l='293' c='unimplemented'/>0,<error n='\accent' l='293' c='unimplemented'/><error n='\accent' l='293' c='number too big'/>,<error n='\accent' l='293' c='unimplemented'/>&#x7FFFFFF;,<error n='\accent' l='293' c='unimplemented'/><error n='\accent' l='293' c='number too big'/>,
-<error n='\delimiter' l='294' c='unimplemented'/>,<error n='\delimiter' l='294' c='unimplemented'/>,<error n='\delimiter' l='294' c='unimplemented'/>,<error n='\delimiter' l='294' c='unimplemented'/>,
-<error n='\insert' l='295' c='unimplemented'/>ok<error n='\insert' l='295' c='unimplemented'/><error n='\insert' l='295' c='number too big'/>ok
-<error n='\mathaccent' l='296' c='unimplemented'/><error n='\mathaccent' l='296' c='unimplemented'/><error n='\mathaccent' l='296' c='unimplemented'/><error n='\mathaccent' l='296' c='number too big'/><error n='\mathchar' l='297' c='unimplemented'/><error n='\mathchar' l='297' c='unimplemented'/><error n='\mathchar' l='297' c='unimplemented'/><error n='\mathchar' l='297' c='number too big'/><error n='\vadjust' l='298' c='unimplemented'/>ok
-<error n='\radical' l='299' c='unimplemented'/><error n='\radical' l='299' c='number too big'/><error n='\vcenter' l='299' c='unimplemented'/>vcentered text.
-<error n='\halign' l='300' c='unimplemented'/><error n='\noalign' l='300' c='unimplemented'/><error n='\noboundary' l='300' c='unimplemented'/><error n='\omit' l='300' c='unimplemented'/><error n='\valign' l='300' c='unimplemented'/>text
-<error n='\span' l='301' c='unimplemented'/><error n='\dump' l='301' c='unimplemented'/><error n='\widthof' l='301' c='unimplemented'/> <error n='\heightof' l='301' c='unimplemented'/><error n='\depthof' l='301' c='unimplemented'/>
-<error n='\textquotestraightbase' l='302' c='unimplemented'/><error n='\textquotestraightdblbase' l='302' c='unimplemented'/><error n='\textlbrackdbl' l='303' c='unimplemented'/><error n='\textrbrackdbl' l='303' c='unimplemented'/><error n='\textcompwordmark' l='303' c='unimplemented'/><error n='\texttildelow' l='304' c='unimplemented'/><error n='\textcentoldstyle' l='304' c='unimplemented'/><error n='\textdollaroldstyle' l='304' c='unimplemented'/><error n='\textcopyleft' l='304' c='unimplemented'/><error n='\textzerooldstyle' l='305' c='unimplemented'/><error n='\textoneoldstyle' l='305' c='unimplemented'/><error n='\texttwooldstyle' l='305' c='unimplemented'/><error n='\textthreeoldstyle' l='305' c='unimplemented'/><error n='\textfouroldstyle' l='306' c='unimplemented'/><error n='\textfiveoldstyle' l='306' c='unimplemented'/><error n='\textsixoldstyle' l='306' c='unimplemented'/><error n='\textsevenoldstyle' l='306' c='unimplemented'/><error n='\texteightoldstyle' l='307' c='unimplemented'/><error n='\textnineoldstyle' l='307' c='unimplemented'/><error n='\textcapitalcompwordmark' l='307' c='unimplemented'/><error n='\textguarani' l='308' c='unimplemented'/><error n='\textleaf' l='308' c='unimplemented'/><error n='\textdied' l='308' c='unimplemented'/><error n='\textdivorced' l='308' c='unimplemented'/><error n='\textblank' l='308' c='unimplemented'/><error n='\textborn' l='309' c='unimplemented'/><error n='\textmarried' l='309' c='unimplemented'/><error n='\textdblhyphen' l='309' c='unimplemented'/><error n='\textascendercompwordmark' l='309' c='unimplemented'/><error n='\textinterrobangdown' l='310' c='unimplemented'/><error n='\textdiscount' l='310' c='unimplemented'/></p>
+<error c='unimplemented' l='293' n='\accent'/>0,<error c='unimplemented' l='293' n='\accent'/><error c='number too big' l='293' n='\accent'/>,<error c='unimplemented' l='293' n='\accent'/>&#x7FFFFFF;,<error c='unimplemented' l='293' n='\accent'/><error c='number too big' l='293' n='\accent'/>,
+<error c='unimplemented' l='294' n='\delimiter'/>,<error c='unimplemented' l='294' n='\delimiter'/>,<error c='unimplemented' l='294' n='\delimiter'/>,<error c='unimplemented' l='294' n='\delimiter'/>,
+<error c='unimplemented' l='295' n='\insert'/>ok<error c='unimplemented' l='295' n='\insert'/><error c='number too big' l='295' n='\insert'/>ok
+<error c='unimplemented' l='296' n='\mathaccent'/><error c='unimplemented' l='296' n='\mathaccent'/><error c='unimplemented' l='296' n='\mathaccent'/><error c='number too big' l='296' n='\mathaccent'/><error c='unimplemented' l='297' n='\mathchar'/><error c='unimplemented' l='297' n='\mathchar'/><error c='unimplemented' l='297' n='\mathchar'/><error c='number too big' l='297' n='\mathchar'/><error c='unimplemented' l='298' n='\vadjust'/>ok
+<error c='unimplemented' l='299' n='\radical'/><error c='number too big' l='299' n='\radical'/><error c='unimplemented' l='299' n='\vcenter'/>vcentered text.
+<error c='unimplemented' l='300' n='\halign'/><error c='unimplemented' l='300' n='\noalign'/><error c='unimplemented' l='300' n='\noboundary'/><error c='unimplemented' l='300' n='\omit'/><error c='unimplemented' l='300' n='\valign'/>text
+<error c='unimplemented' l='301' n='\span'/><error c='unimplemented' l='301' n='\dump'/><error c='unimplemented' l='301' n='\widthof'/> <error c='unimplemented' l='301' n='\heightof'/><error c='unimplemented' l='301' n='\depthof'/>
+<error c='unimplemented' l='302' n='\textquotestraightbase'/><error c='unimplemented' l='302' n='\textquotestraightdblbase'/><error c='unimplemented' l='303' n='\textlbrackdbl'/><error c='unimplemented' l='303' n='\textrbrackdbl'/><error c='unimplemented' l='303' n='\textcompwordmark'/><error c='unimplemented' l='304' n='\texttildelow'/><error c='unimplemented' l='304' n='\textcentoldstyle'/><error c='unimplemented' l='304' n='\textdollaroldstyle'/><error c='unimplemented' l='304' n='\textcopyleft'/><error c='unimplemented' l='305' n='\textzerooldstyle'/><error c='unimplemented' l='305' n='\textoneoldstyle'/><error c='unimplemented' l='305' n='\texttwooldstyle'/><error c='unimplemented' l='305' n='\textthreeoldstyle'/><error c='unimplemented' l='306' n='\textfouroldstyle'/><error c='unimplemented' l='306' n='\textfiveoldstyle'/><error c='unimplemented' l='306' n='\textsixoldstyle'/><error c='unimplemented' l='306' n='\textsevenoldstyle'/><error c='unimplemented' l='307' n='\texteightoldstyle'/><error c='unimplemented' l='307' n='\textnineoldstyle'/><error c='unimplemented' l='307' n='\textcapitalcompwordmark'/><error c='unimplemented' l='308' n='\textguarani'/><error c='unimplemented' l='308' n='\textleaf'/><error c='unimplemented' l='308' n='\textdied'/><error c='unimplemented' l='308' n='\textdivorced'/><error c='unimplemented' l='308' n='\textblank'/><error c='unimplemented' l='309' n='\textborn'/><error c='unimplemented' l='309' n='\textmarried'/><error c='unimplemented' l='309' n='\textdblhyphen'/><error c='unimplemented' l='309' n='\textascendercompwordmark'/><error c='unimplemented' l='310' n='\textinterrobangdown'/><error c='unimplemented' l='310' n='\textdiscount'/></p>
 <p>X
-<error n='\include' l='311' c='Missing brace'/>foo
-<error n='\read' l='52' c='unbalanced \read'/>
-<error n='\read' l='61' c='too many closing braces in \read'/><error n='\bad' l='319' c='Undefined command'/><error n='\count' l='320' c='Missing number'/><error n='\count' l='320' c='Missing number'/>Here we try to converts tokens to numbers
-<error n='\muskip' l='322' c='Missing number'/><error n='\muskip' l='322' c='Incompatible glue units'/>pt <error n='\skip' l='323' c='Missing number'/><error n='\setmathchar' l='324' c='Missing number'/><error n='\setmathchar' l='324' c='Missing number'/><error n='\count' l='324' c='Missing number'/><hi rend='bold'>`</hi>ATesting incompatible mu, first from mu to something else
-<error n='\skip' l='326' c='Incompatible glue units'/><error n='\parindent' l='326' c='Incompatible glue units'/><error n='\linepenalty' l='326' c='Incompatible glue units'/>now scanning mu
-<error n='\muskip' l='328' c='Incompatible glue units'/><error n='\muskip' l='329' c='Incompatible glue units'/><error n='\muskip' l='330' c='Incompatible glue units'/><error n='\muskip' l='330' c='Incompatible glue units'/><error n='\muskip' l='330' c='Incompatible glue units'/><error n='\muskip' l='330' c='missing unit'/>bad mu
-<error n='\skip' l='331' c='missing unit'/>mu Missing unit
-<error n='\muskip' l='332' c='Incompatible glue units'/><error n='\muskip' l='333' c='Incompatible glue units'/><error n='\muskip' l='334' c='Incompatible glue units'/>X
-<error n='\fooA' l='336' c='extra}'/><error n='\textit' l='336' c='extra}'/><hi rend='it'/> <error n='$' l='336' c='extra}'/><error n='$' l='336' c='Unexpected }'/><texmath textype='inline' type='inline'>\hbox{foo}</texmath> 4<mbox><error n='\mbox' l='336' c='extra}'/></mbox><error n='\frac' l='336' c='Mathonly command'/>12<error n='$' l='336' c='Unexpected }'/><texmath textype='inline' type='inline'></texmath>
+<error c='Missing brace' l='311' n='\include'/>foo
+<error c='unbalanced \read' l='52' n='\read'/>
+<error c='too many closing braces in \read' l='61' n='\read'/><error c='Undefined command' l='319' n='\bad'/><error c='Missing number' l='320' n='\count'/><error c='Missing number' l='320' n='\count'/>Here we try to converts tokens to numbers
+<error c='Missing number' l='322' n='\muskip'/><error c='Incompatible glue units' l='322' n='\muskip'/>pt <error c='Missing number' l='323' n='\skip'/><error c='Missing number' l='324' n='\setmathchar'/><error c='Missing number' l='324' n='\setmathchar'/><error c='Missing number' l='324' n='\count'/><hi rend='bold'>`</hi>ATesting incompatible mu, first from mu to something else
+<error c='Incompatible glue units' l='326' n='\skip'/><error c='Incompatible glue units' l='326' n='\parindent'/><error c='Incompatible glue units' l='326' n='\linepenalty'/>now scanning mu
+<error c='Incompatible glue units' l='328' n='\muskip'/><error c='Incompatible glue units' l='329' n='\muskip'/><error c='Incompatible glue units' l='330' n='\muskip'/><error c='Incompatible glue units' l='330' n='\muskip'/><error c='Incompatible glue units' l='330' n='\muskip'/><error c='missing unit' l='330' n='\muskip'/>bad mu
+<error c='missing unit' l='331' n='\skip'/>mu Missing unit
+<error c='Incompatible glue units' l='332' n='\muskip'/><error c='Incompatible glue units' l='333' n='\muskip'/><error c='Incompatible glue units' l='334' n='\muskip'/>X
+<error c='extra}' l='336' n='\fooA'/><error c='extra}' l='336' n='\textit'/><hi rend='it'/> <error c='extra}' l='336' n='$'/><error c='Unexpected }' l='336' n='$'/><texmath textype='inline' type='inline'>\hbox{foo}</texmath> 4<mbox><error c='extra}' l='336' n='\mbox'/></mbox><error c='Mathonly command' l='336' n='\frac'/>12<error c='Unexpected }' l='336' n='$'/><texmath textype='inline' type='inline'></texmath>
 No err signaled if etc removed...!
- <error n='\comment' l='338' c='Verbatim-like environment in argument'/>etc<error n='\xbox' l='339' c='Missing open brace'/><foo>bar</foo> First arg of \xboxis normal, scond like hbox
-<error n='\uppercase' l='340' c='Missing open brace'/>FOOO
+ <error c='Verbatim-like environment in argument' l='338' n='\comment'/>etc<error c='Missing open brace' l='339' n='\xbox'/><foo>bar</foo> First arg of \xboxis normal, scond like hbox
+<error c='Missing open brace' l='340' n='\uppercase'/>FOOO
 
-<error n='\foo' l='343' c='bad after #'/><error n='\foo' l='343' c='bad after #'/>
-<error n='\foo' l='345' c='bad after #'/><error n='\foo' l='345' c='bad after #'/>
-<error n='\foo' l='346' c='bad after #'/><error n='\foo' l='346' c='bad after #'/><error n='\foo' l='346' c='bad after #'/></p>
+<error c='bad after #' l='343' n='\foo'/><error c='bad after #' l='343' n='\foo'/>
+<error c='bad after #' l='345' n='\foo'/><error c='bad after #' l='345' n='\foo'/>
+<error c='bad after #' l='346' n='\foo'/><error c='bad after #' l='346' n='\foo'/><error c='bad after #' l='346' n='\foo'/></p>
 <keywords>
 <term>uu</term>
 <term>vu</term>
-<error n='\motscle' l='347' c='Spurious close brace removed'/><term>xxww</term>
+<error c='Spurious close brace removed' l='347' n='\motscle'/><term>xxww</term>
 <term><hi rend='it'>z</hi>z</term>
 </keywords><p>Next par</p>
 <p>how to check overflow here ?
-<error n='\setlength' l='351' c='onearg'/>12pt
-<error n='\setlength' l='352' c='onearg'/>12pt This one should be OK
-<error n='\newif' l='353' c='token list \newif does not start with if'/><error n='\newif' l='353' c='bad newif'/><error n='\newif' l='353' c='bad newif'/>
+<error c='onearg' l='351' n='\setlength'/>12pt
+<error c='onearg' l='352' n='\setlength'/>12pt This one should be OK
+<error c='token list \newif does not start with if' l='353' n='\newif'/><error c='bad newif' l='353' n='\newif'/><error c='bad newif' l='353' n='\newif'/>
 
-<error n='\csname\endcsname' l='355' c='Undefined environment'/><error n='\end' l='355' c='Illegal \end{}'/><error n='\unless' l='355' c='bad unless'/>Ok<error n='\catcode' l='357' c='number too big'/> <error n='\mathcode' l='358' c='number too big'/><error n='\sfcode' l='359' c='number too big'/><error n='\lccode' l='360' c='number too big'/><error n='\uccode' l='361' c='number too big'/><error n='\newcommand' l='362' c='empty argument'/>
-<error n='\newcommand' l='363' c='bad argument'/>
-<error n='\advance' l='364' c='bad register'/> by 1
-<error n='\multiply' l='366' c='Arithmetic overflow'/>ok and <error n='\toks' l='367' c='missing brace'/> bad
-<error n='\newboolean' l='368' c='bad newboolean'/>
-<error n='\setboolean' l='369' c='boolean value neither true nor false: bar'/>
-<error n='\setboolean' l='370' c='undefined boolean'/>
-<error n='\setbox' l='371' c='Missing box'/>
-<error n='\shipout' l='372' c='\shipout is undefined'/></p>
+<error c='Undefined environment' l='355' n='\csname\endcsname'/><error c='Illegal \end{}' l='355' n='\end'/><error c='bad unless' l='355' n='\unless'/>Ok<error c='number too big' l='357' n='\catcode'/> <error c='number too big' l='358' n='\mathcode'/><error c='number too big' l='359' n='\sfcode'/><error c='number too big' l='360' n='\lccode'/><error c='number too big' l='361' n='\uccode'/><error c='empty argument' l='362' n='\newcommand'/>
+<error c='bad argument' l='363' n='\newcommand'/>
+<error c='bad register' l='364' n='\advance'/> by 1
+<error c='Arithmetic overflow' l='366' n='\multiply'/>ok and <error c='missing brace' l='367' n='\toks'/> bad
+<error c='bad newboolean' l='368' n='\newboolean'/>
+<error c='boolean value neither true nor false: bar' l='369' n='\setboolean'/>
+<error c='undefined boolean' l='370' n='\setboolean'/>
+<error c='Missing box' l='371' n='\setbox'/>
+<error c='\shipout is undefined' l='372' n='\shipout'/></p>
 <p>An example of all the font commands
-<error n='\TextSymbolUnavailable' l='375' c='unimplemented'/><error n='\DeclareMathVersion' l='376' c='unimplemented'/>
-<error n='\DeclareMathDelimiter' l='377' c='unimplemented'/>
-<error n='\DeclareTextCommandDefault' l='378' c='unimplemented'/>
-<error n='\ProvideTextCommandDefault' l='379' c='unimplemented'/>
-<error n='\DeclareTextSymbolDefault' l='380' c='unimplemented'/>
-<error n='\UseTextSymbol' l='381' c='unimplemented'/>
-<error n='\UndeclareTextCommand' l='382' c='unimplemented'/>
-<error n='\DeclareFontEncodingDefaults' l='383' c='unimplemented'/>
-<error n='\DeclareSizeFunction' l='384' c='unimplemented'/>
-<error n='\DeclareSymbolFontAlphabet' l='385' c='unimplemented'/>
-<error n='\DeclareTextFontCommand' l='386' c='unimplemented'/>
-<error n='\DeclareTextAccent' l='387' c='unimplemented'/>
-<error n='\DeclareTextSymbol' l='388' c='unimplemented'/>
-<error n='\DeclareFontFamily' l='389' c='unimplemented'/>
-<error n='\DeclareFontEncoding' l='390' c='unimplemented'/>
-<error n='\DeclareOldFontCommand' l='391' c='unimplemented'/>
-<error n='\DeclareTextCompositeCommand' l='392' c='unimplemented'/>
-<error n='\DeclareTextComposite' l='393' c='unimplemented'/>
-<error n='\DeclareFontSubstitution' l='394' c='unimplemented'/>
-<error n='\DeclareMathAccent' l='395' c='unimplemented'/>
-<error n='\DeclareMathSymbol' l='396' c='unimplemented'/>
-<error n='\DeclarePreloadSizes' l='397' c='unimplemented'/>
-<error n='\DeclareMathSizes' l='398' c='unimplemented'/>
-<error n='\DeclareErrorFont' l='399' c='unimplemented'/>
-<error n='\DeclareSymbolFont' l='400' c='unimplemented'/>
-<error n='\DeclareMathAlphabet' l='401' c='unimplemented'/>
-<error n='\DeclareMathRadical' l='402' c='unimplemented'/>
-<error n='\DeclareFontShape' l='403' c='unimplemented'/>
-<error n='\DeclareFixedFont' l='404' c='unimplemented'/>
-<error n='\SetSymbolFont' l='405' c='unimplemented'/>
-<error n='\SetMathAlphabet' l='406' c='unimplemented'/>
-<error n='\UseTextAccent' l='407' c='unimplemented'/>
-<error n='\ProvideTextCommand' l='408' c='unimplemented'/>
-<error n='\DeclareTextCommand' l='409' c='unimplemented'/></p>
-<p>OK<error n='\define@key' l='412' c='bad kv family'/><error n='\define@key' l='412' c='Missing open brace'/>ly<error n='\endcsname' l='412' c='Extra \endcsname'/>keyA
+<error c='unimplemented' l='375' n='\TextSymbolUnavailable'/><error c='unimplemented' l='376' n='\DeclareMathVersion'/>
+<error c='unimplemented' l='377' n='\DeclareMathDelimiter'/>
+<error c='unimplemented' l='378' n='\DeclareTextCommandDefault'/>
+<error c='unimplemented' l='379' n='\ProvideTextCommandDefault'/>
+<error c='unimplemented' l='380' n='\DeclareTextSymbolDefault'/>
+<error c='unimplemented' l='381' n='\UseTextSymbol'/>
+<error c='unimplemented' l='382' n='\UndeclareTextCommand'/>
+<error c='unimplemented' l='383' n='\DeclareFontEncodingDefaults'/>
+<error c='unimplemented' l='384' n='\DeclareSizeFunction'/>
+<error c='unimplemented' l='385' n='\DeclareSymbolFontAlphabet'/>
+<error c='unimplemented' l='386' n='\DeclareTextFontCommand'/>
+<error c='unimplemented' l='387' n='\DeclareTextAccent'/>
+<error c='unimplemented' l='388' n='\DeclareTextSymbol'/>
+<error c='unimplemented' l='389' n='\DeclareFontFamily'/>
+<error c='unimplemented' l='390' n='\DeclareFontEncoding'/>
+<error c='unimplemented' l='391' n='\DeclareOldFontCommand'/>
+<error c='unimplemented' l='392' n='\DeclareTextCompositeCommand'/>
+<error c='unimplemented' l='393' n='\DeclareTextComposite'/>
+<error c='unimplemented' l='394' n='\DeclareFontSubstitution'/>
+<error c='unimplemented' l='395' n='\DeclareMathAccent'/>
+<error c='unimplemented' l='396' n='\DeclareMathSymbol'/>
+<error c='unimplemented' l='397' n='\DeclarePreloadSizes'/>
+<error c='unimplemented' l='398' n='\DeclareMathSizes'/>
+<error c='unimplemented' l='399' n='\DeclareErrorFont'/>
+<error c='unimplemented' l='400' n='\DeclareSymbolFont'/>
+<error c='unimplemented' l='401' n='\DeclareMathAlphabet'/>
+<error c='unimplemented' l='402' n='\DeclareMathRadical'/>
+<error c='unimplemented' l='403' n='\DeclareFontShape'/>
+<error c='unimplemented' l='404' n='\DeclareFixedFont'/>
+<error c='unimplemented' l='405' n='\SetSymbolFont'/>
+<error c='unimplemented' l='406' n='\SetMathAlphabet'/>
+<error c='unimplemented' l='407' n='\UseTextAccent'/>
+<error c='unimplemented' l='408' n='\ProvideTextCommand'/>
+<error c='unimplemented' l='409' n='\DeclareTextCommand'/></p>
+<p>OK<error c='bad kv family' l='412' n='\define@key'/><error c='Missing open brace' l='412' n='\define@key'/>ly<error c='Extra \endcsname' l='412' n='\endcsname'/>keyA
 OK
-OK<error n='\define@key' l='414' c='bad kv prefix'/><error n='\define@key' l='414' c='Missing open brace'/>familykeyA
-OK<error n='\define@key' l='415' c='xkeyval: `XKV&apos; prefix is not allowed'/></p>
+OK<error c='bad kv prefix' l='414' n='\define@key'/><error c='Missing open brace' l='414' n='\define@key'/>familykeyA
+OK<error c='xkeyval: `XKV&apos; prefix is not allowed' l='415' n='\define@key'/></p>
 <p>Errors from FO
  ok
-<error n='\FP@mul' l='419' c='Overflow in FPmul'/> overflow
-<error n='\FP@add' l='420' c='Overflow in FPadd'/> bad
-<error n='\FP@div' l='421' c='Overflow in FPdiv'/>
-<error n='\FPpascal' l='422' c='out of bound 200 max value is 63'/>
-<error n='\FP@trunc' l='423' c='Negative number -3 in truncate'/>
-<error n='\FP@round' l='424' c='Negative number -4 in round'/>
-<error n='\FP@div' l='425' c='division by zero'/>
-<error n='\FP@ln' l='426' c='Log of negative number'/><error n='\FP@ln' l='426' c='Log of 0'/>
- <error n='\FP@exp' l='427' c='Overflow in FPexp'/>
-<error n='\FP@pow' l='428' c='First argument negative'/>
+<error c='Overflow in FPmul' l='419' n='\FP@mul'/> overflow
+<error c='Overflow in FPadd' l='420' n='\FP@add'/> bad
+<error c='Overflow in FPdiv' l='421' n='\FP@div'/>
+<error c='out of bound 200 max value is 63' l='422' n='\FPpascal'/>
+<error c='Negative number -3 in truncate' l='423' n='\FP@trunc'/>
+<error c='Negative number -4 in round' l='424' n='\FP@round'/>
+<error c='division by zero' l='425' n='\FP@div'/>
+<error c='Log of negative number' l='426' n='\FP@ln'/><error c='Log of 0' l='426' n='\FP@ln'/>
+ <error c='Overflow in FPexp' l='427' n='\FP@exp'/>
+<error c='First argument negative' l='428' n='\FP@pow'/>
 
-<error n='\FP@arccos' l='430' c='OVF'/>
-<error n='\FP@arcsin' l='431' c='OVF'/>
-<error n='\FP@round' l='432' c='overflow in FPread'/>
-ok<error n='\fontdimen' l='435' c='attempt to modify unexistent font param'/><error n='\fontdimen' l='436' c='attempt to modify unexistent font param'/><error n='\hyphenchar' l='438' c='Missing font identifier'/><error n='\hyphenchar' l='438' c='Missing number'/><error n='\hyphenchar' l='438' c='attempt to modify unexistent font param'/>=1
-<error n='\lastkern' l='439' c='readonly'/><error n='\numexpr' l='439' c='readonly'/><error n='\XMLlastid' l='439' c='readonly'/></p>
-<error n='\multiply' l='446' c='Arithmetic overflow'/><p>This is OK
-<error n='\multiply' l='448' c='Arithmetic overflow'/> fail
+<error c='OVF' l='430' n='\FP@arccos'/>
+<error c='OVF' l='431' n='\FP@arcsin'/>
+<error c='overflow in FPread' l='432' n='\FP@round'/>
+ok<error c='attempt to modify unexistent font param' l='435' n='\fontdimen'/><error c='attempt to modify unexistent font param' l='436' n='\fontdimen'/><error c='Missing font identifier' l='438' n='\hyphenchar'/><error c='Missing number' l='438' n='\hyphenchar'/><error c='attempt to modify unexistent font param' l='438' n='\hyphenchar'/>=1
+<error c='readonly' l='439' n='\lastkern'/><error c='readonly' l='439' n='\numexpr'/><error c='readonly' l='439' n='\XMLlastid'/></p>
+<error c='Arithmetic overflow' l='446' n='\multiply'/><p>This is OK
+<error c='Arithmetic overflow' l='448' n='\multiply'/> fail
 OK
-<error n='\multiply' l='451' c='Arithmetic overflow'/>bad
-<error n='\divide' l='455' c='Arithmetic overflow'/><error n='\divide' l='455' c='Arithmetic overflow'/> good
+<error c='Arithmetic overflow' l='451' n='\multiply'/>bad
+<error c='Arithmetic overflow' l='455' n='\divide'/><error c='Arithmetic overflow' l='455' n='\divide'/> good
  bad</p>
 <p>Lines that follow give missing unit but \badis not called
-<error n='\dimen' l='469' c='missing unit'/>. Missing unit here
-<error n='\dimen' l='470' c='missing unit'/>. <error n='\dimen' l='471' c='missing unit'/><error n='\dimen' l='472' c='missing unit'/>. <error n='\dimen' l='473' c='missing unit'/>.</p>
-<p>This is a good accent Ắ and Ắ <error n='\&apos;' l='476' c='bad accent'/>
-<error n='\divide' l='478' c='Arithmetic overflow'/><error n='\skip' l='479' c='Division by zero'/><error n='\dimen' l='489' c='Division by zero'/><error n='\dimen' l='490' c='Division by zero'/></p>
+<error c='missing unit' l='469' n='\dimen'/>. Missing unit here
+<error c='missing unit' l='470' n='\dimen'/>. <error c='missing unit' l='471' n='\dimen'/><error c='missing unit' l='472' n='\dimen'/>. <error c='missing unit' l='473' n='\dimen'/>.</p>
+<p>This is a good accent Ắ and Ắ <error c='bad accent' l='476' n='\&apos;'/>
+<error c='Arithmetic overflow' l='478' n='\divide'/><error c='Division by zero' l='479' n='\skip'/><error c='Division by zero' l='489' n='\dimen'/><error c='Division by zero' l='490' n='\dimen'/></p>
 <date day='2' month='2' year='2008'/><date day='3' month='3' year='2008'/><date day='13' month='3' year='2008'/><date day='13' month='3' year='2008'/><date day='13' month='3' year='2008'/><date day='1' month='3' year='2008'/><date day='4' month='7' year='2008'/><date day='3' month='2' year='1'/><date day='3' month='1' year='2'/><date day='2' month='1' year='3'/><date day='2' month='3' year='1'/><date day='1' month='3' year='2'/><date day='1' month='2' year='3'/><p>Now errors
-<error n='\formatdate' l='502' c='Illegal date format'/><date day='1' month='1' year='2008'/><error n='\formatdate' l='502' c='Bad month field'/><date day='1' month='1' year='2008'/>
-<error n='\formatdate' l='503' c='Bad day field'/><date day='1' month='1' year='2008'/><error n='\formatdate' l='503' c='Illegal date format'/><date day='1' month='1' year='2008'/><error n='\formatdate' l='503' c='Illegal date format'/><date day='1' month='1' year='2008'/>
-<error n='\formatdate' l='504' c='Date has two fields with value>31'/><date day='2008' month='2' year='2008'/><error n='\formatdate' l='504' c='Date has two month fields'/><error n='\formatdate' l='504' c='Unable to distinguish between year day and month'/><date day='1' month='1' year='2008'/>
-<error n='\formatdate' l='505' c='Unable to distinguish between year day and month'/><date day='1' month='1' year='2008'/><error n='\formatdate' l='505' c='Unable to distinguish between year day and month'/><date day='1' month='1' year='2008'/><error n='\formatdate' l='505' c='Too many digits in date field'/><date day='1' month='1' year='2008'/>
-<error n='\formatdate' l='506' c='Expected digits or a month in letters'/><date day='1' month='1' year='2008'/><error n='\formatdate' l='506' c='Expected digits or a month in letters'/><date day='1' month='1' year='2008'/>
+<error c='Illegal date format' l='502' n='\formatdate'/><date day='1' month='1' year='2008'/><error c='Bad month field' l='502' n='\formatdate'/><date day='1' month='1' year='2008'/>
+<error c='Bad day field' l='503' n='\formatdate'/><date day='1' month='1' year='2008'/><error c='Illegal date format' l='503' n='\formatdate'/><date day='1' month='1' year='2008'/><error c='Illegal date format' l='503' n='\formatdate'/><date day='1' month='1' year='2008'/>
+<error c='Date has two fields with value>31' l='504' n='\formatdate'/><date day='2008' month='2' year='2008'/><error c='Date has two month fields' l='504' n='\formatdate'/><error c='Unable to distinguish between year day and month' l='504' n='\formatdate'/><date day='1' month='1' year='2008'/>
+<error c='Unable to distinguish between year day and month' l='505' n='\formatdate'/><date day='1' month='1' year='2008'/><error c='Unable to distinguish between year day and month' l='505' n='\formatdate'/><date day='1' month='1' year='2008'/><error c='Too many digits in date field' l='505' n='\formatdate'/><date day='1' month='1' year='2008'/>
+<error c='Expected digits or a month in letters' l='506' n='\formatdate'/><date day='1' month='1' year='2008'/><error c='Expected digits or a month in letters' l='506' n='\formatdate'/><date day='1' month='1' year='2008'/>
 <date day='2' month='2' year='2008'/>
 <date day='2' month='2' year='2008'/><date day='2' month='8' year='2008'/></p>
-<error n='\tralics@fnhack' l='510' c='bad definition'/><error n='\tralics@fnhack' l='510' c='bad definition'/><p>What is the result here ?</p>
+<error c='bad definition' l='510' n='\tralics@fnhack'/><error c='bad definition' l='510' n='\tralics@fnhack'/><p>What is the result here ?</p>
 <p>ok1
 ok2
-<error n='\@ifdefinable' l='518' c='bad'/>
-<error n='\@ifdefinable' l='519' c='bad'/>
-<error n='\@ifdefinable' l='520' c='bad'/>
-<error n='\@ifdefinable' l='521' c='onearg'/>
-<error n='\@ifdefinable' l='522' c='bad'/>
-<error n='\@ifdefinable' l='523' c='onearg'/>
-<error n='\@ifdefinable' l='524' c='onearg'/></p>
+<error c='bad' l='518' n='\@ifdefinable'/>
+<error c='bad' l='519' n='\@ifdefinable'/>
+<error c='bad' l='520' n='\@ifdefinable'/>
+<error c='onearg' l='521' n='\@ifdefinable'/>
+<error c='bad' l='522' n='\@ifdefinable'/>
+<error c='onearg' l='523' n='\@ifdefinable'/>
+<error c='onearg' l='524' n='\@ifdefinable'/></p>
 <p>Lets try some files foo ok bar bad
-<figure rend='inline' file='foo'/>
-<figure rend='inline' file='./../foo'/>
-<figure rend='inline' file='.././foo'/>
-<figure rend='inline' file='../foo'/>
-<figure rend='inline' file='./foo'/>
-<figure rend='inline' file='./../foo' extension='ps'/>
-<figure rend='inline' file='.././foo' extension='ps'/>
-<figure rend='inline' file='../foo' extension='ps'/>
-<figure rend='inline' file='./foo' extension='ps'/>
-<figure rend='inline' file='foo' extension='ps'/>
-<figure rend='inline' file='bar' extension='gee'/>
-<figure rend='inline' file='./../bar' extension='gee'/>
-<figure rend='inline' file='.././bar' extension='gee'/>
-<figure rend='inline' file='../bar' extension='gee'/>
-<figure rend='inline' file='./bar' extension='gee'/>
-<figure rend='inline' file='./../bar.gee.ps'/><error n='\error' l='543' c='Wrong dots in graphic file ./../bar.gee.ps'/>
-<figure rend='inline' file='.././bar.gee.ps'/><error n='\error' l='544' c='Wrong dots in graphic file .././bar.gee.ps'/>
-<figure rend='inline' file='../bar.gee.ps'/><error n='\error' l='545' c='Wrong dots in graphic file ../bar.gee.ps'/>
-<figure rend='inline' file='./bar.gee.ps'/><error n='\error' l='546' c='Wrong dots in graphic file ./bar.gee.ps'/>
-<figure rend='inline' file='bar.gee.ps'/><error n='\error' l='547' c='Wrong dots in graphic file bar.gee.ps'/>
-<figure rend='inline' file='.bar'/><error n='\error' l='548' c='Wrong dots in graphic file .bar'/>
-<figure rend='inline' file='bar.'/><error n='\error' l='549' c='Wrong dots in graphic file bar.'/></p>
-<error n='\@ifdefinable' l='551' c='bad'/><p>Case of special chars in commande names <error n='\foo&amp;xሴ&lt;&apos;&gt;' l='555' c='Undefined command'/>!
-<error n='\foo&amp;xሴ' l='556' c='Undefined command'/><error n='&lt;' l='556' c='Undefined command'/><error n='&apos;' l='556' c='Undefined command'/><error n='&gt;' l='556' c='Undefined command'/>!</p>
+<figure file='foo' rend='inline'/>
+<figure file='./../foo' rend='inline'/>
+<figure file='.././foo' rend='inline'/>
+<figure file='../foo' rend='inline'/>
+<figure file='./foo' rend='inline'/>
+<figure extension='ps' file='./../foo' rend='inline'/>
+<figure extension='ps' file='.././foo' rend='inline'/>
+<figure extension='ps' file='../foo' rend='inline'/>
+<figure extension='ps' file='./foo' rend='inline'/>
+<figure extension='ps' file='foo' rend='inline'/>
+<figure extension='gee' file='bar' rend='inline'/>
+<figure extension='gee' file='./../bar' rend='inline'/>
+<figure extension='gee' file='.././bar' rend='inline'/>
+<figure extension='gee' file='../bar' rend='inline'/>
+<figure extension='gee' file='./bar' rend='inline'/>
+<figure file='./../bar.gee.ps' rend='inline'/><error c='Wrong dots in graphic file ./../bar.gee.ps' l='543' n='\error'/>
+<figure file='.././bar.gee.ps' rend='inline'/><error c='Wrong dots in graphic file .././bar.gee.ps' l='544' n='\error'/>
+<figure file='../bar.gee.ps' rend='inline'/><error c='Wrong dots in graphic file ../bar.gee.ps' l='545' n='\error'/>
+<figure file='./bar.gee.ps' rend='inline'/><error c='Wrong dots in graphic file ./bar.gee.ps' l='546' n='\error'/>
+<figure file='bar.gee.ps' rend='inline'/><error c='Wrong dots in graphic file bar.gee.ps' l='547' n='\error'/>
+<figure file='.bar' rend='inline'/><error c='Wrong dots in graphic file .bar' l='548' n='\error'/>
+<figure file='bar.' rend='inline'/><error c='Wrong dots in graphic file bar.' l='549' n='\error'/></p>
+<error c='bad' l='551' n='\@ifdefinable'/><p>Case of special chars in commande names <error c='Undefined command' l='555' n='\foo&amp;xሴ&lt;&apos;&gt;'/>!
+<error c='Undefined command' l='556' n='\foo&amp;xሴ'/><error c='Undefined command' l='556' n='&lt;'/><error c='Undefined command' l='556' n='&apos;'/><error c='Undefined command' l='556' n='&gt;'/>!</p>
 <p>More catcodes on Unicode chars
 gives foobar OK
-givesokbar OK <error n='\my€bar' l='561' c='Undefined command'/>bad <error n='\my' l='561' c='Undefined command'/>€bar bad
-okok <error n='\my€bad' l='562' c='Undefined command'/>okok <error n='\my€bad' l='562' c='Undefined command'/>ok
+givesokbar OK <error c='Undefined command' l='561' n='\my€bar'/>bad <error c='Undefined command' l='561' n='\my'/>€bar bad
+okok <error c='Undefined command' l='562' n='\my€bad'/>okok <error c='Undefined command' l='562' n='\my€bad'/>ok
 givesok bar OK okbar good
 OK
  ok OK ok OK

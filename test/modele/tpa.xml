@@ -1,16 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE tpa SYSTEM 'tpa.dtd'>
-<!-- Translated from latex by tralics 2.14.5, date: 2012/05/14-->
-<tpa from_type='OK' from-tpa='ok'>
-<error n='\InsertTitlepage' l='35' c=''/>
-<titlepage a2='b2' a1='b1' att2='foo2' att1='foo'><title-element tea='tea-val'>Titlepage customisation in Tralics</title-element>
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
+<tpa from-tpa='ok' from_type='OK'>
+<error c='' l='35' n='\InsertTitlepage'/>
+<titlepage a1='b1' a2='b2' att1='foo' att2='foo2'><title-element tea='tea-val'>Titlepage customisation in Tralics</title-element>
 <utitle-element tea='utea-val'>No title</utitle-element>
-<autL bl='blval' al='alval'><aut auta='autaval'>José Grimm</aut>
+<autL al='alval' bl='blval'><aut auta='autaval'>José Grimm</aut>
 <aut auta='autaval'>Knuth</aut>
 <aut auta='autaval'>JG</aut>
 <aut auta='autaval'>DEK</aut>
 </autL>
-<uautL bl='blval' al='alval'><aut auta='autaval'>No authors</aut></uautL>
+<uautL al='alval' bl='blval'><aut auta='autaval'>No authors</aut></uautL>
 <abstract ab='AB1'><p>
 This is an abstract with</p>
 <p>some paragraphs in it</p>

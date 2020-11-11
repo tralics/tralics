@@ -39,7 +39,7 @@ auto Xid::get_att() const -> AttList & { return the_stack.get_att_list(value); }
 auto Xid::has_attribute(const std::string &n) const -> std::string {
     AttList &X = get_att();
     auto     i = X.lookup(n);
-    if (i) return i->value;
+    if (i) return *i;
     return std::string();
 }
 
@@ -55,17 +55,15 @@ void Xid::add_attribute(const std::string &A, const std::string &B, bool force) 
 
 // Adds the list L to the attribute list of this id.
 void Xid::add_attribute(const AttList &L, bool force) const {
-    size_t   n = L.size();
     AttList &l = get_att();
-    for (size_t i = 0; i < n; i++) l.push_back(L[i].name, L[i].value, force); // \todo push_back(L)
+    for (const auto &i : L) l.push_back(i.first, i.second, force); // \todo push_back(L)
 }
 
 void Xid::add_attribute_but_rend(Xid b) const {
     AttList &L = b.get_att();
-    size_t   n = L.size();
     AttList &l = get_att();
-    for (size_t i = 0; i < n; i++)
-        if (L[i].name != the_names["rend"]) l.push_back(L[i].name, L[i].value, true); // \todo push_back(L)
+    for (const auto &i : L)
+        if (i.first != the_names["rend"]) l.push_back(i.first, i.second, true); // \todo push_back(L)
 }
 
 // Add attribute list of element B to this id.
@@ -89,6 +87,6 @@ auto operator<<(std::ostream &fp, Xid X) -> std::ostream & { return fp << X.get_
 
 auto fetch_att(Xid idx, const std::string &m) -> std::optional<std::string> {
     AttList &L = idx.get_att();
-    if (auto k = L.lookup(m)) return encode(k->value);
+    if (auto k = L.lookup(m)) return encode(*k);
     return {};
 }

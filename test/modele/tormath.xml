@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE ramain SYSTEM 'raweb.dtd'>
-<!-- Translated from latex by tralics 2.15.4, date: 2015/11/20-->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
 <ramain creator='Tralics version 2.15.4'>
 <p>DOCSTART</p>
 <texmath textype='display' type='display'>x6</texmath>
-<div0 id-text='1' id='cid1'><head>simple math</head>
+<div0 id='cid1' id-text='1'><head>simple math</head>
 <p><texmath textype='inline' type='inline'>\sharp </texmath> ♯</p>
 <p><texmath textype='inline' type='inline'>
 \i \j \$ ~\, \_ \&amp; \lbrace  \rbrace  \% \ \! \quad \qquad \dots \ldots \# \sharp \natural \flat </texmath>
@@ -33,7 +33,7 @@
 <texmath textype='inline' type='inline'>\gamma =\delta </texmath> and <texmath textype='inline' type='inline'>\phi =\psi </texmath>;
 and <texmath textype='inline' type='inline'>0\ne \infty </texmath></p>
 </div0>
-<div0 id-text='2' id='cid2'><head>Mathaccents</head>
+<div0 id='cid2' id-text='2'><head>Mathaccents</head>
 <p><texmath textype='inline' type='inline'>HAT: \hat{a} \acute{b} \bar{c} \dot{d} \breve{e} \check{f} \grave{g} \vec{h}
 \ddot{k} \tilde{l}a\rightarrow b\longrightarrow c</texmath></p>
 <p><texmath textype='inline' type='inline'>ACUTE: \acute{x} \bar{x} \breve{x} \check{x}
@@ -45,7 +45,7 @@ and <texmath textype='inline' type='inline'>0\ne \infty </texmath></p>
 \underleftarrow{abc} \underrightarrow{abc}
 </texmath></p>
 </div0>
-<div0 id-text='3' id='cid3'><head>Commands</head>
+<div0 id='cid3' id-text='3'><head>Commands</head>
 <p><texmath textype='inline' type='inline'>\min _xf(x) &gt;\operatorname{dmin}_xf(x)</texmath>.
 
 <texmath textype='inline' type='inline'>\min _xf(x) &gt;\operatornamewithlimits{dmin}_xf(x)</texmath>.</p>
@@ -71,15 +71,15 @@ and <texmath textype='inline' type='inline'>0\ne \infty </texmath></p>
 <p><texmath textype='inline' type='inline'>{\frac{1}{2}}{x\displaystyle \frac{1}{2}}
 {x\textstyle \frac{1}{2}}{x\scriptstyle \frac{1}{2}}{x\scriptscriptstyle \frac{1}{2}} \qquad {x\displaystyle a}+{x\textstyle a}+{x\scriptstyle a}+{x\scriptscriptstyle a}\qquad \frac{x\displaystyle a}{x\textstyle b}+\frac{x\scriptstyle a}{x\scriptscriptstyle b}</texmath></p>
 </div0>
-<div0 id-text='4' id='cid4'><head>Environments</head>
+<div0 id='cid4' id-text='4'><head>Environments</head>
 </div0>
-<div0 id-text='5' id='cid5'><head>Other</head>
-<texmath id-text='1' id='uid1' textype='equation' type='display'>
+<div0 id='cid5' id-text='5'><head>Other</head>
+<texmath id='uid1' id-text='1' textype='equation' type='display'>
 \begin{aligned}x^2+y^2&amp;=1 &amp; 1 &amp;=X^2+Y^2\\
 x &amp;=0.01&amp; 0.001&amp;=X
 \end{aligned} 
 </texmath>
-<texmath id-text='2' id='uid2' textype='multline' type='display'>
+<texmath id='uid2' id-text='2' textype='multline' type='display'>
 \sin =\cos \\
 \multicolumn{a}{b}{c}\\
 \multicolumn{1}{r}{\cos }\\
@@ -90,32 +90,32 @@ x &amp;=0.01&amp; 0.001&amp;=X
 <p noindent='true'><foo>AB</foo></p>
 <texmath textype='display' type='display'> A\hbox{B $C$} D</texmath>
 <p><texmath textype='inline' type='inline'>a+b</texmath> <texmath textype='inline' type='inline'>a\mathbin +b</texmath></p>
-<texmath id-text='3' id='uid3' textype='equation' type='display'> 0=1 </texmath>
+<texmath id='uid3' id-text='3' textype='equation' type='display'> 0=1 </texmath>
 <texmath textype='equation*' type='display'> 0=2 </texmath>
 <texmath textype='displaymath' type='display'> 0=3 </texmath>
 <texmath textype='display' type='display'> 0=4 </texmath>
 <texmath textype='display' type='display'> 0 = 5 </texmath>
-<texmath id-text='4' id='uid4' textype='equation' type='display'>
+<texmath id='uid4' id-text='4' textype='equation' type='display'>
 \begin{split}
 (a+b)^4 &amp;= (a+b)^ 2 (a+b)^2 \\
 &amp;= (a^2+2ab+b^2)(a^2+2ab+b^2) \\
 &amp;= a^4+4a^3b+6a^2b^2+4ab^3+b^4 \\
 \end{split}
 </texmath>
-<texmath id-text='5' id='uid5' textype='equation' type='display'>
+<texmath id='uid5' id-text='5' textype='equation' type='display'>
 \begin{aligned}(a+b)^4 &amp;= (a+b)^ 2 (a+b)^2 \\
 &amp;= (a^2+2ab+b^2)(a^2+2ab+b^2) \\
 &amp;= a^4+4a^3b+6a^2b^2+4ab^3+b^4 \\
 \end{aligned}
 </texmath>
-<texmath id-text='5' id='uid6' textype='align' type='display'>
+<texmath id='uid6' id-text='5' textype='align' type='display'>
 x^2+y^2&amp;=1\\ x&amp;=\sqrt{1-y^2}
 </texmath>
 <texmath textype='eqnarray*' type='display'>
 x &amp; \ll &amp; y_{1} + \cdots + y_{n} \\
 &amp; \le &amp;z
 </texmath>
-<texmath id-text='5' id='uid7' textype='eqnarray' type='display'>
+<texmath id='uid7' id-text='5' textype='eqnarray' type='display'>
 x &amp; = &amp;17y \\
 y &amp; &gt; &amp; a + b + c+d+e+f+g+h+i+j+ \\
 &amp; &amp; k+l+m+n+o+p
@@ -141,7 +141,7 @@ a - b – c — d</p>
 <p>y´<texmath textype='inline' type='inline'>x^{\prime } x^{\prime \prime } x^{\prime \prime \prime } x^{\prime \prime \prime \prime } u_2^{\prime } v^{\prime 3}_4</texmath></p>
 <p><texmath textype='inline' type='inline'>\min _xf(x) &gt;\operatorname{dmin}_xf(x)</texmath>.</p>
 <p><texmath textype='inline' type='inline'>\min _xf(x) &gt;\mathmo{dmin}\mathattribute{form}{prefix}\mathattribute{movablelimits}{true}_xf(x)</texmath>.</p>
-<texmath id-text='8' id='uid8' textype='equation' type='display'>\begin{split}
+<texmath id='uid8' id-text='8' textype='equation' type='display'>\begin{split}
 \mathtt {Aa}\mathcal {A}\mathbf {Aa}\mathrm {Aa}
 \mathit {Aa}\mathbb {A}\mathsf {Aa}\mathnormal {Aa} &amp;\mathtt {Bb}\mathcal {B}\mathbf {Bb}\mathrm {Bb}
 \mathit {Bb}\mathbb {B}\mathsf {Bb}\mathnormal {Bb}\\
@@ -218,7 +218,7 @@ c)</p>
 <p noindent='true'>d)</p>
 <texmath textype='display' type='display'> x4 </texmath>
 <p noindent='true'>e)</p>
-<texmath id-text='9' id='uid9' textype='equation' type='display'> x5 </texmath>
+<texmath id='uid9' id-text='9' textype='equation' type='display'> x5 </texmath>
 <p>text A</p>
 <p noindent='true'>text B</p>
 <p noindent='true' spacebefore='8.53581pt'>text C</p>
@@ -227,7 +227,7 @@ c)</p>
 <p><texmath textype='inline' type='inline'>1^e</texmath><font-overline>foo</font-overline><font-underline>bar</font-underline>.</p>
 <p><texmath textype='inline' type='inline'>1^e</texmath><font-overline>foo</font-overline><font-underline>bar</font-underline>.
 <font-small-caps-shape>Foo</font-small-caps-shape><font-small-caps-shape>Bar</font-small-caps-shape></p>
-<texmath id-text='10' id='uid10' textype='equation' type='display'>
+<texmath id='uid10' id-text='10' textype='equation' type='display'>
 \begin{array}{lcl}
 \dot{x} &amp; = &amp; Ax+g(x,u)\\[2mm]
 y &amp; = &amp; Cx \\
@@ -235,28 +235,28 @@ y &amp; = &amp; Cx \\
 \end{array}
 </texmath>
 <table rend='inline'><row top-border='true'><cell halign='left' left-border='true'>a</cell>
-<cell right-border='true' halign='left'>b</cell>
+<cell halign='left' right-border='true'>b</cell>
 <cell halign='right'>c</cell>
-<cell right-border='true' halign='right'>d</cell>
+<cell halign='right' right-border='true'>d</cell>
 <cell halign='center'>e</cell>
-<cell right-border='true' halign='center'>f</cell>
+<cell halign='center' right-border='true'>f</cell>
 </row><row bottom-border='true' spaceafter='8.53581pt'><cell halign='left' left-border='true'>aaa</cell>
-<cell right-border='true' halign='left'>bbb</cell>
+<cell halign='left' right-border='true'>bbb</cell>
 <cell halign='right'>ccc</cell>
-<cell right-border='true' halign='right'>ddd</cell>
+<cell halign='right' right-border='true'>ddd</cell>
 <cell halign='center'>eee</cell>
-<cell right-border='true' halign='center'>fff</cell>
+<cell halign='center' right-border='true'>fff</cell>
 </row><row><cell halign='left' left-border='true'>A</cell>
-<cell halign='left' cols='3'>BCD</cell>
+<cell cols='3' halign='left'>BCD</cell>
 <cell halign='center'>E</cell>
-<cell right-border='true' halign='center'>F</cell>
+<cell halign='center' right-border='true'>F</cell>
 </row><row><cell bottom-border='true' cols='3'/>
 <cell cols='2'/><cell bottom-border='true'/></row><row bottom-border='true'><cell halign='left' left-border='true'>aaa</cell>
-<cell right-border='true' halign='left'>bbb</cell>
+<cell halign='left' right-border='true'>bbb</cell>
 <cell halign='right'>ccc</cell>
-<cell right-border='true' halign='right'>ddd</cell>
+<cell halign='right' right-border='true'>ddd</cell>
 <cell halign='center'>eee</cell>
-<cell right-border='true' halign='center'>fff</cell>
+<cell halign='center' right-border='true'>fff</cell>
 </row></table>
 <texmath textype='display' type='display'> \arccos ^2 (x),\, \arcsin ^2(x) ,\, \arctan ^2(x) ,\, \arg ^2(x),\,
 \cos ^2(x) ,\, \cosh ^2(x) ,\, \cot ^2(x)</texmath>
@@ -310,7 +310,7 @@ y &amp; = &amp; Cx \\
 <p><texmath textype='inline' type='inline'>a\hbox{b=1} c</texmath>
 <texmath textype='inline' type='inline'>a\hbox{b~1}~c</texmath></p>
 <p><texmath textype='inline' type='inline'>x^{y^\epsilon _\varepsilon }</texmath></p>
-<texmath id-text='11' id='uid11' textype='equation' type='display'>
+<texmath id='uid11' id-text='11' textype='equation' type='display'>
 \vec{B}(\vec{r}) = \frac{\mu _0}{4\pi }\left\lbrace 
 \frac{3\vec{m}({\vec{r}}^{\prime })\cdot (\vec{r}-{\vec{r}}^{\prime })}{|\vec{r}-{\vec{r}}^{\prime }|^5}
 (\vec{r}-{\vec{r}}^{\prime }) - \frac{\vec{m}({\vec{r}}^{\prime })}{|\vec{r}-{\vec{r}}^{\prime }|^3}
@@ -356,7 +356,7 @@ x^{y^z} = {x^y}^z
 </texmath>
 <p><texmath textype='inline' type='inline'>x=0123456789</texmath>
 <texmath textype='inline' type='inline'>\@root 3  \of {4}</texmath> <texmath textype='inline' type='inline'>\@root 3 \of {4}</texmath></p>
-<texmath id-text='12' id='uid12' textype='equation' type='display'>
+<texmath id='uid12' id-text='12' textype='equation' type='display'>
 0=\hspace{11.38092pt}1
 </texmath>
 <p><texmath textype='inline' type='inline'> Â â Ấ ấ Ầ ầ Ẩ ẩ Ẫ ẫ
@@ -457,11 +457,11 @@ x^{y^z} = {x^y}^z
 \end{pmatrix}</texmath></p>
 <p>signal <texmath textype='inline' type='inline'>\bar{x }\in \mathcal {F} (y )</texmath> with smallest support.</p>
 <p><texmath textype='inline' type='inline'>\mbox{(\ref {W102})}=(\ref {W102})=\mbox{(\ref {W102})}</texmath></p>
-<texmath id-text='5' id='uid13' textype='eqnarray' type='display'>
+<texmath id='uid13' id-text='5' textype='eqnarray' type='display'>
 a &amp; = &amp; b \\
 &amp; = &amp; c
 \mbox{by (\ref {eqn:main2})} </texmath>
-<texmath id-text='5' id='uid14' textype='display' type='display'>1234</texmath>
+<texmath id='uid14' id-text='5' textype='display' type='display'>1234</texmath>
 <p>Non math version
 Is upper case : BAR</p>
 <p noindent='true'>Is lower case : bar</p>
@@ -493,19 +493,19 @@ If <texmath textype='inline' type='inline'>x\in \emptyset </texmath> then <texma
 <texmath textype='inline' type='inline'>x_{\mbox{{\scriptsize {H\,{\sc i}}}}}</texmath>
 <texmath textype='inline' type='inline'>x_{\mbox{{\scriptsize {H\,\quad \qquad \!\,\:\;{\sc i}}}}}</texmath>
 Testing references <ref target='uid14'/> <ref target='uid1'/>
-<texmath xx='yy' tag='8-2-3' textype='inline' type='inline'>a\mbox{b=1} c</texmath>
+<texmath tag='8-2-3' textype='inline' type='inline' xx='yy'>a\mbox{b=1} c</texmath>
 
 
 <texmath textype='inline' type='inline'>\varPi =\varPsi </texmath></p>
-<texmath id-text='5' id='uid15' textype='align' type='display'> 123&amp;34\\56&amp;78</texmath>
+<texmath id='uid15' id-text='5' textype='align' type='display'> 123&amp;34\\56&amp;78</texmath>
 <texmath textype='align*' type='display'> 123&amp;34\\56&amp;78</texmath>
-<texmath id-text='5' id='uid16' textype='flalign' type='display'> 123&amp;34\\56&amp;78</texmath>
+<texmath id='uid16' id-text='5' textype='flalign' type='display'> 123&amp;34\\56&amp;78</texmath>
 <texmath textype='flalign*' type='display'> 123&amp;34\\56&amp;78</texmath>
-<texmath id-text='5' id='uid17' textype='alignat' type='display'>23&amp;34\\56&amp;78</texmath>
+<texmath id='uid17' id-text='5' textype='alignat' type='display'>23&amp;34\\56&amp;78</texmath>
 <texmath textype='alignat*' type='display'>23&amp;34\\56&amp;78</texmath>
-<texmath id-text='5' id='uid18' textype='xalignat' type='display'>23&amp;34\\56&amp;78</texmath>
+<texmath id='uid18' id-text='5' textype='xalignat' type='display'>23&amp;34\\56&amp;78</texmath>
 <texmath textype='xalignat*' type='display'>23&amp;34\\56&amp;78</texmath>
-<texmath id-text='5' id='uid19' textype='xxalignat' type='display'>23&amp;34\\56&amp;78</texmath>
+<texmath id='uid19' id-text='5' textype='xxalignat' type='display'>23&amp;34\\56&amp;78</texmath>
 <texmath textype='xxalignat*' type='display'>23&amp;34\\56&amp;78</texmath>
 <p noindent='true'>ok</p>
 <p noindent='true'>AT_DOC_END</p></div0>
