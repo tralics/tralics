@@ -8,7 +8,7 @@ struct AllIndex : public std::vector<OneIndex> { // \todo unordered_map perhaps
     AllIndex();
 
     auto find_index(const std::string &s) -> OneIndex &;
-    void mark_print(OneIndex &g);
+    static void mark_print(OneIndex &g);
     void new_index(const std::string &s, const std::string &title);
 };
 

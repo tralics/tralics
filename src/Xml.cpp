@@ -277,7 +277,7 @@ auto Xml::try_cline(bool action) -> bool {
 // Puts the total span in res, return false in case of trouble
 auto Xml::total_span(long &res) const -> bool {
     long r = 0;
-    for (auto &k : *this) {
+    for (const auto &k : *this) {
         if (k->is_xmlc()) {
             std::string N = k->name;
             if (std::string(N) == "\n") continue; // allow newline separator

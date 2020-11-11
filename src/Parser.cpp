@@ -2134,8 +2134,8 @@ void Parser::solve_cite(bool user) {
         return;
     }
     AttList &AL    = N.get_att();
-    auto     my_id = AL.lookup(the_names["id"]);
-    if (my_id) {
+    auto *   my_id = AL.lookup(the_names["id"]);
+    if (my_id != nullptr) {
         if (CI.id.empty())
             CI.id = *my_id;
         else {

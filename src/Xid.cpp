@@ -38,7 +38,7 @@ auto Xid::get_att() const -> AttList & { return the_stack.get_att_list(value); }
 // Returns null string otherwise
 auto Xid::has_attribute(const std::string &n) const -> std::string {
     AttList &X = get_att();
-    if (auto i = X.lookup(n)) return *i;
+    if (auto *i = X.lookup(n)) return *i;
     return std::string();
 }
 
@@ -46,7 +46,7 @@ auto Xid::has_attribute(const std::string &n) const -> std::string {
 // (it is unprintable).
 auto Xid::is_font_change() const -> bool {
     std::string n(the_names["'hi_flag"]);
-    return get_att().lookup(n);
+    return get_att().lookup(n) != nullptr;
 }
 
 // Add attribute named A value B to this id.
@@ -97,6 +97,6 @@ auto operator<<(std::ostream &fp, Xid X) -> std::ostream & { return fp << X.get_
 
 auto fetch_att(Xid idx, const std::string &m) -> std::optional<std::string> {
     AttList &L = idx.get_att();
-    if (auto k = L.lookup(m)) return encode(*k);
+    if (auto *k = L.lookup(m)) return encode(*k);
     return {};
 }

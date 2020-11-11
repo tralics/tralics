@@ -130,7 +130,7 @@ void Parser::T_index(subtypes c) {
     }
     auto &g = (c == printindex_code || c == index_code) ? the_index.find_index(sT_optarg_nopar()) : the_index[0];
     if (c == printindex_code || c == printglossary_code) {
-        the_index.mark_print(g);
+        AllIndex::mark_print(g);
         return;
     }
     TokenList L = read_arg();
