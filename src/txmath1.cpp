@@ -389,7 +389,7 @@ void Buffer::push_back_math_token(const CmdChr &x, bool space) {
         if (s[1] == 0 && (std::isalpha(s[0]) == 0)) return;
         push_back(' ');
     } else
-        push_back_real_utf8(x.char_val());
+        append_with_xml_escaping(x.char_val());
 }
 
 // This inserts something like <alpha>,
@@ -402,7 +402,7 @@ void Buffer::push_back_math_tag(const CmdChr &x, int type) {
         push_back_math_tag(s, type);
     } else { // Let's hope no tag needed here
         if (type == pbm_end) return;
-        push_back_real_utf8(x.char_val());
+        append_with_xml_escaping(x.char_val());
     }
 }
 
@@ -865,13 +865,13 @@ void Math::handle_mbox_not() {
 void MathElt::cv_noML() {
     switch (cmd) {
     SELF_INSERT_CASES:
-        mathml_buffer.push_back_real_utf8(get_char());
+        mathml_buffer.append_with_xml_escaping(get_char());
         return;
     case letter_catcode:
         if (get_char() == '&')
             mathml_buffer.push_back('&');
         else
-            mathml_buffer.push_back_real_utf8(get_char());
+            mathml_buffer.append_with_xml_escaping(get_char());
         return;
     NORMAL_CASES:
         mathml_buffer.push_back_math_token(*this, true);
@@ -920,13 +920,13 @@ void MathElt::cv_noML() {
 void MathElt::cv_noMLt() {
     switch (cmd) {
     SELF_INSERT_CASES:
-        mathml_buffer.push_back_real_utf8(get_char());
+        mathml_buffer.append_with_xml_escaping(get_char());
         return;
     case letter_catcode:
         if (get_char() == '&')
             mathml_buffer.push_back('&');
         else
-            mathml_buffer.push_back_real_utf8(get_char());
+            mathml_buffer.append_with_xml_escaping(get_char());
         return;
     NORMAL_CASES:
         mathml_buffer.push_back_math_tag(*this, pbm_empty);
@@ -1055,7 +1055,7 @@ auto Math::chars_to_mb(Buffer &B, bool rec) const -> bool {
         else if (w.cmd == cst1_cmd && w.chr == amp_code)
             B.append("&amp;");
         else if (w.cmd == char_given_cmd)
-            B.push_back_real_utf8(w.char_val());
+            B.append_with_xml_escaping(w.char_val());
         else if (w.cmd == relax_cmd)
             continue;
         else if (rec && w.cmd == math_list_cmd && L->get_font() == subtypes(math_open_cd)) {
@@ -1417,7 +1417,7 @@ void Parser::TM_fonts() {
 // Convert the character c  into <mi>c</mi>
 auto math_ns::mk_mi(char32_t c) -> Xml * {
     aux_buffer.clear();
-    aux_buffer.push_back_real_utf8(c);
+    aux_buffer.append_with_xml_escaping(c);
     Xml *x = new Xml(std::string(aux_buffer));
     return new Xml(the_names["mi"], x);
 }

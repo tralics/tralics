@@ -26,7 +26,7 @@ namespace {
             char32_t c = T.char_val();
             if (c == 0) return "^^@";
             Buffer B;
-            B.push_back_real_utf8(c); // \todo without Buffer
+            B.append_with_xml_escaping(c); // \todo without Buffer
             return std::move(B);
         }
 
@@ -34,7 +34,7 @@ namespace {
             char32_t c = T.char_val();
             if (c == 0) return "\\^^@";
             Buffer B("\\");
-            B.push_back_real_utf8(c);
+            B.append_with_xml_escaping(c);
             return std::move(B);
         }
 

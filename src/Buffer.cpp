@@ -95,8 +95,7 @@ void Buffer::push_back_xml_char(char c) {
         push_back(c);
 }
 
-// \todo rename this into push_back_with_xml_escaping or something
-void Buffer::push_back_real_utf8(char32_t c) {
+void Buffer::append_with_xml_escaping(char32_t c) {
     if (c == 0) return;
     if (c == '\n')
         push_back('\n');

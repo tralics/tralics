@@ -22,7 +22,7 @@ namespace {
         }
         if (cl.find("iso-8859-1") != std::string::npos) return 1;
         if (cl.find("utf8-encoded") != std::string::npos) return 0;
-        if (cl.find("%&TEX encoding = UTF-8") != std::string::npos) return 0; // \todo VB: check, this was 1 but that was dubious
+        if (cl.find("%&TEX encoding = UTF-8") != std::string::npos) return 0;
         auto kk = cl.find("tralics-encoding:");
         if (kk == std::string::npos) return {};
         if (std::isdigit(cl[kk + 17]) == 0) return {};
@@ -468,10 +468,9 @@ void LineList::read(const std::string &x, int spec) {
     std::string   old_name = cur_file_name;
     cur_file_name          = x;
     Buffer B;
-    auto   wc        = the_main.input_encoding; // \todo redundant with encoding?
-    bool   converted = spec < 2;
-    encoding         = the_main.input_encoding;
-    int co_try       = spec == 3 ? 0 : 20;
+    encoding       = the_main.input_encoding;
+    bool converted = spec < 2;
+    int  co_try    = spec == 3 ? 0 : 20;
     for (;;) {
         int  c    = fp.get();
         bool emit = false;
@@ -494,14 +493,13 @@ void LineList::read(const std::string &x, int spec) {
             if (co_try != 0) {
                 co_try--;
                 if (auto k = find_encoding(B)) {
-                    wc       = *k;
-                    encoding = wc;
+                    encoding = *k;
                     co_try   = 0;
                     Logger::finish_seq();
                     spdlog::trace("++ Input encoding number {} detected  at line {} of file {}", *k, cur_line + 1, x);
                 }
             }
-            if (converted) B.convert_line(cur_line + 1, wc);
+            if (converted) B.convert_line(cur_line + 1, encoding);
             if (emit)
                 insert(B, converted);
             else

@@ -152,7 +152,7 @@ void Buffer::out_four_hats(char32_t ch) {
 // We must handle some character. We use entities in case of big values
 // or control characters.
 
-void Parser::process_char(char32_t c) { unprocessed_xml.push_back_real_utf8(c); }
+void Parser::process_char(char32_t c) { unprocessed_xml.append_with_xml_escaping(c); }
 
 // Assumes that c is not a special char
 void Parser::process_char(uchar c) {

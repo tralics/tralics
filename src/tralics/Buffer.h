@@ -116,7 +116,7 @@ public:
     void push_back_math_tag(std::string s, int type);
     void push_back_math_token(const CmdChr &x, bool space);
     void push_back_newline();
-    void push_back_real_utf8(char32_t c);
+    void append_with_xml_escaping(char32_t c);
     void push_back_roman(long n);
     void push_back_Roman(long n);
     void push_back_special_att(const Xid &id);
