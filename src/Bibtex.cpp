@@ -530,11 +530,9 @@ void Bibtex::parse_one_item() {
 
 void Bibtex::handle_multiple_entries(BibEntry *Y) {
     CitationKey s = Y->cite_key;
-    for (size_t i = 0; i < all_entries.size(); i++)
-        if (all_entries[i]->cite_key.is_similar(s)) {
-            BibEntry *X = all_entries[i];
-            if (X == Y) continue;
-            X->copy_from(Y);
+    for (auto *entry : all_entries)
+        if (entry->cite_key.is_similar(s)) {
+            if (entry != Y) entry->copy_from(Y);
         }
 }
 
@@ -687,10 +685,10 @@ auto Bibtex::find_entry(const std::string &s, const std::string &prefix, bib_cre
 
 // This is the main function.
 void Bibtex::work() {
-    if (all_entries.size() == 0) return;
+    if (all_entries.empty()) return;
     if (!bbl.empty()) bbl.flush();
     all_entries_table.reserve(all_entries.size());
-    for (size_t i = 0; i < all_entries.size(); i++) all_entries[i]->un_crossref();
+    for (auto &all_entrie : all_entries) all_entrie->un_crossref();
     for (size_t i = 0; i < all_entries.size(); i++) all_entries[i]->work(to_signed(i));
     auto nb_entries = all_entries_table.size();
     spdlog::trace("Seen {} bibliographic entries.", nb_entries);
