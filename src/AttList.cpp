@@ -11,14 +11,6 @@ auto AttList::lookup(const std::string &x) -> std::string * {
     return nullptr;
 }
 
-void AttList::push_back(const std::string &name, const std::string &value, bool force) {
-    if (force) {
-        (*this)[name] = value;
-    } else {
-        emplace(name, value);
-    }
-}
-
 auto operator<<(std::ostream &o, const AttPair &a) -> std::ostream & {
     if (a.name[0] == '\'') return o;
     const char  quote = the_main.double_quote_att ? '\"' : '\'';

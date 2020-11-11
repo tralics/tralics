@@ -11,8 +11,6 @@ struct [[deprecated]] AttPair {
 
 struct AttList : public std::map<std::string, std::string> {          // map and not unordered_map for reproducible XML output
     [[nodiscard]] auto lookup(const std::string &x) -> std::string *; // \todo use map API
-
-    [[deprecated]] void push_back(const std::string &name, const std::string &value, bool force = true);
 };
 
 [[deprecated]] auto operator<<(std::ostream &o, const AttPair &a) -> std::ostream &;
