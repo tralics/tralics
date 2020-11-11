@@ -12,11 +12,11 @@ auto AttList::lookup(const std::string &x) -> std::string * {
 }
 
 void AttList::push_back(const std::string &name, const std::string &value, bool force) {
-    if (auto T = lookup(name)) {
-        if (force) *T = value;
-        return;
+    if (force) {
+        (*this)[name] = value;
+    } else {
+        emplace(name, value);
     }
-    emplace(name, value);
 }
 
 auto operator<<(std::ostream &o, const AttPair &a) -> std::ostream & {
