@@ -244,8 +244,8 @@ void Parser::T_node() {
     std::string A = nT_arg_nopar();
     leave_v_mode();
     the_stack.push1(the_names["node"]);
-    AttList &cur = last_att_list();
-    cur.push_back(the_names["name"], A);
+    AttList &cur           = last_att_list();
+    cur[the_names["name"]] = A;
     T_arg();
     the_stack.pop(the_names["node"]);
 }
@@ -258,10 +258,10 @@ void Parser::T_nodepoint() {
     auto        B = nT_optarg_nopar();
     auto        C = nT_optarg_nopar();
     the_stack.push1(the_names["node"]);
-    AttList &cur = last_att_list();
-    cur.push_back(the_names["name"], A);
-    if (B) cur.push_back(the_names["xpos"], *B); // default value is zero
-    if (C) cur.push_back(the_names["ypos"], *C); // default value is zero
+    AttList &cur           = last_att_list();
+    cur[the_names["name"]] = A;
+    if (B) cur[the_names["xpos"]] = *B; // default value is zero
+    if (C) cur[the_names["ypos"]] = *C; // default value is zero
     the_stack.pop(the_names["node"]);
 }
 
@@ -274,11 +274,11 @@ void Parser::T_nodeconnect(const std::string &W) {
     if (!A) A = "b";
     if (!C) C = "t";
     the_stack.push1(W);
-    AttList &cur = last_att_list();
-    cur.push_back(the_names["posB"], the_names[*C]);
-    cur.push_back(the_names["posA"], the_names[*A]);
-    cur.push_back(the_names["nameB"], D);
-    cur.push_back(the_names["nameA"], B);
+    AttList &cur            = last_att_list();
+    cur[the_names["posB"]]  = the_names[*C];
+    cur[the_names["posA"]]  = the_names[*A];
+    cur[the_names["nameB"]] = D;
+    cur[the_names["nameA"]] = B;
     the_stack.pop(W);
 }
 
@@ -289,9 +289,9 @@ void Parser::T_barnodeconnect(const std::string &W) {
     std::string C = nT_arg_nopar();
     the_stack.push1(W);
     AttList &cur = last_att_list();
-    if (A) cur.push_back(the_names["depth"], *A);
-    cur.push_back(the_names["nameB"], C);
-    cur.push_back(the_names["nameA"], B);
+    if (A) cur[the_names["depth"]] = *A;
+    cur[the_names["nameB"]] = C;
+    cur[the_names["nameA"]] = B;
     the_stack.pop(W);
 }
 
@@ -308,21 +308,21 @@ void Parser::T_nodecurve(const std::string &W) {
     if (!C) C = "t";
     if (!F || F->empty()) F = E;
     the_stack.push1(W);
-    AttList &cur = last_att_list();
-    cur.push_back(the_names["depthA"], E);
-    cur.push_back(the_names["depthB"], *F);
-    cur.push_back(the_names["posB"], the_names[*C]);
-    cur.push_back(the_names["posA"], the_names[*A]);
-    cur.push_back(the_names["nameB"], D);
-    cur.push_back(the_names["nameA"], B);
+    AttList &cur             = last_att_list();
+    cur[the_names["depthA"]] = E;
+    cur[the_names["depthB"]] = *F;
+    cur[the_names["posB"]]   = the_names[*C];
+    cur[the_names["posA"]]   = the_names[*A];
+    cur[the_names["nameB"]]  = D;
+    cur[the_names["nameA"]]  = B;
     the_stack.pop(W);
 }
 
 void Parser::T_nodebox(const std::string &W) {
     std::string A = nT_arg_nopar();
     the_stack.push1(W);
-    AttList &cur = last_att_list();
-    cur.push_back(the_names["nameA"], A);
+    AttList &cur            = last_att_list();
+    cur[the_names["nameA"]] = A;
     the_stack.pop(W);
 }
 
@@ -330,9 +330,9 @@ void Parser::T_nodetriangle(const std::string &W) {
     std::string A = nT_arg_nopar();
     std::string B = nT_arg_nopar();
     the_stack.push1(W);
-    AttList &cur = last_att_list();
-    cur.push_back(the_names["nameA"], A);
-    cur.push_back(the_names["nameB"], B);
+    AttList &cur            = last_att_list();
+    cur[the_names["nameA"]] = A;
+    cur[the_names["nameB"]] = B;
     the_stack.pop(W);
 }
 
@@ -342,8 +342,8 @@ void Parser::T_nodecircle(const std::string &W) {
     std::string A = nT_arg_nopar();
     the_stack.push1(W);
     AttList &cur = last_att_list();
-    if (B) cur.push_back(the_names["depth"], *B);
-    cur.push_back(the_names["nameA"], A);
+    if (B) cur[the_names["depth"]] = *B;
+    cur[the_names["nameA"]] = A;
     the_stack.pop(W);
 }
 

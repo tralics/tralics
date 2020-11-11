@@ -51,19 +51,30 @@ auto Xid::is_font_change() const -> bool {
 }
 
 // Add attribute named A value B to this id.
-void Xid::add_attribute(const std::string &A, const std::string &B, bool force) const { get_att().push_back(A, B, force); }
+void Xid::add_attribute(const std::string &A, const std::string &B, bool force) const {
+    auto &L = get_att();
+    if (force)
+        L[A] = B;
+    else
+        L.emplace(A, B);
+}
 
 // Adds the list L to the attribute list of this id.
 void Xid::add_attribute(const AttList &L, bool force) const {
     AttList &l = get_att();
-    for (const auto &i : L) l.push_back(i.first, i.second, force); // \todo push_back(L)
+    for (const auto &i : L) {
+        if (force)
+            l[i.first] = i.second;
+        else
+            l.emplace(i.first, i.second);
+    }
 }
 
 void Xid::add_attribute_but_rend(Xid b) const {
     AttList &L = b.get_att();
     AttList &l = get_att();
     for (const auto &i : L)
-        if (i.first != the_names["rend"]) l.push_back(i.first, i.second, true); // \todo push_back(L)
+        if (i.first != the_names["rend"]) l[i.first] = i.second;
 }
 
 // Add attribute list of element B to this id.
