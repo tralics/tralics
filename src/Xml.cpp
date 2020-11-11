@@ -340,8 +340,7 @@ void Xml::bordermatrix() {
 auto Xml::spec_copy() const -> Xml * {
     if (name != the_names["mo"]) return nullptr;
     AttList &X = id.get_att();
-    auto     i = X.lookup(the_names["movablelimits"]);
-    if (i == nullptr) return nullptr;
+    if (X.find(the_names["movablelimits"]) == X.end()) return nullptr;
     Xml *res                                               = new Xml(name, nullptr);
     static_cast<std::vector<gsl::not_null<Xml *>> &>(*res) = *this;
     res->id.add_attribute(X, true);

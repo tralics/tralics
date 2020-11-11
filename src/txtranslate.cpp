@@ -1162,8 +1162,7 @@ void Parser::add_vspace(Token T, ScaledInt dimen, Xid x) {
     AttList &L = x.get_att();
     auto     K = L.lookup(the_names["space_before"]);
     if (K) {
-        std::string k  = *K;
-        TokenList   La = token_ns::string_to_list(k, false);
+        TokenList La = token_ns::string_to_list(*K, false);
         list_to_glue(it_glue, T, La);
         dimen += ScaledInt(cur_val.get_glue_width());
     }

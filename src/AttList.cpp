@@ -6,8 +6,7 @@
 #include <fmt/ostream.h>
 
 auto AttList::lookup(const std::string &x) -> std::string * {
-    auto i = find(x);
-    if (i != end()) return &(i->second);
+    if (auto i = find(x); i != end()) return &(i->second);
     return nullptr;
 }
 
