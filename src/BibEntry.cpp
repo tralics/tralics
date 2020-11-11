@@ -212,6 +212,29 @@ namespace {
         res.append("}}");
         return res;
     }
+
+    void handle_one_namelist(std::string &src, BibtexName &X) {
+        if (src.empty()) return;
+        biblio_buf1.clear();
+        biblio_buf2.clear();
+        biblio_buf3.clear();
+        biblio_buf4.clear();
+        name_buffer.normalise_for_bibtex(src.c_str());
+        auto                    n = name_buffer.size() + 1;
+        std::vector<bchar_type> table(n);
+        NameSplitter            W(table.data());
+        name_buffer.fill_table(table);
+        W.handle_the_names();
+        X.value     = biblio_buf1;
+        X.long_key  = biblio_buf2;
+        X.short_key = biblio_buf3;
+        X.name_key  = biblio_buf4;
+    }
+
+    void out_something_s(field_pos p, const std::string &s) {
+        bbl.format("\\cititem{{{}}}{{{}}}", bib_xml_name[p], s);
+        bbl.flush();
+    }
 } // namespace
 
 // This is non trivial, because we have a fixed-sized array and a varying size
@@ -342,25 +365,18 @@ void BibEntry::numeric_label(size_t i) {
 // -----------------------------------------------------------------------
 // printing the bbl.
 
-void BibEntry::out_something(field_pos p, const std::string &s) {
-    bbl.append("\\cititem");
-    bbl.format("{{{}}}", bib_xml_name[p]);
-    bbl.format("{{{}}}", s);
-    bbl.flush();
-}
-
 // output a generic field as \cititem{k}{value}
 // If no value, and w>0, a default value will be used.
 void BibEntry::out_something(field_pos p, size_t w) {
     std::string s = all_fields[p];
     if (s.empty()) s = my_constant_table[w - 1];
-    out_something(p, s);
+    out_something_s(p, s);
 }
 
 void BibEntry::out_something(field_pos p) {
     std::string s = all_fields[p];
     if (s.empty()) return;
-    out_something(p, s);
+    out_something_s(p, s);
 }
 
 // Outputs a part of the thing.
@@ -576,24 +592,6 @@ void BibEntry::presort(long serial) {
     B.lowercase();
     B.format("{:05d}", serial);
     sort_label = B;
-}
-
-void BibEntry::handle_one_namelist(std::string &src, BibtexName &X) {
-    if (src.empty()) return;
-    biblio_buf1.clear();
-    biblio_buf2.clear();
-    biblio_buf3.clear();
-    biblio_buf4.clear();
-    name_buffer.normalise_for_bibtex(src.c_str());
-    auto                    n = name_buffer.size() + 1;
-    std::vector<bchar_type> table(n);
-    NameSplitter            W(table.data());
-    name_buffer.fill_table(table);
-    W.handle_the_names();
-    X.value     = biblio_buf1;
-    X.long_key  = biblio_buf2;
-    X.short_key = biblio_buf3;
-    X.name_key  = biblio_buf4;
 }
 
 void BibEntry::normalise() {

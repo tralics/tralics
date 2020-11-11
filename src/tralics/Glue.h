@@ -22,8 +22,6 @@ struct Glue {
     void check_overflow();
     void expr_mul(long f);
     void add_ovf(const Glue &);
-
-    static void zdv();
 };
 
 auto operator<<(std::ostream &fp, const Glue &x) -> std::ostream &;

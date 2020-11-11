@@ -37,6 +37,15 @@ namespace {
     Buffer                 local_buf;
     std::array<size_t, 13> month_length_table = {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     Token                  day_ctr, year_ctr, month_ctr;
+
+    // Case \printglossary or \printindex[foo].
+    // Marks the place where to insert the index
+    void mark_print(OneIndex &g) {
+        Xml *mark = new Xml(std::string(), nullptr);
+        Xml *Foo  = new Xml(std::string(), mark);
+        the_stack.add_last(Foo);
+        g.position = mark;
+    }
 } // namespace
 
 // For \addatttoindex[foo]{bar}{gee}, returns the idx of foo,
@@ -130,7 +139,7 @@ void Parser::T_index(subtypes c) {
     }
     auto &g = (c == printindex_code || c == index_code) ? the_index.find_index(sT_optarg_nopar()) : the_index[0];
     if (c == printindex_code || c == printglossary_code) {
-        AllIndex::mark_print(g);
+        mark_print(g);
         return;
     }
     TokenList L = read_arg();

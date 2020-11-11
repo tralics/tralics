@@ -22,12 +22,3 @@ void AllIndex::new_index(const std::string &s, const std::string &title) {
     auto id = the_stack.next_xid(nullptr).value;
     emplace_back(s, title, id);
 }
-
-// Case \printglossary or \printindex[foo].
-// Marks the place where to insert the index
-void AllIndex::mark_print(OneIndex &g) {
-    Xml *mark = new Xml(std::string(), nullptr);
-    Xml *Foo  = new Xml(std::string(), mark);
-    the_stack.add_last(Foo);
-    g.position = mark;
-}

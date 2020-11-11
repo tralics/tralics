@@ -60,6 +60,54 @@ namespace {
             if (Bib[i] == s) return entry_type(type_extension + i + 1);
         return type_unknown;
     }
+
+    // Return an integer associated to a field position.
+    auto find_field_pos(const std::string &s) -> field_pos {
+        auto S = std::string(s);
+        // Check is this has to be ignored
+        std::vector<std::string> &Bib_s        = the_main.bibtex_fields_s;
+        size_t                    additional_s = Bib_s.size();
+        for (size_t i = 0; i < Bib_s.size(); i++)
+            if (Bib_s[i] == s) return fp_unknown;
+
+        // Check is this is standard
+        if (s == the_names["address"]) return fp_address;
+        if (s == the_names["author"]) return fp_author;
+        if (s == the_names["booktitle"]) return fp_booktitle;
+        if (s == the_names["chapter"]) return fp_chapter;
+        if (s == the_names["doi"]) return fp_doi;
+        if (s == the_names["edition"]) return fp_edition;
+        if (s == the_names["editor"]) return fp_editor;
+        if (s == the_names["howpublished"]) return fp_howpublished;
+        if (s == the_names["institution"]) return fp_institution;
+        if (s == the_names["isbn"]) return fp_isbn;
+        if (s == the_names["issn"]) return fp_issn;
+        if (s == the_names["isrn"]) return fp_isrn;
+        if (s == the_names["journal"]) return fp_journal;
+        if (s == the_names["cstb_key"]) return fp_key;
+        if (s == the_names["month"]) return fp_month;
+        if (s == the_names["langue"]) return fp_langue;
+        if (s == the_names["cstb_language"]) return fp_langue;
+        if (s == the_names["note"]) return fp_note;
+        if (s == the_names["number"]) return fp_number;
+        if (s == the_names["organization"]) return fp_organization;
+        if (s == the_names["pages"]) return fp_pages;
+        if (s == the_names["publisher"]) return fp_publisher;
+        if (s == the_names["school"]) return fp_school;
+        if (s == the_names["series"]) return fp_series;
+        if (s == the_names["title"]) return fp_title;
+        if (s == the_names["cstb_type"]) return fp_type;
+        if (s == the_names["cstb_url"]) return fp_url;
+        if (s == the_names["volume"]) return fp_volume;
+        if (s == the_names["year"]) return fp_year;
+        if (s == the_names["crossref"]) return fp_crossref;
+        // Check is this is additional
+        std::vector<std::string> &Bib        = the_main.bibtex_fields;
+        size_t                    additional = Bib.size();
+        for (size_t i = 0; i < Bib.size(); i++)
+            if (Bib[i] == s) return field_pos(fp_unknown + i + 1);
+        return fp_unknown;
+    }
 } // namespace
 
 // This reads conditionally a file. Returns true if the file exists.
@@ -130,54 +178,6 @@ auto Bibtex::find_a_macro(Buffer &name, bool insert, String xname, String val) -
 void Bibtex::define_a_macro(String name, String value) {
     Buffer B;
     find_a_macro(B, true, name, value);
-}
-
-// Return an integer associated to a field position.
-auto Bibtex::find_field_pos(const std::string &s) -> field_pos {
-    auto S = std::string(s);
-    // Check is this has to be ignored
-    std::vector<std::string> &Bib_s        = the_main.bibtex_fields_s;
-    size_t                    additional_s = Bib_s.size();
-    for (size_t i = 0; i < additional_s; i++)
-        if (Bib_s[i] == S) return fp_unknown;
-
-    // Check is this is standard
-    if (S == the_names["address"]) return fp_address;
-    if (S == the_names["author"]) return fp_author;
-    if (S == the_names["booktitle"]) return fp_booktitle;
-    if (S == the_names["chapter"]) return fp_chapter;
-    if (S == the_names["doi"]) return fp_doi;
-    if (S == the_names["edition"]) return fp_edition;
-    if (S == the_names["editor"]) return fp_editor;
-    if (S == the_names["howpublished"]) return fp_howpublished;
-    if (S == the_names["institution"]) return fp_institution;
-    if (S == the_names["isbn"]) return fp_isbn;
-    if (S == the_names["issn"]) return fp_issn;
-    if (S == the_names["isrn"]) return fp_isrn;
-    if (S == the_names["journal"]) return fp_journal;
-    if (S == the_names["cstb_key"]) return fp_key;
-    if (S == the_names["month"]) return fp_month;
-    if (S == the_names["langue"]) return fp_langue;
-    if (S == the_names["cstb_language"]) return fp_langue;
-    if (S == the_names["note"]) return fp_note;
-    if (S == the_names["number"]) return fp_number;
-    if (S == the_names["organization"]) return fp_organization;
-    if (S == the_names["pages"]) return fp_pages;
-    if (S == the_names["publisher"]) return fp_publisher;
-    if (S == the_names["school"]) return fp_school;
-    if (S == the_names["series"]) return fp_series;
-    if (S == the_names["title"]) return fp_title;
-    if (S == the_names["cstb_type"]) return fp_type;
-    if (S == the_names["cstb_url"]) return fp_url;
-    if (S == the_names["volume"]) return fp_volume;
-    if (S == the_names["year"]) return fp_year;
-    if (S == the_names["crossref"]) return fp_crossref;
-    // Check is this is additional
-    std::vector<std::string> &Bib        = the_main.bibtex_fields;
-    size_t                    additional = Bib.size();
-    for (size_t i = 0; i < additional; i++)
-        if (Bib[i] == S) return field_pos(fp_unknown + i + 1);
-    return fp_unknown;
 }
 
 // This finds a citation that matches exactly S
@@ -276,12 +276,6 @@ void Bibtex::err_in_entry(String a) {
     log_and_tty << "Error signaled while handling entry " << cur_entry_name;
     if (cur_entry_line >= 0) log_and_tty << " (line " << cur_entry_line << ")";
     log_and_tty << "\n" << a;
-}
-
-void Bibtex::err_in_name(String a, long i) {
-    err_in_entry(a);
-    log_and_tty << "\nbad syntax in author or editor name\n";
-    log_and_tty << "error occurred at character position " << i << " in the string\n" << name_buffer << ".\n";
 }
 
 // Returns next line of the .bib file. Error if EOF and what.

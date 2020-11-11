@@ -9,13 +9,6 @@ namespace arith_ns {
 using arith_ns::end_err;
 using arith_ns::start_err;
 
-// Divide by zero.
-void Glue::zdv() {
-    start_err(nullptr);
-    err_buf += ", division by 0";
-    end_err();
-}
-
 // Three of the four functions defined above apply to glue.
 void Glue::quotient(long f) {
     width.quotient(f);
@@ -33,7 +26,9 @@ void Glue::scale(long n, long d) {
 
 void Glue::divide(long n) {
     if (n == 0) {
-        zdv();
+        start_err(nullptr);
+        err_buf += ", division by 0";
+        end_err();
         return;
     }
     width.divide(n);

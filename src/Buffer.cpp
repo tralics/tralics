@@ -62,6 +62,12 @@ namespace {
         if (c == 0) return "csname^^@endcsname";
         return "csnameendcsname";
     }
+
+    void err_in_name(String a, long i) {
+        Bibtex::err_in_entry(a);
+        log_and_tty << "\nbad syntax in author or editor name\n";
+        log_and_tty << "error occurred at character position " << i << " in the string\n" << name_buffer << ".\n";
+    }
 } // namespace
 
 auto Buffer::next_non_space(size_t j) const -> size_t {
@@ -887,12 +893,12 @@ void Buffer::fill_table(std::vector<bchar_type> &table) {
             continue;
         }
         if (c == '&') {
-            Bibtex::err_in_name("unexpected character `&' (did you mean `and' ?)", to_signed(i));
+            err_in_name("unexpected character `&' (did you mean `and' ?)", to_signed(i));
             table[i] = bct_bad;
             continue;
         }
         if (c == '}') {
-            Bibtex::err_in_name("too many closing braces", to_signed(i));
+            err_in_name("too many closing braces", to_signed(i));
             table[i] = bct_bad;
             continue;
         }
@@ -904,7 +910,7 @@ void Buffer::fill_table(std::vector<bchar_type> &table) {
             c = head();
             if (!is_accent_char(c)) {
                 table[i] = bct_bad;
-                Bibtex::err_in_name("commands allowed only within braces", to_signed(i));
+                err_in_name("commands allowed only within braces", to_signed(i));
                 continue;
             }
             if (std::isalpha(at(ptrs.b + 1)) != 0) {
@@ -918,7 +924,7 @@ void Buffer::fill_table(std::vector<bchar_type> &table) {
                 table[i]     = bct_bad;
                 table[i + 1] = bct_bad;
                 ptrs.b++;
-                Bibtex::err_in_name("bad accent construct", to_signed(i));
+                err_in_name("bad accent construct", to_signed(i));
                 continue;
             }
             at(ptrs.b + 1) = c;
@@ -932,7 +938,7 @@ void Buffer::fill_table(std::vector<bchar_type> &table) {
         table[i] = bct_brace;
         for (;;) {
             if (head() == 0) {
-                Bibtex::err_in_name("this cannot happen!", to_signed(j));
+                err_in_name("this cannot happen!", to_signed(j));
                 resize(j);
                 table[j] = bct_end;
                 return;

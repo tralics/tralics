@@ -15,15 +15,14 @@ auto operator<<(std::ostream &o, const AttList &l) -> std::ostream & {
         if (name[0] == '\'') continue;
         const char  quote = the_main.double_quote_att ? '\"' : '\'';
         const char *repl  = the_main.double_quote_att ? "&quot;" : "&apos;";
-
-        fmt::print(o, " {}={}", name, quote);
+        std::string out;
         for (char c : encode(value)) {
             if (c == quote)
-                o << repl;
+                out += repl;
             else
-                o << c;
+                out += c;
         }
-        o << quote;
+        fmt::print(o, " {}={}{}{}", name, quote, out, quote);
     }
     return o;
 }

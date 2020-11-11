@@ -74,7 +74,4 @@ private:
     auto store_field(field_pos where) -> bool;
     void parse_crossref();
     void work(long serial);
-
-    static void handle_one_namelist(std::string &s, BibtexName &X);
-    static void out_something(field_pos p, const std::string &s);
 };
