@@ -142,8 +142,8 @@ private:
     void out_sep();
     void out_xml(); ///< Ouput the XML and compute the word list
     void see_aux_info(int k);
-    void see_name(std::string s); ///< Extract versions of a filename with and without ext
-    void see_name1();             ///< Post-process file names
+    void see_name(std::filesystem::path s); ///< Extract versions of a filename with and without ext
+    void see_name1();                       ///< Post-process file names
     void show_input_size();
     void start_document(Buffer &a);
     void start_env(std::string);

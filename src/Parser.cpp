@@ -924,8 +924,6 @@ auto accent_ns::fetch_double_accent(int a, int acc3) -> Token {
     return other_accent[double_other_accent(a, acc3)];
 }
 
-auto operator<<(std::ostream &X, const Image &Y) -> std::ostream &; // \todo elsewhere
-
 // In case of error, we add the current line number as attribute
 // via this function
 auto Parser::cur_line_to_istring() const -> std::string { return std::string(fmt::format("{}", get_cur_line())); }
@@ -1028,9 +1026,7 @@ void Parser::boot_time() {
     TokenList today_tokens = b.str_toks(nlt_space);
     new_prim("today", today_tokens);
     the_main.short_date = short_date;
-    // Default year for the raweb. Until April its last year \todo remove RA stuff
-    if (month <= 4) year--;
-    the_parser.ra_year = year;
+    the_parser.ra_year  = year;
 }
 
 // Installs the default language.

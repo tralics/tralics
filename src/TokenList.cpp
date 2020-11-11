@@ -193,10 +193,8 @@ void TokenList::latex_ctr_fnsymbol(long n) {
 
 void TokenList::reevaluate0(bool in_env) {
     Buffer Abuf;
-    while (!empty()) { // \todo range for loop and clear
-        Abuf << front();
-        pop_front();
-    }
+    for (const auto &c : *this) Abuf << c;
+    clear();
     if (in_env)
         Tbuf.format("\\begin{{{}}}{}\\end{{{}}}%\n", Abuf, tpa_buffer, Abuf);
     else

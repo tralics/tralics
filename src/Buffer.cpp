@@ -566,53 +566,6 @@ auto Buffer::contains_env(const std::string &env) -> bool {
     return true;
 }
 
-auto operator<<(std::ostream &X, const Image &Y) -> std::ostream & {
-    X << "see_image(\"" << Y.name << "\",";
-    int k = Y.flags;
-    if (k == 0)
-        X << 0;
-    else {
-        bool first = true;
-        if ((k & 1) != 0) {
-            if (!first) X << "+";
-            X << 1;
-            first = false;
-        }
-        if ((k & 2) != 0) {
-            if (!first) X << "+";
-            X << 2;
-            first = false;
-        }
-        if ((k & 4) != 0) {
-            if (!first) X << "+";
-            X << 4;
-            first = false;
-        }
-        if ((k & 8) != 0) {
-            if (!first) X << "+";
-            X << 8;
-            first = false;
-        }
-        if ((k & 16) != 0) {
-            if (!first) X << "+";
-            X << 16;
-            first = false;
-        }
-        if ((k & 32) != 0) {
-            if (!first) X << "+";
-            X << 32;
-            first = false;
-        }
-        if ((k & 64) != 0) {
-            if (!first) X << "+";
-            X << 64;
-            // first = false;
-        }
-    }
-    X << "," << Y.occ << ");\n";
-    return X;
-}
-
 auto Buffer::is_spaceh(size_t j) const -> bool { return std::isspace((*this)[j]) != 0; }
 
 void Buffer::push_back(const TokenList &L) {

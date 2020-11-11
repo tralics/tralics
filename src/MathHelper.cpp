@@ -116,7 +116,7 @@ void MathHelper::dump_labels() {
 void MathHelper::ml_check_labels() {
     auto        n = multi_labels.size();
     int         l = 1;
-    Buffer      B; // \todo std::string
+    std::string B;
     static bool warned = false;
     for (size_t i = 0; i < n; i++) {
         int v = multi_labels_type[i];
@@ -127,7 +127,7 @@ void MathHelper::ml_check_labels() {
             if (eqnum_status == 1)
                 B += " for the current the formula";
             else {
-                B.format(" on row {} of the formula", l);
+                B += fmt::format(" on row {} of the formula", l);
                 if (!warned) B += "\n(at most one \\label and at most one \\tag allowed per row)";
                 warned = true;
             }
@@ -138,7 +138,7 @@ void MathHelper::ml_check_labels() {
             if (eqnum_status == 1)
                 B += " for the current formula";
             else {
-                B.format(" on row {} of formula", l);
+                B += fmt::format(" on row {} of formula", l);
                 if (!warned) B += "\n(at most one \\label and at most one \\tag allowed per row)";
                 warned = true;
             }

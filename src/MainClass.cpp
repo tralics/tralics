@@ -148,7 +148,7 @@ found at http://www.cecill.info.)";
     }
 
     /// Locate the config dir, using a few standard sources \todo this should be
-    /// managed by CMake
+    /// managed by CMake, or by kpathsea
     void find_conf_path() {
         static const std::array<std::filesystem::path, 7> paths{
             conf_path[0], "/usr/share/tralics", "/usr/lib/tralics/confdir", "/usr/local/lib/tralics/confdir", "/sw/share/tralics/confdir",
@@ -168,8 +168,7 @@ found at http://www.cecill.info.)";
     /// Split a `:`-separated path list into paths
     void new_in_dir(const std::string &s) {
         std::string b;
-        for (size_t i = 0;; i++) { // \todo range based loop
-            char c = s[i];
+        for (char c : s) {
             if (c == 0 || c == ':') {
                 if (!b.empty() && b.back() == '/') b.pop_back();
                 if (b.size() == 1 && b[0] == '.') b.pop_back();
@@ -879,15 +878,14 @@ void MainClass::read_config_and_other() {
     config_file.clear();
 }
 
-void MainClass::see_name(std::string s) { // \todo read a fs::path
+void MainClass::see_name(std::filesystem::path s) {
     if (!infile.empty()) {
-        spdlog::critical("Fatal error: seen two soure files, {} and {}", infile, std::filesystem::path(s));
+        spdlog::critical("Fatal error: seen two soure files, {} and {}", infile, s);
         exit(1);
     }
-    if (s.ends_with(".xml")) s.resize(s.size() - 4);
-    if (!s.ends_with(".tex")) s.append(".tex");
+    s.replace_extension(".tex");
     infile = s;
-    s.resize(s.size() - 4);
+    s.replace_extension();
     no_ext = s;
 }
 

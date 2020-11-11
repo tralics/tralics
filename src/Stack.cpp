@@ -90,15 +90,10 @@ Stack::Stack() {
 }
 
 // Returns the element in the table with id n
-// This should be at position N
-// \todo this looks wasteful
+// This is at position n in enames
 auto Stack::fetch_by_id(size_t n) -> Xml * {
     if (enames.size() <= n) return nullptr;
-    Xml *x = enames[n];
-    if (x == nullptr) return nullptr;
-    if (x->id.value == n) return x;
-    spdlog::error("This cannot happen: bug in table at position {}", n);
-    return nullptr;
+    return enames[n];
 }
 
 // returns a parent of x
