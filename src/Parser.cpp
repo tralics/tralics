@@ -2137,7 +2137,7 @@ void Parser::solve_cite(bool user) {
     auto     my_id = AL.lookup(the_names["id"]);
     if (my_id) {
         if (CI.id.empty())
-            CI.id = AL.get_val(*my_id);
+            CI.id = my_id->value;
         else {
             err_buf = "Cannot solve (element has an Id) " + encode(key);
             the_parser.signal_error(the_parser.err_tok, "bad solve");

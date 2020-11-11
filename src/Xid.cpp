@@ -39,7 +39,7 @@ auto Xid::get_att() const -> AttList & { return the_stack.get_att_list(value); }
 auto Xid::has_attribute(const std::string &n) const -> std::string {
     AttList &X = get_att();
     auto     i = X.lookup(n);
-    if (i) return X.get_val(*i);
+    if (i) return i->value;
     return std::string();
 }
 
@@ -89,6 +89,6 @@ auto operator<<(std::ostream &fp, Xid X) -> std::ostream & { return fp << X.get_
 
 auto fetch_att(Xid idx, const std::string &m) -> std::optional<std::string> {
     AttList &L = idx.get_att();
-    if (auto k = L.lookup(m)) return encode(L.get_val(*k));
+    if (auto k = L.lookup(m)) return encode(k->value);
     return {};
 }

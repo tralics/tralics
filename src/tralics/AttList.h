@@ -8,9 +8,8 @@ struct AttPair {
     std::string name, value;
 };
 
-struct AttList : public std::vector<AttPair> {
-    [[nodiscard]] auto get_val(size_t i) const -> std::string { return at(i).value; }
-    [[nodiscard]] auto lookup(const std::string &x) const -> std::optional<size_t>;
+struct AttList : public std::vector<AttPair> { // \todo unordered_map
+    [[nodiscard]] auto lookup(const std::string &x) -> AttPair *;
 
     using std::vector<AttPair>::push_back;
     void push_back(const std::string &name, const std::string &value, bool force = true);

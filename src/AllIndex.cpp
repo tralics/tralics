@@ -11,14 +11,14 @@ AllIndex::AllIndex() {
 // Returns the index location associated to the name S
 // If S is not found, the main index is used
 auto AllIndex::find_index(const std::string &s) -> OneIndex & {
-    for (size_t i = 0; i < size(); i++)
-        if (at(i).name == s) return at(i);
-    return at(1);
+    for (auto &i : *this)
+        if (i.name == s) return i;
+    return (*this)[1];
 }
 
 void AllIndex::new_index(const std::string &s, const std::string &title) {
-    for (size_t i = 0; i < size(); i++)
-        if (at(i).name == s) return;
+    for (auto &i : *this)
+        if (i.name == s) return;
     auto id = the_stack.next_xid(nullptr).value;
     emplace_back(s, title, id);
 }

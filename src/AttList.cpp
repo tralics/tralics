@@ -5,15 +5,15 @@
 #include "tralics/util.h"
 #include <fmt/ostream.h>
 
-auto AttList::lookup(const std::string &x) const -> std::optional<size_t> {
-    for (size_t i = 0; i < size(); ++i)
-        if (at(i).name == x) return i;
-    return {};
+auto AttList::lookup(const std::string &x) -> AttPair * {
+    for (auto &i : *this)
+        if (i.name == x) return &i;
+    return nullptr;
 }
 
 void AttList::push_back(const std::string &name, const std::string &value, bool force) {
     if (auto T = lookup(name)) {
-        if (force) at(*T).value = value;
+        if (force) T->value = value;
         return;
     }
     push_back({name, value});
