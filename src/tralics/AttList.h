@@ -5,15 +5,15 @@
 #include <string>
 #include <vector>
 
-struct AttPair {
+struct [[deprecated]] AttPair {
     std::string name, value;
 };
 
 struct AttList : public std::map<std::string, std::string> {          // map and not unordered_map for reproducible XML output
     [[nodiscard]] auto lookup(const std::string &x) -> std::string *; // \todo use map API
 
-    void push_back(const std::string &name, const std::string &value, bool force = true);
+    [[deprecated]] void push_back(const std::string &name, const std::string &value, bool force = true);
 };
 
-auto operator<<(std::ostream &o, const AttPair &a) -> std::ostream &;
-auto operator<<(std::ostream &o, const AttList &a) -> std::ostream &;
+[[deprecated]] auto operator<<(std::ostream &o, const AttPair &a) -> std::ostream &;
+auto                operator<<(std::ostream &o, const AttList &a) -> std::ostream &;

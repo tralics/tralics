@@ -356,10 +356,10 @@ void Parser::T_raisebox() {
     auto        C = nT_optarg_nopar();
     leave_v_mode();
     the_stack.push1(the_names["raisebox"]);
-    AttList &cur = last_att_list();
-    cur.push_back(the_names["val"], A);
-    if (B) cur.push_back(the_names["height"], *B);
-    if (C) cur.push_back(the_names["depth"], *C);
+    AttList &cur          = last_att_list();
+    cur[the_names["val"]] = A;
+    if (B) cur[the_names["height"]] = *B;
+    if (C) cur[the_names["depth"]] = *C;
     T_arg_local();
     the_stack.pop(the_names["raisebox"]);
 }
@@ -417,8 +417,8 @@ void Parser::T_line(subtypes c) {
         leave_v_mode();
     }
     the_stack.push1(the_names["lineC"]);
-    AttList &cur = last_att_list();
-    cur.push_back(the_names["rend"], the_names[k]);
+    AttList &cur           = last_att_list();
+    cur[the_names["rend"]] = the_names[k];
     T_arg_local();
     the_stack.pop(the_names["lineC"]);
 }
@@ -1437,9 +1437,9 @@ void Parser::formatdate() {
     Xml *X = new Xml(std::string("date"), nullptr);
     the_stack.add_last(X);
     AttList &AL = X->id.get_att();
-    AL.push_back(std::string("year"), std::string(std::to_string(FP.year)));
-    AL.push_back(std::string("month"), std::string(std::to_string(abs(FP.month))));
-    AL.push_back(std::string("day"), std::string(std::to_string(FP.day)));
+    AL["year"]  = std::to_string(FP.year);
+    AL["month"] = std::to_string(abs(FP.month));
+    AL["day"]   = std::to_string(FP.day);
 }
 
 // True if ok, parse_error otherwise

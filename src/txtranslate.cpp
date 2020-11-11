@@ -617,7 +617,7 @@ void Parser::T_paras(subtypes x) {
     bool star = remove_initial_star();
     if (chapter_has_star && x == chapter_code) star = true;
     if (star)
-        last_att_list().push_back(the_names["rend"], the_names["nonumber"]);
+        last_att_list()[the_names["rend"]] = the_names["nonumber"];
     else {
         if (x == part_code)
             refstepcounter("part", false);
@@ -893,11 +893,11 @@ void Parser::no_extension(AttList &AL, const std::string &s) {
         back_input(hash_table.locate("@filedoterr"));
     }
     if (ok && k > 0) {
-        AL.push_back(the_names["file_extension"], std::string(Tbuf.substr(to_unsigned(k) + 1)));
+        AL[the_names["file_extension"]] = Tbuf.substr(to_unsigned(k) + 1);
         Tbuf.resize(to_unsigned(k));
     }
     enter_file_in_table(Tbuf.substr(ii), ok);
-    AL.push_back(the_names["file"], std::string(Tbuf));
+    AL[the_names["file"]] = Tbuf;
 }
 
 void Parser::default_bp(Buffer &B, Token T, TokenList &val) {
@@ -955,23 +955,23 @@ void Parser::includegraphics(subtypes C) {
             std::string sval = list_to_string_c(val, bval);
             if (sval == "false") V = "false";
             if (skey == "clip")
-                AL.push_back(the_names["clip"], the_names[V], true);
+                AL[the_names["clip"]] = the_names[V];
             else
-                AL.push_back(std::string(skey), the_names[V], true);
+                AL[skey] = the_names[V];
         } else if (skey == "type" || skey == "ext" || skey == "read" || skey == "command" || skey == "origin" || skey == "scale" ||
                    skey == "angle") {
             std::string sval = list_to_string_c(val, bval);
             if (skey == "angle" && sval == "0") continue;
             std::string p = skey == "scale" ? the_names["scale"] : skey == "angle" ? the_names["angle"] : std::string(skey);
-            AL.push_back(p, std::string(sval), true);
+            AL[p]         = sval;
         } else if (skey == "width" || skey == "height" || skey == "totalheight") {
             std::string N = skey == "height" ? "height" : skey == "width" ? "width" : "totalwidth";
             ScaledInt   s = dimen_from_list(T, val);
             B.push_back(s, glue_spec_pt);
-            AL.push_back(the_names[N], std::string(B), true);
+            AL[the_names[N]] = B;
         } else if (skey == "natwidth" || skey == "natheight" || skey == "bbllx" || skey == "bblly" || skey == "bburx" || skey == "bbury") {
             default_bp(B, T, val);
-            AL.push_back(std::string(skey), std::string(B), true);
+            AL[skey] = B;
         } else if (skey == "bb" || skey == "viewport" || skey == "trim") {
             TokenList aux;
             auto      SP = Token(space_token_val);
@@ -982,11 +982,11 @@ void Parser::includegraphics(subtypes C) {
                 default_bp(B, T, aux);
                 if (i < 3) B.push_back(' ');
             }
-            AL.push_back(std::string(skey), std::string(B), true);
+            AL[skey] = B;
         } else
             invalid_key(T, skey, val);
     }
-    AL.push_back(the_names["rend"], the_names["inline"]);
+    AL[the_names["rend"]] = the_names["inline"];
 }
 
 void Parser::T_epsfbox() {
@@ -1002,9 +1002,9 @@ void Parser::T_epsfbox() {
     }
     AttList &res = the_stack.add_newid0("figure");
     no_extension(res, y);
-    res.push_back(the_names["rend"], the_names["inline"]);
-    if (!(xdim == 0)) res.push_back(the_names["width"], std::string(xdim));
-    if (!(ydim == 0)) res.push_back(the_names["height"], std::string(ydim));
+    res[the_names["rend"]] = the_names["inline"];
+    if (!(xdim == 0)) res[the_names["width"]] = std::string(xdim);
+    if (!(ydim == 0)) res[the_names["height"]] = std::string(ydim);
     dim_define(xdim_pos, ScaledInt(0), false); // reset to 0
     dim_define(ydim_pos, ScaledInt(0), false);
 }
@@ -1094,11 +1094,11 @@ void Parser::T_color(subtypes c) {
         return;
     }
     if (c == pagecolor_code) {
-        std::string opt  = sT_optarg_nopar();
-        std::string name = sT_arg_nopar();
-        std::string C    = scan_color(opt, name);
-        AttList &   res  = the_stack.add_newid0("pagecolor");
-        res.push_back(the_names["color"], C);
+        std::string opt         = sT_optarg_nopar();
+        std::string name        = sT_arg_nopar();
+        std::string C           = scan_color(opt, name);
+        AttList &   res         = the_stack.add_newid0("pagecolor");
+        res[the_names["color"]] = C;
     }
     if (c == colorbox_code) {
         std::string opt  = sT_optarg_nopar();
@@ -1256,10 +1256,10 @@ void Parser::T_makebox(bool framed, Token C) {
     leave_v_mode();
     the_stack.push1(the_names["box"]);
     AttList &cur = last_att_list();
-    if (framed) cur.push_back(the_names["framed"], the_names["true"]);
-    if (!oarg.empty()) cur.push_back(the_names["box_pos"], std::string(oarg));
-    cur.push_back(the_names["height"], B);
-    cur.push_back(the_names["width"], A);
+    if (framed) cur[the_names["framed"]] = the_names["true"];
+    if (!oarg.empty()) cur[the_names["box_pos"]] = oarg;
+    cur[the_names["height"]] = B;
+    cur[the_names["width"]]  = A;
     T_arg_local();
     the_stack.pop(the_names["box"]);
 }
@@ -1309,13 +1309,13 @@ void Parser::T_picture() {
     std::string A, B;
     Token       C = cur_tok;
     T_twodims(A, B, C);
-    cur.push_back(the_names["height"], B);
-    cur.push_back(the_names["width"], A);
+    cur[the_names["height"]] = B;
+    cur[the_names["width"]]  = A;
     skip_initial_space_and_back_input();
     if (cur_tok.is_open_paren()) {
         T_twodims(A, B, C);
-        cur.push_back(the_names["ypos"], B);
-        cur.push_back(the_names["xpos"], A);
+        cur[the_names["ypos"]] = B;
+        cur[the_names["xpos"]] = A;
     }
 }
 
@@ -1388,8 +1388,8 @@ void Parser::T_fbox(subtypes cc) {
             if (iwidth) aux->id.add_attribute(std::string("vscale"), *iwidth);
             cur->kill_name();
         } else {
-            AL.push_back(the_names["box_scale"], iscale);
-            if (iwidth) AL.push_back(std::string("vscale"), *iwidth);
+            AL[the_names["box_scale"]] = iscale;
+            if (iwidth) AL["vscale"] = *iwidth; // \toto perhaps the_names for consistency
         }
         return;
     }
@@ -1399,9 +1399,9 @@ void Parser::T_fbox(subtypes cc) {
         aux->id.add_attribute(the_names["framed"], the_names["true"]);
         cur->kill_name();
     } else {
-        AL.push_back(the_names["fbox_rend"], the_names["boxed"]);
-        if (ipos) AL.push_back(the_names["box_pos"], *ipos);
-        if (iwidth) AL.push_back(the_names["box_width"], *iwidth);
+        AL[the_names["fbox_rend"]] = the_names["boxed"];
+        if (ipos) AL[the_names["box_pos"]] = *ipos;
+        if (iwidth) AL[the_names["box_width"]] = *iwidth;
     }
 }
 
@@ -1796,13 +1796,13 @@ void Parser::T_bezier(subtypes c) {
     T_twodims(b1, b2, C);
     T_twodims(c1, c2, C);
     AttList &res = the_stack.add_newid0("bezier");
-    if (w) res.push_back(the_names["repeat"], *w);
-    res.push_back(the_names["c2"], c2);
-    res.push_back(the_names["c1"], c1);
-    res.push_back(the_names["b2"], b2);
-    res.push_back(the_names["b1"], b1);
-    res.push_back(the_names["a2"], a2);
-    res.push_back(the_names["a1"], a1);
+    if (w) res[the_names["repeat"]] = *w;
+    res[the_names["c2"]] = c2;
+    res[the_names["c1"]] = c1;
+    res[the_names["b2"]] = b2;
+    res[the_names["b1"]] = b1;
+    res[the_names["a2"]] = a2;
+    res[the_names["a1"]] = a1;
 }
 
 // put \line \vector \oval
@@ -1841,18 +1841,18 @@ void Parser::T_put(subtypes c) {
     if (c == oval_code) {
         auto     specs = nT_optarg_nopar();
         AttList &val   = the_stack.add_newid0(x0);
-        if (specs) val.push_back(the_names["specs"], *specs);
-        val.push_back(the_names["ypos"], B);
-        val.push_back(the_names["xpos"], A);
+        if (specs) val[the_names["specs"]] = *specs;
+        val[the_names["ypos"]] = B;
+        val[the_names["xpos"]] = A;
         return;
     }
     if (c != put_code && c != multiput_code && c != scaleput_code) { // line vector
-        TokenList L = read_arg();
-        D           = token_list_to_att(L, C, false);
-        AttList &AL = the_stack.add_newid0(x0);
-        AL.push_back(the_names["width"], D);
-        AL.push_back(the_names["ydir"], B);
-        AL.push_back(the_names["xdir"], A);
+        TokenList L            = read_arg();
+        D                      = token_list_to_att(L, C, false);
+        AttList &AL            = the_stack.add_newid0(x0);
+        AL[the_names["width"]] = D;
+        AL[the_names["ydir"]]  = B;
+        AL[the_names["xdir"]]  = A;
         return;
     }
     // Case of \put or \multiput \scaleput
@@ -1860,11 +1860,11 @@ void Parser::T_put(subtypes c) {
     the_stack.set_arg_mode();
     Xid cur_id = the_stack.get_top_id();
     if (c == scaleput_code) {
-        AttList &AL = cur_id.get_att();
-        AL.push_back(the_names["yscalex"], get_c_val(hash_table.yscalex_token));
-        AL.push_back(the_names["xscaley"], get_c_val(hash_table.xscaley_token));
-        AL.push_back(the_names["yscale"], get_c_val(hash_table.yscale_token));
-        AL.push_back(the_names["xscale"], get_c_val(hash_table.xscale_token));
+        AttList &AL              = cur_id.get_att();
+        AL[the_names["yscalex"]] = get_c_val(hash_table.yscalex_token);
+        AL[the_names["xscaley"]] = get_c_val(hash_table.xscaley_token);
+        AL[the_names["yscale"]]  = get_c_val(hash_table.yscale_token);
+        AL[the_names["xscale"]]  = get_c_val(hash_table.xscale_token);
     }
     if (c == multiput_code) {
         std::string aa, bb;
@@ -1888,7 +1888,7 @@ void Parser::T_linethickness(subtypes c) {
     if (c == thicklines_code) C = "thicklines";
     if (c == thinlines_code) C = "thinlines";
     AttList &res = the_stack.add_newid0(C);
-    if (c == linethickness_code) res.push_back(the_names["size"], nT_arg_nopar());
+    if (c == linethickness_code) res[the_names["size"]] = nT_arg_nopar();
 }
 
 void Parser::T_curves(subtypes c) {
@@ -1950,9 +1950,9 @@ void Parser::T_multiput() {
         back_input(Lc);
         the_stack.push1(the_names["put"]);
         the_stack.set_arg_mode();
-        AttList &AL = last_att_list();
-        AL.push_back(the_names["ypos"], dimen_attrib(Y));
-        AL.push_back(the_names["xpos"], dimen_attrib(X));
+        AttList &AL           = last_att_list();
+        AL[the_names["ypos"]] = dimen_attrib(Y);
+        AL[the_names["xpos"]] = dimen_attrib(X);
         T_arg();
         the_stack.pop(the_names["put"]);
         the_stack.add_nl();
@@ -1971,12 +1971,12 @@ void Parser::T_dashline(subtypes c) {
     if (c == dottedline_code) x0 = "dottedline";
     if (c == circle_code) x0 = "circle";
     if (c == circle_code) { // circle
-        bool        has_star = remove_initial_star();
-        TokenList   L        = read_arg();
-        std::string aa       = token_list_to_att(L, T, false);
-        AttList &   AL       = the_stack.add_newid0(x0);
-        AL.push_back(the_names["size"], aa);
-        if (has_star) AL.push_back(the_names["full"], the_names["true"]);
+        bool        has_star  = remove_initial_star();
+        TokenList   L         = read_arg();
+        std::string aa        = token_list_to_att(L, T, false);
+        AttList &   AL        = the_stack.add_newid0(x0);
+        AL[the_names["size"]] = aa;
+        if (has_star) AL[the_names["full"]] = the_names["true"];
         return;
     }
     auto                       A = nT_optarg_nopar();
@@ -1986,18 +1986,18 @@ void Parser::T_dashline(subtypes c) {
     the_stack.push1(the_names[x0]);
     the_stack.set_arg_mode();
     AttList &AL = last_att_list();
-    if (A) AL.push_back(the_names["arg1"], *A);
-    if (B) AL.push_back(the_names["arg2"], *B);
-    if (C) AL.push_back(the_names["arg3"], *C);
+    if (A) AL[the_names["arg1"]] = *A;
+    if (B) AL[the_names["arg2"]] = *B;
+    if (C) AL[the_names["arg3"]] = *C;
     for (;;) {
         std::string xpos, ypos;
         skip_initial_space();
         if (cur_tok.is_valid()) back_input();
         if (!cur_tok.is_open_paren()) break;
         T_twodims(xpos, ypos, T);
-        AttList &res = the_stack.add_newid0("point");
-        res.push_back(the_names["ypos"], ypos);
-        res.push_back(the_names["xpos"], xpos);
+        AttList &res           = the_stack.add_newid0("point");
+        res[the_names["ypos"]] = ypos;
+        res[the_names["xpos"]] = xpos;
     }
     the_stack.pop(the_names[x0]);
 }

@@ -726,7 +726,7 @@ void Parser::add_language_att() {
     else if (D == 2)
         b = "german";
     Xid doc_att(1);
-    if ((b != "cst_empty") && !the_names["language"].empty()) doc_att.get_att().push_back(the_names["language"], the_names[b]);
+    if ((b != "cst_empty") && !the_names["language"].empty()) doc_att.get_att()[the_names["language"]] = the_names[b];
 }
 
 auto LatexPackage::find_option(const std::string &nname) -> long {

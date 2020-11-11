@@ -42,9 +42,9 @@ namespace {
             if (c != 'r' && c != 'l' && c != 'c') continue;
             AttList L;
             if (c == 'l')
-                L.push_back(the_names["columnalign"], the_names["left"]);
+                L[the_names["columnalign"]] = the_names["left"];
             else if (c == 'r')
-                L.push_back(the_names["columnalign"], the_names["right"]);
+                L[the_names["columnalign"]] = the_names["right"];
             res.push_back(L);
         }
         return res;

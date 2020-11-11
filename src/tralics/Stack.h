@@ -21,7 +21,7 @@ struct StackSlot {
 class Stack : public std::vector<StackSlot> {
     size_t                 xid_boot{0};
     std::string            cur_lid;    // the id to be pushed on uids[]
-    std::vector<AttList>   attributes; // the main table of attributes
+    std::vector<AttList>   attributes; // the main table of attributes \todo maybe global variable while we are at it, or static to Xml
     std::vector<Xml *>     enames;     // the main table of element names
     Buffer                 mybuffer;   // a buffer
     std::vector<ArrayInfo> AI;         // the attributes for the current TeX arrays
