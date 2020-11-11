@@ -43,8 +43,7 @@ namespace {
 // then we can say \XMLaddatt{idx}{bar}{gee}
 auto Parser::get_index_value() -> size_t {
     std::string s = sT_optarg_nopar();
-    auto        i = the_index.find_index(s);
-    return the_index.at(i).AL;
+    return the_index.find_index(s).AL;
 }
 
 // Case of \index{key@value|encap}
@@ -70,7 +69,7 @@ void trees_ns::normalise_space(TokenList &L) {
     L.swap(res);
 }
 
-auto Parser::index_aux(TokenList &L, std::optional<size_t> father, size_t g) -> size_t {
+auto Parser::index_aux(TokenList &L, std::optional<size_t> father, OneIndex &g) -> size_t {
     static const Token escape_t(other_t_offset, '"');
     static const Token actual_t(other_t_offset, '@');
     static const Token actualb_t(letter_t_offset, '@');
@@ -96,7 +95,7 @@ auto Parser::index_aux(TokenList &L, std::optional<size_t> father, size_t g) -> 
     z               = L;
     std::string aux = to_stringE(z);
     // We have now: key@aux|encap
-    std::vector<Indexer> &IR    = the_index.at(g);
+    std::vector<Indexer> &IR    = g;
     int                   level = 1;
     if (father) level = 1 + IR[*father].level;
     auto n = IR.size();
@@ -129,11 +128,7 @@ void Parser::T_index(subtypes c) {
         the_index.new_index(s, title);
         return;
     }
-    size_t g = 0;
-    if (c == printindex_code || c == index_code) {
-        std::string s = sT_optarg_nopar();
-        g             = the_index.find_index(s);
-    }
+    auto &g = (c == printindex_code || c == index_code) ? the_index.find_index(sT_optarg_nopar()) : the_index[0];
     if (c == printindex_code || c == printglossary_code) {
         the_index.mark_print(g);
         return;
@@ -159,7 +154,7 @@ void Parser::T_index(subtypes c) {
     // make sure this exists
     auto pposition = index_aux(L, position, g);
     // Now, add a label here
-    auto iid = the_index.at(g).at(pposition).iid;
+    auto iid = g.at(pposition).iid;
     auto nid = ++the_index.last_index;
 
     local_buf             = fmt::format("lid{}", nid);

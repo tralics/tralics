@@ -253,22 +253,21 @@ Xml::Xml(std::string N, Xml *z) : name(std::move(N)) {
 auto Xml::try_cline(bool action) -> bool {
     auto a    = cline_first - 1;
     bool a_ok = false; // true after skip
-    auto len  = size();
-    for (size_t k = 0; k < len; k++) {
+    for (auto &k : *this) {
         if (a == 0) {
             if (a_ok) return true;
             a    = (cline_last - cline_first) + 1;
             a_ok = true;
         }
-        if (at(k)->is_xmlc()) {
-            std::string N = at(k)->name;
+        if (k->is_xmlc()) {
+            std::string N = k->name;
             if (std::string(N) == "\n") continue; // allow newline separator
             return false;
         }
-        auto c = at(k)->get_cell_span();
+        auto c = k->get_cell_span();
         if (c == -1) return false;
         if (c == 0) continue; // ignore null span cells
-        if (a_ok && action) at(k)->id.add_bottom_rule();
+        if (a_ok && action) k->id.add_bottom_rule();
         a = a - c;
         if (a < 0) return false;
     }
@@ -277,15 +276,14 @@ auto Xml::try_cline(bool action) -> bool {
 
 // Puts the total span in res, return false in case of trouble
 auto Xml::total_span(long &res) const -> bool {
-    long r   = 0;
-    auto len = size();
-    for (size_t k = 0; k < len; k++) {
-        if (at(k)->is_xmlc()) {
-            std::string N = at(k)->name;
+    long r = 0;
+    for (auto &k : *this) {
+        if (k->is_xmlc()) {
+            std::string N = k->name;
             if (std::string(N) == "\n") continue; // allow newline separator
             return false;
         }
-        auto c = at(k)->get_cell_span();
+        auto c = k->get_cell_span();
         if (c == -1) return false;
         r += c;
     }
@@ -299,7 +297,7 @@ auto Xml::total_span(long &res) const -> bool {
 auto Xml::try_cline_again(bool action) -> bool {
     bool seen_cell = false;
     auto len       = size();
-    for (size_t k = 0; k < len; k++) {
+    for (size_t k = 0; k < size(); k++) {
         if (action) {
             erase(begin() + to_signed(k));
             --k;
@@ -378,7 +376,7 @@ auto Xml::deep_copy() -> gsl::not_null<Xml *> {
     if (is_xmlc()) return gsl::not_null{this};
     gsl::not_null res{new Xml(name, nullptr)};
     res->id.add_attribute(id);
-    for (size_t i = 0; i < size(); i++) { res->push_back_unless_nullptr(at(i)->deep_copy()); }
+    for (size_t i = 0; i < size(); i++) { res->push_back_unless_nullptr((*this)[i]->deep_copy()); }
     return res;
 }
 
@@ -441,8 +439,7 @@ void Xml::recurse(XmlAction &X) {
                 if (!an.empty()) remove_label("module in composition", an);
                 erase(begin() + to_signed(k));
                 k--;
-                auto Len = T->size();
-                for (size_t j = 0; j < Len; j++) {
+                for (size_t j = 0; j < T->size(); j++) {
                     Xml *W = T->at(j);
                     if (W == nullptr) continue;
                     if (!W->is_xmlc() && W->has_name_of("head")) {
@@ -750,8 +747,7 @@ void Xml::convert_to_string(Buffer &b) {
         return;
     }
     if (name.empty() || name == the_names["temporary"]) {
-        auto len = size();
-        for (size_t k = 0; k < len; k++) at(k)->convert_to_string(b);
+        for (auto &k : *this) k->convert_to_string(b);
         return;
     }
     err_buf.clear();

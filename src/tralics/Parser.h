@@ -15,6 +15,7 @@
 
 struct RealNumber;
 struct FpNum;
+struct OneIndex;
 class Math;
 class SaveAuxBase;
 class SaveAuxEnv;
@@ -268,7 +269,7 @@ private:
     auto grab_env_comma(TokenList &v) -> bool;
     auto group_to_string_spec(bool) -> std::string;
     auto group_to_string() -> std::string;
-    auto index_aux(TokenList &L, std::optional<size_t> father, size_t g) -> size_t;
+    auto index_aux(TokenList &L, std::optional<size_t> father, OneIndex &g) -> size_t;
     auto internal_makebox() -> Xml *;
     auto is_delimiter(const TokenList &L) -> bool;
     auto is_input_open() -> bool;
