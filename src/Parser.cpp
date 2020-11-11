@@ -2108,7 +2108,7 @@ void Parser::solve_cite(bool user) {
     if (user) {
         implicit_par(zero_code);
         the_stack.add_last(new Xml(the_names["bibitem"], nullptr));
-        if (auto ukey = nT_optarg_nopar()) Xid(the_stack.get_xid()).get_att().push_back(the_names["bibkey"], *ukey);
+        if (auto ukey = nT_optarg_nopar()) Xid(the_stack.get_xid()).get_att()[the_names["bibkey"]] = *ukey;
         n = the_stack.get_xid();
     } else {
         F    = remove_initial_star();
@@ -2144,7 +2144,7 @@ void Parser::solve_cite(bool user) {
             return;
         }
     } else
-        AL.push_back(the_names["id"], CI.get_id());
+        AL[the_names["id"]] = CI.get_id();
     CI.solved = N;
 }
 

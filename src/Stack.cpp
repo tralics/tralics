@@ -119,18 +119,30 @@ auto Stack::find_parent(Xml *x) -> Xml * {
 }
 
 // Add A=B as attribute list to last xid.
-void Stack::add_att_to_last(const std::string &A, const std::string &B) { get_att_list(get_xid()).push_back(A, B); }
+void Stack::add_att_to_last(const std::string &A, const std::string &B) { get_att_list(get_xid())[A] = B; }
 
 // Add A=B as attribute list to top stack
 void Stack::add_att_to_cur(const std::string &A, const std::string &B) { cur_xid().add_attribute(A, B); }
 
 // Add A=B as attribute list to last xid
 // (if force is true, ignores old value otherwise new value).
-void Stack::add_att_to_last(const std::string &A, const std::string &B, bool force) { get_att_list(get_xid()).push_back(A, B, force); }
+void Stack::add_att_to_last(const std::string &A, const std::string &B, bool force) {
+    auto &L = get_att_list(get_xid());
+    if (force)
+        L[A] = B;
+    else
+        L.emplace(A, B);
+}
 
 // Add A=B as attribute list to top stack
 // (if force is true, ignores old value otherwise new value).
-void Stack::add_att_to_cur(const std::string &A, const std::string &B, bool force) { cur_xid().get_att().push_back(A, B, force); }
+void Stack::add_att_to_cur(const std::string &A, const std::string &B, bool force) {
+    auto &L = cur_xid().get_att();
+    if (force)
+        L[A] = B;
+    else
+        L.emplace(A, B);
+}
 
 void Stack::hack_for_hanl() {
     auto ptr = size() - 1;
@@ -189,7 +201,7 @@ auto Stack::get_cur_par() const -> Xml * {
 void Stack::add_center_to_p() const {
     Xml *x = get_cur_par();
     if (x == nullptr) return;
-    x->id.get_att().push_back(the_names["rend"], the_names.center(cur_centering()), false);
+    x->id.get_att().emplace(the_names["rend"], the_names.center(cur_centering()));
 }
 
 auto Stack::is_frame(const std::string &s) const -> bool { return first_frame() == the_names[s]; }
@@ -340,8 +352,8 @@ auto Stack::push_par(size_t k) -> Xid {
 
 // Fonts without argument like \it, (still ok ?)
 void Stack::fonts0(const std::string &x) {
-    Xml *res = fonts1(x);
-    res->id.get_att().push_back(the_names["'hi_flag"], std::string(""));
+    Xml *res                                 = fonts1(x);
+    res->id.get_att()[the_names["'hi_flag"]] = "";
     push(std::string(" "), res);
 }
 
@@ -377,10 +389,10 @@ void Stack::check_font() {
             nonempty = true;
         }
         if (nonempty) {
-            auto     a   = std::string(aux);
-            Xml *    res = new Xml(the_names["hi"], nullptr);
-            AttList &W   = res->id.get_att();
-            W.push_back(the_names["rend"], a);
+            auto     a           = std::string(aux);
+            Xml *    res         = new Xml(the_names["hi"], nullptr);
+            AttList &W           = res->id.get_att();
+            W[the_names["rend"]] = a;
             push(std::string(" "), res);
         }
     } else {
@@ -394,9 +406,9 @@ void Stack::check_font() {
         if (s != "cst_empty") fonts0(s);
     }
     if (auto c = the_parser.cur_font.color; !c.empty()) {
-        Xml *    res = new Xml(the_names["hi"], nullptr);
-        AttList &W   = res->id.get_att();
-        W.push_back(the_names["color"], c);
+        Xml *    res          = new Xml(the_names["hi"], nullptr);
+        AttList &W            = res->id.get_att();
+        W[the_names["color"]] = c;
         push(std::string(" "), res);
     }
     the_parser.cur_font.is_on_stack();
@@ -541,9 +553,9 @@ void Stack::mark_omit_cell() { back().omit_cell = true; }
 auto Stack::remove_last() -> Xml * { return top_stack()->remove_last(); }
 
 void Stack::create_new_anchor(Xid xid, const std::string &id, const std::string &idtext) {
-    AttList &AL = get_att_list(xid.value);
-    AL.push_back(the_names["id"], id);
-    AL.push_back(the_names["id-text"], idtext);
+    AttList &AL              = get_att_list(xid.value);
+    AL[the_names["id"]]      = id;
+    AL[the_names["id-text"]] = idtext;
 }
 
 // mark current element as target for a label.
