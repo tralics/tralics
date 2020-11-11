@@ -529,9 +529,8 @@ void Bibtex::parse_one_item() {
 }
 
 void Bibtex::handle_multiple_entries(BibEntry *Y) {
-    CitationKey s   = Y->cite_key;
-    auto        len = all_entries.size();
-    for (size_t i = 0; i < len; i++)
+    CitationKey s = Y->cite_key;
+    for (size_t i = 0; i < all_entries.size(); i++)
         if (all_entries[i]->cite_key.is_similar(s)) {
             BibEntry *X = all_entries[i];
             if (X == Y) continue;
@@ -688,12 +687,11 @@ auto Bibtex::find_entry(const std::string &s, const std::string &prefix, bib_cre
 
 // This is the main function.
 void Bibtex::work() {
-    auto n = all_entries.size();
-    if (n == 0) return;
+    if (all_entries.size() == 0) return;
     if (!bbl.empty()) bbl.flush();
-    all_entries_table.reserve(n);
-    for (size_t i = 0; i < n; i++) all_entries[i]->un_crossref();
-    for (size_t i = 0; i < n; i++) all_entries[i]->work(to_signed(i));
+    all_entries_table.reserve(all_entries.size());
+    for (size_t i = 0; i < all_entries.size(); i++) all_entries[i]->un_crossref();
+    for (size_t i = 0; i < all_entries.size(); i++) all_entries[i]->work(to_signed(i));
     auto nb_entries = all_entries_table.size();
     spdlog::trace("Seen {} bibliographic entries.", nb_entries);
     // Sort the entries

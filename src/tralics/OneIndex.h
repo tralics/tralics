@@ -5,7 +5,7 @@
 
 class Xml;
 
-struct OneIndex : public std::vector<Indexer> {
+struct OneIndex : public std::vector<Indexer> { // \todo unordered_map
     std::string name;
     std::string title;
     size_t      AL;         // The attribute list index

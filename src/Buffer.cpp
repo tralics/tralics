@@ -419,15 +419,14 @@ auto Buffer::skip_string(const std::string &s) -> bool {
 }
 
 auto Buffer::skip_word_ci(const std::string &s) -> bool {
-    auto n = s.size();
-    for (size_t i = 0; i < n; i++) {
+    for (size_t i = 0; i < s.size(); i++) {
         char c = (*this)[ptrs.b + i];
         if (std::isupper(c) != 0) c += 'a' - 'A';
         if (c != s[i]) return false;
     }
-    char c = (*this)[ptrs.b + n];
+    char c = (*this)[ptrs.b + s.size()];
     if (std::isalpha(c) != 0) return false;
-    ptrs.b += n;
+    ptrs.b += s.size();
     return true;
 }
 

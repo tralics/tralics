@@ -269,7 +269,7 @@ void BibEntry::copy_from(BibEntry *Y, size_t k) {
         log_and_tty << "Unknown reference in crossref " << Y->cite_key.full_key << "\n";
         return; // Should signal an error
     }
-    for (size_t i = k; i < fp_unknown; i++) {
+    for (size_t i = k; i < all_fields.size(); i++) {
         if (all_fields[i].empty()) all_fields[i] = Y->all_fields[i];
     }
     auto n = the_main.bibtex_fields.size();
@@ -416,9 +416,8 @@ void BibEntry::call_type() {
         }
         bbl.flush();
     }
-    std::vector<std::string> &Bib        = the_main.bibtex_fields;
-    auto                      additional = Bib.size();
-    for (size_t i = 0; i < additional; i++) {
+    std::vector<std::string> &Bib = the_main.bibtex_fields;
+    for (size_t i = 0; i < Bib.size(); i++) {
         auto ss = user_fields[i];
         if (!ss.empty()) {
             bbl.append("\\cititem");
@@ -602,11 +601,10 @@ void BibEntry::normalise() {
     handle_one_namelist(all_fields[fp_editor], editor_data);
     std::string y = all_fields[fp_year];
     auto        n = y.size();
-    if (n == 0) return;
+    if (y.empty()) return;
     cur_year = -1;
     int res  = 0;
-    for (size_t i = 0; i < n; i++) {
-        char c = y[i];
+    for (char c : y) {
         if (std::isdigit(c) == 0) return;
         res = res * 10 + (c - '0');
         if (res > 10000) return;
