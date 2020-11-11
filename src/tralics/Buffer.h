@@ -7,7 +7,6 @@
 #include <optional>
 #include <vector>
 
-struct AttPair;
 struct Glue;
 struct ScaledInt;
 struct SthInternal;

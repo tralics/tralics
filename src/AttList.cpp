@@ -11,22 +11,20 @@ auto AttList::lookup(const std::string &x) -> std::string * {
     return nullptr;
 }
 
-auto operator<<(std::ostream &o, const AttPair &a) -> std::ostream & {
-    if (a.name[0] == '\'') return o;
-    const char  quote = the_main.double_quote_att ? '\"' : '\'';
-    const char *repl  = the_main.double_quote_att ? "&quot;" : "&apos;";
+auto operator<<(std::ostream &o, const AttList &l) -> std::ostream & {
+    for (const auto &[name, value] : l) {
+        if (name[0] == '\'') continue;
+        const char  quote = the_main.double_quote_att ? '\"' : '\'';
+        const char *repl  = the_main.double_quote_att ? "&quot;" : "&apos;";
 
-    fmt::print(o, " {}={}", a.name, quote);
-    for (char c : encode(a.value)) {
-        if (c == quote)
-            o << repl;
-        else
-            o << c;
+        fmt::print(o, " {}={}", name, quote);
+        for (char c : encode(value)) {
+            if (c == quote)
+                o << repl;
+            else
+                o << c;
+        }
+        o << quote;
     }
-    return o << quote;
-}
-
-auto operator<<(std::ostream &o, const AttList &a) -> std::ostream & {
-    for (const auto &i : a) o << AttPair{i.first, i.second};
     return o;
 }
