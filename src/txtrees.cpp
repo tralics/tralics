@@ -12,7 +12,6 @@
 // It contains also some eTeX extensions.
 
 #include "tralics/AllIndex.h"
-#include "tralics/Indexer.h"
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/OneIndex.h"

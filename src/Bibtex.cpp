@@ -65,10 +65,9 @@ namespace {
     auto find_field_pos(const std::string &s) -> field_pos {
         auto S = std::string(s);
         // Check is this has to be ignored
-        std::vector<std::string> &Bib_s        = the_main.bibtex_fields_s;
-        size_t                    additional_s = Bib_s.size();
-        for (size_t i = 0; i < Bib_s.size(); i++)
-            if (Bib_s[i] == s) return fp_unknown;
+        std::vector<std::string> &Bib_s = the_main.bibtex_fields_s;
+        for (auto &b : Bib_s)
+            if (b == s) return fp_unknown;
 
         // Check is this is standard
         if (s == the_names["address"]) return fp_address;
@@ -102,8 +101,7 @@ namespace {
         if (s == the_names["year"]) return fp_year;
         if (s == the_names["crossref"]) return fp_crossref;
         // Check is this is additional
-        std::vector<std::string> &Bib        = the_main.bibtex_fields;
-        size_t                    additional = Bib.size();
+        std::vector<std::string> &Bib = the_main.bibtex_fields;
         for (size_t i = 0; i < Bib.size(); i++)
             if (Bib[i] == s) return field_pos(fp_unknown + i + 1);
         return fp_unknown;
