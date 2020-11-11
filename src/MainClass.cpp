@@ -82,10 +82,10 @@ This software is governed by the CeCILL license that can be
 found at http://www.cecill.info.)";
 
     std::filesystem::path out_dir;
+    std::filesystem::path no_ext;
 
     std::string log_name;
     std::string machine;
-    std::string no_ext; // \todo should be a fs::path
     std::string opt_doctype;
     std::string user_config_file;
 
@@ -879,7 +879,7 @@ void MainClass::read_config_and_other() {
     config_file.clear();
 }
 
-void MainClass::see_name(std::string s) {
+void MainClass::see_name(std::string s) { // \todo read a fs::path
     if (!infile.empty()) {
         spdlog::critical("Fatal error: seen two soure files, {} and {}", infile, std::filesystem::path(s));
         exit(1);
@@ -892,9 +892,9 @@ void MainClass::see_name(std::string s) {
 }
 
 void MainClass::see_name1() {
-    the_parser.the_projetval = std::filesystem::path(no_ext).filename();
-    if (out_name.empty()) {                                  // might be given as an option
-        out_name = std::filesystem::path(no_ext).filename(); // \todo make no_ext an fs path?
+    the_parser.the_projetval = no_ext.filename();
+    if (out_name.empty()) { // might be given as an option
+        out_name = no_ext.filename();
     }
     if (year_string.empty()) { // might be given as an option
         year        = the_parser.ra_year;
