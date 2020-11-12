@@ -2036,10 +2036,6 @@ enum lex_type { lex_illegal, lex_white_space, lex_alpha, lex_numeric, lex_sep_ch
 // is char valid for a bibtex entry name ?
 enum id_type { illegal_id_char, legal_id_char };
 
-// is this citation from foot_bib, refer_bib or normal bib ?
-// Is this bibentry for foot, refer, year or all?
-enum [[deprecated]] bib_from{from_year};
-
 // the type of something like @ARTICLE
 enum entry_type : unsigned {
     type_article,

@@ -517,8 +517,7 @@ void Bibtex::handle_multiple_entries(BibEntry *Y) {
 // or or bug.
 
 auto Bibtex::find_entry(const std::string &s, bool create, bib_creator bc) -> BibEntry * {
-    bib_from    prefix = from_year;
-    CitationKey key(prefix, s);
+    CitationKey key(s);
     similar_entries = 1;
     int       n     = 0;
     BibEntry *X     = find_entry(key);
@@ -631,7 +630,7 @@ void Bibtex::read_one_field(bool store) {
 // This finds entry named s, or case-equivalent.
 // creates entry if not found. This is used by exec_bibitem
 auto Bibtex::find_entry(const std::string &s, const std::string &prefix, bib_creator bc) -> BibEntry * {
-    CitationKey key(prefix, s);
+    CitationKey key(s);
     BibEntry *  X = find_entry(key);
     if (X != nullptr) return X;
     int n = 0;

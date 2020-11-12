@@ -409,7 +409,7 @@ void BibEntry::call_type() {
     bbl.format("{{{}}}", label);
     bbl.format("{{{}}}", cite_key.full_key);
     bbl.format("{{{}}}", unique_id);
-    bbl.format("{{{}}}", from_to_string());
+    bbl.format("{{{}}}", "year"); // \todo [[deprecated]]
     const auto &my_name = (is_extension > 0) ? the_main.bibtex_extensions[is_extension - 1] : the_names[type_to_string(type_int)];
     bbl.format("{{{}}}", my_name);
     bbl.append(aux_label);

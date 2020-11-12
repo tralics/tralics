@@ -20,7 +20,7 @@ void CitationItem::dump(Buffer &b) const {
 // This prints an unsolved reference for use by Tralics.
 void CitationItem::dump_bibtex() {
     if (is_solved()) return;
-    CitationKey ref(from, key);
+    CitationKey ref(key);
     BibEntry *  X = the_bibtex.find_entry(ref);
     if (X != nullptr) {
         err_buf = "Conflicts with tralics bib" + ref.full_key;

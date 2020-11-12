@@ -87,7 +87,6 @@ public:
     auto get_an_entry(size_t i) { return all_entries[i]; }
     auto exec_bibitem(const std::string &w, const std::string &b) -> std::string;
     auto implement_cit(String x, std::string w) -> int;
-    auto is_year_string(const std::string &y, bib_from from) -> String;
     void work();
     void read(const std::string &src);
     auto read0(const std::string &B) -> bool;

@@ -2,16 +2,7 @@
 #include "tralics/Buffer.h"
 #include "tralics/globals.h"
 
-// Ctor via "foot" and "Knuth"
-CitationKey::CitationKey(const std::string &a, const std::string &b) {
-    cite_prefix = from_year;
-    make_key(b);
-}
-
-CitationKey::CitationKey(bib_from a, const std::string &b) {
-    cite_prefix = from_year;
-    make_key(b);
-}
+CitationKey::CitationKey(const std::string &b) { make_key(b); }
 
 // Common code of the Ctor. Argument is "Knuth", cite_prefix is OK.
 void CitationKey::make_key(const std::string &s) {
@@ -23,9 +14,4 @@ void CitationKey::make_key(const std::string &s) {
     full_key.clear();
     full_key.append("cite:");
     full_key.append(s);
-}
-
-auto CitationKey::from_to_string() const -> std::string {
-    if (cite_prefix == from_year) return "year";
-    return "foot";
 }
