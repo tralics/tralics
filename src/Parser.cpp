@@ -1002,8 +1002,7 @@ void Parser::boot_xspace() {
 }
 
 // This computes the current date (first thing done after printing the banner)
-// stores the date in the table of equivalents, computes the default year
-// for the RA.
+// stores the date in the table of equivalents.
 void Parser::boot_time() {
     time_t xx = 0;
     time(&xx);

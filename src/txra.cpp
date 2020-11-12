@@ -8,8 +8,6 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-// This file contains commands needed for the RA
-
 #include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
