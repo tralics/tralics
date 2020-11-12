@@ -127,7 +127,6 @@ void Bibtex::read1(std::string s) {
     // \todo now the rest of the function is RA specific, remove
     auto n = s.size();
     if (s.ends_with("+year") && read0(s.substr(0, n - 5), from_year)) return;
-    if (s.ends_with("+all") && read0(s.substr(0, n - 4), from_any)) return;
     spdlog::warn("Bibtex Info: no biblio file {}", s);
 }
 
@@ -513,24 +512,16 @@ void Bibtex::handle_multiple_entries(BibEntry *Y) {
 // This finds entry named s, or case-equivalent. If create is true,
 // creates entry if not found.
 // Used by see_new_entry (create=auto_cite), or parse_crossref
-// prefix can be from_year, from_any;
+// prefix can be from_year;
 // If create is true, it is either a crossref, or \nocite{*}+from_year
-// or or bug; if prefix is from_any, we use from_year instead.
-//
+// or or bug.
 
 auto Bibtex::find_entry(const std::string &s, bool create, bib_creator bc) -> BibEntry * {
-    bib_from prefix = default_prefix();
-    if (create && prefix == from_any) prefix = from_year;
+    bib_from    prefix = default_prefix();
     CitationKey key(prefix, s);
     similar_entries = 1;
-    int n           = 0;
-    if (prefix == from_any) {
-        BibEntry *X = find_similar(key, n);
-        if (n > 1) err_in_file("more than one lower case key equivalent", true);
-        if (n < 0) similar_entries = -n;
-        return X;
-    }
-    BibEntry *X = find_entry(key);
+    int       n     = 0;
+    BibEntry *X     = find_entry(key);
     if (X != nullptr) return X;
     X = find_lower_case(key, n);
     if (n > 1) err_in_file("more than one lower case key equivalent", true);
