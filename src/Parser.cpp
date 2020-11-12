@@ -1978,10 +1978,7 @@ void Parser::T_omitcite() {
 // In prenote we put `p. 25' or nothing, in type one of year, foot, refer, bar
 // as an istring, it will be normalised later.
 void Parser::T_cite(subtypes sw, TokenList &prenote, std::string &type) {
-    if (sw == footcite_code) {
-        read_optarg_nopar(prenote);
-        type = the_names["foot"];
-    } else if (sw == nocite_code) {
+    if (sw == nocite_code) {
         type = std::string(fetch_name_opt());
     } else if (sw == natcite_code) {
         read_optarg_nopar(prenote); // is really the post note
@@ -2029,10 +2026,7 @@ void Parser::T_cite(subtypes sw) {
     cur_tok = T;
     std::string type;
     T_cite(sw, prenote, type); // reads optional arguments
-    if (sw == footcite_code) res.push_back(hash_table.footcite_pre_token);
-    Token sep    = sw == footcite_code  ? hash_table.footcite_sep_token
-                   : sw == natcite_code ? hash_table.locate("NAT@sep")
-                                        : hash_table.cite_punct_token;
+    Token sep    = sw == natcite_code ? hash_table.locate("NAT@sep") : hash_table.cite_punct_token;
     cur_tok      = T;
     auto  List   = fetch_name0_nopar();
     int   n      = 0;

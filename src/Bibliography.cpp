@@ -44,8 +44,7 @@ void Bibliography::dump_data(Buffer &b) {
     b.append("}\n");
 }
 
-// This finds a citation in the table. In the case \footcite{Kunth},
-// the first two arguments are the Istrings associated to foot and Knuth.
+// This finds a citation in the table.
 // If not found, we may insert a new item (normal case),
 // or return -1 (in case of failure)
 auto Bibliography::find_citation_item(const std::string &from, const std::string &key, bool insert) -> std::optional<size_t> {
@@ -56,8 +55,7 @@ auto Bibliography::find_citation_item(const std::string &from, const std::string
     return citation_table.size() - 1;
 }
 
-// This is like the function above. In the case \footcite{Kunth},
-// the two arguments are the Istrings associated to foot and Knuth.
+// This is like the function above.
 // If not found, we try \cite[?]{Kunth}, using any possibility for the first
 // argument (this matches only unsolved references). In case of failure
 // a new entry is added, of type FROM.

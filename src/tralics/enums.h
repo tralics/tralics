@@ -615,7 +615,6 @@ enum subtypes : unsigned {
     toplevel_sec_code,
     // for cite_cmd
     cite_code = 0,
-    footcite_code,
     nocite_code,
     natcite_code,
     natcite_e_code,

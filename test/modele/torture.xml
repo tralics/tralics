@@ -2,7 +2,7 @@
 <!DOCTYPE ramain SYSTEM 'raweb.dtd'>
 <!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/12 -->
 <ramain creator='Tralics version 2.15.4'>
-<p>The time is 12h 41min, 12th November 2020.</p>
+<p>The time is 15h 17min, 12th November 2020.</p>
 <p>DOCSTART</p>
 <div0 id='cid1' id-text='1'><head>First</head>
 <p>31.5pt0.0pt0.0mu1717.0pt17.0pt plus 1.0pt minus 2.0pt17.0mu plus 1.0mu minus 2.0mu3.0mu plus 4.0fil minus 17.0mu0.0mu119811711.0pt
@@ -328,12 +328,12 @@ YX</p>
 </div3>
 <div3 id='uid21' id-text='0.0.0.8'><head>Biblio</head>
 <p>This is some text
-<cit rend='foot'><ref target='bid0'/></cit>, <cit rend='foot'><ref target='bid1'/></cit> <cit><ref target='bid2'>text</ref></cit>, <cit><ref target='bid3'/></cit> <cit><ref target='bid4'/></cit>
-<cit><ref target='bid4'>foo</ref></cit>
-<cit rend='foot'><ref target='bid0'>p32</ref></cit>, <cit rend='foot'><ref target='bid1'/></cit><cit rend='foot'><ref target='bid0'>p32</ref></cit><cit><ref target='bid4'/></cit>, <cit><ref target='bid4'/></cit>
-<cit><ref target='bid2'>text</ref></cit>, <cit><ref target='bid3'/></cit>
-<cit rend='foot'><ref target='bid0'/></cit>, <cit rend='foot'><ref target='bid1'/></cit> <cit rend='foot'><ref target='bid0'>p3</ref></cit>, <cit rend='foot'><ref target='bid1'/></cit></p>
-<bibitem id='bid0'>key1</bibitem><bibitem id='bid1'>key2</bibitem><p>MINIPAGE
+<cit><ref target='bid0'/></cit>, <cit><ref target='bid1'/></cit> <cit><ref target='bid0'>text</ref></cit>, <cit><ref target='bid1'/></cit> <cit><ref target='bid2'/></cit>
+<cit><ref target='bid2'>foo</ref></cit>
+<cit rend='foot'><ref target='bid3'>p32</ref></cit>, <cit rend='foot'><ref target='bid4'/></cit><cit rend='foot'><ref target='bid3'>p32</ref></cit><cit><ref target='bid2'/></cit>, <cit><ref target='bid2'/></cit>
+<cit><ref target='bid0'>text</ref></cit>, <cit><ref target='bid1'/></cit>
+<cit><ref target='bid0'/></cit>, <cit><ref target='bid1'/></cit><cit><ref target='bid0'>p3</ref></cit>, <cit><ref target='bid1'/></cit></p>
+<bibitem id='bid3'>key1</bibitem><bibitem id='bid4'>key2</bibitem><p>MINIPAGE
 Hàn Th&#x1ebf; Thành designed pdf<TeX/>. &#x142; and &lstrok;.</p>
 <p noindent='true'>In Tralics version 2, you can say Th&#x1EBF;</p>
 <formula id='uid22' id-text='8' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><mrow><mi>&#x1D670;&#x1D68A;</mi><mi>&Ascr;</mi><mi>&#x1D400;&#x1D41A;</mi><mi> Aa </mi><mi>&#x1D434;&#x1D44E;</mi><mi>&Aopf;</mi><mi>&#x1D5A0;&#x1D5BA;</mi><mi>A</mi><mi>a</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D671;&#x1D68B;</mi><mi>&Bscr;</mi><mi>&#x1D401;&#x1D41B;</mi><mi> Bb </mi><mi>&#x1D435;&#x1D44F;</mi><mi>&Bopf;</mi><mi>&#x1D5A1;&#x1D5BB;</mi><mi>B</mi><mi>b</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>&#x1D672;&#x1D68C;</mi><mi>&Cscr;</mi><mi>&#x1D402;&#x1D41C;</mi><mi> Cc </mi><mi>&#x1D436;&#x1D450;</mi><mi>&Copf;</mi><mi>&#x1D5A2;&#x1D5BC;</mi><mi>C</mi><mi>c</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D673;&#x1D68D;</mi><mi>&Dscr;</mi><mi>&#x1D403;&#x1D41D;</mi><mi> Dd </mi><mi>&#x1D437;&#x1D451;</mi><mi>&Dopf;</mi><mi>&#x1D5A3;&#x1D5BD;</mi><mi>D</mi><mi>d</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>&#x1D674;&#x1D68E;</mi><mi>&Escr;</mi><mi>&#x1D404;&#x1D41E;</mi><mi> Ee </mi><mi>&#x1D438;&#x1D452;</mi><mi>&Eopf;</mi><mi>&#x1D5A4;&#x1D5BE;</mi><mi>E</mi><mi>e</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D675;&#x1D68F;</mi><mi>&Fscr;</mi><mi>&#x1D405;&#x1D41F;</mi><mi> Ff </mi><mi>&#x1D439;&#x1D453;</mi><mi>&Fopf;</mi><mi>&#x1D5A5;&#x1D5BF;</mi><mi>F</mi><mi>f</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>&#x1D676;&#x1D690;</mi><mi>&Gscr;</mi><mi>&#x1D406;&#x1D420;</mi><mi> Gg </mi><mi>&#x1D43A;&#x1D454;</mi><mi>&Gopf;</mi><mi>&#x1D5A6;&#x1D5C0;</mi><mi>G</mi><mi>g</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D677;&#x1D691;</mi><mi>&Hscr;</mi><mi>&#x1D407;&#x1D421;</mi><mi> Hh </mi><mi>&#x1D43B;&#x210E;</mi><mi>&Hopf;</mi><mi>&#x1D5A7;&#x1D5C1;</mi><mi>H</mi><mi>h</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>&#x1D678;&#x1D692;</mi><mi>&Iscr;</mi><mi>&#x1D408;&#x1D422;</mi><mi> Ii </mi><mi>&#x1D43C;&#x1D456;</mi><mi>&Iopf;</mi><mi>&#x1D5A8;&#x1D5C2;</mi><mi>I</mi><mi>i</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D679;&#x1D693;</mi><mi>&Jscr;</mi><mi>&#x1D409;&#x1D423;</mi><mi> Jj </mi><mi>&#x1D43D;&#x1D457;</mi><mi>&Jopf;</mi><mi>&#x1D5A9;&#x1D5C3;</mi><mi>J</mi><mi>j</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>&#x1D67A;&#x1D694;</mi><mi>&Kscr;</mi><mi>&#x1D40A;&#x1D424;</mi><mi> Kk </mi><mi>&#x1D43E;&#x1D458;</mi><mi>&Kopf;</mi><mi>&#x1D5AA;&#x1D5C4;</mi><mi>K</mi><mi>k</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D67B;&#x1D695;</mi><mi>&Lscr;</mi><mi>&#x1D40B;&#x1D425;</mi><mi> Ll </mi><mi>&#x1D43F;&#x1D459;</mi><mi>&Lopf;</mi><mi>&#x1D5AB;&#x1D5C5;</mi><mi>L</mi><mi>l</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>&#x1D67C;&#x1D696;</mi><mi>&Mscr;</mi><mi>&#x1D40C;&#x1D426;</mi><mi> Mm </mi><mi>&#x1D440;&#x1D45A;</mi><mi>&Mopf;</mi><mi>&#x1D5AC;&#x1D5C6;</mi><mi>M</mi><mi>m</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D67D;&#x1D697;</mi><mi>&Nscr;</mi><mi>&#x1D40D;&#x1D427;</mi><mi> Nn </mi><mi>&#x1D441;&#x1D45B;</mi><mi>&Nopf;</mi><mi>&#x1D5AD;&#x1D5C7;</mi><mi>N</mi><mi>n</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>&#x1D67E;&#x1D698;</mi><mi>&Oscr;</mi><mi>&#x1D40E;&#x1D428;</mi><mi> Oo </mi><mi>&#x1D442;&#x1D45C;</mi><mi>&Oopf;</mi><mi>&#x1D5AE;&#x1D5C8;</mi><mi>O</mi><mi>o</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D67F;&#x1D699;</mi><mi>&Pscr;</mi><mi>&#x1D40F;&#x1D429;</mi><mi> Pp </mi><mi>&#x1D443;&#x1D45D;</mi><mi>&Popf;</mi><mi>&#x1D5AF;&#x1D5C9;</mi><mi>P</mi><mi>p</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>&#x1D680;&#x1D69A;</mi><mi>&Qscr;</mi><mi>&#x1D410;&#x1D42A;</mi><mi> Qq </mi><mi>&#x1D444;&#x1D45E;</mi><mi>&Qopf;</mi><mi>&#x1D5B0;&#x1D5CA;</mi><mi>Q</mi><mi>q</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D681;&#x1D69B;</mi><mi>&Rscr;</mi><mi>&#x1D411;&#x1D42B;</mi><mi> Rr </mi><mi>&#x1D445;&#x1D45F;</mi><mi>&Ropf;</mi><mi>&#x1D5B1;&#x1D5CB;</mi><mi>R</mi><mi>r</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>&#x1D682;&#x1D69C;</mi><mi>&Sscr;</mi><mi>&#x1D412;&#x1D42C;</mi><mi> Ss </mi><mi>&#x1D446;&#x1D460;</mi><mi>&Sopf;</mi><mi>&#x1D5B2;&#x1D5CC;</mi><mi>S</mi><mi>s</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D683;&#x1D69D;</mi><mi>&Tscr;</mi><mi>&#x1D413;&#x1D42D;</mi><mi> Tt </mi><mi>&#x1D447;&#x1D461;</mi><mi>&Topf;</mi><mi>&#x1D5B3;&#x1D5CD;</mi><mi>T</mi><mi>t</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>&#x1D684;&#x1D69E;</mi><mi>&Uscr;</mi><mi>&#x1D414;&#x1D42E;</mi><mi> Uu </mi><mi>&#x1D448;&#x1D462;</mi><mi>&Uopf;</mi><mi>&#x1D5B4;&#x1D5CE;</mi><mi>U</mi><mi>u</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D685;&#x1D69F;</mi><mi>&Vscr;</mi><mi>&#x1D415;&#x1D42F;</mi><mi> Vv </mi><mi>&#x1D449;&#x1D463;</mi><mi>&Vopf;</mi><mi>&#x1D5B5;&#x1D5CF;</mi><mi>V</mi><mi>v</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>&#x1D686;&#x1D6A0;</mi><mi>&Wscr;</mi><mi>&#x1D416;&#x1D430;</mi><mi> Ww </mi><mi>&#x1D44A;&#x1D464;</mi><mi>&Wopf;</mi><mi>&#x1D5B6;&#x1D5D0;</mi><mi>W</mi><mi>w</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D687;&#x1D6A1;</mi><mi>&Xscr;</mi><mi>&#x1D417;&#x1D431;</mi><mi> Xx </mi><mi>&#x1D44B;&#x1D465;</mi><mi>&Xopf;</mi><mi>&#x1D5B7;&#x1D5D1;</mi><mi>X</mi><mi>x</mi></mrow></mtd></mtr><mtr><mtd columnalign='right'><mrow><mi>&#x1D688;&#x1D6A2;</mi><mi>&Yscr;</mi><mi>&#x1D418;&#x1D432;</mi><mi> Yy </mi><mi>&#x1D44C;&#x1D466;</mi><mi>&Yopf;</mi><mi>&#x1D5B8;&#x1D5D2;</mi><mi>Y</mi><mi>y</mi></mrow></mtd><mtd columnalign='left'><mrow><mi>&#x1D689;&#x1D6A3;</mi><mi>&Zscr;</mi><mi>&#x1D419;&#x1D433;</mi><mi> Zz </mi><mi>&#x1D44D;&#x1D467;</mi><mi>&Zopf;</mi><mi>&#x1D5B9;&#x1D5D3;</mi><mi>Z</mi><mi>z</mi></mrow></mtd></mtr></mtable></math></formula>
@@ -350,7 +350,7 @@ Hàn Th&#x1ebf; Thành designed pdf<TeX/>. &#x142; and &lstrok;.</p>
 <p>With opt AABBWithout opt CC
 
 
-<cit><ref target='bid4'/></cit>Without opt BBWithout opt CC</p>
+<cit><ref target='bid2'/></cit>Without opt BBWithout opt CC</p>
 <p>xfoo</p>
 </div3>
 <div3 id='uid23' id-text='0.0.0.9'><head>Letter c</head>
@@ -1291,11 +1291,11 @@ This is a sentence typeset in the theorem environment </font-italic-shape></font
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mroot><mn>4</mn> <mn>3</mn></mroot></math></formula> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mroot><mn>4</mn> <mn>3</mn></mroot><mi>&#x321;</mi><mi>&#x4321;</mi><mi>&#x54321;</mi><mi>&#x654321;</mi><mi>&#x7654321;</mi></mrow></math></formula>
 XYZ</p>
 <biblio>
-<citation from='year' id='bid3' key='BJMTa' type='article' userid='cite:titi'>
+<citation from='year' id='bid1' key='BJMTa' type='article' userid='cite:titi'>
 <bauteurs><bpers nom='Besson' prenom='F.' prenomcomplet='F.'/><bpers nom='Jensen' prenom='T.' prenomcomplet='T.'/><bpers nom='Métayer' prenom='D. L.' prenomcomplet='D. Le'/><bpers nom='Thorn' prenom='T.' prenomcomplet='T.'/></bauteurs>
 <btitle>BRACETEST1 leave  leave a leave <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>H</mi></math></formula></btitle>
 </citation>
-<citation from='year' id='bid2' key='BJMTb' type='book' userid='cite:toto'>
+<citation from='year' id='bid0' key='BJMTb' type='book' userid='cite:toto'>
 <bauteurs><bpers nom='Besson' prenom='F.' prenomcomplet='F.'/><bpers nom='Jensen' prenom='T.' prenomcomplet='T.'/><bpers nom='Métayer' prenom='D. L.' prenomcomplet='D. Le'/><bpers nom='Thorn' prenom='T.' prenomcomplet='T.'/></bauteurs>
 <btitle>Some title</btitle>
 <xref url='http://www.inria.fr/rrrt/rt-0265.html'><font-large1>http://<allowbreak/>www.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>rrrt/<allowbreak/>rt-0265.<allowbreak/>html</font-large1></xref><first-page>50</first-page>
@@ -1303,7 +1303,7 @@ XYZ</p>
 <allpages>21</allpages>
 <bnote>some note</bnote>
 </citation>
-<citation from='year' id='bid4' key='CIMP01' type='misc' userid='cite:mathml2'>
+<citation from='year' id='bid2' key='CIMP01' type='misc' userid='cite:mathml2'>
 <bauteurs><bpers nom='Carlisle' prenom='D.' prenomcomplet='David'/><bpers nom='Ion' prenom='P.' prenomcomplet='Patrick'/><bpers nom='Miner' prenom='R.' prenomcomplet='Robert'/><bpers nom='Poppelier' prenom='N.' prenomcomplet='Nico'/></bauteurs>
 <btitle>Mathematical Markup Language (MathML) Version 2.0</btitle>
 <bhowpublished>http://www.w3.org/TR/MathML2/</bhowpublished>
@@ -1465,11 +1465,11 @@ This is a sentence typeset</font-slanted-shape></p>
 <p noindent='true'><ref target='uid113'/><ref target='uid113'/>
 a: UPPER MiXeD Mixed  UPPER</p>
 <p noindent='true'>b: UPPER <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi> BarMixed </mi></math></formula> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>Y</mi><mi>y</mi></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>Z</mi><mi>z</mi></mrow></math></formula> UPPER</p>
-<p noindent='true'>c: TEXT <cit><ref target='bid4'/></cit> AND <cit><ref target='bid4'/></cit> UPPER 
+<p noindent='true'>c: TEXT <cit><ref target='bid2'/></cit> AND <cit><ref target='bid2'/></cit> UPPER 
 d: <ref target='cid2'/>  UPPER</p>
 <p noindent='true'>a: lower MiXeD Mixed  lower</p>
 <p noindent='true'>b: lower <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi> BarMixed </mi></math></formula> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>Y</mi><mi>y</mi></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>Z</mi><mi>z</mi></mrow></math></formula> lower</p>
-<p noindent='true'>c: TEXT <cit><ref target='bid4'/></cit> AND <cit><ref target='bid4'/></cit> LOWER 
+<p noindent='true'>c: TEXT <cit><ref target='bid2'/></cit> AND <cit><ref target='bid2'/></cit> LOWER 
 d: <ref target='cid2'/>  lower</p>
 <p noindent='true'>AT_DOC_END</p></div3></div2></div1></div0>
 </ramain>

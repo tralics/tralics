@@ -1132,7 +1132,6 @@ auto CmdChr::token_section_name() const -> String {
 auto CmdChr::token_cite_name() const -> String {
     switch (chr) {
     case cite_code: return "cite";
-    case footcite_code: return "footcite";
     case nocite_code: return "nocite";
     case natcite_code: return "natcite";
     case natcite_e_code: return "endnatcite";
