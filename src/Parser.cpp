@@ -68,7 +68,6 @@ namespace {
     [[deprecated]] auto normalise_for_bib(std::string w) -> std::string {
         std::string S = w;
         if (S == "year") return the_names["cst_empty"];
-        if (S == "refer") return the_names["cst_empty"];
         return w;
     }
 
