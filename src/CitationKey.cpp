@@ -24,7 +24,7 @@ CitationKey::CitationKey(bib_from a, const std::string &b) {
 
 // Common code of the Ctor. Argument is "Knuth", cite_prefix is OK.
 void CitationKey::make_key(const std::string &s) {
-    if (!distinguish_refer && cite_prefix == from_refer) cite_prefix = from_year;
+    if (cite_prefix == from_refer) cite_prefix = from_year;
     cite_key = s;
     Buffer B1(s);
     B1.lowercase();

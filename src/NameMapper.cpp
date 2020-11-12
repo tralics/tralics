@@ -213,14 +213,6 @@ void NameMapper::assign(const std::string &sa, const std::string &sb) {
 
     if (sa == "lang_fr") { set("french", sb); }
     if (sa == "lang_en") { set("english", sb); }
-    if (sa == "distinguish_refer_in_rabib") {
-        if ((sb == "true") || (sb == "yes"))
-            the_main.distinguish_refer = true;
-        else if ((sb == "false") || (sb == "no"))
-            the_main.distinguish_refer = false;
-        else
-            spdlog::warn("distinguish_refer_in_rabib = {} ignored");
-    }
     if (sa == "entity_names") { the_main.set_ent_names(sb); }
     if (sa == "default_class") { the_main.default_class = sb; }
     if (sa == "alternate_item") {

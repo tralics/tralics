@@ -20,9 +20,8 @@ inline bool                                                         compatibilit
 inline bool                                                         nofloat_hack{false};
 inline bool                                                         raw_bib{false};
 inline bool                                                         seen_enddocument{false};
-inline bool                                                         distinguish_refer = false;
-inline bool                                                         global_in_load    = false;
-inline bool                                                         global_in_url     = false;
+inline bool                                                         global_in_load = false;
+inline bool                                                         global_in_url  = false;
 inline bool                                                         in_hlinee, have_above, have_below;
 inline bool                                                         no_xml_error{false};
 inline bool                                                         use_quotes{false};

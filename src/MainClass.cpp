@@ -73,7 +73,6 @@ All options start with a single or double hyphen, they are:
   -tpa_status = title/all: translate all document or title only
   -default_class=xx: use xx.clt if current class is unknown
   -raw_bib: uses all bibtex fields
-  -distinguish_refer_in_rabib= true/false: special raweb hack 
   (the list of all options is avalaible at
     http://www-sop.inria.fr/marelle/tralics/options.html )
 
@@ -399,7 +398,6 @@ enum param_args {
     pa_year,
     pa_type,
     pa_config,
-    pa_distinguishreferinrabib,
     pa_confdir,
     pa_externalprog,
     pa_trivialmath,
@@ -426,7 +424,6 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         if (ss == "config") return pa_config;
         if (ss == "defaultclass") return pa_defaultclass;
         if (ss == "dir") return pa_dir;
-        if (ss == "distinguishreferinrabib") return pa_distinguishreferinrabib;
         if (ss == "doctype") return pa_doctype;
         if (ss == "entnames") return pa_entnames;
         if (ss == "externalprog") return pa_externalprog;
@@ -456,10 +453,6 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         case pa_year: year_string = a; return;
         case pa_type: type_option = a; return;
         case pa_config: user_config_file = a; return;
-        case pa_distinguishreferinrabib:
-            after_conf.emplace_back("distinguish_refer_in_rabib");
-            after_conf.emplace_back(a);
-            return;
         case pa_confdir:
             if (a[0] == '0') return;                // ignore empty component
             if (a[0] == '/' && a[1] == '0') return; // ignore root
@@ -903,7 +896,6 @@ void MainClass::trans0() {
 
 void MainClass::boot_bibtex() {
     auto fn                 = out_dir / (out_name + "_.bbl");
-    ::distinguish_refer     = distinguish_refer;
     bbl.name                = fn;
     the_bibtex.default_year = year_string;
     the_bibtex.boot(out_name);

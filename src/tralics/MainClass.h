@@ -65,7 +65,6 @@ public:
 
     int tpa_mode{3};
 
-    bool distinguish_refer{true}; ///< Something to do with bibliographies in RA \todo remove
     bool double_quote_att{false}; ///< double quote as attribute value delimitor
     bool dverbose{false};         ///< Are we verbose at begin document ?
     bool footnote_hack{true};     ///< Not sure what this activates

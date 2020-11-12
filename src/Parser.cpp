@@ -64,12 +64,11 @@ namespace {
     }
 
     // \cite[year][]{foo}is the same as \cite{foo}
-    // if distinguish_refer is false,  \cite[refer][]{foo} is also the same.
-    auto normalise_for_bib(std::string w) -> std::string {
+    // \cite[refer][]{foo} is also the same.
+    [[deprecated]] auto normalise_for_bib(std::string w) -> std::string {
         std::string S = w;
         if (S == "year") return the_names["cst_empty"];
-        if (!distinguish_refer)
-            if (S == "refer") return the_names["cst_empty"];
+        if (S == "refer") return the_names["cst_empty"];
         return w;
     }
 
