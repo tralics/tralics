@@ -837,7 +837,6 @@ void MainClass::find_dtd() {
 }
 
 void MainClass::read_config_and_other() {
-    year             = the_parser.ra_year;
     bool have_dclass = !dclass.empty();
     if (auto of = find_config_file(); of)
         open_config_file(*of);
@@ -893,13 +892,6 @@ void MainClass::see_name1() {
     the_parser.the_projetval = no_ext.filename();
     if (out_name.empty()) { // might be given as an option
         out_name = no_ext.filename();
-    }
-    if (year_string.empty()) { // might be given as an option
-        year        = the_parser.ra_year;
-        year_string = fmt::format("{}", year);
-    } else {
-        year               = std::stoi(year_string);
-        the_parser.ra_year = year;
     }
 }
 

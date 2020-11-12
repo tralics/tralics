@@ -69,8 +69,6 @@ private:
     subtypes sectionning_offset;        // what is the main section, part, chapter ?
 
 public:
-    [[deprecated]] int ra_year{1789}; // default year if none given as argument
-
     l_state     long_state;     // Error recovery handling (\long)
     scan_stat   scanner_status; // Error recovery handling (\outer)
     std::string the_projetval;  // this could be miaou

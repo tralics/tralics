@@ -1026,7 +1026,6 @@ void Parser::boot_time() {
     TokenList today_tokens = b.str_toks(nlt_space);
     new_prim("today", today_tokens);
     the_main.short_date = short_date;
-    the_parser.ra_year  = year;
 }
 
 // Installs the default language.
