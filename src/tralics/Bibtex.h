@@ -31,7 +31,6 @@ private:
     std::vector<BibEntry *>  all_entries;       // potential entries
     std::vector<BibEntry *>  all_entries_table; // real entries
     std::vector<std::string> user_model;
-    bib_from                 entry_prefix{};
     bool                     want_numeric{};
     std::string              cur_field_name;
     std::string              no_year;
@@ -42,12 +41,11 @@ public:
     bool        nocitestar{false};
     std::string default_year;
 
-    auto               find_entry(const CitationKey &s) -> BibEntry *;
-    auto               find_entry(const std::string &s, const std::string &prefix, bib_creator bc) -> BibEntry *;
-    auto               find_entry(const std::string &s, bool create, bib_creator bc) -> BibEntry *;
-    auto               make_new_entry(const CitationKey &a, bib_creator b) -> BibEntry *;
-    void               make_entry(const CitationKey &a, std::string myid);
-    [[nodiscard]] auto default_prefix() const -> bib_from { return entry_prefix; }
+    auto find_entry(const CitationKey &s) -> BibEntry *;
+    auto find_entry(const std::string &s, const std::string &prefix, bib_creator bc) -> BibEntry *;
+    auto find_entry(const std::string &s, bool create, bib_creator bc) -> BibEntry *;
+    auto make_new_entry(const CitationKey &a, bib_creator b) -> BibEntry *;
+    void make_entry(const CitationKey &a, std::string myid);
 
 private:
     [[nodiscard]] auto at_eol() const -> bool { return input_line_pos >= input_line.size(); }
@@ -91,8 +89,8 @@ public:
     auto implement_cit(String x, std::string w) -> int;
     auto is_year_string(const std::string &y, bib_from from) -> String;
     void work();
-    void read(const std::string &src, bib_from ct);
-    auto read0(const std::string &B, bib_from ct) -> bool;
+    void read(const std::string &src);
+    auto read0(const std::string &B) -> bool;
     void read1(std::string s);
     void err_in_file(String s, bool last) const;
     void boot(std::string S);

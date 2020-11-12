@@ -109,10 +109,10 @@ namespace {
 } // namespace
 
 // This reads conditionally a file. Returns true if the file exists.
-auto Bibtex::read0(const std::string &B, bib_from ct = from_year) -> bool {
+auto Bibtex::read0(const std::string &B) -> bool { // \todo merge with read
     if (auto of = find_in_path(B + ".bib"); of) {
         spdlog::trace("Found BIB file: {}", *of);
-        read(*of, ct);
+        read(*of);
         return true;
     }
     return false;
@@ -126,7 +126,7 @@ void Bibtex::read1(std::string s) {
 
     // \todo now the rest of the function is RA specific, remove
     auto n = s.size();
-    if (s.ends_with("+year") && read0(s.substr(0, n - 5), from_year)) return;
+    if (s.ends_with("+year") && read0(s.substr(0, n - 5))) return;
     spdlog::warn("Bibtex Info: no biblio file {}", s);
 }
 
@@ -517,7 +517,7 @@ void Bibtex::handle_multiple_entries(BibEntry *Y) {
 // or or bug.
 
 auto Bibtex::find_entry(const std::string &s, bool create, bib_creator bc) -> BibEntry * {
-    bib_from    prefix = default_prefix();
+    bib_from    prefix = from_year;
     CitationKey key(prefix, s);
     similar_entries = 1;
     int       n     = 0;
@@ -663,11 +663,10 @@ void Bibtex::work() {
     bbl.too_late = true;
 }
 
-void Bibtex::read(const std::string &src, bib_from ct) {
+void Bibtex::read(const std::string &src) {
     bbl.append("% reading source ");
     bbl.append(src);
     bbl.flush();
-    entry_prefix = ct;
     in_lines.read(src, 1);
 
     last_ok_line = 0;
