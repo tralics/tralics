@@ -66,7 +66,6 @@ Hashtab::Hashtab() {
     primitive("cite", cite_cmd, cite_code);
     primitive("XMLsolvecite", solvecite_cmd);
     primitive("footcite", cite_cmd, footcite_code);
-    primitive("refercite", cite_cmd, refercite_code);
     primitive("yearcite", cite_cmd, yearcite_code);
     primitive("nocite", cite_cmd, nocite_code);
     primitive("natcite", cite_cmd, natcite_code);

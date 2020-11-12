@@ -617,7 +617,6 @@ enum subtypes : unsigned {
     cite_code = 0,
     footcite_code,
     nocite_code,
-    refercite_code [[deprecated]],
     yearcite_code,
     natcite_code,
     natcite_e_code,
