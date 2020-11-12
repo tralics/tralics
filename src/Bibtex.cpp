@@ -138,10 +138,6 @@ void Bibtex::read1(const std::string &cur) {
         B.resize(n - 4);
         if (read0(B, from_any)) return;
     }
-    if (B.ends_with("+refer.bib")) {
-        B.resize(n - 6);
-        if (read0(B, from_refer)) return;
-    }
     if (B.ends_with(".bib")) {
         B.resize(n - 4);
         if (read0(B, from_year)) return;
@@ -531,9 +527,9 @@ void Bibtex::handle_multiple_entries(BibEntry *Y) {
 // This finds entry named s, or case-equivalent. If create is true,
 // creates entry if not found.
 // Used by see_new_entry (create=auto_cite), or parse_crossref
-// prefix can be from_year, from_refer, from_foot, from_any;
+// prefix can be from_year, from_foot, from_any;
 // If create is true, it is either a crossref, or \nocite{*}+from_year
-// or from_refer, or bug; if prefix is from_any, we use from_year instead.
+// or or bug; if prefix is from_any, we use from_year instead.
 //
 
 auto Bibtex::find_entry(const std::string &s, bool create, bib_creator bc) -> BibEntry * {
@@ -657,7 +653,6 @@ void Bibtex::read_one_field(bool store) {
 
 // Returns true if because of \nocite{*}
 auto Bibtex::auto_cite() const -> bool {
-    if (refer_biblio) return true;
     if (normal_biblio && nocitestar) return true;
     return false;
 }
@@ -707,7 +702,6 @@ void Bibtex::read(const std::string &src, bib_from ct) {
     bbl.flush();
     entry_prefix  = ct;
     normal_biblio = ct == from_year;
-    refer_biblio  = ct == from_refer;
     in_lines.read(src, 1);
 
     last_ok_line = 0;

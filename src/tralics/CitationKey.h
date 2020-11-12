@@ -21,7 +21,8 @@ struct CitationKey {
     [[nodiscard]] auto is_similar_lower(const CitationKey &w) const -> bool { return lower_cite_key == w.lower_cite_key; }
     [[nodiscard]] auto is_same(const CitationKey &w) const -> bool { return is_similar(w) && cite_prefix == w.cite_prefix; }
     [[nodiscard]] auto is_same_lower(const CitationKey &w) const -> bool { return is_similar_lower(w) && cite_prefix == w.cite_prefix; }
-    [[nodiscard]] auto from_to_string() const -> std::string;
+
+    [[nodiscard, deprecated]] auto from_to_string() const -> std::string;
 
     void move_to_year() { cite_prefix = from_year; } // leaves full_key unchanged
 };

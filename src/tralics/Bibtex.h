@@ -34,7 +34,6 @@ private:
     bib_from                 entry_prefix{};
     bool                     nocitestar{false};
     bool                     normal_biblio{true};
-    bool                     refer_biblio{};
     bool                     want_numeric{};
     std::string              cur_field_name;
     std::string              no_year;
