@@ -92,8 +92,8 @@ public:
     auto is_year_string(const std::string &y, bib_from from) -> String;
     void work();
     void read(const std::string &src, bib_from ct);
-    auto read0(Buffer &B, bib_from ct) -> bool;
-    void read1(const std::string &cur);
+    auto read0(const std::string &B, bib_from ct) -> bool;
+    void read1(std::string s);
     void err_in_file(String s, bool last) const;
     void boot(std::string S);
     void enter_in_table(BibEntry *x) { all_entries_table.push_back(x); }
