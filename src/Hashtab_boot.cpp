@@ -1249,7 +1249,6 @@ Hashtab::Hashtab() {
     primitive("fontname", convert_cmd, fontname_code);
     primitive("jobname", convert_cmd, jobname_code);
     primitive("XMLgetatt", convert_cmd, attributeval_code);
-    primitive("ra@jobname", convert_cmd, ra_jobname_code);
     primitive("tralicsversion", convert_cmd, tralicsversion_code);
     primitive("@onelevel@sanitize", convert_cmd, sanitize_code);
     primitive("[", obracket_cmd);

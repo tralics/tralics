@@ -2210,7 +2210,6 @@ void Parser::E_convert() {
         break;
     }
     case jobname_code: B.append(get_job_name()); break;
-    case ra_jobname_code: B.append(get_projet_val()); break;
     case attributeval_code: B.append(get_attval()); break;
     case tralicsversion_code: B.append(tralics_version); break;
     case etexrevision_code: B.append(".0"); break;

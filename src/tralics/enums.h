@@ -1630,7 +1630,6 @@ enum subtypes : unsigned {
     at_arabic_code,
     sanitize_code,
     twodigits_code,
-    ra_jobname_code,
     attributeval_code,
     meaning_c_code,
     l3string_code,

@@ -69,9 +69,8 @@ private:
     subtypes sectionning_offset;        // what is the main section, part, chapter ?
 
 public:
-    l_state     long_state;     // Error recovery handling (\long)
-    scan_stat   scanner_status; // Error recovery handling (\outer)
-    std::string the_projetval;  // this could be miaou
+    l_state   long_state;     // Error recovery handling (\long)
+    scan_stat scanner_status; // Error recovery handling (\outer)
 private:
     size_t cur_in_chan;     // if get_token call get_a_new_line
     long   cur_file_pos{0}; // pos of file in the package list (0= none)
@@ -108,7 +107,6 @@ private:
         return x;
     }
     [[nodiscard]] auto get_def_language_num() const -> int { return default_language_num; }
-    [[nodiscard]] auto get_projet_val() const -> std::string { return the_projetval; }
     auto               get_ur_val() -> std::string { return the_url_val; }
     void               kill_line() { input_line.clear(); }
     void               see_cs_token() { cur_cmd_chr = hash_table.eqtb[cur_tok.eqtb_loc()].val; }

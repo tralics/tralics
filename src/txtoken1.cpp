@@ -860,7 +860,6 @@ auto CmdChr::token_convert_name() const -> String {
     case fontname_code: return "fontname";
     case jobname_code: return "jobname";
     case attributeval_code: return "XMLgetatt";
-    case ra_jobname_code: return "ra@jobname";
     case tralicsversion_code: return "tralicsversion";
     case etexrevision_code: return "eTeXrevision";
     case sanitize_code: return "@onelevel@sanitize";

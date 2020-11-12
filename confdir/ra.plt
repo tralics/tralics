@@ -273,8 +273,7 @@
 \def\rawebstartdocument{%
   \@addnl
   \begin{xmlelement*}{accueil}%
-    \edef\tmpB{\ra@jobname}
-    \XMLaddatt{html}{\ra@jobname}%
+    \edef\tmpB{}%
     \def\ra@ptype{erreur}\ra@isproject\XMLaddatt{isproject}{\ra@ptype}\@addnl
     \xbox{theme}{(not set)} \@addnl
     \ra@check@project\@addnl

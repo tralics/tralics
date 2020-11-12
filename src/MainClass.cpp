@@ -889,7 +889,6 @@ void MainClass::see_name(std::filesystem::path s) {
 }
 
 void MainClass::see_name1() {
-    the_parser.the_projetval = no_ext.filename();
     if (out_name.empty()) { // might be given as an option
         out_name = no_ext.filename();
     }

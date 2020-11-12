@@ -133,7 +133,7 @@ Error here
 <figure file='a.b.c' rend='inline'/><error c='Wrong dots in graphic file a.b.c' l='267' n='\error'/>
 <ref target='mod:a'/>
 <error c='uerror' l='269' n='\PackageError'/></p>
-<accueil html='testerr' isproject='true'>
+<accueil isproject='true'>
 <theme>(not set)</theme>
 <error c='uerror' l='279' n='\PackageError'/><projet>ProjB</projet>
 <projetdeveloppe>ProjC</projetdeveloppe>
