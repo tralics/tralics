@@ -1134,7 +1134,6 @@ auto CmdChr::token_cite_name() const -> String {
     case cite_code: return "cite";
     case footcite_code: return "footcite";
     case nocite_code: return "nocite";
-    case yearcite_code: return "yearcite";
     case natcite_code: return "natcite";
     case natcite_e_code: return "endnatcite";
     default: return nullptr;
