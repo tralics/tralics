@@ -9,7 +9,7 @@
 struct CitationKey {
     std::string cite_key;                       // cite key, say Foo
     std::string lower_cite_key;                 // cite key, lower case, say foo
-    bib_from    cite_prefix{};                  // symbolic prefix, say from_foot
+    bib_from    cite_prefix{};                  // symbolic prefix
     std::string full_key;                       // something like footcite:Foo
     void        make_key(const std::string &s); // creates the key.
 

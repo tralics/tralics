@@ -2039,7 +2039,7 @@ enum id_type { illegal_id_char, legal_id_char };
 
 // is this citation from foot_bib, refer_bib or normal bib ?
 // Is this bibentry for foot, refer, year or all?
-enum [[deprecated]] bib_from{from_foot, from_year, from_any};
+enum [[deprecated]] bib_from{from_year, from_any};
 
 // the type of something like @ARTICLE
 enum entry_type : unsigned {

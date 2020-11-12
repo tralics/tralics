@@ -126,7 +126,6 @@ void Bibtex::read1(std::string s) {
 
     // \todo now the rest of the function is RA specific, remove
     auto n = s.size();
-    if (s.ends_with("+foot") && read0(s.substr(0, n - 5), from_foot)) return;
     if (s.ends_with("+year") && read0(s.substr(0, n - 5), from_year)) return;
     if (s.ends_with("+all") && read0(s.substr(0, n - 4), from_any)) return;
     spdlog::warn("Bibtex Info: no biblio file {}", s);
@@ -514,7 +513,7 @@ void Bibtex::handle_multiple_entries(BibEntry *Y) {
 // This finds entry named s, or case-equivalent. If create is true,
 // creates entry if not found.
 // Used by see_new_entry (create=auto_cite), or parse_crossref
-// prefix can be from_year, from_foot, from_any;
+// prefix can be from_year, from_any;
 // If create is true, it is either a crossref, or \nocite{*}+from_year
 // or or bug; if prefix is from_any, we use from_year instead.
 //
