@@ -360,7 +360,7 @@ void MainClass::open_log() { // \todo spdlog etc
         tmp.reserve(input_path.size());
 
         for (const auto &s : input_path) tmp.push_back(s);
-        spdlog::trace("Input path: ({})", fmt::join(tmp, ","));
+        spdlog::trace("Input path: ({})", fmt::format("{}", fmt::join(tmp, ",")));
     }
 
     spdlog::info("Starting translation of file {}", infile);

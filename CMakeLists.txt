@@ -14,11 +14,11 @@ include(${PROJECT_SOURCE_DIR}/cmake/conan.cmake)
 conan_add_remote(NAME bincrafters URL https://api.bintray.com/conan/bincrafters/public-conan)
 set(CONAN_SYSTEM_INCLUDES ON)
 conan_cmake_run(REQUIRES
-                fmt/7.0.3
+                fmt/7.1.2
                 ms-gsl/3.1.0
-                spdlog/1.8.0
-                utfcpp/3.1.1
-                ctre/2.8.2
+                spdlog/1.8.1
+                utfcpp/3.1.2
+                ctre/3.3.2
                 BASIC_SETUP NO_OUTPUT_DIRS BUILD missing)
 
 add_compile_options(-fdiagnostics-color=always -pedantic -Wall -Wextra -Wshadow
