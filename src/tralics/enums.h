@@ -114,7 +114,6 @@ enum symcodes : unsigned {
     declaretopics_cmd,
     footnote_cmd,
     caption_cmd,
-    ra_startdoc_cmd,
     fnhack_cmd,
     centering_cmd,
     fbox_cmd,

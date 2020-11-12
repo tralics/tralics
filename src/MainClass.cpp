@@ -864,7 +864,7 @@ void MainClass::read_config_and_other() {
     bool hr = dtype == "ra" || dtype == "RA" || (dtype.empty() && dft == 4);
     if (dclass.empty()) hr = false;
     find_dtd();
-    see_name1(); // this sets year_string.
+    if (out_name.empty()) out_name = no_ext.filename();
     the_parser.set_default_language((hr && year <= 2002) ? 1 : 0);
     LineList cmds = config_file.parse_and_extract("Commands");
     from_config.splice(from_config.end(), cmds);
@@ -886,12 +886,6 @@ void MainClass::see_name(std::filesystem::path s) {
     infile = s;
     s.replace_extension();
     no_ext = s;
-}
-
-void MainClass::see_name1() {
-    if (out_name.empty()) { // might be given as an option
-        out_name = no_ext.filename();
-    }
 }
 
 void MainClass::trans0() {

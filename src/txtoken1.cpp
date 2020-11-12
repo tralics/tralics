@@ -2598,7 +2598,6 @@ auto CmdChr::name() const -> std::string {
     case over_cmd: return token_over_name();
     case begingroup_cmd: return chr == 0 ? "begingroup" : chr == 1 ? "endgroup" : "endenv";
     case startprojet_cmd: return "RAstartprojet";
-    case ra_startdoc_cmd: return "rawebstartdocument";
     case declaretopics_cmd: return "declaretopic";
     case footnote_cmd: return "footnote";
     case popmodule_cmd: return "tralics@pop@module";
