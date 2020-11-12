@@ -565,7 +565,7 @@ auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
             the_log << "bib: Omitting " << cur_entry_name << "\n";
             return nullptr;
         }
-    BibEntry *X = find_entry(cur_entry_name, auto_cite(), because_all);
+    BibEntry *X = find_entry(cur_entry_name, nocitestar, because_all);
     if (X == nullptr) return X;
     if (X->type_int != type_unknown) {
         err_in_file("duplicate entry ignored", true);
@@ -651,12 +651,6 @@ void Bibtex::read_one_field(bool store) {
     }
 }
 
-// Returns true if because of \nocite{*}
-auto Bibtex::auto_cite() const -> bool {
-    if (normal_biblio && nocitestar) return true;
-    return false;
-}
-
 // This finds entry named s, or case-equivalent.
 // creates entry if not found. This is used by exec_bibitem
 auto Bibtex::find_entry(const std::string &s, const std::string &prefix, bib_creator bc) -> BibEntry * {
@@ -692,16 +686,11 @@ void Bibtex::work() {
     bbl.too_late = true;
 }
 
-// Faire un hack: s'il y a un extrabib, et normal_biblio
-// le rajouter a la fin, et virer le extrabib
-// Plus le parser propement
-
 void Bibtex::read(const std::string &src, bib_from ct) {
     bbl.append("% reading source ");
     bbl.append(src);
     bbl.flush();
-    entry_prefix  = ct;
-    normal_biblio = ct == from_year;
+    entry_prefix = ct;
     in_lines.read(src, 1);
 
     last_ok_line = 0;

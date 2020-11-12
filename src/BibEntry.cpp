@@ -261,7 +261,7 @@ auto BibEntry::store_field(field_pos where) -> bool {
 void BibEntry::parse_crossref() {
     const auto &name = all_fields[fp_crossref];
     if (name[0] == 0) return;
-    bib_creator bc = the_bibtex.auto_cite() ? because_all : because_crossref;
+    bib_creator bc = the_bibtex.nocitestar ? because_all : because_crossref;
     BibEntry *  Y  = the_bibtex.find_entry(name, true, bc);
     if (this == Y) return; /// should not happen
     crossref = Y;

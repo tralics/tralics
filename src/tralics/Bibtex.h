@@ -32,8 +32,6 @@ private:
     std::vector<BibEntry *>  all_entries_table; // real entries
     std::vector<std::string> user_model;
     bib_from                 entry_prefix{};
-    bool                     nocitestar{false};
-    bool                     normal_biblio{true};
     bool                     want_numeric{};
     std::string              cur_field_name;
     std::string              no_year;
@@ -41,6 +39,7 @@ private:
     std::array<id_type, 128> id_class{};
 
 public:
+    bool        nocitestar{false};
     std::string default_year;
 
     auto               find_entry(const CitationKey &s) -> BibEntry *;
@@ -48,7 +47,6 @@ public:
     auto               find_entry(const std::string &s, bool create, bib_creator bc) -> BibEntry *;
     auto               make_new_entry(const CitationKey &a, bib_creator b) -> BibEntry *;
     void               make_entry(const CitationKey &a, std::string myid);
-    [[nodiscard]] auto auto_cite() const -> bool;
     [[nodiscard]] auto default_prefix() const -> bib_from { return entry_prefix; }
 
 private:
@@ -90,7 +88,6 @@ private:
 public:
     auto get_an_entry(size_t i) { return all_entries[i]; }
     auto exec_bibitem(const std::string &w, const std::string &b) -> std::string;
-    void nocitestar_true() { nocitestar = true; }
     auto implement_cit(String x, std::string w) -> int;
     auto is_year_string(const std::string &y, bib_from from) -> String;
     void work();

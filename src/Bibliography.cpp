@@ -16,7 +16,7 @@ void Bibliography::dump(Buffer &b) {
 
 // This dumps the whole biblio for use by Tralics.
 void Bibliography::dump_bibtex() {
-    if (seen_nocite()) the_bibtex.nocitestar_true();
+    if (seen_nocite()) the_bibtex.nocitestar = true;
     if (!citation_table.empty()) {
         bbl.open();
         for (auto &i : citation_table) i.dump_bibtex();
