@@ -1993,9 +1993,6 @@ void Parser::T_cite(subtypes sw, TokenList &prenote, std::string &type) {
     } else if (sw == yearcite_code) {
         read_optarg_nopar(prenote);
         type = the_names["cst_empty"]; // should be year here
-    } else if (sw == refercite_code) {
-        read_optarg_nopar(prenote);
-        type = the_names["refer"];
     } else if (sw == nocite_code) {
         type = std::string(fetch_name_opt());
     } else if (sw == natcite_code) {

@@ -6,8 +6,6 @@
 CitationKey::CitationKey(const std::string &a, const std::string &b) {
     if (a == "foot")
         cite_prefix = from_foot;
-    else if (a == "refer")
-        cite_prefix = from_refer;
     else
         cite_prefix = from_year;
     make_key(b);
@@ -31,10 +29,7 @@ void CitationKey::make_key(const std::string &s) {
     lower_cite_key = B1;
 
     full_key.clear();
-    if (cite_prefix == from_foot)
-        full_key = "foot";
-    else if (cite_prefix == from_refer)
-        full_key = "refer";
+    if (cite_prefix == from_foot) full_key = "foot";
     full_key.append("cite:");
     full_key.append(s);
 }

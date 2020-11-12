@@ -24,5 +24,4 @@ struct CitationKey {
     [[nodiscard]] auto from_to_string() const -> std::string;
 
     void move_to_year() { cite_prefix = from_year; } // leaves full_key unchanged
-    void move_to_refer() { cite_prefix = from_refer; }
 };
