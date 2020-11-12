@@ -163,9 +163,7 @@
   \edef\@tmp{\tralics@find@config{affiliation}}%
   \edef\t@aff{\ifx\@tmp\empty#5\else\tralics@get@config{affiliation}{#5}\fi}%
   \edef\@tmp{\tralics@find@config{ur}}%
-  \ifnum\ra@year>2006 
   \edef\t@rc{\ifx\@tmp\empty#1\else\tralics@get@config{ur}{#1}\fi}%
-  \else\let\t@rc\empty\fi
   \xbox{pers}{%
     \unless\ifx\t@rc\empty\XMLaddatt{research-centre}{\t@rc}\fi
     \edef\tmp{#7}\unless\ifx\tmp\empty\XMLaddatt{hdr}{#7}\fi
@@ -198,9 +196,7 @@
   \edef\@tmp{\tralics@find@config{profession}}%
   \edef\t@pro{\ifx\@tmp\empty#4\else\tralics@get@config{profession}{#4}\fi}%
   \edef\@tmp{\tralics@find@config{ur}}%
-  \ifnum\ra@year>2006 
   \edef\t@rc{\ifx\@tmp\empty#1\else\tralics@get@config{ur}{#1}\fi}%
-  \else\let\t@rc\empty\fi
   \xbox{pers}{%
     \unless\ifx\t@rc\empty\XMLaddatt{research-centre}{\t@rc}\fi
     \edef\tmp{#6}\unless\ifx\tmp\empty\XMLaddatt{hdr}{#6}\fi
@@ -237,7 +233,7 @@
   \unless\ifx\@tmp\empty % new section
      \ra@change@section{#2}%
      \typeout{Translating section #2}%
-     \ifnum\ra@year>2006 \XMLaddatt{titre}{\@tmp}\fi
+     \XMLaddatt{titre}{\@tmp}
   \fi
   \refstepcounter{modules}%
   \edef\foo{\noexpand\in@{,#3,}{\@allmodules}}\foo
@@ -280,8 +276,7 @@
     \edef\tmpB{\ra@jobname}
     \XMLaddatt{html}{\ra@jobname}%
     \def\ra@ptype{erreur}\ra@isproject\XMLaddatt{isproject}{\ra@ptype}\@addnl
-    \xbox{theme}{\ifnum\ra@year>2008 Dummy%
-      \else\tralics@get@config{theme}{\ra@theme}\fi} \@addnl
+    \xbox{theme}{(not set)} \@addnl
     \ra@check@project\@addnl
     \xbox{projetdeveloppe}{\ra@proj@c}\@addnl
     %\expandafter\tralics@interpret@rc\expandafter{\ra@UR}\@addnl
@@ -303,7 +298,7 @@
 % syntax \moduleref[yr]{p}{s}{a}
 \newcommand\moduleref[4][]{%
   \def\@tmp{#1}%
-  \unless\ifx\@tmp\empty\edef\@tmpA{\ra@year}\ifx\@tmp\@tmpA\let\@tmp\empty\fi\fi
+  \unless\ifx\@tmp\empty\edef\@tmpA{0000}\ifx\@tmp\@tmpA\let\@tmp\empty\fi\fi
   \ifx\@tmp\empty
   \@iftempty{#4}{\ref{section:#3}}{\ref{mod:#4}}%
   \else \PackageError{Raweb}{\string \moduleref[#1] is not implemented}{}\fi}

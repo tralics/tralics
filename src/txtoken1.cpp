@@ -865,7 +865,6 @@ auto CmdChr::token_convert_name() const -> String {
     case etexrevision_code: return "eTeXrevision";
     case sanitize_code: return "@onelevel@sanitize";
     case twodigits_code: return "two@digits";
-    case rayear_code: return "ra@year";
     default: return nullptr;
     }
 }

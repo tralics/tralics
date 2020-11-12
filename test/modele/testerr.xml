@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE book SYSTEM 'classes.dtd'>
-<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/12 -->
 <book>
 <error c='bad redef' l='13' n='\DeclareStringOption'/><error c='bad redef' l='13' n='\DeclareVoidOption'/><error c='bad redef' l='14' n='\DeclareBoolOption'/><error c='bad redef' l='15' n='\DeclareBoolOption'/><error c='bad redef' l='16' n='\DeclareBoolOption'/><error c='bad redef' l='17' n='\DeclareComplementaryOption'/><error c='bad redef' l='18' n='\DeclareComplementaryOption'/><error c='bad redef' l='19' n='\DeclareComplementaryOption'/><error c='bad bool' l='20' n='\KVO@boolkey'/><error c='bad opt' l='20' n='\KVO@voidkey'/><error c='uerror' l='26' n='\PackageError'/><error c='uerror' l='27' n='\PackageError'/><error c='uerror' l='29' n='\PackageError'/><p>This document contains a number of errors.
 <error c='Undefined command' l='70' n='\For'/><error c='Undefined command' l='70' n='\instance'/><error c='Undefined command' l='70' n='\this'/><error c='Undefined command' l='70' n='\sentence'/>.
@@ -134,7 +134,7 @@ Error here
 <ref target='mod:a'/>
 <error c='uerror' l='269' n='\PackageError'/></p>
 <accueil html='testerr' isproject='true'>
-<theme><error c='no list' l='279' n='\tralics@get@config'/></theme>
+<theme>(not set)</theme>
 <error c='uerror' l='279' n='\PackageError'/><projet>ProjB</projet>
 <projetdeveloppe>ProjC</projetdeveloppe>
 </accueil>

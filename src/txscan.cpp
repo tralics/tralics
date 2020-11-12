@@ -2214,7 +2214,6 @@ void Parser::E_convert() {
     case attributeval_code: B.append(get_attval()); break;
     case tralicsversion_code: B.append(tralics_version); break;
     case etexrevision_code: B.append(".0"); break;
-    case rayear_code: B.format("{}", the_parser.ra_year); break;
     default:;
     }
     TokenList L = B.str_toks(nlt_space); // SPACE

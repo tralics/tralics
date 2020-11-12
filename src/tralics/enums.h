@@ -1626,7 +1626,6 @@ enum subtypes : unsigned {
     jobname_code,
     tralicsversion_code,
     etexrevision_code,
-    rayear_code,
     Romannumeral_code,
     at_arabic_code,
     sanitize_code,
