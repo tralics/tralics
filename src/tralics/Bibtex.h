@@ -42,7 +42,7 @@ public:
     std::string default_year;
 
     auto find_entry(const CitationKey &s) -> BibEntry *;
-    auto find_entry(const std::string &s, const std::string &prefix, bib_creator bc) -> BibEntry *;
+    auto find_entry(const std::string &s, bib_creator bc) -> BibEntry *;
     auto find_entry(const std::string &s, bool create, bib_creator bc) -> BibEntry *;
     auto make_new_entry(const CitationKey &a, bib_creator b) -> BibEntry *;
     void make_entry(const CitationKey &a, std::string myid);
@@ -85,7 +85,7 @@ private:
 
 public:
     auto get_an_entry(size_t i) { return all_entries[i]; }
-    auto exec_bibitem(const std::string &w, const std::string &b) -> std::string;
+    auto exec_bibitem(const std::string &b) -> std::string;
     auto implement_cit(String x, std::string w) -> int;
     void work();
     void read(const std::string &src);

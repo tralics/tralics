@@ -228,8 +228,8 @@ auto Bibtex::make_entry(const CitationKey &a, bib_creator b, std::string myid) -
     return X;
 }
 
-auto Bibtex::exec_bibitem(const std::string &w, const std::string &b) -> std::string {
-    BibEntry *X = find_entry(b, w, because_all);
+auto Bibtex::exec_bibitem(const std::string &b) -> std::string {
+    BibEntry *X = find_entry(b, because_all);
     if (X->type_int != type_unknown) {
         the_parser.parse_error("Duplicate bibliography entry ignored");
         return std::string();
@@ -629,7 +629,7 @@ void Bibtex::read_one_field(bool store) {
 
 // This finds entry named s, or case-equivalent.
 // creates entry if not found. This is used by exec_bibitem
-auto Bibtex::find_entry(const std::string &s, const std::string &prefix, bib_creator bc) -> BibEntry * {
+auto Bibtex::find_entry(const std::string &s, bib_creator bc) -> BibEntry * {
     CitationKey key(s);
     BibEntry *  X = find_entry(key);
     if (X != nullptr) return X;

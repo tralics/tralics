@@ -38,7 +38,7 @@ void Stack::implement_cit(const std::string &b1, const std::string &b2, const st
     add_att_to_last(the_names["userid"], std::string(b1));
     add_att_to_last(the_names["id"], b2);
     add_att_to_last(the_names["key"], std::string(a));
-    add_att_to_last(the_names["from"], std::string(c));
+    add_att_to_last(the_names["from"], std::string(c)); // \todo c is always "year"
 }
 
 // This starts or ends a cell, or does both

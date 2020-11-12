@@ -2153,7 +2153,7 @@ void Parser::T_empty_bibitem() {
     std::string w;
     std::string a;
     std::string b  = sT_arg_nopar();
-    std::string id = the_bibtex.exec_bibitem(w, b);
+    std::string id = the_bibtex.exec_bibitem(b);
     if (id.empty()) return;
     leave_v_mode();
     the_stack.push1(the_names["citation"]);
