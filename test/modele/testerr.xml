@@ -76,7 +76,7 @@ than cite@one which moreover complains for an extra brace.
 <error c='Runaway argument' l='184' n='\footcite'/> <cit rend='foot'><ref target='bid0'>t</ref></cit>xt]x is Ok
 <error c='Runaway argument' l='185' n='\yearcite'/><cit><ref target='bid1'>t</ref></cit>xt]x is Ok
 <error c='Runaway argument' l='186' n='\refercite'/><cit><ref target='bid1'>t</ref></cit>xt]x is Ok
-<error c='Runaway argument' l='187' n='\cite'/><cit><ref target='bid1'>t</ref></cit>xt]x
+<error c='Runaway argument' l='187' n='\cite'/><cit rend='year'><ref target='bid2'>t</ref></cit>xt]x
 <error c='Runaway argument' l='188' n='\cite'/><cit><ref target='bid1'>y</ref></cit>ar][text]x</p>
 <error c='Runaway argument' l='190' n='\thebibliography'/><Bibliography><Box>val</Box></Bibliography><error c='Runaway argument' l='191' n='\thebibliography'/><Bibliography><Box>val</Box>
 <citation from='F' id='I' key='K' type='T' userid='U'>

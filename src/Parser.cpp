@@ -63,14 +63,6 @@ namespace {
         return res;
     }
 
-    // \cite[year][]{foo}is the same as \cite{foo}
-    // \cite[refer][]{foo} is also the same.
-    [[deprecated]] auto normalise_for_bib(std::string w) -> std::string {
-        std::string S = w;
-        if (S == "year") return the_names["cst_empty"];
-        return w;
-    }
-
     // For the case of \'\^e, construct an accent code.
     // It is assumed that the order is irrelevant.
 
@@ -2040,7 +2032,6 @@ void Parser::T_cite(subtypes sw) {
     cur_tok = T;
     std::string type;
     T_cite(sw, prenote, type); // reads optional arguments
-    type = normalise_for_bib(type);
     if (sw == footcite_code) res.push_back(hash_table.footcite_pre_token);
     Token sep    = sw == footcite_code  ? hash_table.footcite_sep_token
                    : sw == natcite_code ? hash_table.locate("NAT@sep")
@@ -2104,7 +2095,6 @@ void Parser::solve_cite(bool user) {
         n    = read_elt_id(T);
         from = std::string(fetch_name_opt());
     }
-    from     = normalise_for_bib(from);
     cur_tok  = T;
     auto key = std::string(fetch_name0_nopar());
     if (user) insert_every_bib();
