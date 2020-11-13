@@ -422,14 +422,10 @@ void BibEntry::call_type() {
     out_something(fp_doi);
     std::string s = all_fields[fp_url];
     if (!s.empty()) {
-        if (s.starts_with("\\rrrt"))
-            bbl.append(s);
-        else {
-            bbl.append("\\csname @href\\endcsname");
-            //    string S = hack_bib_space(s);
-            bbl.format("{{{}}}", remove_space(s));
-            bbl.append(insert_break(s));
-        }
+        bbl.append("\\csname @href\\endcsname");
+        //    string S = hack_bib_space(s);
+        bbl.format("{{{}}}", remove_space(s));
+        bbl.append(insert_break(s));
         bbl.flush();
     }
     std::vector<std::string> &Bib = the_main.bibtex_fields;

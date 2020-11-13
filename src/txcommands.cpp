@@ -1184,7 +1184,7 @@ void Parser::translate03() {
         return;
     case case_shift_cmd: T_case_shift(c); return;
     case linebreak_cmd: ignore_optarg(); return;
-    case url_cmd: T_url(c); return;
+    case url_cmd: T_url(); return;
     case hanl_cmd: T_hanl(c); return;
     case error_cmd: T_error(); return;
     case glo_cmd: T_glo(); return;

@@ -1412,11 +1412,8 @@ void Parser::new_xref(Xml *val, std::string v, bool err) {
     if (err && (v.empty() || v[0] == '(')) parse_error("Invalid URL value");
 }
 
-// Translates \url. If cur_chr !=0, it is rrrt
-// \rrrt{foo} is the same as \url{http://www.inria.fr/rrrt/foo.html}
-// \url{\rrrt{foo}} is the same as \rrrt{foo}
-void Parser::T_url(subtypes c) {
-    bool is_rrrt = c == 1;
+// Translates \url
+void Parser::T_url() {
     bool no_hack = remove_initial_star();
     leave_v_mode();
     auto      guard1 = SaveCatcode('~', other_catcode);
@@ -1428,18 +1425,6 @@ void Parser::T_url(subtypes c) {
     if (!X.empty()) {
         Token T = X.front();
         token_from_list(T);
-        if (cur_cmd_chr.chr == 1 && cur_cmd_chr.cmd == url_cmd) {
-            X.pop_front();
-            is_rrrt = true;
-        }
-    }
-    if (is_rrrt) { // \todo deprecate this case
-        Tbuf          = "http://www.inria.fr/rrrt/";
-        TokenList tmp = Tbuf.str_toks(nlt_space); // what about new line here ?
-        X.splice(X.begin(), tmp);
-        Tbuf = ".html";
-        tmp  = Tbuf.str_toks(nlt_space);
-        X.splice(X.end(), tmp);
     }
     TokenList Y;
     bool      in_href = the_stack.is_frame2("hanl"); // \todo what is hanl?

@@ -2581,7 +2581,7 @@ auto CmdChr::name() const -> std::string {
     case fancy_cmd: return token_fancy_name();
     case xfancy_cmd: return "fancyinternal";
     case xthepage_cmd: return "inert@thepage";
-    case url_cmd: return chr == 0 ? "url" : "rrrt";
+    case url_cmd: return "url";
     case hanl_cmd: return chr == 0 ? "htmladdnormallink" : (chr == 1 ? "htmladdnormallinkfoot" : "href");
     case addatt_cmd:
         switch (chr) {

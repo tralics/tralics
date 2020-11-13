@@ -214,7 +214,6 @@ Hashtab::Hashtab() {
     primitive("pagebreak", linebreak_cmd, pagebreak_code);
     primitive("nopagebreak", linebreak_cmd, nopagebreak_code);
     primitive("url", url_cmd);
-    primitive("rrrt", url_cmd, one_code);
     primitive("Href", hanl_cmd, zero_code);
     primitive("@@href@foot", hanl_cmd, one_code);
     primitive("href", hanl_cmd, two_code);

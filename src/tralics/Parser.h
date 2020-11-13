@@ -876,7 +876,7 @@ private:
     void               T_un_box(subtypes c);
     void               T_unimp(subtypes c);
     void               T_unimplemented_font(subtypes c);
-    void               T_url(subtypes c);
+    void               T_url();
     void               T_use_counter();
     void               T_use_counter(const std::string &s);
     void               T_usefont();
