@@ -860,8 +860,10 @@ auto Parser::new_line_for_read(bool spec) -> bool {
         tty_line_no++;
         n = tty_line_no;
         scratch.append(m_ligne.data()); // \todo push_back(std::array<char>)
-    } else
-        n = tex_input_files[cur_in_chan].lines.get_next(scratch);
+    } else {
+        auto nn = tex_input_files[cur_in_chan].lines.get_next(scratch);
+        n       = nn ? *nn : -1; // \todo use optional better
+    }
     if (n < 0) {
         tex_input_files[cur_in_chan].close();
         if (!spec) return true;
@@ -890,7 +892,8 @@ auto Parser::get_a_new_line() -> bool {
         lines.clear();
         force_eof = false;
     } else {
-        n = lines.get_next(scratch);
+        auto nn = lines.get_next(scratch);
+        n       = nn ? *nn : -1; // \todo use optional better
         if (n < 0 && every_eof) {
             every_eof   = false;
             TokenList L = toks_registers[everyeof_code].val;

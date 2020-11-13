@@ -193,14 +193,12 @@ void LineList::before_close(bool sigforce) {
 }
 
 // Puts in b the next line of input.
-// return -1 at EOF, the line number otherwise.
-auto LineList::get_next(Buffer &b) -> int {
-    int  n         = -1;
-    bool converted = false;
-    if (empty()) return -1;
+// return the line number, or std::nullopt if EOF.
+auto LineList::get_next(Buffer &b) -> std::optional<int> {
+    if (empty()) return {};
+    int  n         = front().number;
+    bool converted = front().converted;
     b.append(front());
-    n         = front().number;
-    converted = front().converted;
     pop_front();
     if (!converted) {
         cur_file_name = file_name;

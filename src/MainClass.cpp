@@ -245,9 +245,9 @@ found at http://www.cecill.info.)";
         Titlepage.make_valid();
         for (;;) {
             tp_main_buf.clear();
-            int line = lines.get_next(tp_main_buf);
-            if (line < 0) return;
-            init_file_pos = line;
+            auto line = lines.get_next(tp_main_buf);
+            if (!line) return;
+            init_file_pos = *line;
             tpa_line k    = tp_main_buf.tp_fetch_something();
             if (k == tl_empty) continue;
             if (k == tl_end) break;

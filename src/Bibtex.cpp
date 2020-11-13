@@ -261,14 +261,13 @@ void Bibtex::err_in_entry(String a) {
 // Throws if EOF.
 void Bibtex::next_line(bool what) {
     Buffer scratch;
-    int    n = in_lines.get_next(scratch);
-    if (n > 0)
-        cur_bib_line = n;
-    else {
+    auto   n = in_lines.get_next(scratch);
+    if (!n) {
         if (what) err_in_file("Illegal end of bibtex database file", true);
         throw Berror();
     }
-    the_parser.set_cur_line(n);
+    cur_bib_line = *n;
+    the_parser.set_cur_line(*n);
     inbuf.insert_without_crlf(scratch);
     input_line     = codepoints(inbuf);
     input_line_pos = 0;
