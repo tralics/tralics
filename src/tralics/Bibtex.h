@@ -77,7 +77,7 @@ private:
     void               reverse_pass();
     [[nodiscard]] bool scan_for_at();
     auto               scan_identifier(size_t what) -> bool;
-    auto               scan_identifier0(size_t what) -> int;
+    auto               scan_identifier0(size_t what) -> std::optional<int>;
     auto               see_new_entry(entry_type cn, int lineno) -> BibEntry *;
     [[nodiscard]] bool skip_space();
     [[nodiscard]] auto wrong_first_char(char32_t c, size_t what) const -> int;

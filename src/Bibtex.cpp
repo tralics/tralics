@@ -308,7 +308,9 @@ bool Bibtex::next_line(bool what) {
 // Note: The error message must be output before skip_space,
 // in case we are at EOF.
 auto Bibtex::scan_identifier(size_t what) -> bool {
-    int ret = scan_identifier0(what);
+    auto res = scan_identifier0(what);
+    if (!res) throw Berror();
+    auto ret = *res;
     if (ret != 0) log_and_tty << scan_msgs[to_unsigned(ret > 0 ? ret : -ret)];
     if (ret == 4 || ret == -4) {
         start_comma = false;
@@ -321,7 +323,7 @@ auto Bibtex::scan_identifier(size_t what) -> bool {
 // Scans an identifier. It will be in lower case in token_buf.
 // Scans also something after it. Invariant: at_eol() is false on entry.
 // it is also false on exit
-auto Bibtex::scan_identifier0(size_t what) -> int {
+auto Bibtex::scan_identifier0(size_t what) -> std::optional<int> {
     Buffer &B = token_buf;
     B.clear();
     char32_t c = cur_char();
@@ -339,16 +341,10 @@ auto Bibtex::scan_identifier0(size_t what) -> int {
     // a field part.
     if (what == 0) return check_val_end();
     if (at_eol() || (std::isspace(static_cast<int>(c)) != 0)) {
-        if (!skip_space()) throw Berror();
+        if (!skip_space()) return {};
     }
-    if (what == 1) {
-        auto res = check_entry_end(); // case of @foo
-        if (!res) throw Berror();
-        return *res;
-    }
-    auto out = check_field_end(what);
-    if (!out) throw Berror();
-    return *out;
+    if (what == 1) return check_entry_end(); // case of @foo
+    return check_field_end(what);
 }
 
 // A bunch of functions called when we see the end of an identifier.
