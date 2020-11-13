@@ -341,7 +341,11 @@ auto Bibtex::scan_identifier0(size_t what) -> int {
     if (at_eol() || (std::isspace(static_cast<int>(c)) != 0)) {
         if (!skip_space()) throw Berror();
     }
-    if (what == 1) return check_entry_end(); // case of @foo
+    if (what == 1) {
+        auto res = check_entry_end(); // case of @foo
+        if (!res) throw Berror();
+        return *res;
+    }
     auto out = check_field_end(what);
     if (!out) throw Berror();
     return *out;
@@ -369,23 +373,15 @@ auto Bibtex::wrong_first_char(char32_t c, size_t what) const -> int {
 // Return 0 if OK, a negative value otherwise.
 // We read c; maybe additional characters in case of error
 // @comment(etc) is ignored
-auto Bibtex::check_entry_end() -> int {
+auto Bibtex::check_entry_end() -> std::optional<int> {
     if (token_buf == "comment") return 0; // don't complain
     char32_t c = cur_char();
-    if (c == '(' || c == '{') {
-        auto res = check_entry_end(0);
-        if (!res) throw Berror();
-        return *res;
-    }
+    if (c == '(' || c == '{') return check_entry_end(0);
     err_in_file(scan_msgs[1], false);
     log_and_tty << "\nexpected `('  or `{'";
     for (;;) {
         c = cur_char();
-        if (c == '(' || c == '{') {
-            auto res = check_entry_end(-7);
-            if (!res) throw Berror();
-            return *res;
-        }
+        if (c == '(' || c == '{') return check_entry_end(-7);
         advance();
         if (at_eol()) return -4;
     }
