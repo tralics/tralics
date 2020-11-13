@@ -67,19 +67,19 @@ private:
     void               mac_set_val(size_t X, const std::string &s) { all_macros[X].value = s; }
     auto               make_entry(const CitationKey &a, bib_creator b, std::string myid) -> BibEntry *;
     auto               next_char() -> char32_t { return input_line[input_line_pos++]; }
-    bool               next_line(bool what);
+    auto               next_line(bool what) -> bool;
     auto               not_start_or_end(int what, char c, bool s) -> bool;
-    bool               parse_one_item();
-    [[nodiscard]] bool parse_one_field(BibEntry *X);
-    [[nodiscard]] bool read_one_field(bool store);
-    [[nodiscard]] bool read_field(bool store);
+    auto               parse_one_item() -> bool;
+    [[nodiscard]] auto parse_one_field(BibEntry *X) -> bool;
+    [[nodiscard]] auto read_one_field(bool store) -> bool;
+    [[nodiscard]] auto read_field(bool store) -> bool;
     void               reset_input() { input_line.clear(); }
     void               reverse_pass();
-    [[nodiscard]] bool scan_for_at();
+    [[nodiscard]] auto scan_for_at() -> bool;
     auto               scan_identifier(size_t what) -> std::optional<bool>;
     auto               scan_identifier0(size_t what) -> std::optional<int>;
     auto               see_new_entry(entry_type cn, int lineno) -> BibEntry *;
-    [[nodiscard]] bool skip_space();
+    [[nodiscard]] auto skip_space() -> bool;
     [[nodiscard]] auto wrong_first_char(char32_t c, size_t what) const -> int;
 
 public:

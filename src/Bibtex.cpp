@@ -254,7 +254,7 @@ void Bibtex::err_in_entry(String a) {
 
 // Returns next line of the .bib file. Error if EOF and what.
 // Throws if EOF.
-bool Bibtex::next_line(bool what) {
+auto Bibtex::next_line(bool what) -> bool {
     Buffer scratch;
     auto   n = in_lines.get_next(scratch);
     if (!n) {
@@ -271,7 +271,7 @@ bool Bibtex::next_line(bool what) {
 
 // Skip over a space. Error in case of EOF.
 // This is the only function that reads a new line.
-[[nodiscard]] bool Bibtex::skip_space() {
+[[nodiscard]] auto Bibtex::skip_space() -> bool {
     for (;;) {
         if (at_eol()) {
             if (!next_line(true)) return false;
@@ -286,7 +286,7 @@ bool Bibtex::next_line(bool what) {
 
 // Reads until the next @ sign. This is the only function
 // that accepts to read an EOF without error.
-[[nodiscard]] bool Bibtex::scan_for_at() {
+[[nodiscard]] auto Bibtex::scan_for_at() -> bool {
     for (;;) {
         if (at_eol()) {
             if (!next_line(false)) return false;
@@ -426,7 +426,7 @@ auto Bibtex::check_val_end() -> int {
 // The first field is preceded by the key and a comma.
 // Thus, we start reading the comma (unless previous fiels has a syntax err).
 // A null pointer means an entry to be discarded
-[[nodiscard]] bool Bibtex::parse_one_field(BibEntry *X) {
+[[nodiscard]] auto Bibtex::parse_one_field(BibEntry *X) -> bool {
     if (start_comma) {
         if (cur_char() != ',')
             err_in_file("expected comma before a field", true);
@@ -460,7 +460,7 @@ auto Bibtex::check_val_end() -> int {
 }
 
 // This parses an @something.
-bool Bibtex::parse_one_item() {
+auto Bibtex::parse_one_item() -> bool {
     cur_entry_name = "";
     cur_entry_line = -1;
     if (!scan_for_at()) return false;
@@ -568,7 +568,7 @@ auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
 // This reads a field into field_buf.
 // This can be "foo" # {bar} # 1234 # macro.
 // If store is false, we do not look at the value of a macro
-[[nodiscard]] bool Bibtex::read_field(bool store) {
+[[nodiscard]] auto Bibtex::read_field(bool store) -> bool {
     field_buf.clear();
     for (;;) {
         if (!read_one_field(store)) return false;
@@ -580,7 +580,7 @@ auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
 }
 
 // This reads a single field
-[[nodiscard]] bool Bibtex::read_one_field(bool store) {
+[[nodiscard]] auto Bibtex::read_one_field(bool store) -> bool {
     char32_t c = cur_char();
     if (c == '{' || c == '\"') {
         uchar delimiter = c == '{' ? '}' : '\"';
