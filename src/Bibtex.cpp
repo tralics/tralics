@@ -429,7 +429,7 @@ auto Bibtex::check_val_end() -> int {
 // The first field is preceded by the key and a comma.
 // Thus, we start reading the comma (unless previous fiels has a syntax err).
 // A null pointer means an entry to be discarded
-void Bibtex::parse_one_field(BibEntry *X) {
+[[nodiscard]] bool Bibtex::parse_one_field(BibEntry *X) {
     if (start_comma) {
         if (cur_char() != ',')
             err_in_file("expected comma before a field", true);
@@ -437,9 +437,9 @@ void Bibtex::parse_one_field(BibEntry *X) {
             advance();
     }
     start_comma = true;
-    if (!skip_space()) throw Berror();
-    if (cur_char() == char32_t(right_outer_delim)) return;
-    if (scan_identifier(3)) return;
+    if (!skip_space()) return false;
+    if (cur_char() == char32_t(right_outer_delim)) return true;
+    if (scan_identifier(3)) return true;
     field_pos where = fp_unknown;
     bool      store = false;
     if (X != nullptr) { // if X null, we just read, but store nothing
@@ -447,16 +447,17 @@ void Bibtex::parse_one_field(BibEntry *X) {
         where          = find_field_pos(token_buf);
         if (where != fp_unknown) store = true;
     }
-    if (!read_field(store)) throw Berror();
-    if (!store) return;
+    if (!read_field(store)) return false;
+    if (!store) return true;
     bool ok = X->store_field(where);
     if (!ok) {
         err_in_file("", false);
         log_and_tty << "duplicate field `" << cur_field_name << "' ignored.\n";
-        return;
+        return true;
     }
-    if (where != fp_crossref) return;
+    if (where != fp_crossref) return true;
     X->parse_crossref(); // special action
+    return true;
 }
 
 // This parses an @something.
@@ -495,7 +496,8 @@ bool Bibtex::parse_one_item() {
         cur_entry_name = A;
         BibEntry *X    = see_new_entry(cn, last_ok_line);
         int       m    = similar_entries;
-        while (cur_char() != ')' && cur_char() != '}') parse_one_field(X);
+        while (cur_char() != ')' && cur_char() != '}')
+            if (!parse_one_field(X)) return false;
         if (m > 1) handle_multiple_entries(X);
     }
     char32_t c = cur_char();

@@ -70,7 +70,7 @@ private:
     bool               next_line(bool what);
     auto               not_start_or_end(int what, char c, bool s) -> bool;
     bool               parse_one_item();
-    void               parse_one_field(BibEntry *X);
+    [[nodiscard]] bool parse_one_field(BibEntry *X);
     [[nodiscard]] bool read_one_field(bool store);
     [[nodiscard]] bool read_field(bool store);
     void               reset_input() { input_line.clear(); }
