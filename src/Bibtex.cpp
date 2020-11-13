@@ -14,7 +14,7 @@ namespace {
 
     bool start_comma = true; // should we scan for an initial comma ?
 
-    class Berror {};
+    class [[deprecated]] Berror {};
 
     const std::array<String, 9> scan_msgs{
         "bad syntax for a field type",
@@ -276,15 +276,15 @@ bool Bibtex::next_line(bool what) {
 
 // Skip over a space. Error in case of EOF.
 // This is the only function that reads a new line.
-void Bibtex::skip_space() {
+[[nodiscard]] bool Bibtex::skip_space() {
     for (;;) {
         if (at_eol()) {
-            if (!next_line(true)) throw Berror(); // \todo BAD
+            if (!next_line(true)) return false;
         } else {
             if (std::isspace(static_cast<int>(cur_char())) != 0)
                 advance();
             else
-                return;
+                return true;
         }
     }
 }
@@ -313,7 +313,7 @@ auto Bibtex::scan_identifier(size_t what) -> bool {
     if (ret == 4 || ret == -4) {
         start_comma = false;
         reset_input();
-        skip_space();
+        if (!skip_space()) throw Berror();
     }
     return ret > 0;
 }
@@ -338,7 +338,9 @@ auto Bibtex::scan_identifier0(size_t what) -> int {
     }
     // a field part.
     if (what == 0) return check_val_end();
-    if (at_eol() || (std::isspace(static_cast<int>(c)) != 0)) skip_space();
+    if (at_eol() || (std::isspace(static_cast<int>(c)) != 0)) {
+        if (!skip_space()) throw Berror();
+    }
     if (what == 1) return check_entry_end(); // case of @foo
     return check_field_end(what);
 }
@@ -384,7 +386,7 @@ auto Bibtex::check_entry_end() -> int {
 auto Bibtex::check_entry_end(int k) -> int {
     right_outer_delim = cur_char() == '(' ? ')' : '}';
     advance();
-    skip_space();
+    if (!skip_space()) throw Berror();
     return k;
 }
 
@@ -394,7 +396,7 @@ auto Bibtex::check_entry_end(int k) -> int {
 auto Bibtex::check_field_end(size_t what) -> int {
     if (cur_char() == '=') {
         advance();
-        skip_space();
+        if (!skip_space()) throw Berror();
         return 0;
     }
     err_in_file(scan_msgs[what], false);
@@ -403,7 +405,7 @@ auto Bibtex::check_field_end(size_t what) -> int {
         if (at_eol()) return what == 2 ? 5 : -4;
         if (cur_char() == '=') {
             advance();
-            skip_space();
+            if (!skip_space()) throw Berror();
             return -8;
         }
         advance();
@@ -435,7 +437,7 @@ void Bibtex::parse_one_field(BibEntry *X) {
             advance();
     }
     start_comma = true;
-    skip_space();
+    if (!skip_space()) throw Berror();
     if (cur_char() == char32_t(right_outer_delim)) return;
     if (scan_identifier(3)) return;
     field_pos where = fp_unknown;
@@ -463,7 +465,7 @@ void Bibtex::parse_one_item() {
     cur_entry_line = -1;
     scan_for_at();
     last_ok_line = cur_bib_line;
-    skip_space();
+    if (!skip_space()) throw Berror();
     bool k = scan_identifier(1);
     if (k) return;
     entry_type cn = find_type(token_buf);
@@ -481,7 +483,7 @@ void Bibtex::parse_one_item() {
     } else {
         cur_entry_line = cur_bib_line;
         Buffer A;
-        skip_space();
+        if (!skip_space()) throw Berror();
         for (;;) {
             if (at_eol()) break;
             char32_t c = cur_char();
@@ -489,7 +491,7 @@ void Bibtex::parse_one_item() {
             A << c;
             next_char();
         }
-        skip_space();
+        if (!skip_space()) throw Berror();
         cur_entry_name = A;
         BibEntry *X    = see_new_entry(cn, last_ok_line);
         int       m    = similar_entries;
@@ -564,10 +566,10 @@ void Bibtex::read_field(bool store) {
     field_buf.clear();
     for (;;) {
         read_one_field(store);
-        skip_space();
+        if (!skip_space()) throw Berror();
         if (cur_char() != '#') return;
         advance();
-        skip_space();
+        if (!skip_space()) throw Berror();
     }
 }
 

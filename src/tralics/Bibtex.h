@@ -79,7 +79,7 @@ private:
     auto               scan_identifier(size_t what) -> bool;
     auto               scan_identifier0(size_t what) -> int;
     auto               see_new_entry(entry_type cn, int lineno) -> BibEntry *;
-    void               skip_space();
+    [[nodiscard]] bool skip_space();
     [[nodiscard]] auto wrong_first_char(char32_t c, size_t what) const -> int;
 
 public:
