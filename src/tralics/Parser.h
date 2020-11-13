@@ -922,7 +922,7 @@ private:
     void               translate_char(uchar c1, uchar c2);
     void               translate_font_size();
     void               translate02();
-    void               translate03();
+    [[nodiscard]] bool translate03();
     void               translate1();
     void               umlaut_bad();
     void               umlaut();

@@ -95,7 +95,7 @@ void Parser::translate_all() {
     unprocessed_xml.clear();
     while (!get_x_token()) {
         if (tracing_commands()) translate02();
-        translate03();
+        if (!translate03()) throw EndOfData();
     }
     flush_buffer();
 }
