@@ -119,7 +119,7 @@ void Bibtex::read_bib_file(const std::string &s) {
         last_ok_line = 0;
         reset_input();
         try {
-            for (;;) parse_one_item();
+            while (parse_one_item()) {};
         } catch (Berror x) {} // \todo bad to stop on exception like this
 
         if (!bbl.empty()) {
@@ -460,22 +460,22 @@ void Bibtex::parse_one_field(BibEntry *X) {
 }
 
 // This parses an @something.
-void Bibtex::parse_one_item() {
+bool Bibtex::parse_one_item() {
     cur_entry_name = "";
     cur_entry_line = -1;
     scan_for_at();
     last_ok_line = cur_bib_line;
-    if (!skip_space()) throw Berror();
+    if (!skip_space()) return false;
     bool k = scan_identifier(1);
-    if (k) return;
+    if (k) return true;
     entry_type cn = find_type(token_buf);
-    if (cn == type_comment) return;
+    if (cn == type_comment) return true;
     if (cn == type_preamble) {
         read_field(true);
         bbl.append(field_buf);
     } else if (cn == type_string) {
         k = scan_identifier(2);
-        if (k) return;
+        if (k) return true;
         auto X = *find_a_macro(token_buf, true, nullptr, nullptr);
         mac_def_val(X);
         read_field(true);
@@ -483,7 +483,7 @@ void Bibtex::parse_one_item() {
     } else {
         cur_entry_line = cur_bib_line;
         Buffer A;
-        if (!skip_space()) throw Berror();
+        if (!skip_space()) return false;
         for (;;) {
             if (at_eol()) break;
             char32_t c = cur_char();
@@ -491,7 +491,7 @@ void Bibtex::parse_one_item() {
             A << c;
             next_char();
         }
-        if (!skip_space()) throw Berror();
+        if (!skip_space()) return false;
         cur_entry_name = A;
         BibEntry *X    = see_new_entry(cn, last_ok_line);
         int       m    = similar_entries;
@@ -501,6 +501,7 @@ void Bibtex::parse_one_item() {
     char32_t c = cur_char();
     if (c == ')' || c == '}') advance();
     if (c != char32_t(right_outer_delim)) err_in_file("bad end delimiter", true);
+    return true;
 }
 
 void Bibtex::handle_multiple_entries(BibEntry *Y) {

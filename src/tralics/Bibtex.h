@@ -69,7 +69,7 @@ private:
     auto               next_char() -> char32_t { return input_line[input_line_pos++]; }
     bool               next_line(bool what);
     auto               not_start_or_end(int what, char c, bool s) -> bool;
-    void               parse_one_item();
+    bool               parse_one_item();
     void               parse_one_field(BibEntry *X);
     void               read_one_field(bool store);
     void               read_field(bool store);
