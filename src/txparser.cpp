@@ -2204,7 +2204,7 @@ auto Parser::env_helper(const std::string &s) -> SaveAuxEnv * {
 }
 
 // This implements \begin{foo}
-void Parser::T_begin(const std::string &s) {
+void Parser::T_begin(const std::string &s) { // \todo return bool or throw EndOfData
     SaveAuxEnv *X = env_helper(s);
     push_level(bt_env);
     push_save_stack(X);

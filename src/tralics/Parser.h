@@ -736,7 +736,7 @@ private:
     void               T_bauteursediteurs(subtypes c);
     void               T_begin(const std::string &s);
     void               T_begindocument();
-    void               T_beginend(symcodes x);
+    [[nodiscard]] bool T_beginend(symcodes x);
     void               T_bezier(subtypes c);
     void               T_bibitem();
     void               T_biblio();

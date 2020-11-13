@@ -760,7 +760,7 @@ void Parser::T_begindocument() {
 }
 
 // case \begin \end
-void Parser::T_beginend(symcodes x) {
+[[nodiscard]] bool Parser::T_beginend(symcodes x) {
     flush_buffer();
     bool begin = x == begin_cmd;
     auto S     = fetch_name0();
@@ -768,10 +768,11 @@ void Parser::T_beginend(symcodes x) {
         Logger::finish_seq();
         the_log << "{\\" << (begin ? "begin " : "end ") << S << "}\n";
     }
-    if (begin)
+    if (begin) {
         T_begin(S);
-    else if (!T_end(S))
-        throw EndOfData();
+        return true;
+    }
+    return T_end(S);
 }
 
 // Case of \@setmode=12

@@ -3,6 +3,7 @@
 #include "tralics/Parser.h"
 #include "tralics/Saver.h"
 #include "tralics/globals.h"
+#include "tralics/types.h"
 
 namespace {
     auto hfill_to_np(subtypes c) -> std::string {
@@ -19,6 +20,8 @@ namespace {
         return "vfil";
     }
 } // namespace
+
+// \todo make a hash table of methods instead of this huge mess
 
 [[nodiscard]] bool Parser::translate03() {
     auto guard  = SaveErrTok(cur_tok);
@@ -417,7 +420,7 @@ namespace {
         return true;
     }
     case begin_cmd:
-    case end_cmd: T_beginend(x); return true;
+    case end_cmd: return T_beginend(x);
     case index_cmd: T_index(c); return true;
     case document_cmd: T_begindocument(); return true;
     case end_document_cmd: T_enddocument(c); return true;
