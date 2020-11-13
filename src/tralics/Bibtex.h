@@ -51,7 +51,7 @@ private:
     void               advance() { input_line_pos++; }
     auto               check_val_end() -> int;
     auto               check_entry_end() -> int;
-    auto               check_entry_end(int k) -> int;
+    auto               check_entry_end(int k) -> std::optional<int>;
     auto               check_field_end(size_t what) -> std::optional<int>;
     auto               cur_char() -> char32_t { return input_line[input_line_pos]; }
     void               define_a_macro(String name, String value);

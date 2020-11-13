@@ -372,12 +372,20 @@ auto Bibtex::wrong_first_char(char32_t c, size_t what) const -> int {
 auto Bibtex::check_entry_end() -> int {
     if (token_buf == "comment") return 0; // don't complain
     char32_t c = cur_char();
-    if (c == '(' || c == '{') return check_entry_end(0);
+    if (c == '(' || c == '{') {
+        auto res = check_entry_end(0);
+        if (!res) throw Berror();
+        return *res;
+    }
     err_in_file(scan_msgs[1], false);
     log_and_tty << "\nexpected `('  or `{'";
     for (;;) {
         c = cur_char();
-        if (c == '(' || c == '{') return check_entry_end(-7);
+        if (c == '(' || c == '{') {
+            auto res = check_entry_end(-7);
+            if (!res) throw Berror();
+            return *res;
+        }
         advance();
         if (at_eol()) return -4;
     }
@@ -385,10 +393,10 @@ auto Bibtex::check_entry_end() -> int {
 
 // We store in right_outer_delim the closing delimiter.
 // associated to the current char. We skip over spaces.
-auto Bibtex::check_entry_end(int k) -> int {
+auto Bibtex::check_entry_end(int k) -> std::optional<int> {
     right_outer_delim = cur_char() == '(' ? ')' : '}';
     advance();
-    if (!skip_space()) throw Berror();
+    if (!skip_space()) return {};
     return k;
 }
 
