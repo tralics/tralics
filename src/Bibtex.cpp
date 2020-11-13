@@ -342,7 +342,9 @@ auto Bibtex::scan_identifier0(size_t what) -> int {
         if (!skip_space()) throw Berror();
     }
     if (what == 1) return check_entry_end(); // case of @foo
-    return check_field_end(what);
+    auto out = check_field_end(what);
+    if (!out) throw Berror();
+    return *out;
 }
 
 // A bunch of functions called when we see the end of an identifier.
@@ -393,10 +395,10 @@ auto Bibtex::check_entry_end(int k) -> int {
 // We have seen foo in foo=bar. We have skipped over spaces
 // Returns 0 if OK. We try to read some characters on the current line
 // in case of error
-auto Bibtex::check_field_end(size_t what) -> int {
+auto Bibtex::check_field_end(size_t what) -> std::optional<int> {
     if (cur_char() == '=') {
         advance();
-        if (!skip_space()) throw Berror();
+        if (!skip_space()) return {};
         return 0;
     }
     err_in_file(scan_msgs[what], false);
@@ -405,7 +407,7 @@ auto Bibtex::check_field_end(size_t what) -> int {
         if (at_eol()) return what == 2 ? 5 : -4;
         if (cur_char() == '=') {
             advance();
-            if (!skip_space()) throw Berror();
+            if (!skip_space()) return {};
             return -8;
         }
         advance();
