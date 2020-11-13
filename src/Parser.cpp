@@ -1,4 +1,5 @@
 #include "tralics/Parser.h"
+#include "tralics/AllIndex.h"
 #include "tralics/Bbl.h"
 #include "tralics/Bibliography.h"
 #include "tralics/Bibtex.h"
@@ -26,6 +27,118 @@ namespace accent_ns {
 
 namespace {
     std::string saved_dim;
+
+    // This is now cline
+    void T_cline() {
+        Xml *R       = the_stack.top_stack()->last_addr();
+        auto cl_span = (cline_last - cline_first) + 1;
+        if (R != nullptr) {
+            if (R->try_cline(false)) {
+                R->try_cline(true);
+                return;
+            }
+            long tot_span = 0;
+            if (R->total_span(tot_span)) {
+                tot_span = cline_first - 1 - tot_span;
+                if (0 <= tot_span) {
+                    if (tot_span != 0) {
+                        Xml *x = new Xml(the_names["cell"], nullptr);
+                        R->push_back_unless_nullptr(x);
+                        x->id.add_span(tot_span);
+                    }
+                    Xml *x = new Xml(the_names["cell"], nullptr);
+                    R->push_back_unless_nullptr(x);
+                    x->id.add_span(cl_span);
+                    x->id.add_bottom_rule();
+                    return;
+                }
+            }
+            if (!R->is_xmlc() && R->has_name(the_names["row"])) {
+                if (R->try_cline_again(false)) {
+                    R->try_cline_again(true);
+                    R->name = std::string();
+                    the_stack.add_border(cline_first, cl_span);
+                    the_log << "\\cline killed a cell \n";
+                    return;
+                }
+            }
+        }
+        the_stack.add_border(cline_first, cl_span);
+    }
+
+    // This is for lower-case upper-case conversions.
+    // Defines values for the character c
+    void mklcuc(size_t c, size_t lc, size_t uc) {
+        eqtb_int_table[c + lc_code_offset].val = to_signed(lc);
+        eqtb_int_table[c + uc_code_offset].val = to_signed(uc);
+    }
+
+    // This is for lower-case upper-case conversions.
+    // Defines values for the pair lc, uc
+    void mklcuc(size_t lc, size_t uc) {
+        eqtb_int_table[lc + lc_code_offset].val = to_signed(lc);
+        eqtb_int_table[lc + uc_code_offset].val = to_signed(uc);
+        eqtb_int_table[uc + lc_code_offset].val = to_signed(lc);
+        eqtb_int_table[uc + uc_code_offset].val = to_signed(uc);
+    }
+
+    // This creates the lc and uc tables.
+    // Only ascii characters have a non-zero value
+    void make_uclc_table() {
+        for (unsigned i = 'a'; i <= 'z'; i++) mklcuc(i, i, i - 32);
+        for (unsigned i = 224; i <= 255; i++) mklcuc(i, i, i - 32);
+        for (unsigned i = 'A'; i <= 'Z'; i++) mklcuc(i, i + 32, i);
+        for (unsigned i = 192; i <= 223; i++) mklcuc(i, i + 32, i);
+        mklcuc(215, 0, 0);
+        mklcuc(247, 0, 0);    // multiplication division (\367 \327)
+        mklcuc(223, 0, 0);    // sharp s (\377 347)
+        mklcuc(0xFF, 0x178);  // \"y
+        mklcuc(0x153, 0x152); // oe
+        mklcuc(0x133, 0x132); // ij
+        mklcuc(0x142, 0x141); // \l
+        mklcuc(0x14B, 0x14A); // \ng
+        mklcuc(0x111, 0x110); // \dh
+    }
+
+    void finish_index() {
+        auto labels = std::vector<std::string>(the_index.last_iid, "");
+        tralics_ns::find_index_labels(labels);
+        size_t idx_size = 0, idx_nb = 0;
+        auto   q = the_index.size();
+        for (size_t jj = 1; jj <= q; jj++) {
+            auto  j  = jj == q ? 0 : jj;
+            auto &CI = the_index.at(j);
+            auto  n  = CI.size();
+            if (n == 0) continue;
+            idx_size += n;
+            idx_nb++;
+            Xml *res = new Xml(the_names[j == 0 ? "theglossary" : "theindex"], nullptr); // OK?
+            Xid  id  = res->id;
+            {
+                const std::string &t = CI.title;
+                if (!t.empty()) id.add_attribute(the_names["title"], std::string(t));
+            }
+            {
+                AttList &L = the_stack.get_att_list(CI.AL);
+                id.add_attribute(L, true);
+            }
+            for (size_t i = 0; i < n; i++) {
+                Xml *A = CI.at(i).translation;
+                A->id.add_attribute(the_names["target"], std::string(labels[CI.at(i).iid]));
+            }
+            std::sort(CI.begin(), CI.end(), [](auto &A, auto &B) { return A.key < B.key; });
+            for (size_t i = 0; i < n; i++) {
+                Xml *A = CI.at(i).translation;
+                res->push_back_unless_nullptr(A);
+                res->add_nl();
+            }
+            the_stack.document_element()->insert_bib(res, CI.position);
+        }
+        if (idx_size == 0) return;
+        log_and_tty << "Index has " << idx_size << " entries";
+        if (idx_nb > 1) log_and_tty << " in " << idx_nb << " clusters";
+        log_and_tty << "\n";
+    }
 
     // This creates the bbl file by running an external program.
     void create_aux_file_and_run_pgm() {
@@ -867,22 +980,6 @@ namespace {
         }
     }
 
-    // This is for lower-case upper-case conversions.
-    // Defines values for the character c
-    void mklcuc(size_t c, size_t lc, size_t uc) {
-        eqtb_int_table[c + lc_code_offset].val = to_signed(lc);
-        eqtb_int_table[c + uc_code_offset].val = to_signed(uc);
-    }
-
-    // This is for lower-case upper-case conversions.
-    // Defines values for the pair lc, uc
-    void mklcuc(size_t lc, size_t uc) {
-        eqtb_int_table[lc + lc_code_offset].val = to_signed(lc);
-        eqtb_int_table[lc + uc_code_offset].val = to_signed(uc);
-        eqtb_int_table[uc + lc_code_offset].val = to_signed(lc);
-        eqtb_int_table[uc + uc_code_offset].val = to_signed(uc);
-    }
-
     void finish_color() {
         int k = 0;
         for (auto &color : all_colors)
@@ -1021,24 +1118,6 @@ void Parser::boot_time() {
 void Parser::set_default_language(int v) {
     eqtb_int_table[language_code] = {v, 1};
     set_def_language_num(v);
-}
-
-// This creates the lc and uc tables.
-// Only ascii characters have a non-zero value
-void Parser::make_uclc_table() {
-    for (unsigned i = 'a'; i <= 'z'; i++) mklcuc(i, i, i - 32);
-    for (unsigned i = 224; i <= 255; i++) mklcuc(i, i, i - 32);
-    for (unsigned i = 'A'; i <= 'Z'; i++) mklcuc(i, i + 32, i);
-    for (unsigned i = 192; i <= 223; i++) mklcuc(i, i + 32, i);
-    mklcuc(215, 0, 0);
-    mklcuc(247, 0, 0);    // multiplication division (\367 \327)
-    mklcuc(223, 0, 0);    // sharp s (\377 347)
-    mklcuc(0xFF, 0x178);  // \"y
-    mklcuc(0x153, 0x152); // oe
-    mklcuc(0x133, 0x132); // ij
-    mklcuc(0x142, 0x141); // \l
-    mklcuc(0x14B, 0x14A); // \ng
-    mklcuc(0x111, 0x110); // \dh
 }
 
 // Locations 2N and 2N+1 are lowercase/uppercase equivalent.
@@ -2452,44 +2531,6 @@ auto Parser::T_hline_parse(subtypes c) -> int {
     in_hlinee           = true;
     hlinee_width        = std::string(tab_width);
     return rt;
-}
-
-// This is now cline
-void Parser::T_cline() {
-    Xml *R       = the_stack.top_stack()->last_addr();
-    auto cl_span = (cline_last - cline_first) + 1;
-    if (R != nullptr) {
-        if (R->try_cline(false)) {
-            R->try_cline(true);
-            return;
-        }
-        long tot_span = 0;
-        if (R->total_span(tot_span)) {
-            tot_span = cline_first - 1 - tot_span;
-            if (0 <= tot_span) {
-                if (tot_span != 0) {
-                    Xml *x = new Xml(the_names["cell"], nullptr);
-                    R->push_back_unless_nullptr(x);
-                    x->id.add_span(tot_span);
-                }
-                Xml *x = new Xml(the_names["cell"], nullptr);
-                R->push_back_unless_nullptr(x);
-                x->id.add_span(cl_span);
-                x->id.add_bottom_rule();
-                return;
-            }
-        }
-        if (!R->is_xmlc() && R->has_name(the_names["row"])) {
-            if (R->try_cline_again(false)) {
-                R->try_cline_again(true);
-                R->name = std::string();
-                the_stack.add_border(cline_first, cl_span);
-                the_log << "\\cline killed a cell \n";
-                return;
-            }
-        }
-    }
-    the_stack.add_border(cline_first, cl_span);
 }
 
 // Case when the command is found outside the tabular loop.

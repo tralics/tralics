@@ -1016,12 +1016,7 @@ public: // \todo static methods that would fit better elsewhere
     static auto ileave_v_mode() -> Xid;
     static auto last_att_list() -> AttList &;
     static void add_bib_marker(bool force);
-    static void finish_index();
-    static void make_uclc_table();
-    static void T_cline();
     static void T_titlepage(size_t v);
-    static void trace_if(String a, int k, long b);
-    static void trace_if(String a, int k, String b);
 };
 
 inline Parser the_parser;

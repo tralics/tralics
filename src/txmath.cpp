@@ -33,6 +33,20 @@ namespace {
     Token              fct_caller;
     std::vector<Xml *> all_maths;
 
+    // This adds a style element above res.
+    auto add_style(int lvl, gsl::not_null<Xml *> res) -> gsl::not_null<Xml *> {
+        if (lvl < 0) return res; // special case
+        res = gsl::not_null{new Xml(the_names["mstyle"], res)};
+        if (lvl == 0) {
+            res->add_att(the_names["displaystyle"], the_names["true"]);
+            res->add_att(the_names["scriptlevel"], the_names["0"]);
+        } else {
+            res->add_att(the_names["displaystyle"], the_names["false"]);
+            res->add_att(the_names["scriptlevel"], the_names[std::to_string(lvl - 1)]);
+        }
+        return res;
+    }
+
     auto sub_to_math(subtypes x) -> math_list_type { return math_list_type(long(x) + long(fml_offset)); }
 
     // Creates a table for array specifications.
@@ -515,20 +529,6 @@ auto MathDataP::make_mfenced(size_t open, size_t close, gsl::not_null<Xml *> val
     } else
         res->add_att(the_names["separators"], the_names["np_separator"]);
     res->add_tmp(val);
-    return res;
-}
-
-// This adds a style element above res.
-auto MathDataP::add_style(int lvl, gsl::not_null<Xml *> res) -> gsl::not_null<Xml *> {
-    if (lvl < 0) return res; // special case
-    res = gsl::not_null{new Xml(the_names["mstyle"], res)};
-    if (lvl == 0) {
-        res->add_att(the_names["displaystyle"], the_names["true"]);
-        res->add_att(the_names["scriptlevel"], the_names["0"]);
-    } else {
-        res->add_att(the_names["displaystyle"], the_names["false"]);
-        res->add_att(the_names["scriptlevel"], the_names[std::to_string(lvl - 1)]);
-    }
     return res;
 }
 
@@ -2542,7 +2542,7 @@ auto math_ns::finish_cv_special(bool isfrac, std::string s, const std::string &p
         if (denalign == 1) R->add_att(the_names["denomalign"], the_names["left"]);
         if (denalign == 2) R->add_att(the_names["denomalign"], the_names["right"]);
     }
-    if (style >= 0) R = math_data.add_style(style, R);
+    if (style >= 0) R = add_style(style, R);
     if (!(open == del_dot && close == del_dot)) R = math_data.make_mfenced(open, close, R);
     return R;
 }
@@ -2646,7 +2646,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
         if (need_row == 2) W = new Xml(the_names["mrow"], W);
         if (!seen_style) return {W, res_type};
 
-        Xml *res2 = math_data.add_style(cms, gsl::not_null{W});
+        Xml *res2 = add_style(cms, gsl::not_null{W});
         return {res2, res_type};
     }
     Xml *tmp = new Xml(the_names["temporary"], nullptr);
@@ -2656,7 +2656,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
         res22 = new Xml(the_names["mrow"], tmp);
     else
         res22 = tmp;
-    if (seen_style) res22 = math_data.add_style(cms, gsl::not_null{res22});
+    if (seen_style) res22 = add_style(cms, gsl::not_null{res22});
     return {res22, res_type};
 }
 

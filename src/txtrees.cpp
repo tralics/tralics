@@ -172,46 +172,6 @@ void Parser::T_index(subtypes c) {
     tralics_ns::add_ref(to_signed(iid), W, true);
 }
 
-void Parser::finish_index() {
-    auto labels = std::vector<std::string>(the_index.last_iid, "");
-    tralics_ns::find_index_labels(labels);
-    size_t idx_size = 0, idx_nb = 0;
-    auto   q = the_index.size();
-    for (size_t jj = 1; jj <= q; jj++) {
-        auto  j  = jj == q ? 0 : jj;
-        auto &CI = the_index.at(j);
-        auto  n  = CI.size();
-        if (n == 0) continue;
-        idx_size += n;
-        idx_nb++;
-        Xml *res = new Xml(the_names[j == 0 ? "theglossary" : "theindex"], nullptr); // OK?
-        Xid  id  = res->id;
-        {
-            const std::string &t = CI.title;
-            if (!t.empty()) id.add_attribute(the_names["title"], std::string(t));
-        }
-        {
-            AttList &L = the_stack.get_att_list(CI.AL);
-            id.add_attribute(L, true);
-        }
-        for (size_t i = 0; i < n; i++) {
-            Xml *A = CI.at(i).translation;
-            A->id.add_attribute(the_names["target"], std::string(labels[CI.at(i).iid]));
-        }
-        std::sort(CI.begin(), CI.end(), [](auto &A, auto &B) { return A.key < B.key; });
-        for (size_t i = 0; i < n; i++) {
-            Xml *A = CI.at(i).translation;
-            res->push_back_unless_nullptr(A);
-            res->add_nl();
-        }
-        the_stack.document_element()->insert_bib(res, CI.position);
-    }
-    if (idx_size == 0) return;
-    log_and_tty << "Index has " << idx_size << " entries";
-    if (idx_nb > 1) log_and_tty << " in " << idx_nb << " clusters";
-    log_and_tty << "\n";
-}
-
 // -----------------------------------------------
 // Commands from tree-dvips.sty
 void Parser::T_trees(subtypes c) {

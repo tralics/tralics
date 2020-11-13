@@ -33,6 +33,21 @@ namespace {
         }
     };
 
+    void trace_if(String a, int k, String b) {
+        if (tracing_commands()) {
+            Logger::finish_seq();
+            the_log << "+" << a << k << " " << b << "\n";
+        }
+    }
+
+    // same code
+    void trace_if(String a, int k, long b) {
+        if (tracing_commands()) {
+            Logger::finish_seq();
+            the_log << "+" << a << k << " " << b << "\n";
+        }
+    }
+
     void show_box(Xml *X) {
         if (X != nullptr)
             log_and_tty << X << "\n";
@@ -2778,21 +2793,6 @@ void Parser::trace_if(int k) {
     }
 }
 
-void Parser::trace_if(String a, int k, String b) {
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "+" << a << k << " " << b << "\n";
-    }
-}
-
-// same code
-void Parser::trace_if(String a, int k, long b) {
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "+" << a << k << " " << b << "\n";
-    }
-}
-
 // Find \fi, \else , \or at level zero.
 void Parser::pass_text(Token Tfe) {
     int  l     = 0;
@@ -2854,18 +2854,18 @@ void Parser::E_if_test(subtypes test, bool negate) {
     trace_if(negate ? -1 : -2);
     if (test == if_case_code) {
         auto n = scan_int(cur_tok);
-        trace_if("\\ifcase", k, n);
+        ::trace_if("\\ifcase", k, n);
         while (n != 0) {
             pass_text(Tfe);
             if (conditions.is_this_if(sz)) {
                 if (cur_cmd_chr.chr == or_code)
                     n--;
                 else if (cur_cmd_chr.chr == fi_code) {
-                    trace_if("\\ifcase", k, "failed");
+                    ::trace_if("\\ifcase", k, "failed");
                     conditions.pop();
                     return;
                 } else {
-                    trace_if("\\ifcase", k, "choose else");
+                    ::trace_if("\\ifcase", k, "choose else");
                     conditions.wait_for_fi();
                     return;
                 }
@@ -2873,12 +2873,12 @@ void Parser::E_if_test(subtypes test, bool negate) {
                 conditions.pop();
         }
         conditions.set_limit(sz, or_code);
-        trace_if("\\ifcase", k, "found");
+        ::trace_if("\\ifcase", k, "found");
         return;
     }
     bool b = eval_condition(test);
     if (negate) b = !b;
-    trace_if("iftest", k, boolean(b));
+    ::trace_if("iftest", k, boolean(b));
     if (b) {
         conditions.set_limit(sz, else_code);
         return;
