@@ -291,13 +291,13 @@ bool Bibtex::next_line(bool what) {
 
 // Reads until the next @ sign. This is the only function
 // that accepts to read an EOF without error.
-void Bibtex::scan_for_at() {
+bool Bibtex::scan_for_at() {
     for (;;) {
         if (at_eol()) {
-            if (!next_line(false)) throw Berror(); // \todo BAD
+            if (!next_line(false)) return false;
         } else {
             char32_t c = next_char();
-            if (c == '@') return;
+            if (c == '@') return true;
         }
     }
 }
@@ -463,7 +463,7 @@ void Bibtex::parse_one_field(BibEntry *X) {
 bool Bibtex::parse_one_item() {
     cur_entry_name = "";
     cur_entry_line = -1;
-    scan_for_at();
+    if (!scan_for_at()) return false;
     last_ok_line = cur_bib_line;
     if (!skip_space()) return false;
     bool k = scan_identifier(1);
