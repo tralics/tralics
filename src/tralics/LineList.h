@@ -24,7 +24,6 @@ struct LineList : public std::list<Line> { // \todo use a vector instead
     auto get_next(Buffer &b) -> int;
     auto get_next(std::string &b, bool &cv) -> int;
     void insert(const std::string &c, bool cv = true);
-    void insert_spec(int n, std::string c);
     void insert(const LineList &aux);
     void normalise_final_cr();
     void parse_and_extract_clean(const std::string &s);

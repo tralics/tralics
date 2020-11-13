@@ -38,8 +38,7 @@ private:
     std::array<id_type, 128> id_class{};
 
 public:
-    bool        nocitestar{false};
-    std::string default_year;
+    bool nocitestar{false};
 
     auto find_entry(const CitationKey &s) -> BibEntry *;
     auto find_entry(const std::string &s, bib_creator bc) -> BibEntry *;

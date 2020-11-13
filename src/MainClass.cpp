@@ -895,9 +895,8 @@ void MainClass::trans0() {
 }
 
 void MainClass::boot_bibtex() {
-    auto fn                 = out_dir / (out_name + "_.bbl");
-    bbl.name                = fn;
-    the_bibtex.default_year = year_string;
+    auto fn  = out_dir / (out_name + "_.bbl");
+    bbl.name = fn;
     the_bibtex.boot(out_name);
 }
 

@@ -151,13 +151,6 @@ void LineList::reset(std::string x) {
 // Insert a line at the end of the file, incrementing the line no
 void LineList::insert(const std::string &c, bool cv) { emplace_back(++cur_line, c, cv); }
 
-// Like insert, but we do not insert an empty line after an empty line.
-// Used by the raweb preprocessor, hence already converted
-void LineList::insert_spec(int n, std::string c) {
-    if (!empty() && back()[0] == '\n' && c[0] == '\n') return;
-    emplace_back(n, c, true);
-}
-
 // insert a file at the start
 void LineList::splice_first(LineList &X) { splice(begin(), X); }
 

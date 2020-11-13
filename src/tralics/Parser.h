@@ -76,8 +76,6 @@ private:
     long   cur_file_pos{0}; // pos of file in the package list (0= none)
 
     std::string cur_env_name; // name of current environment
-    std::string the_url_val;  // this may be <URSophia>, raweb only
-    std::string year_string;  // the year (effective number)
     std::string job_name;     // the name, without extensions
 
     Buffer input_buffer; // input buffer
@@ -107,7 +105,6 @@ private:
         return x;
     }
     [[nodiscard]] auto get_def_language_num() const -> int { return default_language_num; }
-    auto               get_ur_val() -> std::string { return the_url_val; }
     void               kill_line() { input_line.clear(); }
     void               see_cs_token() { cur_cmd_chr = hash_table.eqtb[cur_tok.eqtb_loc()].val; }
     void               see_cs_token(Token T) {
@@ -136,9 +133,7 @@ public:
     auto               get_cur_val() -> SthInternal & { return cur_val; }
     [[nodiscard]] auto get_job_name() const -> std::string { return job_name; }
     [[nodiscard]] auto get_list_files() const -> bool { return list_files_p; }
-    [[nodiscard]] auto get_year_string() const -> std::string { return year_string; }
     void               init(LineList x) { lines = std::move(x); }
-    void               remember_ur(std::string s) { the_url_val = std::move(s); }
     void               set_cur_line(int x) { cur_line = x; }
     void               set_cur_file_pos(long k) { cur_file_pos = k; }
     void               set_cur_env_name(std::string s) {
@@ -150,7 +145,6 @@ public:
         begin_env_line = x;
     }
     void set_job_name(std::string s) { job_name = std::move(s); }
-    void set_year_string(std::string s) { year_string = std::move(s); }
     void unexpected_font() { unexpected_seen_hi = true; }
     void L3_load(bool preload);
     // public functions

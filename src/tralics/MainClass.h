@@ -116,7 +116,6 @@ private:
     void check_presentation();
     void check_project(Buffer &a);
     void check_ra_dir();
-    void check_year_string(int, bool);
     void dubious_command(int k, bool where);
     void end_document();
     void end_env(std::string);
