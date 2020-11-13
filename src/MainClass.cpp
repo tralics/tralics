@@ -395,7 +395,6 @@ enum param_args {
     pa_entnames,
     pa_tpastatus,
     pa_dir,
-    pa_year,
     pa_type,
     pa_config,
     pa_confdir,
@@ -439,7 +438,6 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         if (ss == "tpastatus") return pa_tpastatus;
         if (ss == "trivialmath") return pa_trivialmath;
         if (ss == "type") return pa_type;
-        if (ss == "year") return pa_year;
         return pa_none;
     }(s);
 
@@ -450,7 +448,6 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         case pa_entnames: set_ent_names(a); return;
         case pa_tpastatus: set_tpa_status(a); return;
         case pa_dir: return;
-        case pa_year: year_string = a; return;
         case pa_type: type_option = a; return;
         case pa_config: user_config_file = a; return;
         case pa_confdir:

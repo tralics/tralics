@@ -236,9 +236,7 @@ void Buffer::find_top_atts() {
         std::string bs = std::string(substr(ptrs.b + 1));
         Xid(1).add_attribute(as, bs);
     } else if (substr(ptrs.b) == "\\specialyear") {
-        auto as = std::string(a);
-        auto bs = std::string(the_main.year_string);
-        Xid(1).add_attribute(as, bs);
+        // \todo RA remove
     } else if (substr(ptrs.b) == "\\tralics") {
         auto as = std::string(a);
         clear();

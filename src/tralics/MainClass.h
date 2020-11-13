@@ -50,7 +50,6 @@ class MainClass {
 public:
     std::string default_class; ///< The default class
     std::string short_date;    ///< Date of start of run (short format)
-    std::string year_string;   // is 2003
 
     std::vector<std::string> bibtex_fields_s;
     std::vector<std::string> bibtex_fields;
