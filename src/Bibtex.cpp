@@ -307,15 +307,15 @@ bool Bibtex::next_line(bool what) {
 // If the retval of scan_identifier0 is <=0, but not -4
 // Note: The error message must be output before skip_space,
 // in case we are at EOF.
-auto Bibtex::scan_identifier(size_t what) -> bool {
+auto Bibtex::scan_identifier(size_t what) -> std::optional<bool> {
     auto res = scan_identifier0(what);
-    if (!res) throw Berror();
+    if (!res) return {};
     auto ret = *res;
     if (ret != 0) log_and_tty << scan_msgs[to_unsigned(ret > 0 ? ret : -ret)];
     if (ret == 4 || ret == -4) {
         start_comma = false;
         reset_input();
-        if (!skip_space()) throw Berror();
+        if (!skip_space()) return {};
     }
     return ret > 0;
 }
@@ -441,7 +441,9 @@ auto Bibtex::check_val_end() -> int {
     start_comma = true;
     if (!skip_space()) return false;
     if (cur_char() == char32_t(right_outer_delim)) return true;
-    if (scan_identifier(3)) return true;
+    auto res = scan_identifier(3);
+    if (!res) throw Berror();
+    if (*res) return true;
     field_pos where = fp_unknown;
     bool      store = false;
     if (X != nullptr) { // if X null, we just read, but store nothing
@@ -469,7 +471,9 @@ bool Bibtex::parse_one_item() {
     if (!scan_for_at()) return false;
     last_ok_line = cur_bib_line;
     if (!skip_space()) return false;
-    bool k = scan_identifier(1);
+    auto res = scan_identifier(1);
+    if (!res) throw Berror();
+    bool k = *res;
     if (k) return true;
     entry_type cn = find_type(token_buf);
     if (cn == type_comment) return true;
@@ -477,7 +481,9 @@ bool Bibtex::parse_one_item() {
         if (!read_field(true)) return false;
         bbl.append(field_buf);
     } else if (cn == type_string) {
-        k = scan_identifier(2);
+        res = scan_identifier(2);
+        if (!res) throw Berror();
+        k = *res;
         if (k) return true;
         auto X = *find_a_macro(token_buf, true, nullptr, nullptr);
         mac_def_val(X);
@@ -622,7 +628,9 @@ auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
             advance();
         }
     } else {
-        bool k = scan_identifier(0);
+        auto res = scan_identifier(0);
+        if (!res) throw Berror();
+        bool k = *res;
         if (store && !k) {
             auto macro = find_a_macro(token_buf, false, nullptr, nullptr);
             if (!macro) {

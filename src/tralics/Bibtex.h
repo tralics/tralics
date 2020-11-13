@@ -76,7 +76,7 @@ private:
     void               reset_input() { input_line.clear(); }
     void               reverse_pass();
     [[nodiscard]] bool scan_for_at();
-    auto               scan_identifier(size_t what) -> bool;
+    auto               scan_identifier(size_t what) -> std::optional<bool>;
     auto               scan_identifier0(size_t what) -> std::optional<int>;
     auto               see_new_entry(entry_type cn, int lineno) -> BibEntry *;
     [[nodiscard]] bool skip_space();
