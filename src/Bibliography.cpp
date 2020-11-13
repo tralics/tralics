@@ -23,7 +23,7 @@ void Bibliography::dump_bibtex() {
     }
     if (!biblio_src.empty()) {
         bbl.open();
-        for (auto &i : biblio_src) the_bibtex.read1(i);
+        for (auto &i : biblio_src) the_bibtex.read_bib_file(i);
     }
 }
 

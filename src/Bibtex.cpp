@@ -110,10 +110,22 @@ namespace {
 
 // This takes a file name. It handles the case where the file has a suffix
 // like miaou+foot. Prints a warning if this is a bad name.
-void Bibtex::read1(const std::string &s) { // \todo merge with read
+void Bibtex::read_bib_file(const std::string &s) {
     if (auto of = find_in_path(s + (s.ends_with(".bib") ? "" : ".bib")); of) {
         spdlog::trace("Found BIB file: {}", *of);
-        read_bib(*of);
+        bbl.format("% reading source {}", *of);
+        bbl.flush();
+        in_lines.read(*of, 1);
+        last_ok_line = 0;
+        reset_input();
+        try {
+            for (;;) parse_one_item();
+        } catch (Berror x) {} // \todo bad to stop on exception like this
+
+        if (!bbl.empty()) {
+            bbl.append("%");
+            bbl.flush();
+        }
     } else
         spdlog::warn("Bibtex Info: no biblio file {}", s);
 }
@@ -648,24 +660,6 @@ void Bibtex::work() {
         for (size_t i = 0; i < nb_entries; i++) all_entries_table[i]->numeric_label(i + 1);
     for (size_t i = 0; i < nb_entries; i++) all_entries_table[i]->call_type();
     bbl.too_late = true;
-}
-
-void Bibtex::read_bib(const std::string &src) {
-    bbl.append("% reading source ");
-    bbl.append(src);
-    bbl.flush();
-    in_lines.read(src, 1);
-
-    last_ok_line = 0;
-    reset_input();
-    try {
-        for (;;) parse_one_item();
-    } catch (Berror x) {}
-
-    if (!bbl.empty()) {
-        bbl.append("%");
-        bbl.flush();
-    }
 }
 
 void Bibtex::boot(std::string S) {
