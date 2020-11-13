@@ -87,9 +87,9 @@ header=\XKV@header,this key=\XKV@tkey, na=\XKV@na,val=#1}}
 %% Note about encodings: this file is read in latin2
 %% is saved as UTF8, so the stream coontains JosÃ©. 
 
-\def\NameA{José}% 
+\def\NameA{Josï¿½}% 
 \input@encoding=1
-\def\NameB{José}% 
+\def\NameB{Josï¿½}% 
 \def\xNameA{Jos^^e9}% 
 \def\xNameB{Jos^^c3^^a9}% 
 \ifx\NameA\xNameA\else \bad \fi
@@ -564,13 +564,13 @@ this fam=familya, header=X@familya@,this key=keyc, na=keya,keyd}
 \def\foo{\foobar,gee}\isfoo\opF
 \let\foo\relax\isfoo\opD {\setkeys[xxx]{yyy}{}\setkeys{Gin}{width=20pt}\includegraphics{G}}
 
-\def\xNameA{José}% 
+\def\xNameA{Josï¿½}% 
 \def\xNameB{JosÃ©}% 
 \ifx\NameA\xNameA\else \bad \fi
 \ifx\NameB\xNameB\else \bad \fi
 
 
-\bibliography{testkv+year}
+\bibliography{testkv}
 \cite{louarn88}
 
 \section{Testing errors and the like}

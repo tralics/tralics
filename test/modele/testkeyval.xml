@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE std SYSTEM 'classes.dtd'>
-<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/13 -->
 <std>
 <p>2008/02/15 Package for testing keyval</p>
-<error c='Undefined command' l='99' n='\Error'/><p>epW=5.opE.badpack5a.CuCvLaD=Lb.Lcxyz</p>
+<error c='Undefined command' l='95' n='\bad'/><error c='Undefined command' l='96' n='\bad'/><error c='Undefined command' l='99' n='\Error'/><p>epW=5.opE.badpack5a.CuCvLaD=Lb.Lcxyz</p>
 <p>I will first check your input, please wait.</p>
 <p noindent='true'>The input true was correct, we proceed.</p>
 <p noindent='true'>I finished the input check.
@@ -25,7 +25,7 @@ cCVc cCVc
 XXCc1ec2f
 XXDaAaEaAabAa</p>
 <error c='invalid usevalue' l='467' n='\setkeys'/><error c='no val recorded' l='468' n='\setkeys'/><error c='key loop' l='474' n='\setkeys'/><error c='key loop' l='478' n='\setkeys'/><p><figure file='G' rend='inline' width='20.0pt'/></p>
-<p><cit><ref target='bid0'/></cit></p>
+<error c='Undefined command' l='570' n='\bad'/><p><cit><ref target='bid0'/></cit></p>
 <div0 id='cid1' id-text='1'><head>Testing errors and the like</head>
 <p>This is a test
 <Warning c='Error' l='578'>Package mypack Error: error line1

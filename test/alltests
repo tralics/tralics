@@ -107,7 +107,7 @@ run_tralics testpackii -param bibtex_fields -year -param bibtex_extensions -phdt
 run_tralics bo
 run_tralics testhtml
 run_tralics testclass -defaultclass=article
-run_tralics_with_err testkeyval "There were 32 errors."
+run_tralics_with_err testkeyval "There were 35 errors."
 run_tralics xii
 run_tralics_with_param comp_pi 100
 run_tralics_with_err teststr "There were 82 errors."

@@ -87,9 +87,8 @@ public:
     auto exec_bibitem(const std::string &b) -> std::string;
     auto implement_cit(String x, std::string w) -> int;
     void work();
-    void read(const std::string &src);
-    auto read0(const std::string &B) -> bool;
-    void read1(std::string s);
+    void read_bib(const std::string &src);
+    void read1(const std::string &s);
     void err_in_file(String s, bool last) const;
     void boot(std::string S);
     void enter_in_table(BibEntry *x) { all_entries_table.push_back(x); }

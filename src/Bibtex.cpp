@@ -108,26 +108,14 @@ namespace {
     }
 } // namespace
 
-// This reads conditionally a file. Returns true if the file exists.
-auto Bibtex::read0(const std::string &B) -> bool { // \todo merge with read
-    if (auto of = find_in_path(B + ".bib"); of) {
-        spdlog::trace("Found BIB file: {}", *of);
-        read(*of);
-        return true;
-    }
-    return false;
-}
-
 // This takes a file name. It handles the case where the file has a suffix
 // like miaou+foot. Prints a warning if this is a bad name.
-void Bibtex::read1(std::string s) {
-    if (s.ends_with(".bib")) s = s.substr(0, s.size() - 4);
-    if (read0(s)) return;
-
-    // \todo now the rest of the function is RA specific, remove
-    auto n = s.size();
-    if (s.ends_with("+year") && read0(s.substr(0, n - 5))) return;
-    spdlog::warn("Bibtex Info: no biblio file {}", s);
+void Bibtex::read1(const std::string &s) { // \todo merge with read
+    if (auto of = find_in_path(s + (s.ends_with(".bib") ? "" : ".bib")); of) {
+        spdlog::trace("Found BIB file: {}", *of);
+        read_bib(*of);
+    } else
+        spdlog::warn("Bibtex Info: no biblio file {}", s);
 }
 
 auto Bibtex::look_for_macro(const std::string &name) -> std::optional<size_t> {
@@ -662,7 +650,7 @@ void Bibtex::work() {
     bbl.too_late = true;
 }
 
-void Bibtex::read(const std::string &src) {
+void Bibtex::read_bib(const std::string &src) {
     bbl.append("% reading source ");
     bbl.append(src);
     bbl.flush();
