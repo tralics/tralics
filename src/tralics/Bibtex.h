@@ -67,7 +67,7 @@ private:
     void               mac_set_val(size_t X, const std::string &s) { all_macros[X].value = s; }
     auto               make_entry(const CitationKey &a, bib_creator b, std::string myid) -> BibEntry *;
     auto               next_char() -> char32_t { return input_line[input_line_pos++]; }
-    void               next_line(bool what);
+    bool               next_line(bool what);
     auto               not_start_or_end(int what, char c, bool s) -> bool;
     void               parse_one_item();
     void               parse_one_field(BibEntry *X);

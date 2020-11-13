@@ -259,27 +259,28 @@ void Bibtex::err_in_entry(String a) {
 
 // Returns next line of the .bib file. Error if EOF and what.
 // Throws if EOF.
-void Bibtex::next_line(bool what) {
+bool Bibtex::next_line(bool what) {
     Buffer scratch;
     auto   n = in_lines.get_next(scratch);
     if (!n) {
         if (what) err_in_file("Illegal end of bibtex database file", true);
-        throw Berror();
+        return false;
     }
     cur_bib_line = *n;
     the_parser.set_cur_line(*n);
     inbuf.insert_without_crlf(scratch);
     input_line     = codepoints(inbuf);
     input_line_pos = 0;
+    return true;
 }
 
 // Skip over a space. Error in case of EOF.
 // This is the only function that reads a new line.
 void Bibtex::skip_space() {
     for (;;) {
-        if (at_eol())
-            next_line(true);
-        else {
+        if (at_eol()) {
+            if (!next_line(true)) throw Berror(); // \todo BAD
+        } else {
             if (std::isspace(static_cast<int>(cur_char())) != 0)
                 advance();
             else
@@ -292,9 +293,9 @@ void Bibtex::skip_space() {
 // that accepts to read an EOF without error.
 void Bibtex::scan_for_at() {
     for (;;) {
-        if (at_eol())
-            next_line(false);
-        else {
+        if (at_eol()) {
+            if (!next_line(false)) throw Berror(); // \todo BAD
+        } else {
             char32_t c = next_char();
             if (c == '@') return;
         }
@@ -580,7 +581,7 @@ void Bibtex::read_one_field(bool store) {
         for (;;) {
             if (at_eol()) {
                 field_buf.push_back(' ');
-                next_line(true);
+                if (!next_line(true)) throw Berror(); // \todo BAD
                 continue;
             }
             c = cur_char();
@@ -589,7 +590,7 @@ void Bibtex::read_one_field(bool store) {
                 field_buf.push_back(c);
                 if (at_eol()) {
                     field_buf.push_back(' ');
-                    next_line(true);
+                    if (!next_line(true)) throw Berror();
                     continue;
                 }
                 field_buf.push_back(cur_char());
