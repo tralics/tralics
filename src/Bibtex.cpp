@@ -14,8 +14,6 @@ namespace {
 
     bool start_comma = true; // should we scan for an initial comma ?
 
-    class [[deprecated]] Berror {};
-
     const std::array<String, 9> scan_msgs{
         "bad syntax for a field type",
         "bad syntax for an entry type",
@@ -118,10 +116,7 @@ void Bibtex::read_bib_file(const std::string &s) {
         in_lines.read(*of, 1);
         last_ok_line = 0;
         reset_input();
-        try {
-            while (parse_one_item()) {};
-        } catch (Berror x) {} // \todo bad to stop on exception like this
-
+        while (parse_one_item()) {};
         if (!bbl.empty()) {
             bbl.append("%");
             bbl.flush();
@@ -442,7 +437,7 @@ auto Bibtex::check_val_end() -> int {
     if (!skip_space()) return false;
     if (cur_char() == char32_t(right_outer_delim)) return true;
     auto res = scan_identifier(3);
-    if (!res) throw Berror();
+    if (!res) return false;
     if (*res) return true;
     field_pos where = fp_unknown;
     bool      store = false;
@@ -472,7 +467,7 @@ bool Bibtex::parse_one_item() {
     last_ok_line = cur_bib_line;
     if (!skip_space()) return false;
     auto res = scan_identifier(1);
-    if (!res) throw Berror();
+    if (!res) return false;
     bool k = *res;
     if (k) return true;
     entry_type cn = find_type(token_buf);
@@ -482,7 +477,7 @@ bool Bibtex::parse_one_item() {
         bbl.append(field_buf);
     } else if (cn == type_string) {
         res = scan_identifier(2);
-        if (!res) throw Berror();
+        if (!res) return false;
         k = *res;
         if (k) return true;
         auto X = *find_a_macro(token_buf, true, nullptr, nullptr);
@@ -629,7 +624,7 @@ auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
         }
     } else {
         auto res = scan_identifier(0);
-        if (!res) throw Berror();
+        if (!res) return false;
         bool k = *res;
         if (store && !k) {
             auto macro = find_a_macro(token_buf, false, nullptr, nullptr);
