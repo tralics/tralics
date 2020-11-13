@@ -72,7 +72,7 @@ private:
     bool               parse_one_item();
     void               parse_one_field(BibEntry *X);
     [[nodiscard]] bool read_one_field(bool store);
-    void               read_field(bool store);
+    [[nodiscard]] bool read_field(bool store);
     void               reset_input() { input_line.clear(); }
     void               reverse_pass();
     [[nodiscard]] bool scan_for_at();

@@ -447,7 +447,7 @@ void Bibtex::parse_one_field(BibEntry *X) {
         where          = find_field_pos(token_buf);
         if (where != fp_unknown) store = true;
     }
-    read_field(store);
+    if (!read_field(store)) throw Berror();
     if (!store) return;
     bool ok = X->store_field(where);
     if (!ok) {
@@ -471,14 +471,14 @@ bool Bibtex::parse_one_item() {
     entry_type cn = find_type(token_buf);
     if (cn == type_comment) return true;
     if (cn == type_preamble) {
-        read_field(true);
+        if (!read_field(true)) return false;
         bbl.append(field_buf);
     } else if (cn == type_string) {
         k = scan_identifier(2);
         if (k) return true;
         auto X = *find_a_macro(token_buf, true, nullptr, nullptr);
         mac_def_val(X);
-        read_field(true);
+        if (!read_field(true)) return false;
         mac_set_val(X, field_buf.special_convert(false));
     } else {
         cur_entry_line = cur_bib_line;
@@ -563,14 +563,14 @@ auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
 // This reads a field into field_buf.
 // This can be "foo" # {bar} # 1234 # macro.
 // If store is false, we do not look at the value of a macro
-void Bibtex::read_field(bool store) {
+[[nodiscard]] bool Bibtex::read_field(bool store) {
     field_buf.clear();
     for (;;) {
-        if (!read_one_field(store)) throw Berror();
-        if (!skip_space()) throw Berror();
-        if (cur_char() != '#') return;
+        if (!read_one_field(store)) return false;
+        if (!skip_space()) return false;
+        if (cur_char() != '#') return true;
         advance();
-        if (!skip_space()) throw Berror();
+        if (!skip_space()) return false;
     }
 }
 
