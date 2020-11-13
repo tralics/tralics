@@ -21,9 +21,15 @@ namespace {
     }
 } // namespace
 
-// \todo make a hash table of methods instead of this huge mess
+// \todo make a hash table of methods instead of this huge mess, actions below is a proof of concept.
 
 [[nodiscard]] bool Parser::translate03() {
+    static std::unordered_map<symcodes, std::function<bool(symcodes, subtypes)>> actions;
+    if (actions.empty()) {
+        actions.emplace(begin_cmd, [](symcodes x, subtypes) { return the_parser.T_beginend(x); });
+        actions.emplace(end_cmd, [](symcodes x, subtypes) { return the_parser.T_beginend(x); });
+    }
+
     auto guard  = SaveErrTok(cur_tok);
     auto [x, c] = cur_cmd_chr;
 
@@ -31,6 +37,8 @@ namespace {
         translate_char(cur_cmd_chr);
         return true;
     }
+
+    if (auto it = actions.find(x); it != actions.end()) return it->second(x, c);
 
     switch (x) {
     case cst1_cmd:
@@ -419,8 +427,6 @@ namespace {
         the_stack.pop(the_names[np]);
         return true;
     }
-    case begin_cmd:
-    case end_cmd: return T_beginend(x);
     case index_cmd: T_index(c); return true;
     case document_cmd: T_begindocument(); return true;
     case end_document_cmd: T_enddocument(c); return true;

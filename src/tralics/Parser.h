@@ -734,7 +734,7 @@ private:
     void               T_backslash();
     void               T_barnodeconnect(const std::string &W);
     void               T_bauteursediteurs(subtypes c);
-    void               T_begin(const std::string &s);
+    [[nodiscard]] bool T_begin(const std::string &s);
     void               T_begindocument();
     [[nodiscard]] bool T_beginend(symcodes x);
     void               T_bezier(subtypes c);

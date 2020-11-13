@@ -768,11 +768,7 @@ void Parser::T_begindocument() {
         Logger::finish_seq();
         the_log << "{\\" << (begin ? "begin " : "end ") << S << "}\n";
     }
-    if (begin) {
-        T_begin(S);
-        return true;
-    }
-    return T_end(S);
+    return begin ? T_begin(S) : T_end(S);
 }
 
 // Case of \@setmode=12
