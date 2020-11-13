@@ -921,7 +921,6 @@ private:
     void               translate_char(CmdChr X);
     void               translate_char(uchar c1, uchar c2);
     void               translate_font_size();
-    void               translate01();
     void               translate02();
     void               translate03();
     void               translate1();

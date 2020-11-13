@@ -89,6 +89,8 @@ public:
     void bordermatrix();
 };
 
+inline Xml *the_page_xml;
+
 struct XmlAndType {
     Xml *      value;
     math_types type;

@@ -22,6 +22,8 @@ struct TokenList : public std::list<Token> {
     void brace_me();
 };
 
+inline TokenList onlypreamble; // token-list allowed only in preamble
+
 auto operator<<(std::ostream &fp, const TokenList &L) -> std::ostream &;
 
 using EqtbToken = EQTB<TokenList>;

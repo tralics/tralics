@@ -1175,7 +1175,7 @@ void Parser::scan_math(size_t res, math_list_type type) {
             }
             if (T >= first_mode_independent) {
                 remove_from_trace();
-                translate01();
+                translate03();
                 continue;
             }
             if (T < 16 && cur_tok.not_a_cmd()) {

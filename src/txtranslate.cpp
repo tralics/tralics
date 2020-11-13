@@ -95,7 +95,7 @@ void Parser::translate_all() {
     unprocessed_xml.clear();
     while (!get_x_token()) {
         if (tracing_commands()) translate02();
-        translate01();
+        translate03();
     }
     flush_buffer();
 }
@@ -117,11 +117,6 @@ void Parser::T_translate(TokenList &X) {
     TL.swap(X);
     if (!unprocessed_xml.empty()) missing_flush();
     translate_all();
-}
-
-void Parser::translate01() {
-    auto guard = SaveErrTok(cur_tok);
-    translate03();
 }
 
 // This prints the command to translate. The case of a space is special
