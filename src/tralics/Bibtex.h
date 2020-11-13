@@ -71,11 +71,11 @@ private:
     auto               not_start_or_end(int what, char c, bool s) -> bool;
     bool               parse_one_item();
     void               parse_one_field(BibEntry *X);
-    void               read_one_field(bool store);
+    [[nodiscard]] bool read_one_field(bool store);
     void               read_field(bool store);
     void               reset_input() { input_line.clear(); }
     void               reverse_pass();
-    bool               scan_for_at();
+    [[nodiscard]] bool scan_for_at();
     auto               scan_identifier(size_t what) -> bool;
     auto               scan_identifier0(size_t what) -> int;
     auto               see_new_entry(entry_type cn, int lineno) -> BibEntry *;

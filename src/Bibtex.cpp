@@ -291,7 +291,7 @@ bool Bibtex::next_line(bool what) {
 
 // Reads until the next @ sign. This is the only function
 // that accepts to read an EOF without error.
-bool Bibtex::scan_for_at() {
+[[nodiscard]] bool Bibtex::scan_for_at() {
     for (;;) {
         if (at_eol()) {
             if (!next_line(false)) return false;
@@ -566,7 +566,7 @@ auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
 void Bibtex::read_field(bool store) {
     field_buf.clear();
     for (;;) {
-        read_one_field(store);
+        if (!read_one_field(store)) throw Berror();
         if (!skip_space()) throw Berror();
         if (cur_char() != '#') return;
         advance();
@@ -575,7 +575,7 @@ void Bibtex::read_field(bool store) {
 }
 
 // This reads a single field
-void Bibtex::read_one_field(bool store) {
+[[nodiscard]] bool Bibtex::read_one_field(bool store) {
     char32_t c = cur_char();
     if (c == '{' || c == '\"') {
         uchar delimiter = c == '{' ? '}' : '\"';
@@ -584,7 +584,7 @@ void Bibtex::read_one_field(bool store) {
         for (;;) {
             if (at_eol()) {
                 field_buf.push_back(' ');
-                if (!next_line(true)) throw Berror(); // \todo BAD
+                if (!next_line(true)) return false;
                 continue;
             }
             c = cur_char();
@@ -593,14 +593,14 @@ void Bibtex::read_one_field(bool store) {
                 field_buf.push_back(c);
                 if (at_eol()) {
                     field_buf.push_back(' ');
-                    if (!next_line(true)) throw Berror();
+                    if (!next_line(true)) return false;
                     continue;
                 }
                 field_buf.push_back(cur_char());
                 advance();
                 continue;
             }
-            if (c == delimiter && bl == 0) return;
+            if (c == delimiter && bl == 0) return true;
             if (c == '}' && bl == 0) {
                 err_in_file("illegal closing brace", true);
                 continue;
@@ -611,9 +611,9 @@ void Bibtex::read_one_field(bool store) {
         }
     } else if (std::isdigit(static_cast<int>(c)) != 0) {
         for (;;) {
-            if (at_eol()) return;
+            if (at_eol()) return true;
             c = cur_char();
-            if (std::isdigit(static_cast<int>(c)) == 0) return;
+            if (std::isdigit(static_cast<int>(c)) == 0) return true;
             field_buf.push_back(c);
             advance();
         }
@@ -628,6 +628,7 @@ void Bibtex::read_one_field(bool store) {
                 field_buf += all_macros[*macro].value;
         }
     }
+    return true;
 }
 
 // This finds entry named s, or case-equivalent.
