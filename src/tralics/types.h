@@ -7,7 +7,7 @@ using uchar  = unsigned char;
 using String = const char *;
 using Digit  = size_t;
 
-class EndOfData {};
+class [[deprecated]] EndOfData {};
 
 template <typename T> auto to_signed(T x) -> std::enable_if_t<std::is_unsigned_v<T>, std::make_signed_t<T>> {
     return static_cast<std::make_signed_t<T>>(x);

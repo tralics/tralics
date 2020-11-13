@@ -1264,7 +1264,7 @@ auto Parser::scan_math_env(size_t res, math_list_type type) -> bool {
                 back_input(eenv);
             } else {
                 // FIXME
-                T_end(s);
+                if (!T_end(s)) throw EndOfData();
                 return false;
             }
         }

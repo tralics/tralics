@@ -2212,30 +2212,30 @@ void Parser::T_begin(const std::string &s) {
 }
 
 // This is the code of \end{foo}.
-void Parser::T_end(const std::string &s) {
+[[nodiscard]] bool Parser::T_end(const std::string &s) {
     if (s == "document") // hack, because document is at outer level
     {
         T_begin(s);
         get_token();
     }
     if (s == "tabular" || s == "tabular*") {
-        if (false_end_tabular(s)) return;
+        if (false_end_tabular(s)) return true;
     }
     if (s.empty()) {
         parse_error(err_tok, "Illegal \\end{}");
-        return;
+        return true;
     }
     SaveAuxEnv *X = is_env_on_stack(s);
     if (X == nullptr) {
         parse_error(err_tok, "cannot close environment ", s, "bad \\end");
-        return;
+        return true;
     }
     if (first_boundary() == bt_tpa) {
         pop_level(bt_tpa);
         cur_tok.kill();
         pop_level(bt_env);
         cur_level++;
-        throw EndOfData();
+        return false;
     }
     back_input(X->token);
     back_input(hash_table.sendgroup_token);
@@ -2253,6 +2253,7 @@ void Parser::T_end(const std::string &s) {
         hash_table.eqtb[k].val = X->cc;
         back_input(t);
     }
+    return true;
 }
 
 // Given a string like foo, this evaluates to \expandafter{\foo}

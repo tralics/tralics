@@ -778,8 +778,8 @@ void Parser::T_beginend(symcodes x) {
     }
     if (begin)
         T_begin(S);
-    else
-        T_end(S);
+    else if (!T_end(S))
+        throw EndOfData();
 }
 
 // Case of \@setmode=12
