@@ -25,8 +25,8 @@ class SaveAuxEnv;
 // \todo this should be broken up
 
 class Parser {
-    // Make all tables public
     friend class XkvSetkeys;
+    friend class Dispatcher;
 
 public:
     Mactab                                    mac_table;          // the table of macros

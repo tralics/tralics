@@ -1,3 +1,4 @@
+#include "tralics/Dispatcher.h"
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/Parser.h"
@@ -23,19 +24,7 @@ namespace {
 
 // \todo make a hash table of methods instead of this huge mess, actions below is a proof of concept.
 
-static std::unordered_map<symcodes, std::function<bool(symcodes, subtypes)>> actions;
-using memfn_with_x = bool (Parser::*)(symcodes x);
-
-static void bla(symcodes x, memfn_with_x f) {
-    actions.emplace(x, [=](symcodes x, subtypes) { return std::invoke(f, the_parser, x); });
-}
-
 [[nodiscard]] bool Parser::translate03() {
-    if (actions.empty()) {
-        bla(begin_cmd, &Parser::T_beginend);
-        bla(end_cmd, &Parser::T_beginend);
-    }
-
     auto guard  = SaveErrTok(cur_tok);
     auto [x, c] = cur_cmd_chr;
 
