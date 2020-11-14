@@ -23,11 +23,17 @@ namespace {
 
 // \todo make a hash table of methods instead of this huge mess, actions below is a proof of concept.
 
+static std::unordered_map<symcodes, std::function<bool(symcodes, subtypes)>> actions;
+using memfn_with_x = bool (Parser::*)(symcodes x);
+
+static void bla(symcodes x, memfn_with_x f) {
+    actions.emplace(x, [=](symcodes x, subtypes) { return std::invoke(f, the_parser, x); });
+}
+
 [[nodiscard]] bool Parser::translate03() {
-    static std::unordered_map<symcodes, std::function<bool(symcodes, subtypes)>> actions;
     if (actions.empty()) {
-        actions.emplace(begin_cmd, [](symcodes x, subtypes) { return the_parser.T_beginend(x); });
-        actions.emplace(end_cmd, [](symcodes x, subtypes) { return the_parser.T_beginend(x); });
+        bla(begin_cmd, &Parser::T_beginend);
+        bla(end_cmd, &Parser::T_beginend);
     }
 
     auto guard  = SaveErrTok(cur_tok);

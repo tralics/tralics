@@ -264,7 +264,6 @@ Hashtab::Hashtab() {
     primitive("ignorespaces", specimp_cmd, ignorespaces_code);
     primitive("mark", specimp_cmd, mark_code);
     primitive("penalty", specimp_cmd, penalty_code);
-    //  unimplemented...
     primitive("accent", unimp_cmd, accent_code);
     primitive("delimiter", unimp_cmd, delimiter_code);
     primitive("halign", unimp_cmd, halign_code);
@@ -789,8 +788,8 @@ Hashtab::Hashtab() {
     primitive("endxmlelement", end_xmlelement_env_cmd);
     primitive("endxmlelement*", end_xmlelement_env_cmd, one_code);
     primitive("endxmlelement+", end_xmlelement_env_cmd, two_code);
-    begin_token = primitive("begin", begin_cmd);
-    end_token   = primitive("end", end_cmd);
+    primitive("begin", begin_cmd);
+    primitive("end", end_cmd);
     primitive("cal", math_font_cmd, cal_code);
     primitive("mathtt", math_font_cmd, mathtt_code);
     primitive("mathcal", math_font_cmd, mathcal_code);

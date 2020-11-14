@@ -1288,7 +1288,7 @@ auto Parser::scan_math_env(size_t res, math_list_type type) -> bool {
     if (at_level_zero && cmi.has_tag()) {
         TokenList L = token_ns::string_to_list(s, true);
         back_input(L);
-        back_input(hash_table.end_token);
+        back_input(hash_table.locate("end"));
         cmi.handle_tags();
         return false;
     }

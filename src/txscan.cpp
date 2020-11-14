@@ -742,13 +742,13 @@ auto Parser::scan_for_eval(Buffer &B, bool in_env) -> bool {
             Token t = TL.front();
             TL.pop_front();
             if (in_env && b == 0) { // Check end in the case of env
-                if (t == hash_table.end_token) {
+                if (t == hash_table.locate("end")) {
                     if (elevel == 0) {
                         back_input(t);
                         return true;
                     }
                     elevel--;
-                } else if (t == hash_table.begin_token)
+                } else if (t == hash_table.locate("begin"))
                     elevel++;
             }
             // Check brace level

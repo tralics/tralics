@@ -2554,7 +2554,7 @@ auto Parser::false_end_tabular(const std::string &s) -> bool {
     if (the_stack.is_frame("cell")) {
         TokenList L = token_ns::string_to_list(s, true);
         back_input(L);
-        back_input(hash_table.end_token);
+        back_input(hash_table.locate("end"));
         finish_a_cell(hash_table.cr_token, std::string());
         return true;
     }
