@@ -37,6 +37,9 @@ namespace {
 
     switch (x) {
     case cst1_cmd:
+        LC();
+        T_cst1(c);
+        return true;
     case cst_cmd:
         LC();
         T_cst1(c);
@@ -52,7 +55,7 @@ namespace {
         if (the_stack.in_v_mode() || the_stack.in_no_mode() || the_stack.in_bib_mode()) return true;
         process_char(char32_t(char32_t(c)));
         return true;
-    case letter_catcode:
+    case letter_catcode: translate_char(cur_cmd_chr); return true;
     case other_catcode: translate_char(cur_cmd_chr); return true;
     case char_num_cmd: extended_chars(scan_27bit_int()); return true;
     case char_given_cmd: extended_chars(c); return true;
@@ -188,7 +191,7 @@ namespace {
                 unprocessed_xml.remove_last_space();
         }
         return true;
-    case relax_cmd:
+    case relax_cmd: return true;
     case eof_marker_cmd: return true;
     case nolinebreak_cmd: ignore_optarg(); return true;
     case ignore_one_argument_cmd:
@@ -285,17 +288,17 @@ namespace {
     case shorthand_def_cmd:
     case read_to_cs_cmd:
     case def_cmd:
-    case set_box_cmd:
+    case set_box_cmd: M_prefixed(); return true;
     case set_interaction_cmd: M_prefixed(); return true;
     case shortverb_cmd: M_shortverb(c); return true;
     case usecounter_cmd: T_use_counter(); return true;
     case newcounter_cmd: M_counter(true); return true;
-    case fp_cmd:
+    case fp_cmd: exec_fp_cmd(c); return true;
     case fpif_cmd: exec_fp_cmd(c); return true;
     case fpi_cmd: exec_fpi_cmd(c); return true;
     case aftergroup_cmd: T_aftergroup(); return true;
     case listfiles_cmd: list_files_p = true; return true;
-    case ignorep_cmd:
+    case ignorep_cmd: T_par1(); return true;
     case par_cmd: T_par1(); return true;
     case start_par_cmd: implicit_par(c); return true;
     case caption_cmd: T_cap_or_note(true); return true;
@@ -434,7 +437,7 @@ namespace {
         leave_h_mode(); // finish centered paragraph
         return true;
     case float_cmd: T_float(c); return true;
-    case figure_cmd:
+    case figure_cmd: T_figure_table(x, c); return true;
     case table_cmd: T_figure_table(x, c); return true;
     case end_figure_cmd: T_figure_table_end(true); return true;
     case end_table_cmd: T_figure_table_end(false); return true;
@@ -468,7 +471,7 @@ namespace {
     case end_glossaire_cmd: T_glossaire_end(); return true;
     case end_list_cmd:
     case end_itemize_cmd:
-    case end_enumerate_cmd:
+    case end_enumerate_cmd: T_listenv_end(); return true;
     case end_description_cmd: T_listenv_end(); return true;
     case xmlelement_env_cmd: T_xmlenv(c); return true;
     case end_xmlelement_env_cmd: T_xmlenv_end(c); return true;
@@ -500,10 +503,9 @@ namespace {
         the_stack.pop(the_names["minipage"]);
         return true;
     case end_ignore_content_cmd:
-    case end_raw_env_cmd:
+    case end_raw_env_cmd: parse_error(cur_tok, "missing \\begin environment ", cur_tok.tok_to_str(), "missing begin"); return true;
     case end_math_env_cmd: parse_error(cur_tok, "missing \\begin environment ", cur_tok.tok_to_str(), "missing begin"); return true;
     case eqno_cmd:
-
     case mathordb_cmd:
     case mathord_cmd:
     case mathbin_cmd:
@@ -519,7 +521,7 @@ namespace {
     case math_list_cmd:
     case math_xml_cmd:
     case left_cmd:
-    case right_cmd:
+    case right_cmd: math_only(); return true;
     case tag_cmd: math_only(); return true;
     case mathinner_cmd:
         if (math_loc(c) == vdots_code) {
