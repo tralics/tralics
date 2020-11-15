@@ -41,7 +41,6 @@ namespace {
         LC();
         T_cst1(c);
         return true;
-    case cst2_cmd: T_cst2(c); return true;
     case nobreakspace_cmd:
         LC();
         if (global_in_url)
@@ -468,10 +467,6 @@ namespace {
     case atdocument_cmd: T_atdocument(c); return true;
     case glossaire_cmd: T_glossaire(); return true;
     case end_glossaire_cmd: T_glossaire_end(); return true;
-    case list_cmd:
-    case itemize_cmd:
-    case enumerate_cmd:
-    case description_cmd: T_listenv(x); return true;
     case end_list_cmd:
     case end_itemize_cmd:
     case end_enumerate_cmd:
