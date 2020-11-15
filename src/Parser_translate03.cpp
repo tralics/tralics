@@ -48,7 +48,6 @@ namespace {
         else
             process_char(0xA0);
         return true;
-    case leave_v_mode_cmd: leave_v_mode(); return true;
     case space_catcode:
         if (the_stack.in_v_mode() || the_stack.in_no_mode() || the_stack.in_bib_mode()) return true;
         process_char(char32_t(char32_t(c)));
