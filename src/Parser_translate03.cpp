@@ -60,7 +60,7 @@ namespace {
     case letter_catcode: translate_char(cur_cmd_chr); return true;
     case other_catcode: translate_char(cur_cmd_chr); return true;
     case char_num_cmd: extended_chars(scan_27bit_int()); return true;
-    case char_given_cmd: extended_chars(c); return true;
+    case char_given_cmd: extended_chars(size_t(c)); return true;
     case insertbibliohere_cmd: add_bib_marker(true); return true;
     case inhibit_xml_cmd:
         the_main.no_xml = true;
@@ -158,10 +158,7 @@ namespace {
         return true;
     case bibitem_cmd: c == 1 ? T_empty_bibitem() : T_bibitem(); return true;
     case end_citation_cmd: the_stack.pop(the_names["citation"]); return true;
-    case ignoreA_cmd:
-        T_ignoreA();
-        return true;
-        // these are mode independent...
+    case ignoreA_cmd: T_ignoreA(); return true;
     case ignore_cmd:
         if (c == addnl_code) {
             flush_buffer();
