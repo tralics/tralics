@@ -7,6 +7,8 @@
 #include "tralics/types.h"
 
 namespace {
+    const std::string list[] = {"sup", "sub", "oldstyle", "caps", "hl", "so", "st", "ul"};
+
     auto hfill_to_np(subtypes c) -> std::string {
         if (c == hfill_code) return "hfill";
         if (c == hfilneg_code) return "hfilneg";
@@ -109,6 +111,11 @@ namespace {
         }
         return true;
     case hat_catcode:
+        if (global_in_load || is_pos_par(nomath_code))
+            translate_char(CmdChr(letter_catcode, c));
+        else
+            parse_error(cur_tok, "Missing dollar not inserted, token ignored: ", cur_tok.tok_to_str(), "Missing dollar");
+        return true;
     case underscore_catcode:
         if (global_in_load || is_pos_par(nomath_code))
             translate_char(CmdChr(letter_catcode, c));
@@ -137,12 +144,8 @@ namespace {
         leave_h_mode();
         the_stack.add_newid0(vfill_to_np(c));
         return true;
-    case sub_cmd:
-    case soul_cmd: {
-        static const std::string list[] = {"sup", "sub", "oldstyle", "caps", "hl", "so", "st", "ul"}; // \todo somewhere else
-        T_fonts(list[c]);
-        return true;
-    }
+    case sub_cmd: T_fonts(list[c]); return true;
+    case soul_cmd: T_fonts(list[c]); return true;
     case trees_cmd: T_trees(c); return true;
     case matter_cmd: T_matter(c); return true;
     case arg_font_cmd: T_fonts("font_sc"); return true;
@@ -258,36 +261,36 @@ namespace {
     case ifthenelse_cmd: T_ifthenelse(); return true;
     case whiledo_cmd: T_whiledo(); return true;
     case setmode_cmd: T_setmode(); return true;
-    case toks_register_cmd:
-    case assign_toks_cmd:
-    case assign_int_cmd:
-    case assign_dimen_cmd:
-    case assign_glue_cmd:
-    case assign_mu_glue_cmd:
-    case assign_font_dimen_cmd:
-    case assign_font_int_cmd:
-    case assign_enc_char_cmd:
-    case set_aux_cmd:
-    case set_prev_graf_cmd:
-    case set_page_dimen_cmd:
-    case set_page_int_cmd:
-    case set_box_dimen_cmd:
-    case set_shape_cmd:
-    case def_code_cmd:
-    case def_family_cmd:
-    case set_font_cmd:
-    case set_mathprop_cmd:
-    case set_mathchar_cmd:
-    case def_font_cmd:
-    case register_cmd:
-    case advance_cmd:
-    case multiply_cmd:
-    case divide_cmd:
-    case prefix_cmd:
-    case let_cmd:
-    case shorthand_def_cmd:
-    case read_to_cs_cmd:
-    case def_cmd:
+    case toks_register_cmd: M_prefixed(); return true;
+    case assign_toks_cmd: M_prefixed(); return true;
+    case assign_int_cmd: M_prefixed(); return true;
+    case assign_dimen_cmd: M_prefixed(); return true;
+    case assign_glue_cmd: M_prefixed(); return true;
+    case assign_mu_glue_cmd: M_prefixed(); return true;
+    case assign_font_dimen_cmd: M_prefixed(); return true;
+    case assign_font_int_cmd: M_prefixed(); return true;
+    case assign_enc_char_cmd: M_prefixed(); return true;
+    case set_aux_cmd: M_prefixed(); return true;
+    case set_prev_graf_cmd: M_prefixed(); return true;
+    case set_page_dimen_cmd: M_prefixed(); return true;
+    case set_page_int_cmd: M_prefixed(); return true;
+    case set_box_dimen_cmd: M_prefixed(); return true;
+    case set_shape_cmd: M_prefixed(); return true;
+    case def_code_cmd: M_prefixed(); return true;
+    case def_family_cmd: M_prefixed(); return true;
+    case set_font_cmd: M_prefixed(); return true;
+    case set_mathprop_cmd: M_prefixed(); return true;
+    case set_mathchar_cmd: M_prefixed(); return true;
+    case def_font_cmd: M_prefixed(); return true;
+    case register_cmd: M_prefixed(); return true;
+    case advance_cmd: M_prefixed(); return true;
+    case multiply_cmd: M_prefixed(); return true;
+    case divide_cmd: M_prefixed(); return true;
+    case prefix_cmd: M_prefixed(); return true;
+    case let_cmd: M_prefixed(); return true;
+    case shorthand_def_cmd: M_prefixed(); return true;
+    case read_to_cs_cmd: M_prefixed(); return true;
+    case def_cmd: M_prefixed(); return true;
     case set_box_cmd: M_prefixed(); return true;
     case set_interaction_cmd: M_prefixed(); return true;
     case shortverb_cmd: M_shortverb(c); return true;
@@ -469,8 +472,8 @@ namespace {
     case atdocument_cmd: T_atdocument(c); return true;
     case glossaire_cmd: T_glossaire(); return true;
     case end_glossaire_cmd: T_glossaire_end(); return true;
-    case end_list_cmd:
-    case end_itemize_cmd:
+    case end_list_cmd: T_listenv_end(); return true;
+    case end_itemize_cmd: T_listenv_end(); return true;
     case end_enumerate_cmd: T_listenv_end(); return true;
     case end_description_cmd: T_listenv_end(); return true;
     case xmlelement_env_cmd: T_xmlenv(c); return true;
@@ -502,25 +505,25 @@ namespace {
         the_stack.pop_if_frame(the_names["item"]);
         the_stack.pop(the_names["minipage"]);
         return true;
-    case end_ignore_content_cmd:
+    case end_ignore_content_cmd: parse_error(cur_tok, "missing \\begin environment ", cur_tok.tok_to_str(), "missing begin"); return true;
     case end_raw_env_cmd: parse_error(cur_tok, "missing \\begin environment ", cur_tok.tok_to_str(), "missing begin"); return true;
     case end_math_env_cmd: parse_error(cur_tok, "missing \\begin environment ", cur_tok.tok_to_str(), "missing begin"); return true;
-    case eqno_cmd:
-    case mathordb_cmd:
-    case mathord_cmd:
-    case mathbin_cmd:
-    case mathrel_cmd:
-    case mathbetween_cmd:
-    case mathopen_cmd:
-    case mathclose_cmd:
-    case mathop_cmd:
-    case mathopn_cmd:
-    case mathspace_cmd:
-    case mathfont_cmd:
-    case math_font_cmd:
-    case math_list_cmd:
-    case math_xml_cmd:
-    case left_cmd:
+    case eqno_cmd: math_only(); return true;
+    case mathordb_cmd: math_only(); return true;
+    case mathord_cmd: math_only(); return true;
+    case mathbin_cmd: math_only(); return true;
+    case mathrel_cmd: math_only(); return true;
+    case mathbetween_cmd: math_only(); return true;
+    case mathopen_cmd: math_only(); return true;
+    case mathclose_cmd: math_only(); return true;
+    case mathop_cmd: math_only(); return true;
+    case mathopn_cmd: math_only(); return true;
+    case mathspace_cmd: math_only(); return true;
+    case mathfont_cmd: math_only(); return true;
+    case math_font_cmd: math_only(); return true;
+    case math_list_cmd: math_only(); return true;
+    case math_xml_cmd: math_only(); return true;
+    case left_cmd: math_only(); return true;
     case right_cmd: math_only(); return true;
     case tag_cmd: math_only(); return true;
     case mathinner_cmd:
