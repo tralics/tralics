@@ -75,7 +75,6 @@ namespace {
         LC();
         unprocessed_xml += T_xmllatex();
         return true;
-    case scan_glue_cmd: T_scan_glue(c); return true;
     case kern_cmd:
         scan_dimen(c == 1, cur_tok);
         // so what ? we could append hspace or vspace here.
@@ -146,8 +145,6 @@ namespace {
         return true;
     case sub_cmd: T_fonts(list[c]); return true;
     case soul_cmd: T_fonts(list[c]); return true;
-    case trees_cmd: T_trees(c); return true;
-    case matter_cmd: T_matter(c); return true;
     case arg_font_cmd: T_fonts("font_sc"); return true;
     case special_math_cmd:
         if (c == overline_code || c == underline_code)
@@ -155,8 +152,6 @@ namespace {
         else
             math_only();
         return true;
-    case noargfont_cmd: see_font_change(c); return true;
-    case argfont_cmd: arg_font(c); return true;
     case oldfont_cmd: old_font(); return true;
     case fontsize_cmd: translate_font_size(); return true;
     case fnhack_cmd: fnhack(); return true;
@@ -173,8 +168,6 @@ namespace {
         T_citation();
         the_stack.add_nl();
         return true;
-    case bib_cmd: T_bauteursediteurs(c); return true;
-    case line_cmd: T_line(c); return true;
     case bpers_cmd: T_bpers(); return true;
     case cititem_cmd: T_cititem(); return true;
     case bibitem_cmd: c == 1 ? T_empty_bibitem() : T_bibitem(); return true;
@@ -207,7 +200,6 @@ namespace {
         return true;
     case defineverbatimenv_cmd: T_define_verbatim_env(); return true;
     case saveverb_cmd: T_saveverb(); return true;
-    case xkeyval_cmd: T_xkeyval(c); return true;
     case add_to_macro_cmd: T_addtomacro(c == 1); return true;
     case makeatletter_cmd: word_define('@', letter_catcode, false); return true;
     case makeatother_cmd: word_define('@', other_catcode, false); return true;
@@ -222,15 +214,10 @@ namespace {
         }
         return true;
     case last_item_cmd: parse_error(cur_tok, "Read only variable ", cur_tok, "", "readonly"); return true;
-    case XML_swap_cmd: user_XML_swap(c); return true;
     case XML_fetch_cmd: user_XML_fetch(); return true;
-    case XML_modify_cmd: user_XML_modify(c); return true;
-    case un_box_cmd: T_un_box(c); return true;
-    case extension_cmd: M_extension(c); return true;
     case setlanguage_cmd: //  strange...
         scan_int(cur_tok);
         return true;
-    case xray_cmd: M_xray(c); return true;
     case move_cmd:
         scan_dimen(false, cur_tok); // ignore dimension
         scan_box(move_location);    // read a box and insert the value
@@ -252,11 +239,8 @@ namespace {
             leave_v_mode();
         T_scan_glue(c == 0 ? vskip_code : hskip_code);
         return true;
-    case for_cmd: T_xkv_for(c); return true;
     case ifnextchar_cmd: T_ifnextchar(c == 0); return true;
     case newif_cmd: M_newif(); return true;
-    case newcount_cmd: new_constant(c); return true;
-    case newboolean_cmd: M_newboolean(c); return true;
     case setboolean_cmd: set_boolean(); return true;
     case ifthenelse_cmd: T_ifthenelse(); return true;
     case whiledo_cmd: T_whiledo(); return true;
@@ -293,20 +277,13 @@ namespace {
     case def_cmd: M_prefixed(); return true;
     case set_box_cmd: M_prefixed(); return true;
     case set_interaction_cmd: M_prefixed(); return true;
-    case shortverb_cmd: M_shortverb(c); return true;
     case usecounter_cmd: T_use_counter(); return true;
     case newcounter_cmd: M_counter(true); return true;
-    case fp_cmd: exec_fp_cmd(c); return true;
-    case fpif_cmd: exec_fp_cmd(c); return true;
-    case fpi_cmd: exec_fpi_cmd(c); return true;
     case aftergroup_cmd: T_aftergroup(); return true;
     case listfiles_cmd: list_files_p = true; return true;
     case ignorep_cmd: T_par1(); return true;
     case par_cmd: T_par1(); return true;
-    case start_par_cmd: implicit_par(c); return true;
     case caption_cmd: T_cap_or_note(true); return true;
-    case cite_cmd: T_cite(c); return true;
-    case item_cmd: T_item(c); return true;
     case doc_class_cmd: T_documentclass(!the_stack.in_v_mode() || seen_document); return true;
     case titlepage_cmd:
         if (!the_stack.in_v_mode()) wrong_mode("Bad titlepage command");
@@ -336,7 +313,6 @@ namespace {
         return true;
     case subfigure_cmd: T_subfigure(); return true;
     case pop_stack_cmd: pop_all_levels(); return true;
-    case section_cmd: T_paras(c); return true;
     case label_cmd:
         flush_buffer();
         T_label(c);
@@ -345,11 +321,9 @@ namespace {
         leave_v_mode();
         T_ref(c == 0);
         return true;
-    case hspace_cmd: T_hspace(c); return true;
     case eqref_cmd: // Case \XMLref
         Xid(read_elt_id(cur_tok)).add_ref(sT_arg_nopar());
         return true;
-    case box_cmd: T_mbox(c); return true;
     case centering_cmd:
         word_define(incentering_code, c, false);
         if (c != 0U) the_stack.add_center_to_p();
@@ -362,27 +336,19 @@ namespace {
         else
             T_fbox(c);
         return true;
-    case includegraphics_cmd: includegraphics(c); return true;
     case fancy_cmd: T_fancy(); return true;
     case xfancy_cmd: T_xfancy(); return true;
     case xthepage_cmd:
         flush_buffer();
         the_stack.add_last(the_page_xml);
         return true;
-    case case_shift_cmd: T_case_shift(c); return true;
     case linebreak_cmd: ignore_optarg(); return true;
     case url_cmd: T_url(); return true;
-    case hanl_cmd: T_hanl(c); return true;
     case error_cmd: T_error(); return true;
     case glo_cmd: T_glo(); return true;
     case reevaluate_cmd: T_reevaluate(); return true;
-    case xmlelt_cmd: T_xmlelt(c); return true;
     case newcolumntype_cmd: T_newcolumn_type(); return true;
     case epsfbox_cmd: T_epsfbox(); return true;
-    case put_cmd: T_put(c); return true;
-    case curves_cmd: T_curves(c); return true;
-    case dashline_cmd: T_dashline(c); return true;
-    case bezier_cmd: T_bezier(c); return true;
     case grabenv_cmd: T_grabenv(); return true;
     case verb_cmd: T_verb(c != 0U ? verb_saved_char : char32_t(0U)); return true;
     case gloss_cmd: T_gloss(c == 0); return true;
@@ -393,22 +359,10 @@ namespace {
         onlypreamble.push_back(hash_table.notprerr_token);
         return true;
     case l3_gen_from_sig_cmd: generate_from_sig(); return true;
-    case l3_gen_from_ac_cmd: Tl3_gen_from_ac(c); return true;
     case loadlatex3_cmd: L3_load(false); return true;
     case GetIdInfo_cmd: L3_getid(); return true;
     case GetIdInfoLog_cmd: L3_logid(); return true;
-    case l3_gen_cond_Npnn_cmd: L3_new_conditional_parm(c); return true;
-    case l3_gen_cond_Nnn_cmd: L3_new_conditional(c); return true;
-    case l3_gen_eq_cond_cmd: L3_eq_conditional(c); return true;
-    case l3_check_cmd: L3_check_cmd(c); return true;
     case l3_generate_variant_cmd: l3_generate_variant(); return true;
-    case l3_set_cat_cmd: L3_set_cat_code(c); return true;
-    case l3_set_num_cmd: L3_set_num_code(c); return true;
-    case tl_basic_cmd: l3_new_token_list(c); return true;
-    case tl_concat_cmd: l3_tl_concat(c); return true;
-    case tl_put_left_cmd: l3_tl_put_left(c); return true;
-    case tl_set_cmd: l3_tl_set(c); return true;
-    case l3_rescan_cmd: tl_set_rescan(c); return true;
     case toc_cmd: { // insert <tableofcontents/>
         std::string np = "tableofcontents";
         if (c == 1) np = "listoftables";
@@ -426,9 +380,7 @@ namespace {
         the_stack.pop(the_names[np]);
         return true;
     }
-    case index_cmd: T_index(c); return true;
     case document_cmd: T_begindocument(); return true;
-    case end_document_cmd: T_enddocument(c); return true;
     case keywords_cmd: T_keywords(); return true;
     case end_keywords_cmd: the_stack.pop(the_names["keywords"]); return true;
     case center_cmd:
@@ -439,7 +391,6 @@ namespace {
     case end_center_cmd:
         leave_h_mode(); // finish centered paragraph
         return true;
-    case float_cmd: T_float(c); return true;
     case figure_cmd: T_figure_table(x, c); return true;
     case table_cmd: T_figure_table(x, c); return true;
     case end_figure_cmd: T_figure_table_end(true); return true;
@@ -448,16 +399,9 @@ namespace {
     case end_thebibliography_cmd: T_end_the_biblio(); return true;
     case solvecite_cmd: solve_cite(false); return true;
     case cite_one_cmd: T_cite_one(); return true;
-    case ipa_cmd: T_ipa(c); return true;
     case footcitepre_cmd: unprocessed_xml.push_back_unless_punct(' '); return true;
     case ding_cmd: T_ding(); return true;
     case etex_cmd: T_etex(); return true;
-    case rule_cmd: scan_rule(c); return true;
-    case file_cmd: T_input(c); return true;
-    case unimp_font_cmd: T_unimplemented_font(c); return true;
-    case unimp_cmd: T_unimp(c); return true;
-    case specimp_cmd: T_specimp(c); return true;
-    case thickness_cmd: T_linethickness(c); return true;
     case thm_aux_cmd: {
         TokenList L = read_arg();
         token_list_define(c, L, false);
@@ -469,17 +413,12 @@ namespace {
         else
             T_start_theorem(c);
         return true;
-    case atdocument_cmd: T_atdocument(c); return true;
     case glossaire_cmd: T_glossaire(); return true;
     case end_glossaire_cmd: T_glossaire_end(); return true;
     case end_list_cmd: T_listenv_end(); return true;
     case end_itemize_cmd: T_listenv_end(); return true;
     case end_enumerate_cmd: T_listenv_end(); return true;
     case end_description_cmd: T_listenv_end(); return true;
-    case xmlelement_env_cmd: T_xmlenv(c); return true;
-    case end_xmlelement_env_cmd: T_xmlenv_end(c); return true;
-    case filecontents_env_cmd: T_filecontents(c); return true;
-    case addatt_cmd: T_xmladdatt(c); return true;
     case ignore_env_cmd: return true;
     case ignore_content_cmd: T_raw_env(false); return true;
     case raw_env_cmd: the_stack.add_last(new Xml(std::string(T_raw_env(true)))); return true;
@@ -490,8 +429,6 @@ namespace {
         return true;
     case popmodule_cmd: the_stack.end_module(); return true;
     case pushmodule_cmd: push_module(); return true;
-    case tabular_env_cmd: T_start_tabular(c); return true;
-    case end_tabular_env_cmd: T_end_tabular(c); return true;
     case verbatim_env_cmd: T_verbatim(); return true;
     case picture_env_cmd: T_picture(); return true;
     case end_picture_env_cmd: the_stack.pop(the_names["picture"]); return true;
@@ -542,18 +479,14 @@ namespace {
         LC();
         unprocessed_xml.push_back(cur_tok);
         return true;
-    case check_date_cmd: date_commands(c); return true;
     case typein_cmd: T_typein(); return true;
     case testopt_cmd: T_testopt(); return true;
     case selective_sanitize_cmd: selective_sanitize(); return true;
-    case latex_error_cmd: T_class_error(c); return true;
     case change_element_name_cmd: T_change_element_name(); return true;
     case formatdate_cmd: formatdate(); return true;
     case numberwithin_cmd: numberwithin(); return true;
     case dblarg_cmd: dbl_arg(); return true;
     case ifdefinable_cmd: T_ifdefinable(); return true;
-    case color_cmd: T_color(c); return true;
-    case kvo_family_cmd: kvo_family(c); return true;
     default: undefined_mac(); return true;
     }
 }
