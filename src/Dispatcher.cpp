@@ -1,33 +1,33 @@
 #include "tralics/Dispatcher.h"
 
 void Dispatcher::register_action(symcodes x, parser_fn f) {
-    emplace(x, [f](symcodes, subtypes) { return std::invoke(f, the_parser); });
+    emplace(x, [f](symcodes /*unused*/, subtypes /*unused*/) { return std::invoke(f, the_parser); });
 }
 
 void Dispatcher::register_action(symcodes x, parser_fn_void f) {
-    emplace(x, [f](symcodes, subtypes) {
+    emplace(x, [f](symcodes /*unused*/, subtypes /*unused*/) {
         std::invoke(f, the_parser);
         return true;
     });
 }
 
 void Dispatcher::register_action(symcodes x, parser_fn_with_x f) {
-    emplace(x, [f](symcodes x, subtypes) { return std::invoke(f, the_parser, x); });
+    emplace(x, [f](symcodes x, subtypes /*unused*/) { return std::invoke(f, the_parser, x); });
 }
 
 void Dispatcher::register_action(symcodes x, parser_fn_with_x_void f) {
-    emplace(x, [f](symcodes x, subtypes) {
+    emplace(x, [f](symcodes x, subtypes /*unused*/) {
         std::invoke(f, the_parser, x);
         return true;
     });
 }
 
 void Dispatcher::register_action(symcodes x, parser_fn_with_c f) {
-    emplace(x, [f](symcodes, subtypes c) { return std::invoke(f, the_parser, c); });
+    emplace(x, [f](symcodes /*unused*/, subtypes c) { return std::invoke(f, the_parser, c); });
 }
 
 void Dispatcher::register_action(symcodes x, parser_fn_with_c_void f) {
-    emplace(x, [f](symcodes, subtypes c) {
+    emplace(x, [f](symcodes /*unused*/, subtypes c) {
         std::invoke(f, the_parser, c);
         return true;
     });

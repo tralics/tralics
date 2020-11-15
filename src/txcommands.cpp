@@ -760,7 +760,7 @@ void Parser::T_begindocument() {
 }
 
 // case \begin \end
-[[nodiscard]] bool Parser::T_beginend(symcodes x) {
+[[nodiscard]] auto Parser::T_beginend(symcodes x) -> bool {
     flush_buffer();
     bool begin = x == begin_cmd;
     auto S     = fetch_name0();

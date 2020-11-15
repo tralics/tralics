@@ -26,7 +26,7 @@ namespace {
 
 // \todo make a hash table of methods instead of this huge mess, actions below is a proof of concept.
 
-[[nodiscard]] bool Parser::translate03() {
+[[nodiscard]] auto Parser::translate03() -> bool {
     auto guard  = SaveErrTok(cur_tok);
     auto [x, c] = cur_cmd_chr;
 

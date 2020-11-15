@@ -2204,7 +2204,7 @@ auto Parser::env_helper(const std::string &s) -> SaveAuxEnv * {
 }
 
 // This implements \begin{foo}
-[[nodiscard]] bool Parser::T_begin(const std::string &s) {
+[[nodiscard]] auto Parser::T_begin(const std::string &s) -> bool {
     SaveAuxEnv *X = env_helper(s);
     push_level(bt_env);
     push_save_stack(X);
@@ -2213,7 +2213,7 @@ auto Parser::env_helper(const std::string &s) -> SaveAuxEnv * {
 }
 
 // This is the code of \end{foo}.
-[[nodiscard]] bool Parser::T_end(const std::string &s) {
+[[nodiscard]] auto Parser::T_end(const std::string &s) -> bool {
     if (s == "document") // hack, because document is at outer level
     {
         T_begin(s);

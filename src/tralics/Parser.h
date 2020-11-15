@@ -734,9 +734,9 @@ private:
     void               T_backslash();
     void               T_barnodeconnect(const std::string &W);
     void               T_bauteursediteurs(subtypes c);
-    [[nodiscard]] bool T_begin(const std::string &s);
+    [[nodiscard]] auto T_begin(const std::string &s) -> bool;
     void               T_begindocument();
-    [[nodiscard]] bool T_beginend(symcodes x);
+    [[nodiscard]] auto T_beginend(symcodes x) -> bool;
     void               T_bezier(subtypes c);
     void               T_bibitem();
     void               T_biblio();
@@ -769,7 +769,7 @@ private:
     void               T_end_tabular(subtypes c);
     void               T_end_the_biblio();
     void               T_end_theorem();
-    [[nodiscard]] bool T_end(const std::string &s);
+    [[nodiscard]] auto T_end(const std::string &s) -> bool;
     void               T_enddocument(subtypes c);
     void               T_endv();
     void               T_epsfbox();
@@ -922,7 +922,7 @@ private:
     void               translate_char(uchar c1, uchar c2);
     void               translate_font_size();
     void               translate02();
-    [[nodiscard]] bool translate03();
+    [[nodiscard]] auto translate03() -> bool;
     void               translate1();
     void               umlaut_bad();
     void               umlaut();
