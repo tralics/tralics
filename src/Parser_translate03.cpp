@@ -201,7 +201,6 @@ namespace {
         scan_dimen(false, cur_tok); // ignore dimension
         scan_box(move_location);    // read a box and insert the value
         return true;
-    case save_box_cmd: T_save_box(c == 0); return true;
     case make_box_cmd: begin_box(makebox_location, c); return true;
     case leader_ship_cmd:
         scan_box(c == shipout_code    ? shipout_location
@@ -216,7 +215,6 @@ namespace {
             leave_v_mode();
         T_scan_glue(c == 0 ? vskip_code : hskip_code);
         return true;
-    case ifnextchar_cmd: T_ifnextchar(c == 0); return true;
     case newcounter_cmd: M_counter(true); return true;
     case listfiles_cmd: list_files_p = true; return true;
     case caption_cmd: T_cap_or_note(true); return true;
@@ -229,12 +227,6 @@ namespace {
         if (!the_stack.in_v_mode() || seen_document) wrong_mode("Bad \\usepackage command");
         T_usepackage();
         return true;
-    case if_package_loaded_cmd: T_if_package_loaded(c == 0); return true;
-    case if_package_later_cmd: T_if_package_later(c == 0); return true;
-    case if_package_with_cmd: T_if_package_with(c == 0); return true;
-    case provides_package_cmd: T_provides_package(c == 0); return true;
-    case load_with_options_cmd: T_load_with_options(c == 0); return true;
-    case pass_options_cmd: T_pass_options(c == 0); return true;
     case needs_format_cmd:
         ignore_arg();
         ignore_optarg();
@@ -267,7 +259,6 @@ namespace {
         the_stack.add_last(the_page_xml);
         return true;
     case verb_cmd: T_verb(c != 0U ? verb_saved_char : char32_t(0U)); return true;
-    case gloss_cmd: T_gloss(c == 0); return true;
     case only_preamble_cmd:
         get_r_token(true);
         onlypreamble.push_back(hash_table.let_token);

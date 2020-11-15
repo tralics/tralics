@@ -14,12 +14,15 @@ public:
 
     Dispatcher();
 
+    void register_action(symcodes x, std::function<bool(symcodes, subtypes)> f); // explicit action
+    void register_action(symcodes x, std::function<void(symcodes, subtypes)> f); // explicit action, return true
+
     void register_action(symcodes x, parser_fn f);             // x triggers the_parser.f()
-    void register_action(symcodes x, parser_fn_void f);        // x triggers the_parser.f()
+    void register_action(symcodes x, parser_fn_void f);        // x triggers the_parser.f(), return true
     void register_action(symcodes x, parser_fn_with_x f);      // x triggers the_parser.f(x)
-    void register_action(symcodes x, parser_fn_with_x_void f); // x triggers the_parser.f(x)
+    void register_action(symcodes x, parser_fn_with_x_void f); // x triggers the_parser.f(x), return true
     void register_action(symcodes x, parser_fn_with_c f);      // x triggers the_parser.f(c)
-    void register_action(symcodes x, parser_fn_with_c_void f); // x triggers the_parser.f(c)
+    void register_action(symcodes x, parser_fn_with_c_void f); // x triggers the_parser.f(c), return true
 };
 
 inline Dispatcher actions;

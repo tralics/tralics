@@ -1,5 +1,14 @@
 #include "tralics/Dispatcher.h"
 
+void Dispatcher::register_action(symcodes x, std::function<bool(symcodes, subtypes)> f) { emplace(x, f); }
+
+void Dispatcher::register_action(symcodes x, std::function<void(symcodes, subtypes)> f) {
+    emplace(x, [f](symcodes x, subtypes c) {
+        f(x, c);
+        return true;
+    });
+}
+
 void Dispatcher::register_action(symcodes x, parser_fn f) {
     emplace(x, [f](symcodes /*unused*/, subtypes /*unused*/) { return std::invoke(f, the_parser); });
 }
@@ -240,4 +249,13 @@ Dispatcher::Dispatcher() {
     register_action(numberwithin_cmd, &Parser::numberwithin);
     register_action(dblarg_cmd, &Parser::dbl_arg);
     register_action(ifdefinable_cmd, &Parser::T_ifdefinable);
+    register_action(save_box_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_save_box(c == 0); });
+    register_action(ifnextchar_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_ifnextchar(c == 0); });
+    register_action(if_package_loaded_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_if_package_loaded(c == 0); });
+    register_action(if_package_later_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_if_package_later(c == 0); });
+    register_action(if_package_with_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_if_package_with(c == 0); });
+    register_action(provides_package_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_provides_package(c == 0); });
+    register_action(load_with_options_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_load_with_options(c == 0); });
+    register_action(pass_options_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_pass_options(c == 0); });
+    register_action(gloss_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_gloss(c == 0); });
 }
