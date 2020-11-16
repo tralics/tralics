@@ -38,14 +38,6 @@ namespace {
     if (auto it = actions.find(x); it != actions.end()) return it->second(x, c);
 
     switch (x) {
-    case cst1_cmd:
-        LC();
-        T_cst1(c);
-        return true;
-    case cst_cmd:
-        LC();
-        T_cst1(c);
-        return true;
     case nobreakspace_cmd:
         LC();
         if (global_in_url)
@@ -57,10 +49,7 @@ namespace {
         if (the_stack.in_v_mode() || the_stack.in_no_mode() || the_stack.in_bib_mode()) return true;
         process_char(char32_t(char32_t(c)));
         return true;
-    case letter_catcode: translate_char(cur_cmd_chr); return true;
-    case other_catcode: translate_char(cur_cmd_chr); return true;
     case char_num_cmd: extended_chars(scan_27bit_int()); return true;
-    case char_given_cmd: extended_chars(size_t(c)); return true;
     case insertbibliohere_cmd: add_bib_marker(true); return true;
     case inhibit_xml_cmd:
         the_main.no_xml = true;

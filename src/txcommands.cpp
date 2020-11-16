@@ -307,6 +307,7 @@ void Parser::T_cst2(subtypes c) {
 }
 
 void Parser::T_cst1(subtypes c) {
+    LC();
     switch (c) {
     case underscore_code:
         process_char('_');
