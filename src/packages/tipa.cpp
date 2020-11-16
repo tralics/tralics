@@ -155,9 +155,30 @@ namespace {
         if (c == 4) tipa_normal();
     }
 
+    auto tipa_name(subtypes chr) -> std::string {
+        switch (chr) {
+        case 0: return "tipa@star";
+        case 1: return "tipa@semi";
+        case 2: return "tipa@colon";
+        case 3: return "tipa@exclam";
+        case 4: return "tipa@normal";
+        case 5: return "tipa@syllabic";
+        case 6: return "tipa@subumlaut";
+        case 7: return "tipa@subtilde";
+        case 8: return "tipa@subring";
+        case 9: return "tipa@dotacute";
+        case 10: return "tipa@gravedot";
+        case 11: return "tipa@acutemacron";
+        case 12: return "tipa@circumdot";
+        case 13: return "tipa@tildedot";
+        case 14: return "tipa@brevemacro";
+        default: return "";
+        }
+    }
+
     void tipa() {
         actions.register_action(ipa_cmd, T_ipa);
-        actions.register_name(ipa_cmd, [](symcodes c, subtypes x) { return CmdChr(c, x).tipa_name(); });
+        actions.register_name(ipa_cmd, [](symcodes, subtypes x) { return tipa_name(x); });
     }
     bool t = (tipa(), true);
 } // namespace

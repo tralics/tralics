@@ -151,7 +151,6 @@ private:
     [[nodiscard]] auto token_xray_name() const -> String;
 
 public: // for use in plugins
-    [[nodiscard]] auto tipa_name() const -> String;
 };
 
 using EqtbCmdChr = EQTB<CmdChr>;

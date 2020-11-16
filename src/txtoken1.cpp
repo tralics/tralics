@@ -691,27 +691,6 @@ auto CmdChr::token_math_name() const -> String {
     }
 }
 
-auto CmdChr::tipa_name() const -> String {
-    switch (chr) {
-    case 0: return "tipa@star";
-    case 1: return "tipa@semi";
-    case 2: return "tipa@colon";
-    case 3: return "tipa@exclam";
-    case 4: return "tipa@normal";
-    case 5: return "tipa@syllabic";
-    case 6: return "tipa@subumlaut";
-    case 7: return "tipa@subtilde";
-    case 8: return "tipa@subring";
-    case 9: return "tipa@dotacute";
-    case 10: return "tipa@gravedot";
-    case 11: return "tipa@acutemacron";
-    case 12: return "tipa@circumdot";
-    case 13: return "tipa@tildedot";
-    case 14: return "tipa@brevemacro";
-    default: return nullptr;
-    }
-}
-
 // Aux functions for CmdChr::name() const
 auto CmdChr::token_fancy_name() const -> String {
     switch (chr) {
@@ -2993,7 +2972,6 @@ auto CmdChr::name() const -> std::string {
     case car_cmd: return chr == 0 ? "@car" : "@cdr";
     case latex_error_cmd: return token_error_name();
     case xkeyval_cmd: return token_xkeyval_name();
-    case ipa_cmd: return tipa_name();
     case curves_cmd:
         switch (chr) {
         case arc_code: return "arc";
