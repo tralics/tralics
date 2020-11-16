@@ -63,9 +63,7 @@ private:
     int      cur_level;                 // current level on the execution stack
     size_t   equation_ctr_pos{};        // position in the table of the counter equation
     states   state;                     // current state of the scanner
-    Token    cur_tok;                   // current token
     Token    after_assignment_token;    // token for \afterassignment
-    CmdChr   cur_cmd_chr;               // current command code and modifier
     subtypes sectionning_offset;        // what is the main section, part, chapter ?
 
 public:
@@ -253,7 +251,6 @@ private:
     auto               get_opt_dim(Token T) -> std::string;
     auto               get_r_token(bool br = false) -> Token;
     auto               get_token_o() -> bool;
-    auto               get_token() -> bool;
     auto               get_trees_opt() -> std::optional<std::string>;
     auto               get_x_token() -> bool;
     auto               grab_env_comma(TokenList &v) -> bool;
@@ -492,7 +489,6 @@ private:
     void               expand_verb1(TokenList &);
     void               expand_when_ok(bool allow_undef);
     void               expand();
-    void               extended_chars(size_t c);
     void               extra_close_brace(int cl);
     void               extra_fi_or_else();
     void               extract_keys(TokenList, std::vector<std::string> &);
@@ -892,24 +888,6 @@ private:
     void               T_xmlelt(subtypes w);
     void               T_xmlenv_end(subtypes c);
     void               T_xmlenv(subtypes c);
-    void               Tat_pers_ra();
-    void               Tat_pers();
-    void               testoptd(std::string s);
-    void               tipa_acutemacron();
-    void               tipa_brevemacro();
-    void               tipa_circumdot();
-    void               tipa_colon();
-    void               tipa_dotacute();
-    void               tipa_exclam();
-    void               tipa_gravedot();
-    void               tipa_normal();
-    void               tipa_semi();
-    void               tipa_star();
-    void               tipa_subring();
-    void               tipa_subtilde();
-    void               tipa_subumlaut();
-    void               tipa_syllabic();
-    void               tipa_tildedot();
     void               TM_fonts();
     void               TM_math_fonts(Math &x) const;
     void               TM_tabular_arg(Xid id);
@@ -1005,9 +983,13 @@ private:
     void tl_set_rescan(subtypes c);
     void Tl3_gen_from_ac(subtypes c);
 
-public: // \todo used in packages, would need to be moved
-    void T_ipa(subtypes c);
+public: // general methods and variables used from packages
+    CmdChr cur_cmd_chr;
+    Token  cur_tok;
+    void   extended_chars(size_t c);
+    auto   get_token() -> bool;
 
+public: // \todo specific methods used in packages, belong there
 public: // \todo static methods that would fit better elsewhere
     static auto ileave_v_mode() -> Xid;
     static auto last_att_list() -> AttList &;
