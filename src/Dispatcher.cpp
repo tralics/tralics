@@ -2,17 +2,17 @@
 #include "tralics/globals.h"
 #include <spdlog/spdlog.h>
 
-std::unordered_map<symcodes, std::function<bool(symcodes, subtypes)>> &Dispatcher::the_actions() {
+auto Dispatcher::the_actions() -> std::unordered_map<symcodes, std::function<bool(symcodes, subtypes)>> & {
     static std::unordered_map<symcodes, std::function<bool(symcodes, subtypes)>> m;
     return m;
 };
 
-std::unordered_map<symcodes, std::function<std::string(symcodes, subtypes)>> &Dispatcher::the_name_fns() {
+auto Dispatcher::the_name_fns() -> std::unordered_map<symcodes, std::function<std::string(symcodes, subtypes)>> & {
     static std::unordered_map<symcodes, std::function<std::string(symcodes, subtypes)>> m;
     return m;
 };
 
-std::unordered_map<symcodes, std::unordered_map<subtypes, std::string>> &Dispatcher::the_names() {
+auto Dispatcher::the_names() -> std::unordered_map<symcodes, std::unordered_map<subtypes, std::string>> & {
     static std::unordered_map<symcodes, std::unordered_map<subtypes, std::string>> m;
     return m;
 };
@@ -34,13 +34,34 @@ auto Dispatcher::name(symcodes x, subtypes c) -> std::optional<std::string> {
     return {};
 }
 
-void Dispatcher::register_action(symcodes x, std::function<bool(symcodes, subtypes)> f) { the_actions().emplace(x, f); }
+void Dispatcher::register_action(symcodes x, const std::function<bool()> &f) {
+    the_actions().emplace(x, [f](symcodes, subtypes) { return f(); });
+}
 
-void Dispatcher::register_action(symcodes x, std::function<void(symcodes, subtypes)> f) {
-    the_actions().emplace(x, [f](symcodes x, subtypes c) {
-        f(x, c);
-        return true;
-    });
+void Dispatcher::register_action(symcodes x, const std::function<void()> &f) {
+    the_actions().emplace(x, [f](symcodes, subtypes) { return f(), true; });
+}
+
+void Dispatcher::register_action(symcodes x, const std::function<bool(symcodes)> &f) {
+    the_actions().emplace(x, [f](symcodes x, subtypes) { return f(x); });
+}
+
+void Dispatcher::register_action(symcodes x, const std::function<void(symcodes)> &f) {
+    the_actions().emplace(x, [f](symcodes x, subtypes) { return f(x), true; });
+}
+
+void Dispatcher::register_action(symcodes x, const std::function<bool(subtypes)> &f) {
+    the_actions().emplace(x, [f](symcodes, subtypes c) { return f(c); });
+}
+
+void Dispatcher::register_action(symcodes x, const std::function<void(subtypes)> &f) {
+    the_actions().emplace(x, [f](symcodes, subtypes c) { return f(c), true; });
+}
+
+void Dispatcher::register_action(symcodes x, const std::function<bool(symcodes, subtypes)> &f) { the_actions().emplace(x, f); }
+
+void Dispatcher::register_action(symcodes x, const std::function<void(symcodes, subtypes)> &f) {
+    the_actions().emplace(x, [f](symcodes x, subtypes c) { return f(x, c), true; });
 }
 
 void Dispatcher::register_action(symcodes x, parser_fn f) {
@@ -98,7 +119,7 @@ void Dispatcher::register_action(symcodes x, parser_fn_with_cmdchr_void f) {
     });
 }
 
-void Dispatcher::register_name(symcodes x, std::function<std::string(symcodes, subtypes)> f) { the_name_fns().emplace(x, f); }
+void Dispatcher::register_name(symcodes x, const std::function<std::string(symcodes, subtypes)> &f) { the_name_fns().emplace(x, f); }
 
 void Dispatcher::register_name(symcodes x, subtypes c, const std::string &s) { the_names()[x][c] = s; };
 
@@ -315,62 +336,61 @@ Dispatcher::Dispatcher() {
     register_action(xmlelt_cmd, &Parser::T_xmlelt);
     register_action(xray_cmd, &Parser::M_xray);
 
-    register_action(char_given_cmd, [](symcodes /*unused*/, subtypes c) { the_parser.extended_chars(size_t(c)); });
-    register_action(gloss_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_gloss(c == 0); });
-    register_action(if_package_later_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_if_package_later(c == 0); });
-    register_action(if_package_loaded_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_if_package_loaded(c == 0); });
-    register_action(if_package_with_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_if_package_with(c == 0); });
-    register_action(ifnextchar_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_ifnextchar(c == 0); });
-    register_action(load_with_options_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_load_with_options(c == 0); });
-    register_action(pass_options_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_pass_options(c == 0); });
-    register_action(provides_package_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_provides_package(c == 0); });
-    register_action(save_box_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_save_box(c == 0); });
-    register_action(char_num_cmd, [](symcodes, subtypes) { the_parser.extended_chars(the_parser.scan_27bit_int()); });
-    register_action(insertbibliohere_cmd, [](symcodes, subtypes) { the_parser.add_bib_marker(true); });
-    register_action(endcsname_cmd, [](symcodes, subtypes) { the_parser.parse_error("Extra \\endcsname"); });
-    register_action(open_catcode, [](symcodes, subtypes) { the_parser.push_level(bt_brace); });
-    register_action(close_catcode, [](symcodes, subtypes) { the_parser.pop_level(bt_brace); });
-    register_action(arg_font_cmd, [](symcodes, subtypes) { the_parser.T_fonts("font_sc"); });
-    register_action(footnote_cmd, [](symcodes, subtypes) { the_parser.T_cap_or_note(false); });
-    register_action(bibitem_cmd, [](symcodes, subtypes c) { c == 1 ? the_parser.T_empty_bibitem() : the_parser.T_bibitem(); });
-    register_action(end_citation_cmd, [](symcodes, subtypes) { the_stack.pop(::the_names["citation"]); });
-    register_action(ignoreA_cmd, [](symcodes, subtypes) { the_parser.T_ignoreA(); });
-    register_action(add_to_macro_cmd, [](symcodes, subtypes c) { the_parser.T_addtomacro(c == 1); });
-    register_action(makeatletter_cmd, [](symcodes, subtypes) { the_parser.word_define('@', letter_catcode, false); });
-    register_action(makeatother_cmd, [](symcodes, subtypes) { the_parser.word_define('@', other_catcode, false); });
-    register_action(numberedverbatim_cmd, [](symcodes, subtypes) { the_parser.numbered_verbatim = true; });
-    register_action(unnumberedverbatim_cmd, [](symcodes, subtypes) { the_parser.numbered_verbatim = false; });
-    register_action(make_box_cmd, [](symcodes, subtypes c) { the_parser.begin_box(makebox_location, c); });
-    register_action(newcounter_cmd, [](symcodes, subtypes) { the_parser.M_counter(true); });
-    register_action(listfiles_cmd, [](symcodes, subtypes) { the_parser.list_files_p = true; });
-    register_action(caption_cmd, [](symcodes, subtypes) { the_parser.T_cap_or_note(true); });
-    register_action(doc_class_cmd, [](symcodes, subtypes) { the_parser.T_documentclass(!the_stack.in_v_mode() || seen_document); });
-    register_action(verb_cmd, [](symcodes, subtypes c) { the_parser.T_verb(c != 0U ? the_parser.verb_saved_char : char32_t(0U)); });
-    register_action(loadlatex3_cmd, [](symcodes, subtypes) { the_parser.L3_load(false); });
-    register_action(end_keywords_cmd, [](symcodes, subtypes) { the_stack.pop(::the_names["keywords"]); });
+    register_action(add_to_macro_cmd, [](subtypes c) { the_parser.T_addtomacro(c == 1); });
+    register_action(arg_font_cmd, [] { the_parser.T_fonts("font_sc"); });
+    register_action(bibitem_cmd, [](subtypes c) { c == 1 ? the_parser.T_empty_bibitem() : the_parser.T_bibitem(); });
+    register_action(caption_cmd, [] { the_parser.T_cap_or_note(true); });
+    register_action(char_given_cmd, [](subtypes c) { the_parser.extended_chars(size_t(c)); });
+    register_action(char_num_cmd, [] { the_parser.extended_chars(the_parser.scan_27bit_int()); });
+    register_action(close_catcode, [] { the_parser.pop_level(bt_brace); });
+    register_action(doc_class_cmd, [] { the_parser.T_documentclass(!the_stack.in_v_mode() || seen_document); });
+    register_action(end_citation_cmd, [] { the_stack.pop(::the_names["citation"]); });
+    register_action(end_figure_cmd, [] { the_parser.T_figure_table_end(true); });
+    register_action(end_keywords_cmd, [] { the_stack.pop(::the_names["keywords"]); });
+    register_action(end_picture_env_cmd, [] { the_stack.pop(::the_names["picture"]); });
+    register_action(end_subequations_cmd, [] { the_parser.T_subequations(false); });
+    register_action(end_table_cmd, [] { the_parser.T_figure_table_end(false); });
+    register_action(endcsname_cmd, [] { the_parser.parse_error("Extra \\endcsname"); });
     register_action(figure_cmd, [](symcodes x, subtypes c) { the_parser.T_figure_table(x, c); });
+    register_action(footcitepre_cmd, [] { the_parser.unprocessed_xml.push_back_unless_punct(' '); });
+    register_action(footnote_cmd, [] { the_parser.T_cap_or_note(false); });
+    register_action(gloss_cmd, [](subtypes c) { the_parser.T_gloss(c == 0); });
+    register_action(if_package_later_cmd, [](subtypes c) { the_parser.T_if_package_later(c == 0); });
+    register_action(if_package_loaded_cmd, [](subtypes c) { the_parser.T_if_package_loaded(c == 0); });
+    register_action(if_package_with_cmd, [](subtypes c) { the_parser.T_if_package_with(c == 0); });
+    register_action(ifnextchar_cmd, [](subtypes c) { the_parser.T_ifnextchar(c == 0); });
+    register_action(ignore_content_cmd, [] { the_parser.T_raw_env(false); });
+    register_action(ignoreA_cmd, [] { the_parser.T_ignoreA(); });
+    register_action(insertbibliohere_cmd, [] { Parser::add_bib_marker(true); });
+    register_action(listfiles_cmd, [] { the_parser.list_files_p = true; });
+    register_action(load_with_options_cmd, [](subtypes c) { the_parser.T_load_with_options(c == 0); });
+    register_action(loadlatex3_cmd, [] { the_parser.L3_load(false); });
+    register_action(make_box_cmd, [](subtypes c) { the_parser.begin_box(makebox_location, c); });
+    register_action(makeatletter_cmd, [] { the_parser.word_define('@', letter_catcode, false); });
+    register_action(makeatother_cmd, [] { the_parser.word_define('@', other_catcode, false); });
+    register_action(newcounter_cmd, [] { the_parser.M_counter(true); });
+    register_action(numberedverbatim_cmd, [] { the_parser.numbered_verbatim = true; });
+    register_action(open_catcode, [] { the_parser.push_level(bt_brace); });
+    register_action(pass_options_cmd, [](subtypes c) { the_parser.T_pass_options(c == 0); });
+    register_action(popmodule_cmd, [] { the_stack.end_module(); });
+    register_action(provides_package_cmd, [](subtypes c) { the_parser.T_provides_package(c == 0); });
+    register_action(raw_env_cmd, [] { the_stack.add_last(new Xml(std::string(the_parser.T_raw_env(true)))); });
+    register_action(save_box_cmd, [](subtypes c) { the_parser.T_save_box(c == 0); });
+    register_action(solvecite_cmd, [] { the_parser.solve_cite(false); });
+    register_action(subequations_cmd, [] { the_parser.T_subequations(true); });
     register_action(table_cmd, [](symcodes x, subtypes c) { the_parser.T_figure_table(x, c); });
-    register_action(end_figure_cmd, [](symcodes, subtypes) { the_parser.T_figure_table_end(true); });
-    register_action(end_table_cmd, [](symcodes, subtypes) { the_parser.T_figure_table_end(false); });
-    register_action(solvecite_cmd, [](symcodes, subtypes) { the_parser.solve_cite(false); });
-    register_action(footcitepre_cmd, [](symcodes, subtypes) { the_parser.unprocessed_xml.push_back_unless_punct(' '); });
-    register_action(ignore_content_cmd, [](symcodes, subtypes) { the_parser.T_raw_env(false); });
-    register_action(raw_env_cmd, [](symcodes, subtypes) { the_stack.add_last(new Xml(std::string(the_parser.T_raw_env(true)))); });
-    register_action(popmodule_cmd, [](symcodes, subtypes) { the_stack.end_module(); });
-    register_action(end_picture_env_cmd, [](symcodes, subtypes) { the_stack.pop(::the_names["picture"]); });
-    register_action(subequations_cmd, [](symcodes, subtypes) { the_parser.T_subequations(true); });
-    register_action(end_subequations_cmd, [](symcodes, subtypes) { the_parser.T_subequations(false); });
+    register_action(unnumberedverbatim_cmd, [] { the_parser.numbered_verbatim = false; });
+    register_action(verb_cmd, [](subtypes c) { the_parser.T_verb(c != 0U ? the_parser.verb_saved_char : char32_t(0U)); });
 
-    register_action(last_item_cmd, [](symcodes, subtypes) {
-        the_parser.parse_error(the_parser.cur_tok, "Read only variable ", the_parser.cur_tok, "", "readonly");
-    });
-    register_action(end_ignore_content_cmd, [](symcodes, subtypes) {
+    register_action(end_ignore_content_cmd, [] {
         the_parser.parse_error(the_parser.cur_tok, "missing \\begin environment ", the_parser.cur_tok.tok_to_str(), "missing begin");
     });
-    register_action(end_raw_env_cmd, [](symcodes, subtypes) {
+    register_action(end_math_env_cmd, [] {
         the_parser.parse_error(the_parser.cur_tok, "missing \\begin environment ", the_parser.cur_tok.tok_to_str(), "missing begin");
     });
-    register_action(end_math_env_cmd, [](symcodes, subtypes) {
+    register_action(end_raw_env_cmd, [] {
         the_parser.parse_error(the_parser.cur_tok, "missing \\begin environment ", the_parser.cur_tok.tok_to_str(), "missing begin");
     });
+    register_action(last_item_cmd,
+                    [] { the_parser.parse_error(the_parser.cur_tok, "Read only variable ", the_parser.cur_tok, "", "readonly"); });
 }
