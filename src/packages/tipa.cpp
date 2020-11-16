@@ -10,7 +10,8 @@
  *
  * Good inclusion is tested by testhtml in the test suite.
  *
- * \todo move Parser::T_ipa here
+ * \todo find a way to remove ipa_cmd from enums.h
+ * \todo having both the primitive and name stuff is redundant
  *
  * Reference: https://www.bfilipek.com/2018/02/static-vars-static-lib.html
  */
