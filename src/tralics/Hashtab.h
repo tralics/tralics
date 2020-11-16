@@ -5,14 +5,11 @@
 #include <vector>
 
 // This is the main hash table.
-class Hashtab : public std::vector<std::string> {
-private:
-    std::unordered_map<std::string, size_t> map;
-
-public:
-    std::array<Token, 15>                  my_mathfont_table;
-    std::array<Token, 5>                   genfrac_mode;
-    std::unordered_map<size_t, EqtbCmdChr> eqtb;
+struct Hashtab : public std::vector<std::string> {
+    std::unordered_map<std::string, size_t> &the_map();
+    std::unordered_map<size_t, EqtbCmdChr>   eqtb;
+    std::array<Token, 15>                    my_mathfont_table;
+    std::array<Token, 5>                     genfrac_mode;
 
     int usage_normal{0}, usage_unhashed{0};
 

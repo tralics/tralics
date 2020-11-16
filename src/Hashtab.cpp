@@ -10,6 +10,11 @@ namespace {
     }
 } // namespace
 
+std::unordered_map<std::string, size_t> &Hashtab::the_map() {
+    static std::unordered_map<std::string, size_t> m;
+    return m;
+}
+
 auto Hashtab::locate(const std::string &s) -> Token {
     if (s.empty()) return Token(null_tok_val);
     if (s.size() == 1) return Token(uchar(s[0]) + single_offset);
@@ -20,6 +25,7 @@ auto Hashtab::locate(const std::string &s) -> Token {
 // Returns the hash location of the name in the buffer.
 // If a new slot has to be created, uses the string name, if not empty.
 auto Hashtab::hash_find(const std::string &s) -> size_t {
+    static auto &map = the_map();
     if (auto i = map.find(s); i != map.end()) return i->second;
     usage_normal++;
     push_back(s);
@@ -41,7 +47,8 @@ auto Hashtab::nohash_primitive(const std::string &a, CmdChr b) -> Token {
 // exists in the hash table and is not undefined.
 // Sets last_tok to the result
 auto Hashtab::is_defined(const std::string &b) -> bool {
-    auto i = map.find(b);
+    static auto &map = the_map();
+    auto         i   = map.find(b);
     if (i == map.end()) return false;
 
     size_t T = 0;

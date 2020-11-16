@@ -1,7 +1,7 @@
 #pragma once
 #include "Token.h"
 
-class Hashtab;
+struct Hashtab;
 
 struct TokenList : public std::list<Token> {
     [[nodiscard]] auto block_size() const -> int;

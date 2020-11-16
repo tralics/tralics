@@ -177,6 +177,21 @@ namespace {
     }
 
     void tipa() {
+        hash_table.primitive("tipa@star", ipa_cmd, subtypes(0));
+        hash_table.primitive("tipa@semi", ipa_cmd, subtypes(1));
+        hash_table.primitive("tipa@colon", ipa_cmd, subtypes(2));
+        hash_table.primitive("tipa@exclam", ipa_cmd, subtypes(3));
+        hash_table.primitive("tipa@normal", ipa_cmd, subtypes(4));
+        hash_table.primitive("tipa@syllabic", ipa_cmd, subtypes(5));
+        hash_table.primitive("tipa@subumlaut", ipa_cmd, subtypes(6));
+        hash_table.primitive("tipa@subtilde", ipa_cmd, subtypes(7));
+        hash_table.primitive("tipa@subring", ipa_cmd, subtypes(8));
+        hash_table.primitive("tipa@dotacute", ipa_cmd, subtypes(9));
+        hash_table.primitive("tipa@gravedot", ipa_cmd, subtypes(10));
+        hash_table.primitive("tipa@acutemacron", ipa_cmd, subtypes(11));
+        hash_table.primitive("tipa@circumdot", ipa_cmd, subtypes(12));
+        hash_table.primitive("tipa@tildedot", ipa_cmd, subtypes(13));
+        hash_table.primitive("tipa@brevemacro", ipa_cmd, subtypes(14));
         actions.register_action(ipa_cmd, T_ipa);
         actions.register_name(ipa_cmd, [](symcodes, subtypes x) { return tipa_name(x); });
     }

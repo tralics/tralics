@@ -1302,21 +1302,6 @@ Hashtab::Hashtab() {
     primitive("@firstoftwo", first_of_two_cmd, one_code);
     primitive("@secondoftwo", first_of_two_cmd, two_code);
     composite_token = primitive("@unicode@composite", all_of_one_cmd);
-    primitive("tipa@star", ipa_cmd, subtypes(0));
-    primitive("tipa@semi", ipa_cmd, subtypes(1));
-    primitive("tipa@colon", ipa_cmd, subtypes(2));
-    primitive("tipa@exclam", ipa_cmd, subtypes(3));
-    primitive("tipa@normal", ipa_cmd, subtypes(4));
-    primitive("tipa@syllabic", ipa_cmd, subtypes(5));
-    primitive("tipa@subumlaut", ipa_cmd, subtypes(6));
-    primitive("tipa@subtilde", ipa_cmd, subtypes(7));
-    primitive("tipa@subring", ipa_cmd, subtypes(8));
-    primitive("tipa@dotacute", ipa_cmd, subtypes(9));
-    primitive("tipa@gravedot", ipa_cmd, subtypes(10));
-    primitive("tipa@acutemacron", ipa_cmd, subtypes(11));
-    primitive("tipa@circumdot", ipa_cmd, subtypes(12));
-    primitive("tipa@tildedot", ipa_cmd, subtypes(13));
-    primitive("tipa@brevemacro", ipa_cmd, subtypes(14));
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     primitive("@whilenum", while_cmd, zero_code);
