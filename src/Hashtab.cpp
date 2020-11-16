@@ -1,3 +1,4 @@
+#include "tralics/Dispatcher.h"
 #include "tralics/Parser.h"
 #include <utf8.h>
 
@@ -73,6 +74,11 @@ auto Hashtab::primitive(const std::string &s, symcodes c, subtypes v) -> Token {
     Token res                  = locate(s);
     the_eqtb()[res.eqtb_loc()] = {{c, v}, 1};
     return res;
+}
+
+auto Hashtab::primitive_plain(const std::string &s, symcodes c, subtypes v) -> Token {
+    actions.register_name(c, v, s);
+    return primitive(s, c, v);
 }
 
 // \global\let\firststring = \secondstring

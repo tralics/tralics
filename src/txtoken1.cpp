@@ -2424,7 +2424,7 @@ auto CmdChr::special_name() const -> String {
 // This returns the name of a CmdChr pair.
 // The result is a UTF8 string
 auto CmdChr::name() const -> std::string {
-    if (auto res = actions.name(cmd, chr); !res.empty()) return res;
+    if (auto res = actions.name(cmd, chr)) return *res;
 
     switch (cmd) {
     case mathbin_cmd:

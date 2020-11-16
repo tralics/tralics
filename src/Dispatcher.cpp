@@ -6,14 +6,28 @@ std::unordered_map<symcodes, std::function<bool(symcodes, subtypes)>> &Dispatche
     return m;
 };
 
-std::unordered_map<symcodes, std::function<std::string(symcodes, subtypes)>> &Dispatcher::the_names() {
+std::unordered_map<symcodes, std::function<std::string(symcodes, subtypes)>> &Dispatcher::the_name_fns() {
     static std::unordered_map<symcodes, std::function<std::string(symcodes, subtypes)>> m;
     return m;
 };
 
-auto Dispatcher::lookup_and_call(symcodes x, subtypes c) -> std::optional<bool> {
+std::unordered_map<symcodes, std::unordered_map<subtypes, std::string>> &Dispatcher::the_names() {
+    static std::unordered_map<symcodes, std::unordered_map<subtypes, std::string>> m;
+    return m;
+};
+
+auto Dispatcher::call(symcodes x, subtypes c) -> std::optional<bool> {
     static auto &m = the_actions();
     if (auto f = m.find(x); f != m.end()) return f->second(x, c);
+    return {};
+}
+
+auto Dispatcher::name(symcodes x, subtypes c) -> std::optional<std::string> {
+    static auto &m = the_name_fns();
+    static auto &n = the_names();
+    if (auto it = n.find(x); it != n.end())
+        if (auto it2 = it->second.find(c); it2 != it->second.end()) return it2->second;
+    if (auto it = m.find(x); it != m.end()) return it->second(x, c);
     return {};
 }
 
@@ -81,14 +95,9 @@ void Dispatcher::register_action(symcodes x, parser_fn_with_cmdchr_void f) {
     });
 }
 
-void Dispatcher::register_name(symcodes x, std::function<std::string(symcodes, subtypes)> f) { the_names().emplace(x, f); }
+void Dispatcher::register_name(symcodes x, std::function<std::string(symcodes, subtypes)> f) { the_name_fns().emplace(x, f); }
 
-auto Dispatcher::name(symcodes x, subtypes c) -> std::string {
-    static auto &m = the_names();
-    if (auto it = m.find(x); it != m.end()) return it->second(x, c);
-    spdlog::warn("Name of ({},{}) not registered", x, c);
-    return "";
-}
+void Dispatcher::register_name(symcodes x, subtypes c, const std::string &s) { the_names()[x][c] = s; };
 
 Dispatcher::Dispatcher() {
     register_action(addatt_cmd, &Parser::T_xmladdatt);

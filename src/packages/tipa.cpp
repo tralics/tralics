@@ -11,7 +11,6 @@
  * Good inclusion is tested by testhtml in the test suite.
  *
  * \todo find a way to remove ipa_cmd from enums.h
- * \todo having both the primitive and name stuff is redundant
  *
  * Reference: https://www.bfilipek.com/2018/02/static-vars-static-lib.html
  */
@@ -156,45 +155,23 @@ namespace {
         if (c == 4) tipa_normal();
     }
 
-    auto tipa_name(subtypes chr) -> std::string {
-        switch (chr) {
-        case 0: return "tipa@star";
-        case 1: return "tipa@semi";
-        case 2: return "tipa@colon";
-        case 3: return "tipa@exclam";
-        case 4: return "tipa@normal";
-        case 5: return "tipa@syllabic";
-        case 6: return "tipa@subumlaut";
-        case 7: return "tipa@subtilde";
-        case 8: return "tipa@subring";
-        case 9: return "tipa@dotacute";
-        case 10: return "tipa@gravedot";
-        case 11: return "tipa@acutemacron";
-        case 12: return "tipa@circumdot";
-        case 13: return "tipa@tildedot";
-        case 14: return "tipa@brevemacro";
-        default: return "";
-        }
-    }
-
     void tipa() {
-        hash_table.primitive("tipa@star", ipa_cmd, subtypes(0));
-        hash_table.primitive("tipa@semi", ipa_cmd, subtypes(1));
-        hash_table.primitive("tipa@colon", ipa_cmd, subtypes(2));
-        hash_table.primitive("tipa@exclam", ipa_cmd, subtypes(3));
-        hash_table.primitive("tipa@normal", ipa_cmd, subtypes(4));
-        hash_table.primitive("tipa@syllabic", ipa_cmd, subtypes(5));
-        hash_table.primitive("tipa@subumlaut", ipa_cmd, subtypes(6));
-        hash_table.primitive("tipa@subtilde", ipa_cmd, subtypes(7));
-        hash_table.primitive("tipa@subring", ipa_cmd, subtypes(8));
-        hash_table.primitive("tipa@dotacute", ipa_cmd, subtypes(9));
-        hash_table.primitive("tipa@gravedot", ipa_cmd, subtypes(10));
-        hash_table.primitive("tipa@acutemacron", ipa_cmd, subtypes(11));
-        hash_table.primitive("tipa@circumdot", ipa_cmd, subtypes(12));
-        hash_table.primitive("tipa@tildedot", ipa_cmd, subtypes(13));
-        hash_table.primitive("tipa@brevemacro", ipa_cmd, subtypes(14));
+        hash_table.primitive_plain("tipa@star", ipa_cmd, subtypes(0));
+        hash_table.primitive_plain("tipa@semi", ipa_cmd, subtypes(1));
+        hash_table.primitive_plain("tipa@colon", ipa_cmd, subtypes(2));
+        hash_table.primitive_plain("tipa@exclam", ipa_cmd, subtypes(3));
+        hash_table.primitive_plain("tipa@normal", ipa_cmd, subtypes(4));
+        hash_table.primitive_plain("tipa@syllabic", ipa_cmd, subtypes(5));
+        hash_table.primitive_plain("tipa@subumlaut", ipa_cmd, subtypes(6));
+        hash_table.primitive_plain("tipa@subtilde", ipa_cmd, subtypes(7));
+        hash_table.primitive_plain("tipa@subring", ipa_cmd, subtypes(8));
+        hash_table.primitive_plain("tipa@dotacute", ipa_cmd, subtypes(9));
+        hash_table.primitive_plain("tipa@gravedot", ipa_cmd, subtypes(10));
+        hash_table.primitive_plain("tipa@acutemacron", ipa_cmd, subtypes(11));
+        hash_table.primitive_plain("tipa@circumdot", ipa_cmd, subtypes(12));
+        hash_table.primitive_plain("tipa@tildedot", ipa_cmd, subtypes(13));
+        hash_table.primitive_plain("tipa@brevemacro", ipa_cmd, subtypes(14));
         actions.register_action(ipa_cmd, T_ipa);
-        actions.register_name(ipa_cmd, [](symcodes, subtypes x) { return tipa_name(x); });
     }
     bool t = (tipa(), true);
 } // namespace

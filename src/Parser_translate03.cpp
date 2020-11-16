@@ -33,7 +33,7 @@ namespace {
         return true;
     }
 
-    if (auto res = actions.lookup_and_call(x, c)) return *res;
+    if (auto res = actions.call(x, c)) return *res;
 
     switch (x) {
     case nobreakspace_cmd:

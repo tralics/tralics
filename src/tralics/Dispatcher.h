@@ -18,8 +18,8 @@ public:
 
     Dispatcher();
 
-    auto lookup_and_call(symcodes x, subtypes c) -> std::optional<bool>;
-    auto name(symcodes x, subtypes c) -> std::string;
+    auto call(symcodes x, subtypes c) -> std::optional<bool>;
+    auto name(symcodes x, subtypes c) -> std::optional<std::string>;
 
     void register_action(symcodes x, std::function<bool(symcodes, subtypes)> f); // explicit action
     void register_action(symcodes x, std::function<void(symcodes, subtypes)> f); // explicit action, return true
@@ -36,10 +36,12 @@ public:
     void register_action(symcodes x, parser_fn_with_cmdchr_void f); // x triggers the_parser.f({x,c}), return true
 
     void register_name(symcodes x, std::function<std::string(symcodes, subtypes)> f);
+    void register_name(symcodes x, subtypes c, const std::string &s);
 
 private:
     std::unordered_map<symcodes, std::function<bool(symcodes, subtypes)>> &       the_actions();
-    std::unordered_map<symcodes, std::function<std::string(symcodes, subtypes)>> &the_names();
+    std::unordered_map<symcodes, std::function<std::string(symcodes, subtypes)>> &the_name_fns();
+    std::unordered_map<symcodes, std::unordered_map<subtypes, std::string>> &     the_names();
 };
 
 inline Dispatcher actions;
