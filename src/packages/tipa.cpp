@@ -155,6 +155,9 @@ namespace {
         if (c == 4) tipa_normal();
     }
 
-    void tipa() { actions.register_action(ipa_cmd, T_ipa); }
+    void tipa() {
+        actions.register_action(ipa_cmd, T_ipa);
+        actions.register_name(ipa_cmd, [](symcodes c, subtypes x) { return CmdChr(c, x).tipa_name(); });
+    }
     bool t = (tipa(), true);
 } // namespace

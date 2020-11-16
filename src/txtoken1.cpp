@@ -9,6 +9,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics/Buffer.h"
+#include "tralics/Dispatcher.h"
 #include <fmt/format.h>
 #include <spdlog/spdlog.h>
 
@@ -2444,6 +2445,8 @@ auto CmdChr::special_name() const -> String {
 // This returns the name of a CmdChr pair.
 // The result is a UTF8 string
 auto CmdChr::name() const -> std::string {
+    if (auto res = actions.name(cmd, chr); !res.empty()) return res;
+
     switch (cmd) {
     case mathbin_cmd:
     case mathrel_cmd:
