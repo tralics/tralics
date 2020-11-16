@@ -7,7 +7,7 @@
 // This is the main hash table.
 struct Hashtab : public std::vector<std::string> {
     std::unordered_map<std::string, size_t> &the_map();
-    std::unordered_map<size_t, EqtbCmdChr>   eqtb;
+    std::unordered_map<size_t, EqtbCmdChr> & the_eqtb();
     std::array<Token, 15>                    my_mathfont_table;
     std::array<Token, 5>                     genfrac_mode;
 

@@ -510,7 +510,7 @@ void Parser::L3_check_cmd(subtypes c) {
         if (l3_get_name(T)) return;
         what = cur_tok;
     }
-    bool is_free = hash_table.eqtb[what.eqtb_loc()].val.is_undef_or_relax();
+    bool is_free = hash_table.the_eqtb()[what.eqtb_loc()].val.is_undef_or_relax();
     if (c == 0 || c == 1) {
         if (!is_free) bad_redefinition(0, what);
     } else {
@@ -533,7 +533,7 @@ void Parser::l3_new_token_list(subtypes c) {
         M_let(name, T_empty, c == l3_tl_gclear_code, false);
         return;
     }
-    bool u = hash_table.eqtb[name.eqtb_loc()].val.is_undef_or_relax();
+    bool u = hash_table.the_eqtb()[name.eqtb_loc()].val.is_undef_or_relax();
     if (c == l3_tl_gclearnew_code || c == l3_tl_clearnew_code) {
         // define globally, reset locally
         if (u)
@@ -1082,7 +1082,7 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
     if (need_prot) prot = true;
     nsig         = tok_base + ':' + osig;
     Token newfun = hash_table.locate(nsig);
-    if (!hash_table.eqtb[newfun.eqtb_loc()].val.is_undef()) {
+    if (!hash_table.the_eqtb()[newfun.eqtb_loc()].val.is_undef()) {
         the_log << "Variant " << newfun << " already defined, not changing it.\n";
         return;
     }
@@ -1093,7 +1093,7 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
     body.push_back(orig);
     auto *X = new Macro(body);
     mac_define(newfun, X, true, rd_always, prot ? userp_cmd : user_cmd);
-    if (!hash_table.eqtb[converter.eqtb_loc()].val.is_undef()) return;
+    if (!hash_table.the_eqtb()[converter.eqtb_loc()].val.is_undef()) return;
     TokenList cb;
     for (size_t i = 0;; i++) {
         char c = changes[i];

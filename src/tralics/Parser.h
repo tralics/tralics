@@ -104,7 +104,7 @@ private:
     }
     [[nodiscard]] auto get_def_language_num() const -> int { return default_language_num; }
     void               kill_line() { input_line.clear(); }
-    void               see_cs_token() { cur_cmd_chr = hash_table.eqtb[cur_tok.eqtb_loc()].val; }
+    void               see_cs_token() { cur_cmd_chr = hash_table.the_eqtb()[cur_tok.eqtb_loc()].val; }
     void               see_cs_token(Token T) {
         cur_tok = T;
         see_cs_token();
