@@ -786,6 +786,7 @@ private:
     void               T_filecontents(subtypes spec);
     void               T_float(subtypes c);
     void               T_fonts(const std::string &x);
+    void               T_fonts(subtypes c);
     void               T_glo();
     void               T_gloss(bool c);
     void               T_glossaire_end();

@@ -1,64 +1,81 @@
 #include "tralics/Dispatcher.h"
 
-void Dispatcher::register_action(symcodes x, std::function<bool(symcodes, subtypes)> f) { emplace(x, f); }
+std::unordered_map<symcodes, std::function<bool(symcodes, subtypes)>> &Dispatcher::the_map() {
+    static std::unordered_map<symcodes, std::function<bool(symcodes, subtypes)>> m;
+    return m;
+};
+
+auto Dispatcher::lookup(symcodes x) -> std::optional<std::function<bool(symcodes, subtypes)>> {
+    static auto &m = the_map();
+    if (auto f = m.find(x); f != m.end()) return f->second;
+    return {};
+}
+
+auto Dispatcher::lookup_and_call(symcodes x, subtypes c) -> std::optional<bool> {
+    static auto &m = the_map();
+    if (auto f = m.find(x); f != m.end()) return f->second(x, c);
+    return {};
+}
+
+void Dispatcher::register_action(symcodes x, std::function<bool(symcodes, subtypes)> f) { the_map().emplace(x, f); }
 
 void Dispatcher::register_action(symcodes x, std::function<void(symcodes, subtypes)> f) {
-    emplace(x, [f](symcodes x, subtypes c) {
+    the_map().emplace(x, [f](symcodes x, subtypes c) {
         f(x, c);
         return true;
     });
 }
 
 void Dispatcher::register_action(symcodes x, parser_fn f) {
-    emplace(x, [f](symcodes /*unused*/, subtypes /*unused*/) { return std::invoke(f, the_parser); });
+    the_map().emplace(x, [f](symcodes /*unused*/, subtypes /*unused*/) { return std::invoke(f, the_parser); });
 }
 
 void Dispatcher::register_action(symcodes x, parser_fn_void f) {
-    emplace(x, [f](symcodes /*unused*/, subtypes /*unused*/) {
+    the_map().emplace(x, [f](symcodes /*unused*/, subtypes /*unused*/) {
         std::invoke(f, the_parser);
         return true;
     });
 }
 
 void Dispatcher::register_action(symcodes x, parser_fn_with_x f) {
-    emplace(x, [f](symcodes x, subtypes /*unused*/) { return std::invoke(f, the_parser, x); });
+    the_map().emplace(x, [f](symcodes x, subtypes /*unused*/) { return std::invoke(f, the_parser, x); });
 }
 
 void Dispatcher::register_action(symcodes x, parser_fn_with_x_void f) {
-    emplace(x, [f](symcodes x, subtypes /*unused*/) {
+    the_map().emplace(x, [f](symcodes x, subtypes /*unused*/) {
         std::invoke(f, the_parser, x);
         return true;
     });
 }
 
 void Dispatcher::register_action(symcodes x, parser_fn_with_c f) {
-    emplace(x, [f](symcodes /*unused*/, subtypes c) { return std::invoke(f, the_parser, c); });
+    the_map().emplace(x, [f](symcodes /*unused*/, subtypes c) { return std::invoke(f, the_parser, c); });
 }
 
 void Dispatcher::register_action(symcodes x, parser_fn_with_c_void f) {
-    emplace(x, [f](symcodes /*unused*/, subtypes c) {
+    the_map().emplace(x, [f](symcodes /*unused*/, subtypes c) {
         std::invoke(f, the_parser, c);
         return true;
     });
 }
 
 void Dispatcher::register_action(symcodes x, parser_fn_with_xc f) {
-    emplace(x, [f](symcodes x, subtypes c) { return std::invoke(f, the_parser, x, c); });
+    the_map().emplace(x, [f](symcodes x, subtypes c) { return std::invoke(f, the_parser, x, c); });
 }
 
 void Dispatcher::register_action(symcodes x, parser_fn_with_xc_void f) {
-    emplace(x, [f](symcodes x, subtypes c) {
+    the_map().emplace(x, [f](symcodes x, subtypes c) {
         std::invoke(f, the_parser, x, c);
         return true;
     });
 }
 
 void Dispatcher::register_action(symcodes x, parser_fn_with_cmdchr f) {
-    emplace(x, [f](symcodes x, subtypes c) { return std::invoke(f, the_parser, CmdChr{x, c}); });
+    the_map().emplace(x, [f](symcodes x, subtypes c) { return std::invoke(f, the_parser, CmdChr{x, c}); });
 }
 
 void Dispatcher::register_action(symcodes x, parser_fn_with_cmdchr_void f) {
-    emplace(x, [f](symcodes x, subtypes c) {
+    the_map().emplace(x, [f](symcodes x, subtypes c) {
         std::invoke(f, the_parser, CmdChr{x, c});
         return true;
     });
@@ -253,8 +270,10 @@ Dispatcher::Dispatcher() {
     register_action(setmode_cmd, &Parser::T_setmode);
     register_action(shorthand_def_cmd, &Parser::M_prefixed);
     register_action(shortverb_cmd, &Parser::M_shortverb);
+    register_action(soul_cmd, &Parser::T_fonts);
     register_action(specimp_cmd, &Parser::T_specimp);
     register_action(start_par_cmd, &Parser::implicit_par);
+    register_action(sub_cmd, &Parser::T_fonts);
     register_action(subfigure_cmd, &Parser::T_subfigure);
     register_action(tabular_env_cmd, &Parser::T_start_tabular);
     register_action(tag_cmd, &Parser::math_only);

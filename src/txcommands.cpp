@@ -46,10 +46,6 @@ void Parser::init_all(const std::string &doc_elt) {
 // Note: never use process_char('&'),
 void Parser::process_string(String s) { unprocessed_xml.append(s); }
 
-void Parser::process_char(int s) { process_char(char32_t(unsigned(s))); }
-
-void Parser::process_char(size_t c) { process_char(char32_t(c)); }
-
 // This is useful for German unlaut. It translates two normal characters.
 void Parser::translate_char(uchar c1, uchar c2) {
     translate_char(CmdChr(letter_catcode, subtypes(c1)));

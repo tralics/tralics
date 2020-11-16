@@ -31,6 +31,8 @@ namespace {
     Xml *  unfinished_par{nullptr};
     Token  T_theequation, T_theparentequation, T_at_theparentequation;
 
+    const std::string list[] = {"sup", "sub", "oldstyle", "caps", "hl", "so", "st", "ul"};
+
 #ifdef _MSC_VER
     inline void txsleep(unsigned i) { Sleep(1000 * i); }
 #else
@@ -366,6 +368,8 @@ void Parser::T_fonts(const std::string &x) {
     T_arg();
     the_stack.pop(the_names["fonts"]);
 }
+
+void Parser::T_fonts(subtypes c) { T_fonts(list[c]); }
 
 // \indent or \noindent. If we are in a <p>,  and the <p> is empty, then we
 // add noindent=true or noindent=false, unless there is already a noindent

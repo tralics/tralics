@@ -153,6 +153,8 @@ void Buffer::out_four_hats(char32_t ch) {
 // or control characters.
 
 void Parser::process_char(char32_t c) { unprocessed_xml.append_with_xml_escaping(c); }
+void Parser::process_char(int s) { process_char(char32_t(s)); }
+void Parser::process_char(size_t c) { process_char(char32_t(c)); }
 
 // Assumes that c is not a special char
 void Parser::process_char(uchar c) {

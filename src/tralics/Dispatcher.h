@@ -3,7 +3,7 @@
 #include "enums.h"
 #include <unordered_map>
 
-class Dispatcher : public std::unordered_map<symcodes, std::function<bool(symcodes, subtypes)>> {
+class Dispatcher {
 public:
     using parser_fn                  = bool (Parser::*)();
     using parser_fn_void             = void (Parser::*)();
@@ -18,6 +18,9 @@ public:
 
     Dispatcher();
 
+    auto lookup(symcodes x) -> std::optional<std::function<bool(symcodes, subtypes)>>;
+    auto lookup_and_call(symcodes x, subtypes c) -> std::optional<bool>;
+
     void register_action(symcodes x, std::function<bool(symcodes, subtypes)> f); // explicit action
     void register_action(symcodes x, std::function<void(symcodes, subtypes)> f); // explicit action, return true
 
@@ -31,6 +34,9 @@ public:
     void register_action(symcodes x, parser_fn_with_xc_void f);     // x triggers the_parser.f(x,c), return true
     void register_action(symcodes x, parser_fn_with_cmdchr f);      // x triggers the_parser.f({x,c})
     void register_action(symcodes x, parser_fn_with_cmdchr_void f); // x triggers the_parser.f({x,c}), return true
+
+private:
+    std::unordered_map<symcodes, std::function<bool(symcodes, subtypes)>> &the_map();
 };
 
 inline Dispatcher actions;

@@ -7,8 +7,6 @@
 #include "tralics/types.h"
 
 namespace {
-    const std::string list[] = {"sup", "sub", "oldstyle", "caps", "hl", "so", "st", "ul"};
-
     auto hfill_to_np(subtypes c) -> std::string {
         if (c == hfill_code) return "hfill";
         if (c == hfilneg_code) return "hfilneg";
@@ -35,7 +33,7 @@ namespace {
         return true;
     }
 
-    if (auto it = actions.find(x); it != actions.end()) return it->second(x, c);
+    if (auto res = actions.lookup_and_call(x, c)) return *res;
 
     switch (x) {
     case nobreakspace_cmd:
@@ -126,8 +124,6 @@ namespace {
         leave_h_mode();
         the_stack.add_newid0(vfill_to_np(c));
         return true;
-    case sub_cmd: T_fonts(list[c]); return true;
-    case soul_cmd: T_fonts(list[c]); return true;
     case arg_font_cmd: T_fonts("font_sc"); return true;
     case special_math_cmd:
         if (c == overline_code || c == underline_code)
