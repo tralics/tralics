@@ -181,7 +181,6 @@ Dispatcher::Dispatcher() {
     register_action(includegraphics_cmd, &Parser::includegraphics);
     register_action(index_cmd, &Parser::T_index);
     register_action(inputclass_cmd, &Parser::T_inputclass);
-    register_action(ipa_cmd, &Parser::T_ipa);
     register_action(isin_cmd, &Parser::T_isin);
     register_action(item_cmd, &Parser::T_item);
     register_action(itemize_cmd, &Parser::T_listenv);

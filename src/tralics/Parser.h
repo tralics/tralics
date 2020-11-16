@@ -806,7 +806,6 @@ private:
     void               T_index(subtypes c);
     void               T_input(subtypes q);
     void               T_inputclass();
-    void               T_ipa(subtypes c);
     void               T_isin();
     void               T_item(subtypes c);
     void               T_keywords();
@@ -1005,6 +1004,9 @@ private:
     void T_scantokens(TokenList &L);
     void tl_set_rescan(subtypes c);
     void Tl3_gen_from_ac(subtypes c);
+
+public: // \todo used in packages, would need to be moved
+    void T_ipa(subtypes c);
 
 public: // \todo static methods that would fit better elsewhere
     static auto ileave_v_mode() -> Xid;
