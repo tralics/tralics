@@ -25,48 +25,18 @@ namespace {
         if (the_parser.get_token()) return; // should not happen
         auto cmd = the_parser.cur_cmd_chr.cmd;
         if (cmd == 12 || cmd == 11) {
-            auto n = the_parser.cur_cmd_chr.chr;
-            if (n > 0 && n < 128) {
-                if (n == 'k') {
-                    the_parser.extended_chars(0x29e);
-                    return;
-                }
-                if (n == 'f') {
-                    mk_hi("turned", 'f');
-                    return;
-                }
-                if (n == 't') {
-                    the_parser.extended_chars(0x287);
-                    return;
-                }
-                if (n == 'r') {
-                    the_parser.extended_chars(0x279);
-                    return;
-                }
-                if (n == 'w') {
-                    the_parser.extended_chars(0x28d);
-                    return;
-                }
-                if (n == 'j') {
-                    the_parser.extended_chars(0x25f);
-                    return;
-                }
-                if (n == 'n') {
-                    the_parser.extended_chars(0x272);
-                    return;
-                }
-                if (n == 'h') {
-                    the_parser.extended_chars(0x127);
-                    return;
-                }
-                if (n == 'l') {
-                    the_parser.extended_chars(0x26c);
-                    return;
-                }
-                if (n == 'z') {
-                    the_parser.extended_chars(0x26e);
-                    return;
-                }
+            auto n = size_t(the_parser.cur_cmd_chr.chr);
+            switch (n) {
+            case 'k': the_parser.extended_chars(0x29e); return;
+            case 'f': mk_hi("turned", 'f'); return;
+            case 't': the_parser.extended_chars(0x287); return;
+            case 'r': the_parser.extended_chars(0x279); return;
+            case 'w': the_parser.extended_chars(0x28d); return;
+            case 'j': the_parser.extended_chars(0x25f); return;
+            case 'n': the_parser.extended_chars(0x272); return;
+            case 'h': the_parser.extended_chars(0x127); return;
+            case 'l': the_parser.extended_chars(0x26c); return;
+            case 'z': the_parser.extended_chars(0x26e); return;
             }
         }
         the_parser.back_input(the_parser.cur_tok);
@@ -76,36 +46,18 @@ namespace {
         if (the_parser.get_token()) return; // should not happen
         auto cmd = the_parser.cur_cmd_chr.cmd;
         if (cmd == 12 || cmd == 11) {
-            auto n = the_parser.cur_cmd_chr.chr;
-            if (n > 0 && n < 128) {
-                if (n == 'E' || n == 'J' || n == 'A' || n == 'U') {
-                    mk_hi("sc", char(n));
-                    return;
-                }
-                if (n == 'H') {
-                    the_parser.extended_chars(0x29c);
-                    return;
-                }
-                if (n == 'L') {
-                    the_parser.extended_chars(0x29f);
-                    return;
-                }
-                if (n == 'B') {
-                    the_parser.extended_chars(0x299);
-                    return;
-                }
-                if (n == 'G') {
-                    the_parser.extended_chars(0x262);
-                    return;
-                }
-                if (n == 'N') {
-                    the_parser.extended_chars(0x274);
-                    return;
-                }
-                if (n == 'R') {
-                    the_parser.extended_chars(0x280);
-                    return;
-                }
+            auto n = size_t(the_parser.cur_cmd_chr.chr);
+            switch (n) {
+            case 'E': mk_hi("sc", 'E'); return;
+            case 'J': mk_hi("sc", 'J'); return;
+            case 'A': mk_hi("sc", 'A'); return;
+            case 'U': mk_hi("sc", 'U'); return;
+            case 'H': the_parser.extended_chars(0x29c); return;
+            case 'L': the_parser.extended_chars(0x29f); return;
+            case 'B': the_parser.extended_chars(0x299); return;
+            case 'G': the_parser.extended_chars(0x262); return;
+            case 'N': the_parser.extended_chars(0x274); return;
+            case 'R': the_parser.extended_chars(0x280); return;
             }
         }
         the_parser.back_input(the_parser.cur_tok);
@@ -115,40 +67,16 @@ namespace {
         if (the_parser.get_token()) return; // should not happen
         auto cmd = the_parser.cur_cmd_chr.cmd;
         if (cmd == 12 || cmd == 11) {
-            auto n = the_parser.cur_cmd_chr.chr;
-            if (n > 0 && n < 128) {
-                if (n == 'd') {
-                    the_parser.extended_chars(0x256);
-                    return;
-                }
-                if (n == 'l') {
-                    the_parser.extended_chars(0x26d);
-                    return;
-                }
-                if (n == 'n') {
-                    the_parser.extended_chars(0x273);
-                    return;
-                }
-                if (n == 'r') {
-                    the_parser.extended_chars(0x27d);
-                    return;
-                }
-                if (n == 'R') {
-                    the_parser.extended_chars(0x27b);
-                    return;
-                }
-                if (n == 's') {
-                    the_parser.extended_chars(0x282);
-                    return;
-                }
-                if (n == 't') {
-                    the_parser.extended_chars(0x288);
-                    return;
-                }
-                if (n == 'z') {
-                    the_parser.extended_chars(0x290);
-                    return;
-                }
+            auto n = size_t(the_parser.cur_cmd_chr.chr);
+            switch (n) {
+            case 'd': the_parser.extended_chars(0x256); return;
+            case 'l': the_parser.extended_chars(0x26d); return;
+            case 'n': the_parser.extended_chars(0x273); return;
+            case 'r': the_parser.extended_chars(0x27d); return;
+            case 'R': the_parser.extended_chars(0x27b); return;
+            case 's': the_parser.extended_chars(0x282); return;
+            case 't': the_parser.extended_chars(0x288); return;
+            case 'z': the_parser.extended_chars(0x290); return;
             }
         }
         the_parser.back_input(the_parser.cur_tok);
@@ -158,32 +86,14 @@ namespace {
         if (the_parser.get_token()) return; // should not happen
         auto cmd = the_parser.cur_cmd_chr.cmd;
         if (cmd == 12 || cmd == 11) {
-            auto n = the_parser.cur_cmd_chr.chr;
-            if (n > 0 && n < 128) {
-                if (n == 'G') {
-                    the_parser.extended_chars(0x29b);
-                    return;
-                }
-                if (n == 'b') {
-                    the_parser.extended_chars(0x253);
-                    return;
-                }
-                if (n == 'd') {
-                    the_parser.extended_chars(0x257);
-                    return;
-                }
-                if (n == 'g') {
-                    the_parser.extended_chars(0x260);
-                    return;
-                }
-                if (n == 'j') {
-                    the_parser.extended_chars(0x284);
-                    return;
-                }
-                if (n == 'o') {
-                    the_parser.extended_chars(0x298);
-                    return;
-                }
+            auto n = size_t(the_parser.cur_cmd_chr.chr);
+            switch (n) {
+            case 'G': the_parser.extended_chars(0x29b); return;
+            case 'b': the_parser.extended_chars(0x253); return;
+            case 'd': the_parser.extended_chars(0x257); return;
+            case 'g': the_parser.extended_chars(0x260); return;
+            case 'j': the_parser.extended_chars(0x284); return;
+            case 'o': the_parser.extended_chars(0x298); return;
             }
         }
         the_parser.back_input(the_parser.cur_tok);
@@ -193,162 +103,51 @@ namespace {
         if (the_parser.get_token()) return; // should not happen
         auto cmd = the_parser.cur_cmd_chr.cmd;
         if (cmd == 12 || cmd == 11) {
-            auto n = the_parser.cur_cmd_chr.chr;
-            if (n > 0 && n < 128) {
-                if (n == '0') {
-                    the_parser.extended_chars(0x289);
-                    return;
-                }
-                if (n == '1') {
-                    the_parser.extended_chars(0x268);
-                    return;
-                }
-                if (n == '2') {
-                    the_parser.extended_chars(0x28c);
-                    return;
-                }
-                if (n == '3') {
-                    the_parser.extended_chars(0x25c);
-                    return;
-                }
-                if (n == '4') {
-                    the_parser.extended_chars(0x265);
-                    return;
-                }
-                if (n == '5') {
-                    the_parser.extended_chars(0x250);
-                    return;
-                }
-                if (n == '6') {
-                    the_parser.extended_chars(0x252);
-                    return;
-                }
-                if (n == '7') {
-                    the_parser.extended_chars(0x264);
-                    return;
-                }
-                if (n == '8') {
-                    the_parser.extended_chars(0x275);
-                    return;
-                }
-                if (n == '9') {
-                    the_parser.extended_chars(0x258);
-                    return;
-                }
-                if (n == '@') {
-                    the_parser.extended_chars(0x259);
-                    return;
-                }
-                if (n == 'A') {
-                    the_parser.extended_chars(0x251);
-                    return;
-                }
-                if (n == 'B') {
-                    the_parser.extended_chars(0x3b2);
-                    return;
-                } // beta
-                if (n == 'C') {
-                    the_parser.extended_chars(0x255);
-                    return;
-                }
-                if (n == 'D') {
-                    the_parser.extended_chars(0x0f0);
-                    return;
-                } // eth
-                if (n == 'E') {
-                    the_parser.extended_chars(0x25B);
-                    return;
-                }
-                if (n == 'F') {
-                    the_parser.extended_chars(0x278);
-                    return;
-                }
-                if (n == 'G') {
-                    the_parser.extended_chars(0x263);
-                    return;
-                }
-                if (n == 'H') {
-                    the_parser.extended_chars(0x266);
-                    return;
-                }
-                if (n == 'I') {
-                    the_parser.extended_chars(0x26A);
-                    return;
-                }
-                if (n == 'J') {
-                    the_parser.extended_chars(0x29D);
-                    return;
-                }
-                if (n == 'K') {
-                    the_parser.extended_chars(0x261);
-                    return;
-                }
-                if (n == 'L') {
-                    the_parser.extended_chars(0x28E);
-                    return;
-                }
-                if (n == 'M') {
-                    the_parser.extended_chars(0x271);
-                    return;
-                }
-                if (n == 'N') {
-                    the_parser.extended_chars(0x14b);
-                    return;
-                } // eng
-                if (n == 'O') {
-                    the_parser.extended_chars(0x254);
-                    return;
-                }
-                if (n == 'P') {
-                    the_parser.extended_chars(0x294);
-                    return;
-                }
-                if (n == 'Q') {
-                    the_parser.extended_chars(0x295);
-                    return;
-                }
-                if (n == 'R') {
-                    the_parser.extended_chars(0x27E);
-                    return;
-                }
-                if (n == 'S') {
-                    the_parser.extended_chars(0x283);
-                    return;
-                }
-                if (n == 'T') {
-                    the_parser.extended_chars(0x3b8);
-                    return;
-                } // theta
-                if (n == 'U') {
-                    the_parser.extended_chars(0x28a);
-                    return;
-                }
-                if (n == 'V') {
-                    the_parser.extended_chars(0x28b);
-                    return;
-                }
-                if (n == 'W') {
-                    the_parser.extended_chars(0x26f);
-                    return;
-                }
-                if (n == 'X') {
-                    the_parser.extended_chars(0x3c7);
-                    return;
-                } // chi
-                if (n == 'Y') {
-                    the_parser.extended_chars(0x28f);
-                    return;
-                }
-                if (n == 'Z') {
-                    the_parser.extended_chars(0x292);
-                    return;
-                }
+            auto n = size_t(the_parser.cur_cmd_chr.chr);
+            switch (n) {
+            case '0': the_parser.extended_chars(0x289); return;
+            case '1': the_parser.extended_chars(0x268); return;
+            case '2': the_parser.extended_chars(0x28c); return;
+            case '3': the_parser.extended_chars(0x25c); return;
+            case '4': the_parser.extended_chars(0x265); return;
+            case '5': the_parser.extended_chars(0x250); return;
+            case '6': the_parser.extended_chars(0x252); return;
+            case '7': the_parser.extended_chars(0x264); return;
+            case '8': the_parser.extended_chars(0x275); return;
+            case '9': the_parser.extended_chars(0x258); return;
+            case '@': the_parser.extended_chars(0x259); return;
+            case 'A': the_parser.extended_chars(0x251); return;
+            case 'B': the_parser.extended_chars(0x3b2); return;
+            case 'C': the_parser.extended_chars(0x255); return;
+            case 'D': the_parser.extended_chars(0x0f0); return;
+            case 'E': the_parser.extended_chars(0x25B); return;
+            case 'F': the_parser.extended_chars(0x278); return;
+            case 'G': the_parser.extended_chars(0x263); return;
+            case 'H': the_parser.extended_chars(0x266); return;
+            case 'I': the_parser.extended_chars(0x26A); return;
+            case 'J': the_parser.extended_chars(0x29D); return;
+            case 'K': the_parser.extended_chars(0x261); return;
+            case 'L': the_parser.extended_chars(0x28E); return;
+            case 'M': the_parser.extended_chars(0x271); return;
+            case 'N': the_parser.extended_chars(0x14b); return;
+            case 'O': the_parser.extended_chars(0x254); return;
+            case 'P': the_parser.extended_chars(0x294); return;
+            case 'Q': the_parser.extended_chars(0x295); return;
+            case 'R': the_parser.extended_chars(0x27E); return;
+            case 'S': the_parser.extended_chars(0x283); return;
+            case 'T': the_parser.extended_chars(0x3b8); return;
+            case 'U': the_parser.extended_chars(0x28a); return;
+            case 'V': the_parser.extended_chars(0x28b); return;
+            case 'W': the_parser.extended_chars(0x26f); return;
+            case 'X': the_parser.extended_chars(0x3c7); return;
+            case 'Y': the_parser.extended_chars(0x28f); return;
+            case 'Z': the_parser.extended_chars(0x292); return;
             }
         }
         the_parser.back_input(the_parser.cur_tok);
     }
 
-    void T_ipa(subtypes c) {
+    void T_ipa(symcodes, subtypes c) {
         if (c == 0) tipa_star();
         if (c == 1) tipa_semi();
         if (c == 2) tipa_colon();
@@ -356,16 +155,6 @@ namespace {
         if (c == 4) tipa_normal();
     }
 
-    // Unicode characters not in the tables above.
-    // 25a 25d 25e
-    // 262 267 269 26b
-    // 270 276 277 27a 27c 27f
-    // 281 285 286
-    // 291 x293 296 297 29a
-    // 2a0 2a1 2a2 2a3 2a4 2a5 2a6 2a7 2a8 2a9 2aa 2ab 2ac 2ad 2ae 2af
-
-    void tipa() {
-        actions.register_action(ipa_cmd, [](symcodes, subtypes c) { T_ipa(c); });
-    }
+    void tipa() { actions.register_action(ipa_cmd, T_ipa); }
     bool t = (tipa(), true);
 } // namespace
