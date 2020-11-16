@@ -36,32 +36,19 @@ namespace {
     if (auto res = actions.call(x, c)) return *res;
 
     switch (x) {
-    case nobreakspace_cmd:
-        LC();
-        if (global_in_url)
-            process_char('~');
-        else
-            process_char(0xA0);
-        return true;
     case space_catcode:
-        if (the_stack.in_v_mode() || the_stack.in_no_mode() || the_stack.in_bib_mode()) return true;
-        process_char(char32_t(char32_t(c)));
+        if (!the_stack.in_v_mode() && !the_stack.in_no_mode() && !the_stack.in_bib_mode()) process_char(char32_t(c));
         return true;
     case inhibit_xml_cmd:
         the_main.no_xml = true;
-        log_and_tty << "\nsyntaxonly: no XML file will be produced\n";
+        spdlog::warn("syntaxonly: no XML file will be produced");
         return true;
     case xmllatex_cmd:
         LC();
         unprocessed_xml += T_xmllatex();
         return true;
-    case kern_cmd:
-        scan_dimen(c == 1, cur_tok);
-        // so what ? we could append hspace or vspace here.
-        return true;
     case aparaitre_cmd:
         LC();
-        // FIXME this is latex not xml
         if (eqtb_int_table[language_code].val == 1) {
             process_char(char32_t(0xE0U));
             process_string(" para");
@@ -103,14 +90,7 @@ namespace {
         else
             T_newline();
         return true;
-    case hline_cmd: // cline, hline, hlinee
-        T_hline(c);
-        return true;
-    case skip_cmd: {
-        int w = c == smallskip_code ? 3 : c == medskip_code ? 6 : 12;
-        append_glue(cur_tok, w << 16, true);
-        return true;
-    }
+    case skip_cmd: return append_glue(cur_tok, (c == smallskip_code ? 3 : c == medskip_code ? 6 : 12) << 16, true), true;
     case hfill_cmd:
         leave_v_mode();
         the_stack.add_newid0(hfill_to_np(c));
@@ -130,7 +110,6 @@ namespace {
         cur_font.ltfont(sT_arg_nopar(), c);
         return true;
     case citation_cmd:
-        // should be mode independent...
         T_citation();
         the_stack.add_nl();
         return true;
@@ -162,9 +141,6 @@ namespace {
             Logger::finish_seq();
             the_log << "{\\afterassignment: " << cur_tok << "}\n";
         }
-        return true;
-    case setlanguage_cmd: //  strange...
-        scan_int(cur_tok);
         return true;
     case move_cmd:
         scan_dimen(false, cur_tok); // ignore dimension
@@ -202,9 +178,6 @@ namespace {
     case ref_cmd:
         leave_v_mode();
         T_ref(c == 0);
-        return true;
-    case eqref_cmd: // Case \XMLref
-        Xid(read_elt_id(cur_tok)).add_ref(sT_arg_nopar());
         return true;
     case centering_cmd:
         word_define(incentering_code, c, false);
@@ -249,9 +222,6 @@ namespace {
         leave_h_mode();     // finish the possibly not-centered paragraph
         the_stack.add_nl(); // needed ?
         word_define(incentering_code, c, false);
-        return true;
-    case end_center_cmd:
-        leave_h_mode(); // finish centered paragraph
         return true;
     case thm_aux_cmd: {
         TokenList L = read_arg();
