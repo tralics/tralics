@@ -47,13 +47,10 @@ namespace {
         if (the_stack.in_v_mode() || the_stack.in_no_mode() || the_stack.in_bib_mode()) return true;
         process_char(char32_t(char32_t(c)));
         return true;
-    case char_num_cmd: extended_chars(scan_27bit_int()); return true;
-    case insertbibliohere_cmd: add_bib_marker(true); return true;
     case inhibit_xml_cmd:
         the_main.no_xml = true;
         log_and_tty << "\nsyntaxonly: no XML file will be produced\n";
         return true;
-    case endcsname_cmd: parse_error("Extra \\endcsname"); return true;
     case xmllatex_cmd:
         LC();
         unprocessed_xml += T_xmllatex();
@@ -77,8 +74,6 @@ namespace {
         flush_buffer();
         T_math(nomathenv_code);
         return true;
-    case open_catcode: push_level(bt_brace); return true;
-    case close_catcode: pop_level(bt_brace); return true;
     case begingroup_cmd:
         flush_buffer();
         if (c == 0)
@@ -124,14 +119,12 @@ namespace {
         leave_h_mode();
         the_stack.add_newid0(vfill_to_np(c));
         return true;
-    case arg_font_cmd: T_fonts("font_sc"); return true;
     case special_math_cmd:
         if (c == overline_code || c == underline_code)
             T_fonts(c == overline_code ? "overline" : "underline");
         else
             math_only();
         return true;
-    case footnote_cmd: T_cap_or_note(false); return true;
     case ltfont_cmd:
         flush_buffer();
         cur_font.ltfont(sT_arg_nopar(), c);
@@ -141,9 +134,6 @@ namespace {
         T_citation();
         the_stack.add_nl();
         return true;
-    case bibitem_cmd: c == 1 ? T_empty_bibitem() : T_bibitem(); return true;
-    case end_citation_cmd: the_stack.pop(the_names["citation"]); return true;
-    case ignoreA_cmd: T_ignoreA(); return true;
     case ignore_cmd:
         if (c == addnl_code) {
             flush_buffer();
@@ -165,11 +155,6 @@ namespace {
         ignore_arg();
         ignore_arg();
         return true;
-    case add_to_macro_cmd: T_addtomacro(c == 1); return true;
-    case makeatletter_cmd: word_define('@', letter_catcode, false); return true;
-    case makeatother_cmd: word_define('@', other_catcode, false); return true;
-    case numberedverbatim_cmd: numbered_verbatim = true; return true;
-    case unnumberedverbatim_cmd: numbered_verbatim = false; return true;
     case after_assignment_cmd:
         get_token();
         set_after_ass_tok(cur_tok);
@@ -178,7 +163,6 @@ namespace {
             the_log << "{\\afterassignment: " << cur_tok << "}\n";
         }
         return true;
-    case last_item_cmd: parse_error(cur_tok, "Read only variable ", cur_tok, "", "readonly"); return true;
     case setlanguage_cmd: //  strange...
         scan_int(cur_tok);
         return true;
@@ -186,7 +170,6 @@ namespace {
         scan_dimen(false, cur_tok); // ignore dimension
         scan_box(move_location);    // read a box and insert the value
         return true;
-    case make_box_cmd: begin_box(makebox_location, c); return true;
     case leader_ship_cmd:
         scan_box(c == shipout_code    ? shipout_location
                  : c == leaders_code  ? leaders_location
@@ -200,10 +183,6 @@ namespace {
             leave_v_mode();
         T_scan_glue(c == 0 ? vskip_code : hskip_code);
         return true;
-    case newcounter_cmd: M_counter(true); return true;
-    case listfiles_cmd: list_files_p = true; return true;
-    case caption_cmd: T_cap_or_note(true); return true;
-    case doc_class_cmd: T_documentclass(!the_stack.in_v_mode() || seen_document); return true;
     case titlepage_cmd:
         if (!the_stack.in_v_mode()) wrong_mode("Bad titlepage command");
         T_titlepage(c);
@@ -243,14 +222,12 @@ namespace {
         flush_buffer();
         the_stack.add_last(the_page_xml);
         return true;
-    case verb_cmd: T_verb(c != 0U ? verb_saved_char : char32_t(0U)); return true;
     case only_preamble_cmd:
         get_r_token(true);
         onlypreamble.push_back(hash_table.let_token);
         onlypreamble.push_back(cur_tok);
         onlypreamble.push_back(hash_table.notprerr_token);
         return true;
-    case loadlatex3_cmd: L3_load(false); return true;
     case toc_cmd: { // insert <tableofcontents/>
         std::string np = "tableofcontents";
         if (c == 1) np = "listoftables";
@@ -268,7 +245,6 @@ namespace {
         the_stack.pop(the_names[np]);
         return true;
     }
-    case end_keywords_cmd: the_stack.pop(the_names["keywords"]); return true;
     case center_cmd:
         leave_h_mode();     // finish the possibly not-centered paragraph
         the_stack.add_nl(); // needed ?
@@ -277,12 +253,6 @@ namespace {
     case end_center_cmd:
         leave_h_mode(); // finish centered paragraph
         return true;
-    case figure_cmd: T_figure_table(x, c); return true;
-    case table_cmd: T_figure_table(x, c); return true;
-    case end_figure_cmd: T_figure_table_end(true); return true;
-    case end_table_cmd: T_figure_table_end(false); return true;
-    case solvecite_cmd: solve_cite(false); return true;
-    case footcitepre_cmd: unprocessed_xml.push_back_unless_punct(' '); return true;
     case thm_aux_cmd: {
         TokenList L = read_arg();
         token_list_define(c, L, false);
@@ -295,27 +265,18 @@ namespace {
             T_start_theorem(c);
         return true;
     case ignore_env_cmd: return true;
-    case ignore_content_cmd: T_raw_env(false); return true;
-    case raw_env_cmd: the_stack.add_last(new Xml(std::string(T_raw_env(true)))); return true;
     case math_env_cmd:
         cur_tok.kill();
         pop_level(bt_env); // IS THIS OK ?
         T_math(c);
         return true;
-    case popmodule_cmd: the_stack.end_module(); return true;
-    case end_picture_env_cmd: the_stack.pop(the_names["picture"]); return true;
     case end_ignore_env_cmd: return true;
-    case subequations_cmd: T_subequations(true); return true;
-    case end_subequations_cmd: T_subequations(false); return true;
     case end_minipage_cmd:
         flush_buffer();
         the_stack.pop_if_frame(the_names["cst_p"]);
         the_stack.pop_if_frame(the_names["item"]);
         the_stack.pop(the_names["minipage"]);
         return true;
-    case end_ignore_content_cmd: parse_error(cur_tok, "missing \\begin environment ", cur_tok.tok_to_str(), "missing begin"); return true;
-    case end_raw_env_cmd: parse_error(cur_tok, "missing \\begin environment ", cur_tok.tok_to_str(), "missing begin"); return true;
-    case end_math_env_cmd: parse_error(cur_tok, "missing \\begin environment ", cur_tok.tok_to_str(), "missing begin"); return true;
     case mathinner_cmd:
         if (math_loc(c) == vdots_code) {
             back_input(hash_table.dollar_token);

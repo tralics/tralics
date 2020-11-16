@@ -1,4 +1,5 @@
 #include "tralics/Dispatcher.h"
+#include "tralics/globals.h"
 #include <spdlog/spdlog.h>
 
 std::unordered_map<symcodes, std::function<bool(symcodes, subtypes)>> &Dispatcher::the_actions() {
@@ -23,11 +24,13 @@ auto Dispatcher::call(symcodes x, subtypes c) -> std::optional<bool> {
 }
 
 auto Dispatcher::name(symcodes x, subtypes c) -> std::optional<std::string> {
-    static auto &m = the_name_fns();
     static auto &n = the_names();
     if (auto it = n.find(x); it != n.end())
         if (auto it2 = it->second.find(c); it2 != it->second.end()) return it2->second;
+
+    static auto &m = the_name_fns();
     if (auto it = m.find(x); it != m.end()) return it->second(x, c);
+
     return {};
 }
 
@@ -125,7 +128,6 @@ Dispatcher::Dispatcher() {
     register_action(calc_cmd, &Parser::exec_calc);
     register_action(case_shift_cmd, &Parser::T_case_shift);
     register_action(change_element_name_cmd, &Parser::T_change_element_name);
-    register_action(char_given_cmd, [](symcodes /*unused*/, subtypes c) { the_parser.extended_chars(size_t(c)); });
     register_action(check_date_cmd, &Parser::date_commands);
     register_action(cite_cmd, &Parser::T_cite);
     register_action(cite_one_cmd, &Parser::T_cite_one);
@@ -183,16 +185,11 @@ Dispatcher::Dispatcher() {
     register_action(GetIdInfo_cmd, &Parser::L3_getid);
     register_action(GetIdInfoLog_cmd, &Parser::L3_logid);
     register_action(glo_cmd, &Parser::T_glo);
-    register_action(gloss_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_gloss(c == 0); });
     register_action(glossaire_cmd, &Parser::T_glossaire);
     register_action(grabenv_cmd, &Parser::T_grabenv);
     register_action(hanl_cmd, &Parser::T_hanl);
     register_action(hspace_cmd, &Parser::T_hspace);
-    register_action(if_package_later_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_if_package_later(c == 0); });
-    register_action(if_package_loaded_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_if_package_loaded(c == 0); });
-    register_action(if_package_with_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_if_package_with(c == 0); });
     register_action(ifdefinable_cmd, &Parser::T_ifdefinable);
-    register_action(ifnextchar_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_ifnextchar(c == 0); });
     register_action(ifstar_cmd, &Parser::T_ifstar);
     register_action(ifthenelse_cmd, &Parser::T_ifthenelse);
     register_action(ignorep_cmd, &Parser::T_par1);
@@ -222,7 +219,6 @@ Dispatcher::Dispatcher() {
     register_action(line_cmd, &Parser::T_line);
     register_action(linebreak_cmd, &Parser::ignore_optarg);
     register_action(list_cmd, &Parser::T_listenv);
-    register_action(load_with_options_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_load_with_options(c == 0); });
     register_action(math_font_cmd, &Parser::math_only);
     register_action(math_list_cmd, &Parser::math_only);
     register_action(math_xml_cmd, &Parser::math_only);
@@ -252,12 +248,10 @@ Dispatcher::Dispatcher() {
     register_action(options_not_used_cmd, &Parser::T_option_not_used);
     register_action(other_catcode, &Parser::translate_char);
     register_action(par_cmd, &Parser::T_par1);
-    register_action(pass_options_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_pass_options(c == 0); });
     register_action(picture_env_cmd, &Parser::T_picture);
     register_action(pop_stack_cmd, &Parser::pop_all_levels);
     register_action(prefix_cmd, &Parser::M_prefixed);
     register_action(process_options_cmd, &Parser::T_process_options);
-    register_action(provides_package_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_provides_package(c == 0); });
     register_action(pushmodule_cmd, &Parser::push_module);
     register_action(put_cmd, &Parser::T_put);
     register_action(read_to_cs_cmd, &Parser::M_prefixed);
@@ -266,7 +260,6 @@ Dispatcher::Dispatcher() {
     register_action(removeelement_cmd, &Parser::T_remove_element);
     register_action(right_cmd, &Parser::math_only);
     register_action(rule_cmd, &Parser::scan_rule);
-    register_action(save_box_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_save_box(c == 0); });
     register_action(saveverb_cmd, &Parser::T_saveverb);
     register_action(scan_glue_cmd, &Parser::T_scan_glue);
     register_action(section_cmd, &Parser::T_paras);
@@ -321,4 +314,63 @@ Dispatcher::Dispatcher() {
     register_action(xmlelement_env_cmd, &Parser::T_xmlenv);
     register_action(xmlelt_cmd, &Parser::T_xmlelt);
     register_action(xray_cmd, &Parser::M_xray);
+
+    register_action(char_given_cmd, [](symcodes /*unused*/, subtypes c) { the_parser.extended_chars(size_t(c)); });
+    register_action(gloss_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_gloss(c == 0); });
+    register_action(if_package_later_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_if_package_later(c == 0); });
+    register_action(if_package_loaded_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_if_package_loaded(c == 0); });
+    register_action(if_package_with_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_if_package_with(c == 0); });
+    register_action(ifnextchar_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_ifnextchar(c == 0); });
+    register_action(load_with_options_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_load_with_options(c == 0); });
+    register_action(pass_options_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_pass_options(c == 0); });
+    register_action(provides_package_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_provides_package(c == 0); });
+    register_action(save_box_cmd, [](symcodes /* unused */, subtypes c) { the_parser.T_save_box(c == 0); });
+    register_action(char_num_cmd, [](symcodes, subtypes) { the_parser.extended_chars(the_parser.scan_27bit_int()); });
+    register_action(insertbibliohere_cmd, [](symcodes, subtypes) { the_parser.add_bib_marker(true); });
+    register_action(endcsname_cmd, [](symcodes, subtypes) { the_parser.parse_error("Extra \\endcsname"); });
+    register_action(open_catcode, [](symcodes, subtypes) { the_parser.push_level(bt_brace); });
+    register_action(close_catcode, [](symcodes, subtypes) { the_parser.pop_level(bt_brace); });
+    register_action(arg_font_cmd, [](symcodes, subtypes) { the_parser.T_fonts("font_sc"); });
+    register_action(footnote_cmd, [](symcodes, subtypes) { the_parser.T_cap_or_note(false); });
+    register_action(bibitem_cmd, [](symcodes, subtypes c) { c == 1 ? the_parser.T_empty_bibitem() : the_parser.T_bibitem(); });
+    register_action(end_citation_cmd, [](symcodes, subtypes) { the_stack.pop(::the_names["citation"]); });
+    register_action(ignoreA_cmd, [](symcodes, subtypes) { the_parser.T_ignoreA(); });
+    register_action(add_to_macro_cmd, [](symcodes, subtypes c) { the_parser.T_addtomacro(c == 1); });
+    register_action(makeatletter_cmd, [](symcodes, subtypes) { the_parser.word_define('@', letter_catcode, false); });
+    register_action(makeatother_cmd, [](symcodes, subtypes) { the_parser.word_define('@', other_catcode, false); });
+    register_action(numberedverbatim_cmd, [](symcodes, subtypes) { the_parser.numbered_verbatim = true; });
+    register_action(unnumberedverbatim_cmd, [](symcodes, subtypes) { the_parser.numbered_verbatim = false; });
+    register_action(make_box_cmd, [](symcodes, subtypes c) { the_parser.begin_box(makebox_location, c); });
+    register_action(newcounter_cmd, [](symcodes, subtypes) { the_parser.M_counter(true); });
+    register_action(listfiles_cmd, [](symcodes, subtypes) { the_parser.list_files_p = true; });
+    register_action(caption_cmd, [](symcodes, subtypes) { the_parser.T_cap_or_note(true); });
+    register_action(doc_class_cmd, [](symcodes, subtypes) { the_parser.T_documentclass(!the_stack.in_v_mode() || seen_document); });
+    register_action(verb_cmd, [](symcodes, subtypes c) { the_parser.T_verb(c != 0U ? the_parser.verb_saved_char : char32_t(0U)); });
+    register_action(loadlatex3_cmd, [](symcodes, subtypes) { the_parser.L3_load(false); });
+    register_action(end_keywords_cmd, [](symcodes, subtypes) { the_stack.pop(::the_names["keywords"]); });
+    register_action(figure_cmd, [](symcodes x, subtypes c) { the_parser.T_figure_table(x, c); });
+    register_action(table_cmd, [](symcodes x, subtypes c) { the_parser.T_figure_table(x, c); });
+    register_action(end_figure_cmd, [](symcodes, subtypes) { the_parser.T_figure_table_end(true); });
+    register_action(end_table_cmd, [](symcodes, subtypes) { the_parser.T_figure_table_end(false); });
+    register_action(solvecite_cmd, [](symcodes, subtypes) { the_parser.solve_cite(false); });
+    register_action(footcitepre_cmd, [](symcodes, subtypes) { the_parser.unprocessed_xml.push_back_unless_punct(' '); });
+    register_action(ignore_content_cmd, [](symcodes, subtypes) { the_parser.T_raw_env(false); });
+    register_action(raw_env_cmd, [](symcodes, subtypes) { the_stack.add_last(new Xml(std::string(the_parser.T_raw_env(true)))); });
+    register_action(popmodule_cmd, [](symcodes, subtypes) { the_stack.end_module(); });
+    register_action(end_picture_env_cmd, [](symcodes, subtypes) { the_stack.pop(::the_names["picture"]); });
+    register_action(subequations_cmd, [](symcodes, subtypes) { the_parser.T_subequations(true); });
+    register_action(end_subequations_cmd, [](symcodes, subtypes) { the_parser.T_subequations(false); });
+
+    register_action(last_item_cmd, [](symcodes, subtypes) {
+        the_parser.parse_error(the_parser.cur_tok, "Read only variable ", the_parser.cur_tok, "", "readonly");
+    });
+    register_action(end_ignore_content_cmd, [](symcodes, subtypes) {
+        the_parser.parse_error(the_parser.cur_tok, "missing \\begin environment ", the_parser.cur_tok.tok_to_str(), "missing begin");
+    });
+    register_action(end_raw_env_cmd, [](symcodes, subtypes) {
+        the_parser.parse_error(the_parser.cur_tok, "missing \\begin environment ", the_parser.cur_tok.tok_to_str(), "missing begin");
+    });
+    register_action(end_math_env_cmd, [](symcodes, subtypes) {
+        the_parser.parse_error(the_parser.cur_tok, "missing \\begin environment ", the_parser.cur_tok.tok_to_str(), "missing begin");
+    });
 }
