@@ -98,11 +98,11 @@ void Parser::push_tpa() {
 // If the definition is local, the old definition is saved on the save stack.
 void Parser::eq_define(size_t a, CmdChr bc, bool gbl) {
     if (bc.is_user()) mac_table.incr_macro_ref(bc.chr);
-    if (!gbl && hash_table.the_eqtb()[a].must_push(cur_level))
-        push_save_stack(new SaveAuxCmd(*this, a, hash_table.the_eqtb()[a]));
-    else if (hash_table.the_eqtb()[a].val.is_user())
-        mac_table.delete_macro_ref(hash_table.the_eqtb()[a].val.chr);
-    hash_table.the_eqtb()[a] = {bc, gbl ? 1 : cur_level};
+    if (!gbl && Hashtab::the_eqtb()[a].must_push(cur_level))
+        push_save_stack(new SaveAuxCmd(*this, a, Hashtab::the_eqtb()[a]));
+    else if (Hashtab::the_eqtb()[a].val.is_user())
+        mac_table.delete_macro_ref(Hashtab::the_eqtb()[a].val.chr);
+    Hashtab::the_eqtb()[a] = {bc, gbl ? 1 : cur_level};
 }
 
 // This defines a user command, associated to the token A.
@@ -115,7 +115,7 @@ void Parser::mac_define(Token a, Macro *b, bool gbl, rd_flag redef, symcodes wha
         if (tracing_assigns()) {
             Logger::finish_seq();
             the_log << "{" << gbl_or_assign(gbl, false) << a << "=";
-            token_for_show(hash_table.the_eqtb()[a.eqtb_loc()].val);
+            token_for_show(Hashtab::the_eqtb()[a.eqtb_loc()].val);
             the_log << "}\n{into " << a << "=";
             token_for_show(nv);
             the_log << "}\n";
@@ -134,7 +134,7 @@ auto Parser::ok_to_define(Token a, rd_flag redef) -> bool {
     if (a == hash_table.frozen_protection) return false;
     if (redef == rd_always) return true;
     auto A              = a.eqtb_loc();
-    bool undef_or_relax = hash_table.the_eqtb()[A].val.is_undef_or_relax();
+    bool undef_or_relax = Hashtab::the_eqtb()[A].val.is_undef_or_relax();
     if (redef == rd_if_defined && undef_or_relax) {
         bad_redefinition(1, a);
         return false;

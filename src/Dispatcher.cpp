@@ -35,27 +35,27 @@ auto Dispatcher::name(symcodes x, subtypes c) -> std::optional<std::string> {
 }
 
 void Dispatcher::register_action(symcodes x, const std::function<bool()> &f) {
-    the_actions().emplace(x, [f](symcodes, subtypes) { return f(); });
+    the_actions().emplace(x, [f](symcodes /*unused*/, subtypes /*unused*/) { return f(); });
 }
 
 void Dispatcher::register_action(symcodes x, const std::function<void()> &f) {
-    the_actions().emplace(x, [f](symcodes, subtypes) { return f(), true; });
+    the_actions().emplace(x, [f](symcodes /*unused*/, subtypes /*unused*/) { return f(), true; });
 }
 
 void Dispatcher::register_action(symcodes x, const std::function<bool(symcodes)> &f) {
-    the_actions().emplace(x, [f](symcodes x, subtypes) { return f(x); });
+    the_actions().emplace(x, [f](symcodes x, subtypes /*unused*/) { return f(x); });
 }
 
 void Dispatcher::register_action(symcodes x, const std::function<void(symcodes)> &f) {
-    the_actions().emplace(x, [f](symcodes x, subtypes) { return f(x), true; });
+    the_actions().emplace(x, [f](symcodes x, subtypes /*unused*/) { return f(x), true; });
 }
 
 void Dispatcher::register_action(symcodes x, const std::function<bool(subtypes)> &f) {
-    the_actions().emplace(x, [f](symcodes, subtypes c) { return f(c); });
+    the_actions().emplace(x, [f](symcodes /*unused*/, subtypes c) { return f(c); });
 }
 
 void Dispatcher::register_action(symcodes x, const std::function<void(subtypes)> &f) {
-    the_actions().emplace(x, [f](symcodes, subtypes c) { return f(c), true; });
+    the_actions().emplace(x, [f](symcodes /*unused*/, subtypes c) { return f(c), true; });
 }
 
 void Dispatcher::register_action(symcodes x, const std::function<bool(symcodes, subtypes)> &f) { the_actions().emplace(x, f); }

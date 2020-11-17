@@ -33,7 +33,7 @@ namespace {
         return true;
     }
 
-    if (auto res = actions.call(x, c)) return *res;
+    if (auto res = Dispatcher::call(x, c)) return *res;
 
     switch (x) {
     case space_catcode:

@@ -104,7 +104,7 @@ private:
     }
     [[nodiscard]] auto get_def_language_num() const -> int { return default_language_num; }
     void               kill_line() { input_line.clear(); }
-    void               see_cs_token() { cur_cmd_chr = hash_table.the_eqtb()[cur_tok.eqtb_loc()].val; }
+    void               see_cs_token() { cur_cmd_chr = Hashtab::the_eqtb()[cur_tok.eqtb_loc()].val; }
     void               see_cs_token(Token T) {
         cur_tok = T;
         see_cs_token();
@@ -215,7 +215,7 @@ public:
     // private functions, alphabetic order
 private:
     auto               before_mac_arg() -> bool;
-    auto               check_brace(int &b) -> bool;
+    auto               check_brace(int &b) const -> bool;
     auto               check_builtin_pack(const std::string &pack) -> bool;
     auto               check_if_redef(const std::string &s) -> bool;
     auto               counter_aux(const std::string &name, String opt, Token T) -> bool;
@@ -899,7 +899,7 @@ private:
     void               translate_char(CmdChr X);
     void               translate_char(uchar c1, uchar c2);
     void               translate_font_size();
-    void               translate02();
+    void               translate02() const;
     [[nodiscard]] auto translate03() -> bool;
     void               translate1();
     void               umlaut_bad();
@@ -989,8 +989,8 @@ public: // general methods and variables used from packages
     void   extended_chars(size_t c);
     auto   get_token() -> bool;
 
-public: // \todo specific methods used in packages, belong there
-public: // \todo static methods that would fit better elsewhere
+    // \todo specific methods used in packages, belong there
+    // \todo static methods that would fit better elsewhere
     static auto ileave_v_mode() -> Xid;
     static auto last_att_list() -> AttList &;
     static void add_bib_marker(bool force);

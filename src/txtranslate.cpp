@@ -123,7 +123,7 @@ void Parser::T_translate(TokenList &X) {
 
 // This prints the command to translate. The case of a space is special
 // Letters are printed elsewhere
-void Parser::translate02() {
+void Parser::translate02() const {
     if (cur_cmd_chr.is_space()) {
         if (!the_stack.in_v_mode()) Logger::out_single_char(char32_t(' '));
         return;
@@ -1124,7 +1124,7 @@ void Parser::T_color(subtypes c) {
         std::string value = sT_arg_nopar();
         B                 = "\\color@" + name;
         Token C           = hash_table.locate(B);
-        if (!hash_table.the_eqtb()[C.eqtb_loc()].val.is_undef()) log_and_tty << "Redefining color " << name << "\n";
+        if (!Hashtab::the_eqtb()[C.eqtb_loc()].val.is_undef()) log_and_tty << "Redefining color " << name << "\n";
         if (model == "named") {
             // case \definecolor{myred}{named}{red}
             // is \global\let\color@myred = \color@red
@@ -1517,7 +1517,7 @@ auto Parser::special_tpa_arg(const std::string &name, const std::string &y, bool
     if (!env) {
         B       = name + "@hook";
         cur_tok = hash_table.locate(B);
-        if (!hash_table.the_eqtb()[cur_tok.eqtb_loc()].val.is_undef()) {
+        if (!Hashtab::the_eqtb()[cur_tok.eqtb_loc()].val.is_undef()) {
             Token     T = cur_tok;
             TokenList L = read_arg();
             L.brace_me();
@@ -1531,7 +1531,7 @@ auto Parser::special_tpa_arg(const std::string &name, const std::string &y, bool
     push_tpa();
     B       = name + "@helper";
     cur_tok = hash_table.locate(B);
-    if (!hash_table.the_eqtb()[cur_tok.eqtb_loc()].val.is_undef()) {
+    if (!Hashtab::the_eqtb()[cur_tok.eqtb_loc()].val.is_undef()) {
         back_input(cur_tok);
         if (!env) special_case = true;
     }

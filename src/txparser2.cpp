@@ -1870,7 +1870,7 @@ void Parser::T_use_counter(const std::string &s) {
     Buffer &b     = txparser2_local_buf;
     b             = "c@" + s;
     Token       T = hash_table.locate(b);
-    EqtbCmdChr &E = hash_table.the_eqtb()[T.eqtb_loc()];
+    EqtbCmdChr &E = Hashtab::the_eqtb()[T.eqtb_loc()];
     if (E.val.cmd != assign_int_cmd) return;
     word_define(E.val.chr, 0, true);
 }
@@ -1897,7 +1897,7 @@ void Parser::T_ifdefinable() {
         bad = true;
     else if (C == hash_table.relax_token)
         bad = true;
-    else if (!hash_table.the_eqtb()[C.eqtb_loc()].val.is_undef_or_relax())
+    else if (!Hashtab::the_eqtb()[C.eqtb_loc()].val.is_undef_or_relax())
         bad = true;
     else {
         if (C.is_in_hash()) {
@@ -2023,7 +2023,7 @@ void Parser::T_listenv(symcodes x) {
         b += "@hook";
         Token T   = hash_table.locate(b);
         auto  pos = T.eqtb_loc();
-        if (!hash_table.the_eqtb()[pos].val.is_undef()) back_input(T);
+        if (!Hashtab::the_eqtb()[pos].val.is_undef()) back_input(T);
     }
     Xml *res = new Xml(the_names["list"], nullptr);
     the_stack.push(the_names["list"], res);

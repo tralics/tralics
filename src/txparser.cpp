@@ -135,7 +135,7 @@ void Parser::check_outer_validity() {
 
 // Adjusts the brace counter b. Returns true if it becomes 0.
 // The scanner returns only balanced lists.
-auto Parser::check_brace(int &b) -> bool {
+auto Parser::check_brace(int &b) const -> bool {
     if (cur_tok.is_a_brace()) {
         if (cur_tok.is_a_left_brace())
             b++;
@@ -1553,7 +1553,7 @@ void Parser::fetch_name2() {
 void Parser::finish_csname(const std::string &b) {
     cur_tok  = hash_table.locate(b);
     auto pos = cur_tok.eqtb_loc();
-    if (hash_table.the_eqtb()[pos].val.is_undef()) eq_define(pos, CmdChr(relax_cmd, relax_code), false);
+    if (Hashtab::the_eqtb()[pos].val.is_undef()) eq_define(pos, CmdChr(relax_cmd, relax_code), false);
 }
 
 // Same as above, but the token is to be read again
@@ -1839,7 +1839,7 @@ void Parser::counter_boot(const std::string &s, String aux) {
 // Returns true if bad
 auto Parser::counter_check(Buffer &b, bool def) -> bool {
     cur_tok       = hash_table.locate(b);
-    EqtbCmdChr &E = hash_table.the_eqtb()[cur_tok.eqtb_loc()];
+    EqtbCmdChr &E = Hashtab::the_eqtb()[cur_tok.eqtb_loc()];
     if (def) {
         if (!E.val.is_undef_or_relax()) {
             bad_redefinition(0, cur_tok);
@@ -2249,9 +2249,9 @@ auto Parser::env_helper(const std::string &s) -> SaveAuxEnv * {
         else
             expand();
     } else {
-        Token t                      = hash_table.temp_token;
-        auto  k                      = t.eqtb_loc();
-        hash_table.the_eqtb()[k].val = X->cc;
+        Token t                    = hash_table.temp_token;
+        auto  k                    = t.eqtb_loc();
+        Hashtab::the_eqtb()[k].val = X->cc;
         back_input(t);
     }
     return true;
@@ -3067,7 +3067,7 @@ void Parser::M_let(Token A, bool global, bool redef) {
         String action = global ? "globally " : "";
         Logger::finish_seq();
         the_log << "{" << action << "changing " << A << "=";
-        token_for_show(hash_table.the_eqtb()[pos].val);
+        token_for_show(Hashtab::the_eqtb()[pos].val);
         the_log << "}\n{into " << A << "=";
         token_for_show(cur_cmd_chr);
         the_log << "}\n";
@@ -3188,7 +3188,7 @@ void Parser::M_newcommand(rd_flag redef) {
         X          = read_latex_macro();
         if (redef == rd_never) { // case \CheckCommand
             bool is_same = true;
-            auto pq      = hash_table.the_eqtb()[name.eqtb_loc()].val;
+            auto pq      = Hashtab::the_eqtb()[name.eqtb_loc()].val;
             if (pq.cmd != what)
                 is_same = false;
             else {
@@ -3593,7 +3593,7 @@ void Parser::set_boolean() {
         return;
     }
     if (my_csname("", s, A, "setboolean")) return;
-    if (hash_table.the_eqtb()[cur_tok.eqtb_loc()].val.is_relax()) {
+    if (Hashtab::the_eqtb()[cur_tok.eqtb_loc()].val.is_relax()) {
         get_token();
         parse_error(T, "Undefined boolean ", cur_tok, "", "undefined boolean");
     }

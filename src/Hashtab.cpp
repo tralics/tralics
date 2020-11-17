@@ -11,12 +11,12 @@ namespace {
     }
 } // namespace
 
-std::unordered_map<std::string, size_t> &Hashtab::the_map() {
+auto Hashtab::the_map() -> std::unordered_map<std::string, size_t> & {
     static std::unordered_map<std::string, size_t> m;
     return m;
 }
 
-std::unordered_map<size_t, EqtbCmdChr> &Hashtab::the_eqtb() {
+auto Hashtab::the_eqtb() -> std::unordered_map<size_t, EqtbCmdChr> & {
     static std::unordered_map<size_t, EqtbCmdChr> m;
     return m;
 }
@@ -77,7 +77,7 @@ auto Hashtab::primitive(const std::string &s, symcodes c, subtypes v) -> Token {
 }
 
 auto Hashtab::primitive_plain(const std::string &s, symcodes c, subtypes v) -> Token {
-    actions.register_name(c, v, s);
+    Dispatcher::register_name(c, v, s);
     return primitive(s, c, v);
 }
 
