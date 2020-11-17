@@ -115,10 +115,10 @@ void Parser::T_titlepage_finish(size_t v) {
     the_stack.add_nl();
     ileave_v_mode();
     Titlepage.make_invalid();
-    if (the_main->tpa_mode == 1) return;
-    if (the_main->tpa_mode == 2)
+    if (the_main.tpa_mode == 1) return;
+    if (the_main.tpa_mode == 2)
         finished = true;
-    else if (the_main->tpa_mode == 0) {
+    else if (the_main.tpa_mode == 0) {
         if (nb_errs > 0) finished = true;
     }
     if (finished && also_bib) {
@@ -131,7 +131,7 @@ void Parser::T_titlepage_finish(size_t v) {
     }
 }
 
-void Parser::T_titlepage(size_t v) const {
+void Parser::T_titlepage(size_t v) {
     if (tracing_commands()) {
         Logger::finish_seq();
         the_log << "{\\titlepage " << v << "}\n";
@@ -236,9 +236,7 @@ void Buffer::find_top_atts() {
         std::string bs = std::string(substr(ptrs.b + 1));
         Xid(1).add_attribute(as, bs);
     } else if (substr(ptrs.b) == "\\specialyear") {
-        auto as = std::string(a);
-        auto bs = std::string(the_main->year_string);
-        Xid(1).add_attribute(as, bs);
+        // \todo RA remove
     } else if (substr(ptrs.b) == "\\tralics") {
         auto as = std::string(a);
         clear();
@@ -248,7 +246,7 @@ void Buffer::find_top_atts() {
         Xid(1).add_attribute(as, bs);
     } else {
         docspecial = fmt::format("\\addattributestodocument{{{}}}{{{}}}", a, data() + ptrs.b);
-        the_main->add_to_from_config(init_file_pos, docspecial);
+        the_main.add_to_from_config(init_file_pos, docspecial);
     }
 }
 
@@ -281,7 +279,7 @@ auto Buffer::find_alias(const std::vector<std::string> &SL, std::string &res) ->
         bool        ok = a == res;
         if (ok) {
             the_log << "Potential type " << res << " aliased to " << pot_res << "\n";
-            if (!local_potres) local_potres = the_main->check_for_tcf(pot_res);
+            if (!local_potres) local_potres = the_main.check_for_tcf(pot_res);
             if (local_potres) {
                 res = pot_res;
                 return true;

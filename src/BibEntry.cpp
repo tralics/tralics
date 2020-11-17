@@ -212,31 +212,30 @@ namespace {
         res.append("}}");
         return res;
     }
-} // namespace
 
-// This returns a prefix from ra_pretable, according to from and type_int.
-auto BibEntry::ra_prefix() const -> std::string {
-    if (get_cite_prefix() == from_refer) return ra_pretable[0];
-    if (get_cite_prefix() == from_foot) return ra_pretable[1];
-    switch (type_int) {
-    case type_book:
-    case type_booklet:
-    case type_proceedings: return ra_pretable[2];
-    case type_phdthesis: return ra_pretable[3];
-    case type_article:
-    case type_inbook:
-    case type_incollection: return ra_pretable[4];
-    case type_conference:
-    case type_inproceedings: return ra_pretable[5];
-    case type_manual:
-    case type_techreport:
-    case type_coursenotes: return ra_pretable[6];
-    case type_masterthesis:
-    case type_misc:
-    case type_unpublished:
-    default: return ra_pretable[7];
+    void handle_one_namelist(std::string &src, BibtexName &X) {
+        if (src.empty()) return;
+        biblio_buf1.clear();
+        biblio_buf2.clear();
+        biblio_buf3.clear();
+        biblio_buf4.clear();
+        name_buffer.normalise_for_bibtex(src.c_str());
+        auto                    n = name_buffer.size() + 1;
+        std::vector<bchar_type> table(n);
+        NameSplitter            W(table.data());
+        name_buffer.fill_table(table);
+        W.handle_the_names();
+        X.value     = biblio_buf1;
+        X.long_key  = biblio_buf2;
+        X.short_key = biblio_buf3;
+        X.name_key  = biblio_buf4;
     }
-}
+
+    void out_something_s(field_pos p, const std::string &s) {
+        bbl.format("\\cititem{{{}}}{{{}}}", bib_xml_name[p], s);
+        bbl.flush();
+    }
+} // namespace
 
 // This is non trivial, because we have a fixed-sized array and a varying size
 // return true if the field is not already filled.
@@ -262,7 +261,7 @@ auto BibEntry::store_field(field_pos where) -> bool {
 void BibEntry::parse_crossref() {
     const auto &name = all_fields[fp_crossref];
     if (name[0] == 0) return;
-    bib_creator bc = the_bibtex.auto_cite() ? because_all : because_crossref;
+    bib_creator bc = the_bibtex.nocitestar ? because_all : because_crossref;
     BibEntry *  Y  = the_bibtex.find_entry(name, true, bc);
     if (this == Y) return; /// should not happen
     crossref = Y;
@@ -293,10 +292,10 @@ void BibEntry::copy_from(BibEntry *Y, size_t k) {
         log_and_tty << "Unknown reference in crossref " << Y->cite_key.full_key << "\n";
         return; // Should signal an error
     }
-    for (size_t i = k; i < fp_unknown; i++) {
+    for (size_t i = k; i < all_fields.size(); i++) {
         if (all_fields[i].empty()) all_fields[i] = Y->all_fields[i];
     }
-    auto n = the_main->bibtex_fields.size();
+    auto n = the_main.bibtex_fields.size();
     for (size_t i = 0; i < n; i++)
         if (user_fields[i].empty()) user_fields[i] = Y->user_fields[i];
 }
@@ -366,25 +365,18 @@ void BibEntry::numeric_label(size_t i) {
 // -----------------------------------------------------------------------
 // printing the bbl.
 
-void BibEntry::out_something(field_pos p, const std::string &s) {
-    bbl.append("\\cititem");
-    bbl.format("{{{}}}", bib_xml_name[p]);
-    bbl.format("{{{}}}", s);
-    bbl.flush();
-}
-
 // output a generic field as \cititem{k}{value}
 // If no value, and w>0, a default value will be used.
 void BibEntry::out_something(field_pos p, size_t w) {
     std::string s = all_fields[p];
     if (s.empty()) s = my_constant_table[w - 1];
-    out_something(p, s);
+    out_something_s(p, s);
 }
 
 void BibEntry::out_something(field_pos p) {
     std::string s = all_fields[p];
     if (s.empty()) return;
-    out_something(p, s);
+    out_something_s(p, s);
 }
 
 // Outputs a part of the thing.
@@ -417,8 +409,8 @@ void BibEntry::call_type() {
     bbl.format("{{{}}}", label);
     bbl.format("{{{}}}", cite_key.full_key);
     bbl.format("{{{}}}", unique_id);
-    bbl.format("{{{}}}", from_to_string());
-    const auto &my_name = (is_extension > 0) ? the_main->bibtex_extensions[is_extension - 1] : the_names[type_to_string(type_int)];
+    bbl.format("{{{}}}", "year"); // \todo [[deprecated]]
+    const auto &my_name = (is_extension > 0) ? the_main.bibtex_extensions[is_extension - 1] : the_names[type_to_string(type_int)];
     bbl.format("{{{}}}", my_name);
     bbl.append(aux_label);
     bbl.flush();
@@ -430,19 +422,14 @@ void BibEntry::call_type() {
     out_something(fp_doi);
     std::string s = all_fields[fp_url];
     if (!s.empty()) {
-        if (s.starts_with("\\rrrt"))
-            bbl.append(s);
-        else {
-            bbl.append("\\csname @href\\endcsname");
-            //    string S = hack_bib_space(s);
-            bbl.format("{{{}}}", remove_space(s));
-            bbl.append(insert_break(s));
-        }
+        bbl.append("\\csname @href\\endcsname");
+        //    string S = hack_bib_space(s);
+        bbl.format("{{{}}}", remove_space(s));
+        bbl.append(insert_break(s));
         bbl.flush();
     }
-    std::vector<std::string> &Bib        = the_main->bibtex_fields;
-    auto                      additional = Bib.size();
-    for (size_t i = 0; i < additional; i++) {
+    std::vector<std::string> &Bib = the_main.bibtex_fields;
+    for (size_t i = 0; i < Bib.size(); i++) {
         auto ss = user_fields[i];
         if (!ss.empty()) {
             bbl.append("\\cititem");
@@ -596,7 +583,6 @@ void BibEntry::presort(long serial) {
         label = lab1 + s;
     }
     B.clear();
-    if (the_main->handling_ra) B = ra_prefix() + lab3;
     B.format("{}{}    {}    ", label, lab2, y);
     B.special_title(all_fields[fp_title]);
     B.lowercase();
@@ -604,34 +590,15 @@ void BibEntry::presort(long serial) {
     sort_label = B;
 }
 
-void BibEntry::handle_one_namelist(std::string &src, BibtexName &X) {
-    if (src.empty()) return;
-    biblio_buf1.clear();
-    biblio_buf2.clear();
-    biblio_buf3.clear();
-    biblio_buf4.clear();
-    name_buffer.normalise_for_bibtex(src.c_str());
-    auto                    n = name_buffer.size() + 1;
-    std::vector<bchar_type> table(n);
-    NameSplitter            W(table.data());
-    name_buffer.fill_table(table);
-    W.handle_the_names();
-    X.value     = biblio_buf1;
-    X.long_key  = biblio_buf2;
-    X.short_key = biblio_buf3;
-    X.name_key  = biblio_buf4;
-}
-
 void BibEntry::normalise() {
     handle_one_namelist(all_fields[fp_author], author_data);
     handle_one_namelist(all_fields[fp_editor], editor_data);
     std::string y = all_fields[fp_year];
     auto        n = y.size();
-    if (n == 0) return;
+    if (y.empty()) return;
     cur_year = -1;
     int res  = 0;
-    for (size_t i = 0; i < n; i++) {
-        char c = y[i];
+    for (char c : y) {
         if (std::isdigit(c) == 0) return;
         res = res * 10 + (c - '0');
         if (res > 10000) return;

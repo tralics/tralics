@@ -42,17 +42,12 @@ public:
     std::string label, sort_label, aux_label; // cite label and sort label
     std::string unique_id;
 
-    BibEntry() : user_fields(the_main->bibtex_fields.size()) {}
+    BibEntry() : user_fields(the_main.bibtex_fields.size()) {}
 
 private:
-    [[nodiscard]] auto from_to_string() const -> std::string { return cite_key.from_to_string(); };
-    [[nodiscard]] auto ra_prefix() const -> std::string;
-    [[nodiscard]] auto get_cite_prefix() const -> bib_from { return cite_key.cite_prefix; }
-
     void out_something(field_pos p);
     void out_something(field_pos p, size_t w);
     void set_explicit_cit() { explicit_cit = true; }
-    void move_to_year() { cite_key.move_to_year(); }
     void use_extra_num();
     void numeric_label(size_t i);
     void call_type();
@@ -75,7 +70,4 @@ private:
     auto store_field(field_pos where) -> bool;
     void parse_crossref();
     void work(long serial);
-
-    static void handle_one_namelist(std::string &s, BibtexName &X);
-    static void out_something(field_pos p, const std::string &s);
 };

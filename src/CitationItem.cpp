@@ -20,7 +20,7 @@ void CitationItem::dump(Buffer &b) const {
 // This prints an unsolved reference for use by Tralics.
 void CitationItem::dump_bibtex() {
     if (is_solved()) return;
-    CitationKey ref(from, key);
+    CitationKey ref(key);
     BibEntry *  X = the_bibtex.find_entry(ref);
     if (X != nullptr) {
         err_buf = "Conflicts with tralics bib" + ref.full_key;
@@ -31,7 +31,7 @@ void CitationItem::dump_bibtex() {
 }
 
 // Returns true if this is the same object.
-// returns false for \cite{Knuth} and \footcite{Knuth}
+// returns false for \cite{Knuth}
 auto CitationItem::match(const std::string &A, const std::string &B) const -> bool { return key == A && from == B; }
 
 // Case of solve{?}{Knuth}. We return true if the key is Knuth, whatever the

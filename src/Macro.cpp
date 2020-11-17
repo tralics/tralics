@@ -11,7 +11,7 @@ void Macro::correct_type() {
         auto             A = L.begin();
         auto             B = L.end();
         if (A == B) return;
-        if (*A != the_parser.hash_table.dblarg_token) return;
+        if (*A != hash_table.dblarg_token) return;
         ++A;
         if (A != B) return;
         type = dt_spec_opt;

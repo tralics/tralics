@@ -17,12 +17,6 @@
 #include "tralics/util.h"
 #include <fmt/format.h>
 
-namespace {
-    std::vector<std::unique_ptr<SaveAuxBase>> the_save_stack;
-} // namespace
-
-// --------------------------------------------------
-
 auto to_string(save_type v) -> String { // \todo std::string
     switch (v) {
     case st_boundary: return "boundary";
@@ -47,7 +41,7 @@ auto gbl_or_assign(bool gbl, bool re) -> String {
     return "changing ";
 }
 
-Parser::Parser() : cur_env_name("document") {
+Parser::Parser() : cur_env_name("document") { // \todo move more to the header
     sectionning_offset                 = section_code;
     restricted                         = false;
     cur_level                          = 1;
@@ -70,24 +64,6 @@ Parser::Parser() : cur_env_name("document") {
 }
 
 // saving and restoring things
-
-// Implements \currentgrouptype.
-// (see online doc for the meaning of the numbers).
-auto Parser::cur_group_type() -> int {
-    auto V = first_boundary();
-    switch (V) {
-    case bt_impossible: return 0;
-    case bt_brace: return 1;
-    case bt_math: return 9;
-    case bt_semisimple: return 14;
-    case bt_esemisimple: return 17;
-    case bt_env: return 18;
-    case bt_cell: return 19;
-    case bt_local: return 20;
-    case bt_tpa: return 21;
-    default: return 17;
-    }
-}
 
 auto operator<<(std::ostream &fp, const boundary_type &x) -> std::ostream & { return fp << bt_to_string(x); }
 
@@ -122,11 +98,11 @@ void Parser::push_tpa() {
 // If the definition is local, the old definition is saved on the save stack.
 void Parser::eq_define(size_t a, CmdChr bc, bool gbl) {
     if (bc.is_user()) mac_table.incr_macro_ref(bc.chr);
-    if (!gbl && hash_table.eqtb[a].must_push(cur_level))
-        push_save_stack(new SaveAuxCmd(*this, a, hash_table.eqtb[a]));
-    else if (hash_table.eqtb[a].val.is_user())
-        mac_table.delete_macro_ref(hash_table.eqtb[a].val.chr);
-    hash_table.eqtb[a] = {bc, gbl ? 1 : cur_level};
+    if (!gbl && Hashtab::the_eqtb()[a].must_push(cur_level))
+        push_save_stack(new SaveAuxCmd(*this, a, Hashtab::the_eqtb()[a]));
+    else if (Hashtab::the_eqtb()[a].val.is_user())
+        mac_table.delete_macro_ref(Hashtab::the_eqtb()[a].val.chr);
+    Hashtab::the_eqtb()[a] = {bc, gbl ? 1 : cur_level};
 }
 
 // This defines a user command, associated to the token A.
@@ -139,7 +115,7 @@ void Parser::mac_define(Token a, Macro *b, bool gbl, rd_flag redef, symcodes wha
         if (tracing_assigns()) {
             Logger::finish_seq();
             the_log << "{" << gbl_or_assign(gbl, false) << a << "=";
-            token_for_show(hash_table.eqtb[a.eqtb_loc()].val);
+            token_for_show(Hashtab::the_eqtb()[a.eqtb_loc()].val);
             the_log << "}\n{into " << a << "=";
             token_for_show(nv);
             the_log << "}\n";
@@ -158,7 +134,7 @@ auto Parser::ok_to_define(Token a, rd_flag redef) -> bool {
     if (a == hash_table.frozen_protection) return false;
     if (redef == rd_always) return true;
     auto A              = a.eqtb_loc();
-    bool undef_or_relax = hash_table.eqtb[A].val.is_undef_or_relax();
+    bool undef_or_relax = Hashtab::the_eqtb()[A].val.is_undef_or_relax();
     if (redef == rd_if_defined && undef_or_relax) {
         bad_redefinition(1, a);
         return false;
@@ -314,42 +290,6 @@ void Parser::save_font() {
     cur_font.set_level(cur_level);
 }
 
-// returns the type of the first boundary
-// sets first_boundary_loc if a boundary has been seen.
-
-static int first_boundary_loc = 0;
-auto       Parser::first_boundary() -> boundary_type {
-    auto n = the_save_stack.size();
-    for (size_t i = n; i > 0; i--) {
-        SaveAuxBase *p = the_save_stack[i - 1].get();
-        if (p == nullptr) continue;
-        if (p->type != st_boundary) continue;
-        first_boundary_loc = p->line;
-        return dynamic_cast<SaveAuxBoundary *>(p)->val;
-    }
-    return bt_impossible;
-}
-
-// case where a table preamble says  >{}c<{xx$yy} and we see &
-// here xy can be } or \endgroup
-auto Parser::stack_math_in_cell() -> bool {
-    auto n     = the_save_stack.size();
-    bool first = true;
-    for (size_t i = n; i > 0; i--) {
-        SaveAuxBase *p = the_save_stack[i - 1].get();
-        if (p->type != st_boundary) continue;
-        auto cur = dynamic_cast<SaveAuxBoundary *>(p)->val;
-        if (cur == bt_brace || cur == bt_semisimple) continue;
-        if (first) {
-            if (cur != bt_math) return false;
-            first = false;
-            continue;
-        }
-        return cur == bt_cell;
-    }
-    return false;
-}
-
 void Parser::dump_save_stack() const {
     int  L = cur_level - 1;
     auto n = the_save_stack.size();
@@ -491,377 +431,3 @@ void Parser::final_checks() {
     }
     the_log << B << ".\n";
 }
-
-// Returns the slot associated to the env S
-auto Parser::is_env_on_stack(const std::string &s) -> SaveAuxEnv * {
-    auto n = the_save_stack.size();
-    for (size_t i = n; i > 0; i--) {
-        SaveAuxBase *p = the_save_stack[i - 1].get();
-        if (p == nullptr) continue; // \todo this should never happen but it does on linux+clang9
-        if (p->type != st_env) continue;
-        auto *q = dynamic_cast<SaveAuxEnv *>(p);
-        if (q->name == s) return q;
-    }
-    return nullptr;
-}
-
-// Returns the number of environments
-auto Parser::nb_env_on_stack() -> int {
-    auto n = the_save_stack.size();
-    int  k = 0;
-    for (size_t i = n; i > 0; i--) {
-        SaveAuxBase *p = the_save_stack[i - 1].get();
-        if (p->type == st_env) ++k;
-    }
-    return k;
-}
-
-// ----------------------------------------------------------------------
-// TIPA macros
-void Parser::T_ipa(subtypes c) {
-    if (c == 0) tipa_star();
-    if (c == 1) tipa_semi();
-    if (c == 2) tipa_colon();
-    if (c == 3) tipa_exclam();
-    if (c == 4) tipa_normal();
-}
-
-void Parser::mk_hi(String x, char c) {
-    the_parser.LC();
-    the_parser.unprocessed_xml.format("<hi rend='{}'>{}</hi>", x, c);
-}
-
-void Parser::tipa_star() {
-    if (get_token()) return; // should not happen
-    auto cmd = cur_cmd_chr.cmd;
-    if (cmd == 12 || cmd == 11) {
-        auto n = cur_cmd_chr.chr;
-        if (n > 0 && n < 128) {
-            if (n == 'k') {
-                extended_chars(0x29e);
-                return;
-            }
-            if (n == 'f') {
-                mk_hi("turned", 'f');
-                return;
-            }
-            if (n == 't') {
-                extended_chars(0x287);
-                return;
-            }
-            if (n == 'r') {
-                extended_chars(0x279);
-                return;
-            }
-            if (n == 'w') {
-                extended_chars(0x28d);
-                return;
-            }
-            if (n == 'j') {
-                extended_chars(0x25f);
-                return;
-            }
-            if (n == 'n') {
-                extended_chars(0x272);
-                return;
-            }
-            if (n == 'h') {
-                extended_chars(0x127);
-                return;
-            } // 0x45b ?
-            if (n == 'l') {
-                extended_chars(0x26c);
-                return;
-            }
-            if (n == 'z') {
-                extended_chars(0x26e);
-                return;
-            }
-        }
-    }
-    back_input(cur_tok);
-}
-
-void Parser::tipa_semi() {
-    if (get_token()) return; // should not happen
-    auto cmd = cur_cmd_chr.cmd;
-    if (cmd == 12 || cmd == 11) {
-        auto n = cur_cmd_chr.chr;
-        if (n > 0 && n < 128) {
-            if (n == 'E' || n == 'J' || n == 'A' || n == 'U') {
-                mk_hi("sc", char(n));
-                return;
-            }
-            if (n == 'H') {
-                extended_chars(0x29c);
-                return;
-            }
-            if (n == 'L') {
-                extended_chars(0x29f);
-                return;
-            }
-            if (n == 'B') {
-                extended_chars(0x299);
-                return;
-            }
-            if (n == 'G') {
-                extended_chars(0x262);
-                return;
-            }
-            if (n == 'N') {
-                extended_chars(0x274);
-                return;
-            }
-            if (n == 'R') {
-                extended_chars(0x280);
-                return;
-            }
-        }
-    }
-    back_input(cur_tok);
-}
-
-void Parser::tipa_colon() {
-    if (get_token()) return; // should not happen
-    auto cmd = cur_cmd_chr.cmd;
-    if (cmd == 12 || cmd == 11) {
-        auto n = cur_cmd_chr.chr;
-        if (n > 0 && n < 128) {
-            if (n == 'd') {
-                extended_chars(0x256);
-                return;
-            }
-            if (n == 'l') {
-                extended_chars(0x26d);
-                return;
-            }
-            if (n == 'n') {
-                extended_chars(0x273);
-                return;
-            }
-            if (n == 'r') {
-                extended_chars(0x27d);
-                return;
-            }
-            if (n == 'R') {
-                extended_chars(0x27b);
-                return;
-            }
-            if (n == 's') {
-                extended_chars(0x282);
-                return;
-            }
-            if (n == 't') {
-                extended_chars(0x288);
-                return;
-            }
-            if (n == 'z') {
-                extended_chars(0x290);
-                return;
-            }
-        }
-    }
-    back_input(cur_tok);
-}
-
-void Parser::tipa_exclam() {
-    if (get_token()) return; // should not happen
-    auto cmd = cur_cmd_chr.cmd;
-    if (cmd == 12 || cmd == 11) {
-        auto n = cur_cmd_chr.chr;
-        if (n > 0 && n < 128) {
-            if (n == 'G') {
-                extended_chars(0x29b);
-                return;
-            }
-            if (n == 'b') {
-                extended_chars(0x253);
-                return;
-            }
-            if (n == 'd') {
-                extended_chars(0x257);
-                return;
-            }
-            if (n == 'g') {
-                extended_chars(0x260);
-                return;
-            }
-            if (n == 'j') {
-                extended_chars(0x284);
-                return;
-            }
-            if (n == 'o') {
-                extended_chars(0x298);
-                return;
-            }
-        }
-    }
-    back_input(cur_tok);
-}
-
-void Parser::tipa_normal() {
-    if (get_token()) return; // should not happen
-    auto cmd = cur_cmd_chr.cmd;
-    if (cmd == 12 || cmd == 11) {
-        auto n = cur_cmd_chr.chr;
-        if (n > 0 && n < 128) {
-            if (n == '0') {
-                extended_chars(0x289);
-                return;
-            }
-            if (n == '1') {
-                extended_chars(0x268);
-                return;
-            }
-            if (n == '2') {
-                extended_chars(0x28c);
-                return;
-            }
-            if (n == '3') {
-                extended_chars(0x25c);
-                return;
-            }
-            if (n == '4') {
-                extended_chars(0x265);
-                return;
-            }
-            if (n == '5') {
-                extended_chars(0x250);
-                return;
-            }
-            if (n == '6') {
-                extended_chars(0x252);
-                return;
-            }
-            if (n == '7') {
-                extended_chars(0x264);
-                return;
-            }
-            if (n == '8') {
-                extended_chars(0x275);
-                return;
-            }
-            if (n == '9') {
-                extended_chars(0x258);
-                return;
-            }
-            if (n == '@') {
-                extended_chars(0x259);
-                return;
-            }
-            if (n == 'A') {
-                extended_chars(0x251);
-                return;
-            }
-            if (n == 'B') {
-                extended_chars(0x3b2);
-                return;
-            } // beta
-            if (n == 'C') {
-                extended_chars(0x255);
-                return;
-            }
-            if (n == 'D') {
-                extended_chars(0x0f0);
-                return;
-            } // eth
-            if (n == 'E') {
-                extended_chars(0x25B);
-                return;
-            }
-            if (n == 'F') {
-                extended_chars(0x278);
-                return;
-            }
-            if (n == 'G') {
-                extended_chars(0x263);
-                return;
-            }
-            if (n == 'H') {
-                extended_chars(0x266);
-                return;
-            }
-            if (n == 'I') {
-                extended_chars(0x26A);
-                return;
-            }
-            if (n == 'J') {
-                extended_chars(0x29D);
-                return;
-            }
-            if (n == 'K') {
-                extended_chars(0x261);
-                return;
-            }
-            if (n == 'L') {
-                extended_chars(0x28E);
-                return;
-            }
-            if (n == 'M') {
-                extended_chars(0x271);
-                return;
-            }
-            if (n == 'N') {
-                extended_chars(0x14b);
-                return;
-            } // eng
-            if (n == 'O') {
-                extended_chars(0x254);
-                return;
-            }
-            if (n == 'P') {
-                extended_chars(0x294);
-                return;
-            }
-            if (n == 'Q') {
-                extended_chars(0x295);
-                return;
-            }
-            if (n == 'R') {
-                extended_chars(0x27E);
-                return;
-            }
-            if (n == 'S') {
-                extended_chars(0x283);
-                return;
-            }
-            if (n == 'T') {
-                extended_chars(0x3b8);
-                return;
-            } // theta
-            if (n == 'U') {
-                extended_chars(0x28a);
-                return;
-            }
-            if (n == 'V') {
-                extended_chars(0x28b);
-                return;
-            }
-            if (n == 'W') {
-                extended_chars(0x26f);
-                return;
-            }
-            if (n == 'X') {
-                extended_chars(0x3c7);
-                return;
-            } // chi
-            if (n == 'Y') {
-                extended_chars(0x28f);
-                return;
-            }
-            if (n == 'Z') {
-                extended_chars(0x292);
-                return;
-            }
-        }
-    }
-    back_input(cur_tok);
-}
-
-// Unicode characters not in the tables above.
-// 25a 25d 25e
-// 262 267 269 26b
-// 270 276 277 27a 27c 27f
-// 281 285 286
-// 291 x293 296 297 29a
-// 2a0 2a1 2a2 2a3 2a4 2a5 2a6 2a7 2a8 2a9 2aa 2ab 2ac 2ad 2ae 2af

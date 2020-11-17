@@ -1,7 +1,7 @@
 #include "tralics/NameMapper.h"
+#include "tralics/ConfigData.h"
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"
-#include "tralics/ParamDataVector.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include <spdlog/spdlog.h>
@@ -9,83 +9,6 @@
 namespace config_ns {
     auto start_interpret(Buffer &B, String s) -> bool;
 } // namespace config_ns
-
-namespace {
-    // Function called when theme_vals is seen in the config file.
-    void interpret_theme_list(const Buffer &B) {
-        all_themes = " " + B + " ";
-        for (char &c : all_themes) c = static_cast<char>(std::tolower(c));
-    }
-
-    // This interprets Foo="Visiteur/foo/Chercheur//Enseignant//Technique//"
-    // This creates four slots in a table indexed by k.
-    void interpret_data_list(Buffer &B, const std::string &name) {
-        ParamDataList *V = config_data.find_list(name, true);
-        if (config_ns::start_interpret(B, "//")) V->clear();
-        for (;;) {
-            std::string r1, r2;
-            if (!B.slash_separated(r1)) return;
-            if (!B.slash_separated(r2)) return;
-            if (r1.empty()) continue;
-            if (r2.empty()) r2 = r1;
-            the_log << name << ": " << r1 << " -> " << r2 << "\n";
-            V->push_back({r1, r2});
-        }
-    }
-
-    // Interprets Sections ="/foo/bar*/gee".
-    // In 2007, we have  NewSections ="/foo/FOO/bar/BAR/gee/GEE"
-    // This is indicated by new_syntax
-    // Puts foo bar+ gee in the transcript file (we use + instead of *, meaning
-    // that the character was interpreted). Three RaSection objects are
-    // created, named foo, bar and gee. The second is marked: not for topic.
-    // In simplified mode, a section has a name and a number.
-    // Otherwise it has additional fields.
-    void interpret_section_list(Buffer &B, bool new_syntax) {
-        ParamDataList &V = config_data[1];
-        if (config_ns::start_interpret(B, "//")) {
-            V.clear();
-            sec_buffer.clear();
-            composition_section = -1;
-        }
-        std::string s, r;
-        for (;;) {
-            if (!B.slash_separated(s)) break;
-            if (new_syntax) {
-                if (!B.slash_separated(r)) break;
-            } else
-                r = "";
-            if (s.empty()) continue;
-            bool star = false;
-            auto ns   = s.size();
-            if (ns > 1 && s[ns - 1] == '*') {
-                s    = std::string(s, 0, ns - 1);
-                star = true;
-            }
-            if (r.empty()) r = s;
-            the_log << "Section: " << s << (star ? "+" : "") << " -> " << r << "\n";
-            if (s == "composition") composition_section = to_signed(V.size() + 1);
-            sec_buffer += " " + s;
-            V.push_back({s, r, !star});
-        }
-    }
-
-    // --------------------------------------------------
-    // This interprets theme_vals = "foo bar"
-    // and all consequences
-
-    void interpret_list(const std::string &a, Buffer &b) {
-        if (a == "section")
-            interpret_section_list(b, false);
-        else if (a == "fullsection")
-            interpret_section_list(b, true);
-        else if (a == "theme")
-            interpret_theme_list(b);
-        else if (a.empty()) {
-        } else
-            interpret_data_list(b, a);
-    }
-} // namespace
 
 auto NameMapper::operator[](const std::string &name) const -> std::string {
     if (auto i = dict.find(name); i != dict.end()) return i->second;
@@ -181,7 +104,6 @@ void NameMapper::boot() {
     set("circle", "pic-circle");
     set("citetype", "type");
     set("closecurve", "pic-closecurve");
-    set("composition_ra", "composition");
     set("cst_display", "display");
     set("cst_div0", "div0");
     set("cst_div1", "div1");
@@ -249,7 +171,6 @@ void NameMapper::boot() {
     set("minipage_width", "width");
     set("multiput", "pic-multiput");
     set("natcit", "Cit");
-    set("nb_rasection", "");
     set("np_center_etc", "center");
     set("np_center", "center");
     set("np_cst_width", "width");
@@ -262,8 +183,6 @@ void NameMapper::boot() {
     set("put", "pic-put");
     set("quotation", "quoted");
     set("quote", "quoted");
-    set("rclist", "UR");
-    set("rcval", "+UR");
     set("rotate_angle", "angle");
     set("rotatebox", "pic-rotatebox");
     set("row_spaceafter", "spaceafter");
@@ -294,46 +213,38 @@ void NameMapper::assign(const std::string &sa, const std::string &sb) {
 
     if (sa == "lang_fr") { set("french", sb); }
     if (sa == "lang_en") { set("english", sb); }
-    if (sa == "distinguish_refer_in_rabib") {
-        if ((sb == "true") || (sb == "yes"))
-            the_main->distinguish_refer = true;
-        else if ((sb == "false") || (sb == "no"))
-            the_main->distinguish_refer = false;
-        else
-            spdlog::warn("distinguish_refer_in_rabib = {} ignored");
-    }
-    if (sa == "entity_names") { the_main->set_ent_names(sb); }
-    if (sa == "default_class") { the_main->default_class = sb; }
+    if (sa == "entity_names") { the_main.set_ent_names(sb); }
+    if (sa == "default_class") { the_main.default_class = sb; }
     if (sa == "alternate_item") {
         if (sb == "false")
-            the_parser.hash_table.eval_let("item", "@@item");
+            hash_table.eval_let("item", "@@item");
         else if (sb == "true")
-            the_parser.hash_table.eval_let("item", "@item");
+            hash_table.eval_let("item", "@item");
     }
-    if (sa == "url_font") { the_main->add_to_from_config(1, "\\def\\urlfont{" + sb + "}"); }
+    if (sa == "url_font") { the_main.add_to_from_config(1, "\\def\\urlfont{" + sb + "}"); }
     if (sa == "everyjob") { everyjob_string = fmt::format("\\everyjob={{{}}}", sb); }
     if (sa == "no_footnote_hack") {
-        if (sb == "true") the_main->footnote_hack = false;
-        if (sb == "false") the_main->footnote_hack = true;
+        if (sb == "true") the_main.footnote_hack = false;
+        if (sb == "false") the_main.footnote_hack = true;
     }
     if (sa == "use_font_elt") {
-        if (sb == "true") the_main->use_font_elt = true;
-        if (sb == "false") the_main->use_font_elt = false;
+        if (sb == "true") the_main.use_font_elt = true;
+        if (sb == "false") the_main.use_font_elt = false;
     }
     if (sa == "use_all_sizes") {
-        if (sb == "true") the_main->use_all_sizes = true;
-        if (sb == "false") the_main->use_all_sizes = false;
+        if (sb == "true") the_main.use_all_sizes = true;
+        if (sb == "false") the_main.use_all_sizes = false;
     }
     if (sa == "bibtex_fields") {
         the_log << "bibtex_fields: ";
-        std::vector<std::string> &bib  = the_main->bibtex_fields;
-        std::vector<std::string> &bib1 = the_main->bibtex_fields_s;
+        std::vector<std::string> &bib  = the_main.bibtex_fields;
+        std::vector<std::string> &bib1 = the_main.bibtex_fields_s;
         Buffer(sb).interpret_aux(bib, bib1); // \todo without Buffer
     }
     if (sa == "bibtex_extensions") {
         the_log << "bibtex_extensions: ";
-        std::vector<std::string> &bib  = the_main->bibtex_extensions;
-        std::vector<std::string> &bib2 = the_main->bibtex_extensions_s;
+        std::vector<std::string> &bib  = the_main.bibtex_extensions;
+        std::vector<std::string> &bib2 = the_main.bibtex_extensions_s;
         Buffer(sb).interpret_aux(bib, bib2); // \todo without Buffer
     }
     if (sa == "mfenced_separator_val") {
@@ -342,10 +253,7 @@ void NameMapper::assign(const std::string &sa, const std::string &sb) {
         else
             set("np_separator", sb);
     }
-    if (sa.ends_with("_vals")) {
-        Buffer B(sb);
-        interpret_list(sa.substr(0, n - 5), B); // \todo without Buffer
-    }
+    if (sa.ends_with("_vals") && (sa.size() > 5)) { config_data[sa.substr(0, n - 5)].interpret(sb); }
     if (sa == "mml_font_normal") { set("mml@font@normal", sb); }
     if (sa == "mml_font_upright") { set("mml@font@upright", sb); }
     if (sa == "mml_font_bold") { set("mml@font@bold", sb); }
@@ -367,33 +275,28 @@ void NameMapper::assign_name(const std::string &A, const std::string &B) {
     spdlog::trace("Setting XML element name `{}' to \"{}\" (assign_name)", A, B);
 
     if (A == "pack_font_att") {
-        if (B == "true") the_main->pack_font_elt = true;
-        if (B == "false") the_main->pack_font_elt = false;
-        return;
-    }
-
-    if (A == "rasection" && ra_ok) {
-        set("nb_rasection", B);
+        if (B == "true") the_main.pack_font_elt = true;
+        if (B == "false") the_main.pack_font_elt = false;
         return;
     }
 
     if (A == "theorem") {
         if (B[0] == 0) { // reverst to old behavior
             set("np_theorem", B);
-            the_parser.hash_table.eval_let("@begintheorem", "@ybegintheorem");
+            hash_table.eval_let("@begintheorem", "@ybegintheorem");
         } else if (B[0] == ' ') { // special case
             set("np_theorem", B.substr(1));
-            the_parser.hash_table.eval_let("@begintheorem", "@ybegintheorem");
+            hash_table.eval_let("@begintheorem", "@ybegintheorem");
         } else {
             set("np_theorem", B);
-            the_parser.hash_table.eval_let("@begintheorem", "@xbegintheorem");
+            hash_table.eval_let("@begintheorem", "@xbegintheorem");
         }
         return;
     }
 
     if (A == "use_font_elt") {
-        if (B == "true") the_main->use_font_elt = true;
-        if (B == "false") the_main->use_font_elt = false;
+        if (B == "true") the_main.use_font_elt = true;
+        if (B == "false") the_main.use_font_elt = false;
         return;
     }
 

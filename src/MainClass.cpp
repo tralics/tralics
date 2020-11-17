@@ -5,7 +5,6 @@
 #include "tralics/Logger.h"
 #include "tralics/MathDataP.h"
 #include "tralics/NameMapper.h"
-#include "tralics/ParamDataVector.h"
 #include "tralics/Parser.h"
 #include "tralics/TitlePage.h"
 #include "tralics/TitlePageAux.h"
@@ -74,7 +73,6 @@ All options start with a single or double hyphen, they are:
   -tpa_status = title/all: translate all document or title only
   -default_class=xx: use xx.clt if current class is unknown
   -raw_bib: uses all bibtex fields
-  -distinguish_refer_in_rabib= true/false: special raweb hack 
   (the list of all options is avalaible at
     http://www-sop.inria.fr/marelle/tralics/options.html )
 
@@ -83,10 +81,10 @@ This software is governed by the CeCILL license that can be
 found at http://www.cecill.info.)";
 
     std::filesystem::path out_dir;
+    std::filesystem::path no_ext;
 
     std::string log_name;
     std::string machine;
-    std::string no_ext;
     std::string opt_doctype;
     std::string user_config_file;
 
@@ -96,13 +94,6 @@ found at http://www.cecill.info.)";
 
     void after_conf_assign(std::vector<std::string> &V) {
         for (size_t i = 0; i < V.size(); i += 2) the_names.assign(V[i], V[i + 1]);
-    }
-
-    void bad_conf(String s) {
-        spdlog::critical("The configuration file for the RA is ra{}.tcf or ra.tcf\n", the_parser.get_ra_year());
-        spdlog::critical("It must define a value for the parameter {}", s);
-        spdlog::critical("No xml file generated");
-        exit(1);
     }
 
     /// Display usage message, then exit the program \todo Manage this centrally
@@ -136,48 +127,6 @@ found at http://www.cecill.info.)";
             for (unsigned j = 0; j < lmaxchar; ++j) i[j] = char32_t(j);
     }
 
-    /// Checks that name is non-empty and all lowercase
-    void check_lowercase(const std::string &s) {
-        if (s.empty()) {
-            spdlog::critical("Illegal file name of the form safir/2002.tex");
-            the_main->bad_year(); // never returns
-        }
-        if (std::any_of(s.begin(), s.end(), [](char c) { return c < 32 || uchar(c) > 127 || (std::isupper(c) != 0); })) {
-            spdlog::critical("Fatal: only lowercase letters allowed, {}", s);
-            exit(1);
-        }
-    }
-
-    void check_year(int y, Buffer &C, const std::string &dclass, const std::string &Y) {
-        if (y < 2000 || y >= 2100) the_main->bad_year();
-        std::string raclass = std::string("ra") + C;
-        if (dclass != raclass) {
-            spdlog::critical("Illegal document class {} should be {}", dclass, raclass);
-            exit(1);
-        }
-        if (Y.empty()) return;
-        if (Y == C) return;
-        spdlog::critical("Fatal: Option -year={} incompatible with year in source file", Y);
-        exit(1);
-    }
-
-    /// If B holds apics2006, puts apics in B, 2006 in C, returns 2006
-    // \todo refactor or deprecate with RA
-    auto extract_year(std::string &B, std::string &C) -> int {
-        size_t m = B.size(), n = m, k = 0;
-        while (k < 4 && n > 0 && (std::isdigit(B[n - 1]) != 0)) {
-            n--;
-            k++;
-        }
-        int y = 0;
-        for (auto i = n; i < m; i++) {
-            y = 10 * y + B[i] - '0';
-            C.push_back(B[i]);
-        }
-        B.resize(n);
-        return y;
-    }
-
     /// Sometimes, we want `bar` if `\jobname` is `foo/bar`
     auto hack_for_input(const std::filesystem::path &s) -> std::string {
         std::filesystem::path path = s.parent_path();
@@ -198,7 +147,7 @@ found at http://www.cecill.info.)";
     }
 
     /// Locate the config dir, using a few standard sources \todo this should be
-    /// managed by CMake
+    /// managed by CMake, or by kpathsea
     void find_conf_path() {
         static const std::array<std::filesystem::path, 7> paths{
             conf_path[0], "/usr/share/tralics", "/usr/lib/tralics/confdir", "/usr/local/lib/tralics/confdir", "/sw/share/tralics/confdir",
@@ -218,8 +167,7 @@ found at http://www.cecill.info.)";
     /// Split a `:`-separated path list into paths
     void new_in_dir(const std::string &s) {
         std::string b;
-        for (size_t i = 0;; i++) { // \todo range based loop
-            char c = s[i];
+        for (char c : s) {
             if (c == 0 || c == ':') {
                 if (!b.empty() && b.back() == '/') b.pop_back();
                 if (b.size() == 1 && b[0] == '.') b.pop_back();
@@ -297,9 +245,9 @@ found at http://www.cecill.info.)";
         Titlepage.make_valid();
         for (;;) {
             tp_main_buf.clear();
-            int line = lines.get_next(tp_main_buf);
-            if (line < 0) return;
-            init_file_pos = line;
+            auto line = lines.get_next(tp_main_buf);
+            if (!line) return;
+            init_file_pos = *line;
             tpa_line k    = tp_main_buf.tp_fetch_something();
             if (k == tl_empty) continue;
             if (k == tl_end) break;
@@ -412,14 +360,10 @@ void MainClass::open_log() { // \todo spdlog etc
         tmp.reserve(input_path.size());
 
         for (const auto &s : input_path) tmp.push_back(s);
-        spdlog::trace("Input path: ({})", fmt::join(tmp, ","));
+        spdlog::trace("Input path: ({})", fmt::format("{}", fmt::join(tmp, ",")));
     }
 
-    if (only_input_data)
-        spdlog::info("Starting translation of command line argument");
-    else
-        spdlog::info("Starting translation of file {}", infile);
-
+    spdlog::info("Starting translation of file {}", infile);
     check_for_encoding(); // \todo this does not feel like it belongs here
 }
 
@@ -451,10 +395,8 @@ enum param_args {
     pa_entnames,
     pa_tpastatus,
     pa_dir,
-    pa_year,
     pa_type,
     pa_config,
-    pa_distinguishreferinrabib,
     pa_confdir,
     pa_externalprog,
     pa_trivialmath,
@@ -481,7 +423,6 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         if (ss == "config") return pa_config;
         if (ss == "defaultclass") return pa_defaultclass;
         if (ss == "dir") return pa_dir;
-        if (ss == "distinguishreferinrabib") return pa_distinguishreferinrabib;
         if (ss == "doctype") return pa_doctype;
         if (ss == "entnames") return pa_entnames;
         if (ss == "externalprog") return pa_externalprog;
@@ -497,7 +438,6 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         if (ss == "tpastatus") return pa_tpastatus;
         if (ss == "trivialmath") return pa_trivialmath;
         if (ss == "type") return pa_type;
-        if (ss == "year") return pa_year;
         return pa_none;
     }(s);
 
@@ -508,13 +448,8 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         case pa_entnames: set_ent_names(a); return;
         case pa_tpastatus: set_tpa_status(a); return;
         case pa_dir: return;
-        case pa_year: year_string = a; return;
         case pa_type: type_option = a; return;
         case pa_config: user_config_file = a; return;
-        case pa_distinguishreferinrabib:
-            after_conf.emplace_back("distinguish_refer_in_rabib");
-            after_conf.emplace_back(a);
-            return;
         case pa_confdir:
             if (a[0] == '0') return;                // ignore empty component
             if (a[0] == '/' && a[1] == '0') return; // ignore root
@@ -862,7 +797,7 @@ auto MainClass::find_document_type() -> bool {
 
 void MainClass::find_dtd() {
     std::string res = opt_doctype;
-    if (handling_ra || res.empty()) res = config_file.find_top_val("DocType", false);
+    if (res.empty()) res = config_file.find_top_val("DocType", false);
 
     Buffer B(res); // \todo refactor this to avoid using a Buffer
     B.skip_letter_dig_dot();
@@ -888,14 +823,10 @@ void MainClass::find_dtd() {
             dtdfile = "classes.dtd";
         }
     }
-    if (handling_ra)
-        spdlog::trace("dtd is {} from {} (mode RAWEB{})", dtd, dtdfile, year);
-    else
-        spdlog::trace("dtd is {} from {} (standard mode)", dtd, dtdfile);
+    spdlog::trace("dtd is {} from {}", dtd, dtdfile);
 }
 
 void MainClass::read_config_and_other() {
-    year             = the_parser.get_ra_year();
     bool have_dclass = !dclass.empty();
     if (auto of = find_config_file(); of)
         open_config_file(*of);
@@ -922,9 +853,8 @@ void MainClass::read_config_and_other() {
 
     bool hr = dtype == "ra" || dtype == "RA" || (dtype.empty() && dft == 4);
     if (dclass.empty()) hr = false;
-    handling_ra = hr;
     find_dtd();
-    see_name1(); // this sets year_string.
+    if (out_name.empty()) out_name = no_ext.filename();
     the_parser.set_default_language((hr && year <= 2002) ? 1 : 0);
     LineList cmds = config_file.parse_and_extract("Commands");
     from_config.splice(from_config.end(), cmds);
@@ -932,57 +862,20 @@ void MainClass::read_config_and_other() {
     config_file.find_top_atts();
     LineList TP = config_file.parse_and_extract("TitlePage");
     Titlepage_create(TP);
-    if (have_dclass && !handling_ra) from_config.insert("\\InputIfFileExists*+{" + ult_name + "}{}{}\n", true);
+    if (have_dclass) from_config.insert("\\InputIfFileExists*+{" + ult_name + "}{}{}\n", true);
     input_content.splice(doc_class_pos, from_config);
     config_file.clear();
 }
 
-void MainClass::bad_year() const {
-    spdlog::critical("Fatal: Input file name must be team name followed by {}", year);
-    end_with_help(1);
-}
-
-void MainClass::see_name(std::string s) {
+void MainClass::see_name(std::filesystem::path s) {
     if (!infile.empty()) {
-        spdlog::critical("Fatal error: seen two soure files, {} and {}", infile, std::filesystem::path(s));
+        spdlog::critical("Fatal error: seen two soure files, {} and {}", infile, s);
         exit(1);
     }
-    if (s.ends_with(".xml")) s.resize(s.size() - 4);
-    if (!s.ends_with(".tex")) s.append(".tex");
+    s.replace_extension(".tex");
     infile = s;
-    s.resize(s.size() - 4);
+    s.replace_extension();
     no_ext = s;
-}
-
-void MainClass::see_name1() {
-    Buffer      C;
-    std::string B = no_ext;
-    int         y = 0;
-    if (handling_ra) { // find and check the year from the file name
-        y = extract_year(B, C);
-        check_year(y, C, dclass, year_string);
-    }
-    B                        = std::filesystem::path(B).filename();
-    the_parser.the_projetval = B; // this is apics
-    if (handling_ra) {            // \todo handling_ra should disappear from tralics alltogether
-        check_lowercase(B);
-        year_string = C;
-        out_name    = B; // This is apics
-        year        = y;
-        the_parser.set_ra_year(y);
-        return;
-    }
-    if (out_name.empty()) {                                  // might be given as an option
-        out_name = std::filesystem::path(no_ext).filename(); // \todo make no_ext an fs path?
-    }
-    if (year_string.empty()) { // might be given as an option
-        year = the_parser.get_ra_year();
-        C.format("{}", year);
-        year_string = C;
-    } else {
-        year = std::stoi(year_string);
-        the_parser.set_ra_year(year);
-    }
 }
 
 void MainClass::trans0() {
@@ -996,18 +889,12 @@ void MainClass::trans0() {
     the_parser.load_latex();
     if (load_l3) the_parser.L3_load(true);
     Titlepage.start_thing(verbose);
-    if (only_input_data) {
-        Logger::log_finish();
-        exit(0);
-    }
 }
 
-void MainClass::boot_bibtex(bool inra) {
-    auto fn                 = out_dir / (out_name + "_.bbl");
-    ::distinguish_refer     = distinguish_refer;
-    bbl.name                = fn;
-    the_bibtex.default_year = year_string;
-    the_bibtex.boot(out_name, inra);
+void MainClass::boot_bibtex() {
+    auto fn  = out_dir / (out_name + "_.bbl");
+    bbl.name = fn;
+    the_bibtex.boot(out_name);
 }
 
 void MainClass::show_input_size() {
@@ -1024,13 +911,13 @@ void MainClass::more_boot() const {
         int w = (2 << 15) - 1;
         the_parser.word_define(mathprop_ctr_code, w, true);
     }
-    if (etex_enabled) the_parser.hash_table.boot_etex();
+    if (etex_enabled) hash_table.boot_etex();
     LineList res;
     res.reset(".tex");
     res.emplace_back(1, "\\message{File ignored^^J}\\endinput", false);
     res.register_file();
     the_parser.my_stats.after_boot();
-    the_parser.the_stack.set_xid_boot();
+    the_stack.set_xid_boot();
 }
 
 void MainClass::run(int argc, char **argv) {
@@ -1043,20 +930,14 @@ void MainClass::run(int argc, char **argv) {
     if (opt_doctype.empty()) opt_doctype = input_content.find_doctype();
 
     read_config_and_other();
-    finish_init();
     spdlog::trace("OK with the configuration file, dealing with the TeX file...");
     show_input_size();
-    boot_bibtex(handling_ra);
+    boot_bibtex();
     trans0();
-    if (handling_ra) {
-        if (the_names["language"].empty()) the_names.set("language", "language");
-        the_parser.add_language_att();
-    }
     the_parser.init(input_content);
     the_parser.translate_all();
-    check_section_use();
     the_parser.after_main_text();
-    if (seen_enddocument) the_parser.the_stack.add_nl();
+    if (seen_enddocument) the_stack.add_nl();
     the_parser.final_checks();
     if (!no_xml) {
         the_parser.my_stats.token_stats();
@@ -1077,54 +958,9 @@ void MainClass::out_xml() {
         fmt::print(fp, "<?xml-stylesheet href=\"{}\" type=\"{}\"?>\n", sl, the_names["stylesheettype"]);
     fmt::print(fp, "<!DOCTYPE {} SYSTEM '{}'>\n", dtd, std::string(dtdfile)); // \todo keep double quotes from fs::path
     fmt::print(fp, "<!-- Translated from LaTeX by tralics {}, date: {} -->\n", tralics_version, short_date);
-    fp << the_parser.the_stack.document_element() << "\n";
+    fp << the_stack.document_element() << "\n";
 
     spdlog::info("Output written on {} ({} bytes).", p, fp.tellp());
-}
-
-void MainClass::finish_init() const {
-    if (handling_ra) {
-        if (year <= 2003) all_themes = " 1a 1b 1c 2a 2b 3a 3b 4a 4b ";
-        if (year <= 2014 && all_themes.empty()) bad_conf("theme_vals");
-        if (config_data[0].empty()) bad_conf("ur_vals");
-        if (year >= 2007) {
-            if (config_data[2].empty()) bad_conf("profession_vals");
-            if (year >= 2013)
-                config_data[3].clear(); // kill this
-            else if (config_data[3].empty())
-                bad_conf("affiliation_vals");
-        }
-        auto n = config_data[1].size();
-        if (n == 0) bad_conf("sections_vals");
-        if (n < 2) bad_conf("Config file did not provide sections");
-    }
-    auto n = config_data.size();
-    for (size_t i = 2; i < n; i++) config_data[i].check_other();
-}
-
-auto MainClass::check_theme(const std::string &s) -> std::string {
-    static Buffer B;
-    std::string   res = B.add_with_space(s);
-    if (all_themes.find(B) == std::string::npos) {
-        if (s.empty())
-            err_buf = "Empty or missing theme\n";
-        else
-            err_buf = "Invalid theme " + s + "\n";
-        if (all_themes.empty())
-            err_buf += "Configuration file defines nothing";
-        else
-            err_buf += "Valid themes are" + all_themes;
-        the_parser.signal_error(the_parser.err_tok, "Bad theme");
-    }
-    return res;
-}
-
-void MainClass::check_section_use() const {
-    if (handling_ra) {
-        std::vector<ParamDataSlot> &X = config_data[1];
-        for (auto &i : X)
-            if (i.no_topic()) the_parser.parse_error(Token(), "No module in section ", i.key, "no module");
-    }
 }
 
 void MainClass::set_input_encoding(size_t wc) {

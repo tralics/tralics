@@ -1,10 +1,19 @@
-#include "tralics/ParamDataList.h"
+#include "tralics/Buffer.h"
+#include "tralics/ConfigData.h"
 
-// We may add a special slot at the end
-void ParamDataList::check_other() {
-    if (!empty() && (std::islower(name[0]) != 0)) push_back({"Other", "Other"});
-}
+namespace config_ns {
+    auto start_interpret(Buffer &B, String s) -> bool;
+} // namespace config_ns
 
-void ParamDataList::keys_to_buffer(std::string &B) const {
-    for (const auto &i : *this) B += " " + i.key;
+void ParamDataList::interpret(const std::string &b) {
+    Buffer B(b);
+    if (config_ns::start_interpret(B, "//")) clear();
+    for (;;) {
+        std::string r1, r2;
+        if (!B.slash_separated(r1)) return;
+        if (!B.slash_separated(r2)) return;
+        if (r1.empty()) continue;
+        if (r2.empty()) r2 = r1;
+        (*this)[r1] = r2;
+    }
 }

@@ -65,9 +65,6 @@ Hashtab::Hashtab() {
     primitive("bibitem@empty", bibitem_cmd, one_code);
     primitive("cite", cite_cmd, cite_code);
     primitive("XMLsolvecite", solvecite_cmd);
-    primitive("footcite", cite_cmd, footcite_code);
-    primitive("refercite", cite_cmd, refercite_code);
-    primitive("yearcite", cite_cmd, yearcite_code);
     primitive("nocite", cite_cmd, nocite_code);
     primitive("natcite", cite_cmd, natcite_code);
     citeone_token     = primitive("cite@one", cite_one_cmd);
@@ -217,7 +214,6 @@ Hashtab::Hashtab() {
     primitive("pagebreak", linebreak_cmd, pagebreak_code);
     primitive("nopagebreak", linebreak_cmd, nopagebreak_code);
     primitive("url", url_cmd);
-    primitive("rrrt", url_cmd, one_code);
     primitive("Href", hanl_cmd, zero_code);
     primitive("@@href@foot", hanl_cmd, one_code);
     primitive("href", hanl_cmd, two_code);
@@ -243,7 +239,6 @@ Hashtab::Hashtab() {
     primitive("tralics@fnhack", fnhack_cmd);
     primitive("tralics@pop@module", popmodule_cmd);
     primitive("tralics@push@module", pushmodule_cmd);
-    primitive("tralics@interpret@rc", interpret_rc_cmd);
     primitive("thanks", footnote_cmd);
     primitive("caption", caption_cmd);
     primitive("centering", centering_cmd, center_code);
@@ -269,7 +264,6 @@ Hashtab::Hashtab() {
     primitive("ignorespaces", specimp_cmd, ignorespaces_code);
     primitive("mark", specimp_cmd, mark_code);
     primitive("penalty", specimp_cmd, penalty_code);
-    //  unimplemented...
     primitive("accent", unimp_cmd, accent_code);
     primitive("delimiter", unimp_cmd, delimiter_code);
     primitive("halign", unimp_cmd, halign_code);
@@ -725,7 +719,6 @@ Hashtab::Hashtab() {
     primitive("vmatrix", math_env_cmd, matrixv_code);
     primitive("Vmatrix", math_env_cmd, matrixV_code);
 
-    primitive("tralics@push@section", RAsection_env_cmd);
     primitive("tabular", tabular_env_cmd, zero_code);
     primitive("tabular*", tabular_env_cmd, one_code);
     primitive("verbatim", verbatim_env_cmd, zero_code);
@@ -782,7 +775,6 @@ Hashtab::Hashtab() {
     // primitive("endequation*",end_math_env_cmd,equation_star_code);
     // primitive("endmath",end_math_env_cmd,math_code);
     // primitive("enddisplaymath",end_math_env_cmd,displaymath_code);
-    primitive("tralics@pop@section", end_RAsection_env_cmd);
     primitive("endtabular", end_tabular_env_cmd, zero_code);
     primitive("endtabular*", end_tabular_env_cmd, one_code);
     primitive("endverbatim", end_verbatim_env_cmd, zero_code);
@@ -796,8 +788,8 @@ Hashtab::Hashtab() {
     primitive("endxmlelement", end_xmlelement_env_cmd);
     primitive("endxmlelement*", end_xmlelement_env_cmd, one_code);
     primitive("endxmlelement+", end_xmlelement_env_cmd, two_code);
-    begin_token = primitive("begin", begin_cmd);
-    end_token   = primitive("end", end_cmd);
+    primitive("begin", begin_cmd);
+    primitive("end", end_cmd);
     primitive("cal", math_font_cmd, cal_code);
     primitive("mathtt", math_font_cmd, mathtt_code);
     primitive("mathcal", math_font_cmd, mathcal_code);
@@ -1252,9 +1244,7 @@ Hashtab::Hashtab() {
     primitive("fontname", convert_cmd, fontname_code);
     primitive("jobname", convert_cmd, jobname_code);
     primitive("XMLgetatt", convert_cmd, attributeval_code);
-    primitive("ra@jobname", convert_cmd, ra_jobname_code);
     primitive("tralicsversion", convert_cmd, tralicsversion_code);
-    primitive("ra@year", convert_cmd, rayear_code);
     primitive("@onelevel@sanitize", convert_cmd, sanitize_code);
     primitive("[", obracket_cmd);
     primitive("]", obracket_cmd, one_code);
@@ -1312,21 +1302,6 @@ Hashtab::Hashtab() {
     primitive("@firstoftwo", first_of_two_cmd, one_code);
     primitive("@secondoftwo", first_of_two_cmd, two_code);
     composite_token = primitive("@unicode@composite", all_of_one_cmd);
-    primitive("tipa@star", ipa_cmd, subtypes(0));
-    primitive("tipa@semi", ipa_cmd, subtypes(1));
-    primitive("tipa@colon", ipa_cmd, subtypes(2));
-    primitive("tipa@exclam", ipa_cmd, subtypes(3));
-    primitive("tipa@normal", ipa_cmd, subtypes(4));
-    primitive("tipa@syllabic", ipa_cmd, subtypes(5));
-    primitive("tipa@subumlaut", ipa_cmd, subtypes(6));
-    primitive("tipa@subtilde", ipa_cmd, subtypes(7));
-    primitive("tipa@subring", ipa_cmd, subtypes(8));
-    primitive("tipa@dotacute", ipa_cmd, subtypes(9));
-    primitive("tipa@gravedot", ipa_cmd, subtypes(10));
-    primitive("tipa@acutemacron", ipa_cmd, subtypes(11));
-    primitive("tipa@circumdot", ipa_cmd, subtypes(12));
-    primitive("tipa@tildedot", ipa_cmd, subtypes(13));
-    primitive("tipa@brevemacro", ipa_cmd, subtypes(14));
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     primitive("@whilenum", while_cmd, zero_code);

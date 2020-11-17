@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE std SYSTEM 'classes.dtd'>
-<!-- Translated from latex by tralics 2.15.3, date: 2015/08/05-->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
 <std>
 <p>Test of the OT2 encoding</p>
 <p>ЊЉЏЭІЄЂЋњљџэієђћ
@@ -52,21 +52,21 @@ pqrstuvwxyz{|}~-
 àáâãäåæçèéêëìíîï
 ðñòóôõöœøùúûüýþß</p>
 <p>˘ˇ</p>
-<char name='compwordmark'/><char name='blank'/><char name='born'/><char name='capitalcompwordmark'/><char name='centoldstyle'/><char name='compwordmark'/><char name='copyleft'/><char name='dblhyphen'/><char name='died'/><char name='discount'/><char name='divorced'/><char name='dollaroldstyle'/><char name='gurani'/><char name='interrobangdown'/><char name='lbrackdbl'/><char name='leaf'/><char name='married'/><char name='quotestraightbase'/><char name='quotestraightdblbase'/><char name='rbrackdbl'/><char name='tildelow'/><char name='sevenoldstyle'/><char name='zerooldstyle'/><char name='twooldstyle'/><char name='threeoldstyle'/><char name='sixoldstyle'/><char name='oneoldstyle'/><char name='nineoldstyle'/><char name='eightoldstyle'/><char name='fiveoldstyle'/><char name='fouroldstyle'/><table arr='array' rend='inline'><row row='row'><cell right-border='true' halign='center' left-border='true' cell='cell'><hi rend='bold'>ok ab</hi></cell>
-</row><row row='ROW'><cell right-border='true' halign='center' left-border='true'/>
-<cell right-border='true' halign='center' cell='CELL'>2b<u>vab w</u></cell>
+<char name='compwordmark'/><char name='blank'/><char name='born'/><char name='capitalcompwordmark'/><char name='centoldstyle'/><char name='compwordmark'/><char name='copyleft'/><char name='dblhyphen'/><char name='died'/><char name='discount'/><char name='divorced'/><char name='dollaroldstyle'/><char name='gurani'/><char name='interrobangdown'/><char name='lbrackdbl'/><char name='leaf'/><char name='married'/><char name='quotestraightbase'/><char name='quotestraightdblbase'/><char name='rbrackdbl'/><char name='tildelow'/><char name='sevenoldstyle'/><char name='zerooldstyle'/><char name='twooldstyle'/><char name='threeoldstyle'/><char name='sixoldstyle'/><char name='oneoldstyle'/><char name='nineoldstyle'/><char name='eightoldstyle'/><char name='fiveoldstyle'/><char name='fouroldstyle'/><table arr='array' rend='inline'><row row='row'><cell cell='cell' halign='center' left-border='true' right-border='true'><hi rend='bold'>ok ab</hi></cell>
+</row><row row='ROW'><cell halign='center' left-border='true' right-border='true'/>
+<cell cell='CELL' halign='center' right-border='true'>2b<u>vab w</u></cell>
 </row></table>
 <cell>0</cell><table rend='inline'><row><cell a='b'><foo/></cell>
 </row></table><p>
 test<foo>bar</foo>,xx<truc/> 
-<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced open='(' close=''><mn>1</mn></mfenced></math></formula>
-<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced open='(' close=''><mn>2</mn></mfenced></math></formula>
-<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced separators='' open='(' close=''><mfrac linethickness='3pt'><mi>a</mi> <mi>b</mi></mfrac></mfenced></math></formula>
-<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced separators='' open='(' close=''><mfrac><mi>c</mi> <mi>d</mi></mfrac></mfenced></math></formula>
-<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced separators='' open='(' close=''><mfrac linethickness='0pt'><mi>e</mi> <mi>f</mi></mfrac></mfenced></math></formula>
-<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced open='(' close=''><mstyle scriptlevel='1' displaystyle='false'><mfrac><mn>1</mn> <mn>2</mn></mfrac></mstyle></mfenced></math></formula>
-<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced open='(' close=')'><mstyle scriptlevel='1' displaystyle='false'><mfrac linethickness='4.0pt'><mn>3</mn> <mn>4</mn></mfrac></mstyle></mfenced></math></formula>
-<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced separators='' open='(' close=')'><mfrac linethickness='0pt'><mi>e</mi> <mi>f</mi></mfrac></mfenced></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced close='' open='('><mn>1</mn></mfenced></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced close='' open='('><mn>2</mn></mfenced></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced close='' open='(' separators=''><mfrac linethickness='3pt'><mi>a</mi> <mi>b</mi></mfrac></mfenced></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced close='' open='(' separators=''><mfrac><mi>c</mi> <mi>d</mi></mfrac></mfenced></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced close='' open='(' separators=''><mfrac linethickness='0pt'><mi>e</mi> <mi>f</mi></mfrac></mfenced></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced close='' open='('><mstyle displaystyle='false' scriptlevel='1'><mfrac><mn>1</mn> <mn>2</mn></mfrac></mstyle></mfenced></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced close=')' open='('><mstyle displaystyle='false' scriptlevel='1'><mfrac linethickness='4.0pt'><mn>3</mn> <mn>4</mn></mfrac></mstyle></mfenced></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced close=')' open='(' separators=''><mfrac linethickness='0pt'><mi>e</mi> <mi>f</mi></mfrac></mfenced></math></formula>
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac linethickness='3pt'><mi>a</mi> <mi>b</mi></mfrac></math></formula> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac linethickness='3pt'><mi>a</mi> <mi>b</mi></mfrac></math></formula> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac linethickness='3.pt'><mi>a</mi> <mi>b</mi></mfrac></math></formula><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac linethickness='0.3pt'><mi>a</mi> <mi>b</mi></mfrac></math></formula>
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac linethickness='-3pt'><mi>a</mi> <mi>b</mi></mfrac></math></formula> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac linethickness='-3pt'><mi>a</mi> <mi>b</mi></mfrac></math></formula> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac linethickness='-0.pt'><mi>a</mi> <mi>b</mi></mfrac></math></formula><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac linethickness='0.pt'><mi>a</mi> <mi>b</mi></mfrac></math></formula></p>
 </std>

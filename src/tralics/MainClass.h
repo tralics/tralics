@@ -48,11 +48,8 @@ class MainClass {
     bool verbose{false}; ///< Are we verbose ?
 
 public:
-    Stack *the_stack{}; ///< pointer to the stack
-
     std::string default_class; ///< The default class
     std::string short_date;    ///< Date of start of run (short format)
-    std::string year_string;   // is 2003
 
     std::vector<std::string> bibtex_fields_s;
     std::vector<std::string> bibtex_fields;
@@ -67,11 +64,9 @@ public:
 
     int tpa_mode{3};
 
-    bool distinguish_refer{true}; ///< Something to do with bibliographies in RA \todo remove
     bool double_quote_att{false}; ///< double quote as attribute value delimitor
     bool dverbose{false};         ///< Are we verbose at begin document ?
     bool footnote_hack{true};     ///< Not sure what this activates
-    bool handling_ra{true};       ///< Are we handling the INRIA RA from the 2000s? \todo remove all references to the RA
     bool math_variant{false};
     bool no_entnames{false};
     bool no_undef_mac{false};
@@ -88,15 +83,11 @@ public:
     auto check_for_tcf(const std::string &s) -> bool; ///< Look for a `.tcf` file, and if found set `tcf_file` and `use_tcf`
 
     void add_to_from_config(int n, const std::string &b); ///< Add contents to `from_config`
-    void bad_year() const;                                ///< If the year is wrong, fail \todo this seems to be RA specific
     void run(int argc, char **argv);                      ///< Do everything
     void set_ent_names(const std::string &s);             ///< Set no_entnames from a string saying yes or no
     void set_input_encoding(size_t wc);                   ///< Set default input file encoding and log the action \todo remove?
 
-    static auto check_theme(const std::string &s) -> std::string; ///< Check that theme is valid \todo RA specific?
-
 private:
-    void check_section_use() const;                   ///< Not sure what this does, RA related
     void parse_args(int argc, char **argv);           ///< Parse the command-line arguments
     void parse_option(int &p, int argc, char **argv); ///< Interprets one command-line option, advances p
     void read_config_and_other();                     ///< Read the config file and extract all relevant information
@@ -112,7 +103,7 @@ private:
     void after_main_text();
     void append_non_eof_line(String, int);
     void bad_mod(int a, std::string b, Buffer &c);
-    void boot_bibtex(bool inra);
+    void boot_bibtex();
     void call_dvips(std::string);
     void check_all();
     void check_before_begin(int k);
@@ -124,14 +115,12 @@ private:
     void check_presentation();
     void check_project(Buffer &a);
     void check_ra_dir();
-    void check_year_string(int, bool);
     void dubious_command(int k, bool where);
     void end_document();
     void end_env(std::string);
     void end_mod();
     void find_dtd(); ///< Finds the DTD, create default if nothing given
     void find_field(String a);
-    void finish_init() const; ///< RA related stuff
     void finish_xml();
     void get_doc_type();         ///< Determine document type from various sources
     void get_os();               ///< Sets cur_os to the current OS as a symbolic string
@@ -142,18 +131,14 @@ private:
     void merge_bib();
     void mkcfg();
     void more_boot() const; ///< Finish bootstrapping
-    void one_bib_file(bib_from pre, std::string bib);
     void open_config_file(std::filesystem::path f);
     void open_log(); ///< Opens the log file, prints some information
     void open_main_file();
     void out_gathered_math();
     void out_sep();
     void out_xml(); ///< Ouput the XML and compute the word list
-    void run_ra();
-    void run_simple_ra();
     void see_aux_info(int k);
-    void see_name(std::string s); ///< Extract versions of a filename with and without ext
-    void see_name1();             ///< Post-process file names
+    void see_name(std::filesystem::path s); ///< Extract versions of a filename with and without ext
     void show_input_size();
     void start_document(Buffer &a);
     void start_env(std::string);
@@ -161,4 +146,4 @@ private:
     void trans0(); ///< Start the latex to XML translation
 };
 
-inline MainClass *the_main;
+inline MainClass the_main;

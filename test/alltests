@@ -81,6 +81,7 @@ compare_file() {
 }
 
 echo "Tralics tests started at $(date) " >Trace
+rm -f *.log *.spdlog *.xml
 run_tralics hello
 run_tralics hello1
 run_tralics hello2.tex -config=hello.tcf -oe8
@@ -107,11 +108,11 @@ run_tralics testpackii -param bibtex_fields -year -param bibtex_extensions -phdt
 run_tralics bo
 run_tralics testhtml
 run_tralics testclass -defaultclass=article
-run_tralics_with_err testkeyval "There were 32 errors."
+run_tralics_with_err testkeyval "There were 35 errors."
 run_tralics xii
 run_tralics_with_param comp_pi 100
-run_tralics_with_err teststr "There were 64 errors."
-run_tralics_with_err testerr "Following images not defined: gee." "-year=2008"
+run_tralics_with_err teststr "There were 82 errors."
+run_tralics_with_err testerr "Following images not defined: gee."
 run_tralics beauvilams2
 run_tralics testbe
 run_tralics testot2
@@ -119,28 +120,6 @@ run_tralics testmathfont
 run_tralics testb1
 mv testb1.xml testb0.xml
 run_tralics testb1 -raw_bib
-run_tralics exemple2003
-mv exemple.xml exemple2003.xml
-run_tralics exemple2005
-mv exemple.xml exemple2005.xml
-run_tralics exemple2006
-mv exemple.xml exemple2006.xml
-run_tralics exemple2007
-mv exemple.xml exemple2007.xml
-run_tralics exemple2008
-mv exemple.xml exemple2008.xml
-run_tralics ex_emple2008
-mv ex_emple.xml ex_emple2008.xml
-run_tralics exemple2009
-mv exemple.xml exemple2009.xml
-run_tralics_with_err exempleb2011 "There were 8 errors."
-mv exempleb.xml exempleb2011.xml
-run_tralics exemple2011
-mv exemple.xml exemple2011.xml
-run_tralics exemple2013
-mv exemple.xml exemple2013.xml
-run_tralics exemple2015
-mv exemple.xml exemple2015.xml
 run_tralics testm1 -oe8
 mv testm1.xml testm1a.xml
 run_tralics testm1 -nomathml -oe8
@@ -185,16 +164,6 @@ compare_file testerr.xml
 compare_file testbe.xml
 compare_file testb0.xml 5
 compare_file testb1.xml 5
-compare_file exemple2003.xml 5
-compare_file exemple2005.xml 5
-compare_file exemple2006.xml 5
-compare_file exemple2007.xml 5
-compare_file exemple2008.xml 5
-compare_file ex_emple2008.xml 5
-compare_file exemple2009.xml 5
-compare_file exemple2011.xml 5
-compare_file exempleb2011.xml 5
-compare_file exemple2013.xml 5
 compare_file beauvilams2.xml
 compare_file testm1a.xml
 compare_file testm1b.xml

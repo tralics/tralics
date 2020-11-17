@@ -4,10 +4,10 @@
 
 void TokenList::add_env(const std::string &name) {
     TokenList res;
-    res.push_back(the_parser.hash_table.begin_token);
+    res.push_back(hash_table.locate("begin"));
     res.splice(res.end(), token_ns::string_to_list(name, true)); // \todo res.append()
     res.splice(res.end(), *this);
-    res.push_back(the_parser.hash_table.end_token);
+    res.push_back(hash_table.locate("end"));
     res.splice(res.end(), token_ns::string_to_list(name, true));
     swap(res);
 }
@@ -62,7 +62,7 @@ auto TokenList::expand_nct(size_t n, uchar c, int &MX, TokenList &body) -> bool 
         MX--;
         if (MX < 0) return true;
         for (size_t k = 0; k < n; k++) Table[k + 1] = get_a_param();
-        TokenList W = Parser::expand_mac_inner(body, Table.data());
+        TokenList W = body.expand_mac_inner(Table.data());
         splice(begin(), W);
     }
     splice(end(), res);
@@ -141,4 +141,84 @@ auto TokenList::get_a_param() -> TokenList {
         break;
     }
     return res;
+}
+
+// Inserts a \allowbreak after dot and slash
+void TokenList::url_hack() {
+    TokenList R;
+    while (!empty()) {
+        Token T = front();
+        pop_front();
+        R.push_back(T);
+        if (empty()) continue;                                        // no break needed at end.
+        if (T.is_slash_token() && front().is_slash_token()) continue; // no break at the start of http://
+        if ((T.is_slash_token() || T.val == other_t_offset + '.') && bib_allow_break) R.push_back(hash_table.allowbreak_token);
+    }
+    swap(R);
+}
+
+// In some cases, we must enter math mode.
+void TokenList::latex_ctr_fnsymbol(long n) {
+    if (n == 1) {
+        push_back(hash_table.star_token);
+        return;
+    }
+    if (n == 4) {
+        push_back(Token(other_t_offset, uchar('\247')));
+        return;
+    }
+    if (n == 5) {
+        push_back(Token(other_t_offset, uchar('\266')));
+        return;
+    }
+    if (n == 7) {
+        push_back(hash_table.star_token);
+        push_back(hash_table.star_token);
+        return;
+    }
+    if (n == 2) { push_back(hash_table.dagger_token); }
+    if (n == 6) { push_back(hash_table.vbar_token); }
+    if (n == 3) { push_back(hash_table.ddagger_token); }
+    if (n == 8) {
+        push_back(hash_table.dagger_token);
+        push_back(hash_table.dagger_token);
+    }
+    if (n == 9) {
+        push_back(hash_table.ddagger_token);
+        push_back(hash_table.ddagger_token);
+    }
+    brace_me();
+    push_front(hash_table.ensuremath_token);
+}
+
+void TokenList::reevaluate0(bool in_env) {
+    Buffer Abuf;
+    for (const auto &c : *this) Abuf << c;
+    clear();
+    if (in_env)
+        Tbuf.format("\\begin{{{}}}{}\\end{{{}}}%\n", Abuf, tpa_buffer, Abuf);
+    else
+        Tbuf.format("{}{{{}}}%\n", Abuf, tpa_buffer);
+}
+
+// This is the code that replaces arguments by values in the body.
+// note that Tex uses a completely different method (there is a stack with
+// all arguments of all macros; here we have just one table).
+auto TokenList::expand_mac_inner(TokenList *arguments) const -> TokenList {
+    TokenList res;
+    for (const auto &x : *this) {
+        if (x.is_a_char() && x.cmd_val() == eol_catcode) {
+            auto      k  = x.chr_val();
+            TokenList ww = arguments[k];
+            res.splice(res.end(), ww);
+        } else
+            res.push_back(x);
+    }
+    return res;
+}
+
+// insert an open brace at the beginning, a close brace at the end.
+void TokenList::brace_me() {
+    push_front(hash_table.OB_token);
+    push_back(hash_table.CB_token);
 }

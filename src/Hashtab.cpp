@@ -1,3 +1,4 @@
+#include "tralics/Dispatcher.h"
 #include "tralics/Parser.h"
 #include <utf8.h>
 
@@ -10,6 +11,16 @@ namespace {
     }
 } // namespace
 
+auto Hashtab::the_map() -> std::unordered_map<std::string, size_t> & {
+    static std::unordered_map<std::string, size_t> m;
+    return m;
+}
+
+auto Hashtab::the_eqtb() -> std::unordered_map<size_t, EqtbCmdChr> & {
+    static std::unordered_map<size_t, EqtbCmdChr> m;
+    return m;
+}
+
 auto Hashtab::locate(const std::string &s) -> Token {
     if (s.empty()) return Token(null_tok_val);
     if (s.size() == 1) return Token(uchar(s[0]) + single_offset);
@@ -20,6 +31,7 @@ auto Hashtab::locate(const std::string &s) -> Token {
 // Returns the hash location of the name in the buffer.
 // If a new slot has to be created, uses the string name, if not empty.
 auto Hashtab::hash_find(const std::string &s) -> size_t {
+    static auto &map = the_map();
     if (auto i = map.find(s); i != map.end()) return i->second;
     usage_normal++;
     push_back(s);
@@ -32,8 +44,8 @@ auto Hashtab::hash_find(const std::string &s) -> size_t {
 auto Hashtab::nohash_primitive(const std::string &a, CmdChr b) -> Token {
     usage_unhashed++;
     push_back(a);
-    auto t                    = size() - 1 + hash_offset;
-    eqtb[Token(t).eqtb_loc()] = {b, b.is_undef() ? 0 : 1}; // allows to define an undefined command
+    auto t                          = size() - 1 + hash_offset;
+    the_eqtb()[Token(t).eqtb_loc()] = {b, b.is_undef() ? 0 : 1}; // allows to define an undefined command
     return Token(t);
 }
 
@@ -41,7 +53,8 @@ auto Hashtab::nohash_primitive(const std::string &a, CmdChr b) -> Token {
 // exists in the hash table and is not undefined.
 // Sets last_tok to the result
 auto Hashtab::is_defined(const std::string &b) -> bool {
-    auto i = map.find(b);
+    static auto &map = the_map();
+    auto         i   = map.find(b);
     if (i == map.end()) return false;
 
     size_t T = 0;
@@ -53,14 +66,19 @@ auto Hashtab::is_defined(const std::string &b) -> bool {
         T = i->second + hash_offset;
 
     last_tok = Token(T);
-    return !eqtb[Token(T).eqtb_loc()].val.is_undef();
+    return !the_eqtb()[Token(T).eqtb_loc()].val.is_undef();
 }
 
 // Creates a primitive.
 auto Hashtab::primitive(const std::string &s, symcodes c, subtypes v) -> Token {
-    Token res            = locate(s);
-    eqtb[res.eqtb_loc()] = {{c, v}, 1};
+    Token res                  = locate(s);
+    the_eqtb()[res.eqtb_loc()] = {{c, v}, 1};
     return res;
+}
+
+auto Hashtab::primitive_plain(const std::string &s, symcodes c, subtypes v) -> Token {
+    Dispatcher::register_name(c, v, s);
+    return primitive(s, c, v);
 }
 
 // \global\let\firststring = \secondstring
@@ -68,7 +86,7 @@ auto Hashtab::eval_let(const std::string &a, const std::string &b) -> Token {
     Token Av   = locate(a);
     auto  A    = Av.eqtb_loc();
     auto  Bval = locate(b).eqtb_loc();
-    the_parser.eq_define(A, eqtb[Bval].val, true);
+    the_parser.eq_define(A, the_eqtb()[Bval].val, true);
     return Av;
 }
 
@@ -77,5 +95,5 @@ auto Hashtab::eval_let(const std::string &a, const std::string &b) -> Token {
 void Hashtab::eval_let_local(const std::string &a, const std::string &b) {
     auto A    = locate(a).eqtb_loc();
     auto Bval = locate(b).eqtb_loc();
-    the_parser.eq_define(A, eqtb[Bval].val, false);
+    the_parser.eq_define(A, the_eqtb()[Bval].val, false);
 }

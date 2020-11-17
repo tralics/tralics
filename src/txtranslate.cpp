@@ -10,8 +10,10 @@
 
 // This file contains a big part of the Tralics translator
 
+#include "tralics/ColSpec.h"
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"
+#include "tralics/SaveAux.h"
 #include "tralics/Saver.h"
 #include <fmt/format.h>
 #include <fmt/ostream.h>
@@ -26,11 +28,10 @@ void readline_newprompt(std::string s); // in readline.cpp, but only used here
 
 namespace {
     Buffer current_head;
-    Buffer Tbuf;
-    Buffer Abuf;
-    Buffer tpa_buffer;
     Xml *  unfinished_par{nullptr};
     Token  T_theequation, T_theparentequation, T_at_theparentequation;
+
+    const std::string list[] = {"sup", "sub", "oldstyle", "caps", "hl", "so", "st", "ul"};
 
 #ifdef _MSC_VER
     inline void txsleep(unsigned i) { Sleep(1000 * i); }
@@ -39,38 +40,64 @@ namespace {
 #endif
 
     auto st_bool(bool x) -> std::string { return x ? the_names["true"] : the_names["false"]; }
+
+    // Returns the number of environments
+    auto nb_env_on_stack() -> int {
+        auto n = the_save_stack.size();
+        int  k = 0;
+        for (size_t i = n; i > 0; i--) {
+            SaveAuxBase *p = the_save_stack[i - 1].get();
+            if (p->type == st_env) ++k;
+        }
+        return k;
+    }
+
+    // Reads the tokens, converts them to dimension.
+    auto dimen_attrib(ScaledInt A) -> std::string {
+        Buffer B;
+        B.push_back(A, glue_spec_empty);
+        auto i = B.size();
+        if (i > 0 && B[i - 1] == '0') {
+            B.pop_back();
+            i--;
+        }
+        if (i > 0 && B[i - 1] == '.') B.pop_back();
+        return std::string(B);
+    }
+
+    // This prints a control sequence value on the log file.
+    // Used when tracing a command (catcode not 11 nor 12)
+    // used in the case {\let\x\y}, after the closing brace.
+    // It it's not a char, it's a command, with a plain ASCII name.
+    void print_cmd_chr(CmdChr X) {
+        String a = X.special_name();
+        auto   b = X.name();
+        if (a != nullptr) { // print both values
+            the_log << "\\" << b << " " << a;
+            return;
+        }
+        if (a != nullptr) { // chr
+            the_log << a;
+            char32_t y = X.chr;
+            Buffer & B = buffer_for_log;
+            B.clear();
+            B.out_log(y, the_main.log_encoding);
+            return;
+        }
+        the_log << "\\" << b;
+    }
 } // namespace
 
 namespace translate_ns {
     auto find_color(const std::string &model, const std::string &value) -> std::string;
 } // namespace translate_ns
 
-class ColSpec {
-    std::string name;
-    std::string model;
-    std::string value;
-    std::string id;
-    Xml *       xval;
-    bool        used;
-
-public:
-    ColSpec(std::string a, std::string b, std::string c);
-    auto compare(const std::string &a, const std::string &b) -> bool { return model == a && value == b; }
-    auto get_id() -> std::string { // \todo weird name
-        used = true;
-        return id;
-    }
-    [[nodiscard]] auto is_used() const -> bool { return used; }
-    [[nodiscard]] auto get_val() const -> Xml * { return xval; }
-};
-std::vector<ColSpec *> all_colors;
-
 // This code translates everything, until end of file.
 void Parser::translate_all() {
     unprocessed_xml.clear();
     while (!get_x_token()) {
         if (tracing_commands()) translate02();
-        translate01();
+        if (!translate03()) throw EndOfData();
     }
     flush_buffer();
 }
@@ -94,14 +121,9 @@ void Parser::T_translate(TokenList &X) {
     translate_all();
 }
 
-void Parser::translate01() {
-    auto guard = SaveErrTok(cur_tok);
-    translate03();
-}
-
 // This prints the command to translate. The case of a space is special
 // Letters are printed elsewhere
-void Parser::translate02() {
+void Parser::translate02() const {
     if (cur_cmd_chr.is_space()) {
         if (!the_stack.in_v_mode()) Logger::out_single_char(char32_t(' '));
         return;
@@ -143,8 +165,7 @@ void Parser::leave_v_mode() {
 }
 
 auto Parser::ileave_v_mode() -> Xid {
-    auto k   = cur_centering();
-    Xid  res = the_stack.push_par(k);
+    Xid res = the_stack.push_par(cur_centering());
     if (unfinished_par != nullptr) {
         res.add_attribute(unfinished_par->id.get_att(), true);
         unfinished_par = nullptr;
@@ -342,11 +363,13 @@ void Parser::arg_font(subtypes c) {
 // \textsuperscript, \textsubscript, etc.
 void Parser::T_fonts(const std::string &x) {
     leave_v_mode();
-    Xml *res = Stack::fonts1(x);
+    Xml *res = fonts1(x);
     the_stack.push(the_names["fonts"], res);
     T_arg();
     the_stack.pop(the_names["fonts"]);
 }
+
+void Parser::T_fonts(subtypes c) { T_fonts(list[c]); }
 
 // \indent or \noindent. If we are in a <p>,  and the <p> is empty, then we
 // add noindent=true or noindent=false, unless there is already a noindent
@@ -432,7 +455,7 @@ void Parser::T_xmlelt(subtypes w) {
 void Parser::T_arg1(const std::string &y) {
     the_stack.push1(y);
     TokenList L = read_arg();
-    brace_me(L);
+    L.brace_me();
     T_translate(L);
     the_stack.pop(y);
 }
@@ -468,7 +491,7 @@ auto Parser::T_item_label(unsigned c) -> std::string {
         else
             return std::string();
     }
-    brace_me(L); // \item[\bf x] puts only x in \bf
+    L.brace_me(); // \item[\bf x] puts only x in \bf
     the_stack.push1(the_names["labelitem"]);
     the_stack.set_arg_mode();
     T_translate(L);
@@ -517,7 +540,7 @@ void Parser::start_paras(int y, const std::string &Y, bool star) {
     Xml *     title = the_stack.top_stack();
     TokenList L     = read_arg();
     if (module_p) check_module_title(L);
-    brace_me(L);
+    L.brace_me();
     T_translate(L);
     current_head.clear();
     title->put_in_buffer(current_head);
@@ -593,7 +616,7 @@ void Parser::T_paras(subtypes x) {
     bool star = remove_initial_star();
     if (chapter_has_star && x == chapter_code) star = true;
     if (star)
-        last_att_list().push_back(the_names["rend"], the_names["nonumber"]);
+        last_att_list()[the_names["rend"]] = the_names["nonumber"];
     else {
         if (x == part_code)
             refstepcounter("part", false);
@@ -828,7 +851,6 @@ void Parser::T_keywords() {
 }
 
 // Handle the case of an argument of \includegraphics
-// Extension is in Abuf, if needed
 void Parser::no_extension(AttList &AL, const std::string &s) {
     long k  = -1;
     bool ok = true;
@@ -865,16 +887,16 @@ void Parser::no_extension(AttList &AL, const std::string &s) {
     }
     if (!ok) {
         TokenList L = Tbuf.str_toks11(false);
-        brace_me(L);
+        L.brace_me();
         back_input(L);
         back_input(hash_table.locate("@filedoterr"));
     }
     if (ok && k > 0) {
-        AL.push_back(the_names["file_extension"], std::string(Tbuf.substr(to_unsigned(k) + 1)));
+        AL[the_names["file_extension"]] = Tbuf.substr(to_unsigned(k) + 1);
         Tbuf.resize(to_unsigned(k));
     }
     enter_file_in_table(Tbuf.substr(ii), ok);
-    AL.push_back(the_names["file"], std::string(Tbuf));
+    AL[the_names["file"]] = Tbuf;
 }
 
 void Parser::default_bp(Buffer &B, Token T, TokenList &val) {
@@ -932,23 +954,23 @@ void Parser::includegraphics(subtypes C) {
             std::string sval = list_to_string_c(val, bval);
             if (sval == "false") V = "false";
             if (skey == "clip")
-                AL.push_back(the_names["clip"], the_names[V], true);
+                AL[the_names["clip"]] = the_names[V];
             else
-                AL.push_back(std::string(skey), the_names[V], true);
+                AL[skey] = the_names[V];
         } else if (skey == "type" || skey == "ext" || skey == "read" || skey == "command" || skey == "origin" || skey == "scale" ||
                    skey == "angle") {
             std::string sval = list_to_string_c(val, bval);
             if (skey == "angle" && sval == "0") continue;
             std::string p = skey == "scale" ? the_names["scale"] : skey == "angle" ? the_names["angle"] : std::string(skey);
-            AL.push_back(p, std::string(sval), true);
+            AL[p]         = sval;
         } else if (skey == "width" || skey == "height" || skey == "totalheight") {
             std::string N = skey == "height" ? "height" : skey == "width" ? "width" : "totalwidth";
             ScaledInt   s = dimen_from_list(T, val);
             B.push_back(s, glue_spec_pt);
-            AL.push_back(the_names[N], std::string(B), true);
+            AL[the_names[N]] = B;
         } else if (skey == "natwidth" || skey == "natheight" || skey == "bbllx" || skey == "bblly" || skey == "bburx" || skey == "bbury") {
             default_bp(B, T, val);
-            AL.push_back(std::string(skey), std::string(B), true);
+            AL[skey] = B;
         } else if (skey == "bb" || skey == "viewport" || skey == "trim") {
             TokenList aux;
             auto      SP = Token(space_token_val);
@@ -959,11 +981,11 @@ void Parser::includegraphics(subtypes C) {
                 default_bp(B, T, aux);
                 if (i < 3) B.push_back(' ');
             }
-            AL.push_back(std::string(skey), std::string(B), true);
+            AL[skey] = B;
         } else
             invalid_key(T, skey, val);
     }
-    AL.push_back(the_names["rend"], the_names["inline"]);
+    AL[the_names["rend"]] = the_names["inline"];
 }
 
 void Parser::T_epsfbox() {
@@ -979,9 +1001,9 @@ void Parser::T_epsfbox() {
     }
     AttList &res = the_stack.add_newid0("figure");
     no_extension(res, y);
-    res.push_back(the_names["rend"], the_names["inline"]);
-    if (!(xdim == 0)) res.push_back(the_names["width"], std::string(xdim));
-    if (!(ydim == 0)) res.push_back(the_names["height"], std::string(ydim));
+    res[the_names["rend"]] = the_names["inline"];
+    if (!(xdim == 0)) res[the_names["width"]] = std::string(xdim);
+    if (!(ydim == 0)) res[the_names["height"]] = std::string(ydim);
     dim_define(xdim_pos, ScaledInt(0), false); // reset to 0
     dim_define(ydim_pos, ScaledInt(0), false);
 }
@@ -1025,42 +1047,14 @@ void Parser::append_glue(Token T, ScaledInt dimen, bool vert) {
     add_vspace(T, dimen, cp);
 }
 
-//  Colors.
-// This creates a new color item, to be pushed on the color stack
-// Note that used is false, set to true by get_id.
-ColSpec::ColSpec(std::string a, std::string b, std::string c) : name(std::move(a)), model(std::move(b)), value(std::move(c)), used(false) {
-    xval = new Xml(the_names["color"], nullptr);
-    if (!name.empty()) xval->id.add_attribute(std::string("name"), name);
-    xval->id.add_attribute(std::string("model"), std::string(model));
-    xval->id.add_attribute(std::string("value"), std::string(value));
-    static int n = 0;
-    id           = std::string(fmt::format("colid{}", ++n)); // This is a unique id
-    xval->id.add_attribute(the_names["id"], id);
-}
-
-void Parser::finish_color() {
-    auto n = all_colors.size();
-    int  k = 0;
-    for (size_t i = 0; i < n; i++)
-        if (all_colors[i]->is_used()) k++;
-    if (k == 0) return;
-    Xml *res = new Xml(std::string("colorpool"), nullptr);
-    for (size_t i = 0; i < n; i++)
-        if (all_colors[i]->is_used()) {
-            res->push_back_unless_nullptr(all_colors[i]->get_val());
-            res->add_nl();
-        }
-    the_stack.document_element()->replace_first(res);
-}
-
 // Find a color in the stack, returns the id;
 // May add a new item to the stack
 auto translate_ns::find_color(const std::string &model, const std::string &value) -> std::string {
     auto n = all_colors.size();
     for (size_t i = 0; i < n; i++)
-        if (all_colors[i]->compare(model, value)) return all_colors[i]->get_id();
-    all_colors.push_back(new ColSpec("", model, value));
-    return all_colors[n]->get_id();
+        if (all_colors[i].compare(model, value)) return all_colors[i].get_id();
+    all_colors.emplace_back("", model, value);
+    return all_colors[n].get_id();
 }
 
 // case of \color{red} or \color[rgb]{1,0,0}
@@ -1073,7 +1067,7 @@ auto Parser::scan_color(const std::string &opt, const std::string &name) -> std:
         token_from_list(hash_table.locate(B));
         if ((cur_cmd_chr.cmd == color_cmd) && (cur_cmd_chr.chr >= color_offset)) {
             auto k = cur_cmd_chr.chr - color_offset;
-            if (k < all_colors.size()) return all_colors[k]->get_id();
+            if (k < all_colors.size()) return all_colors[k].get_id();
         }
         parse_error(err_tok, "Undefined color ", name, "undefined color");
         return std::string();
@@ -1099,11 +1093,11 @@ void Parser::T_color(subtypes c) {
         return;
     }
     if (c == pagecolor_code) {
-        std::string opt  = sT_optarg_nopar();
-        std::string name = sT_arg_nopar();
-        std::string C    = scan_color(opt, name);
-        AttList &   res  = the_stack.add_newid0("pagecolor");
-        res.push_back(the_names["color"], C);
+        std::string opt         = sT_optarg_nopar();
+        std::string name        = sT_arg_nopar();
+        std::string C           = scan_color(opt, name);
+        AttList &   res         = the_stack.add_newid0("pagecolor");
+        res[the_names["color"]] = C;
     }
     if (c == colorbox_code) {
         std::string opt  = sT_optarg_nopar();
@@ -1130,7 +1124,7 @@ void Parser::T_color(subtypes c) {
         std::string value = sT_arg_nopar();
         B                 = "\\color@" + name;
         Token C           = hash_table.locate(B);
-        if (!hash_table.eqtb[C.eqtb_loc()].val.is_undef()) log_and_tty << "Redefining color " << name << "\n";
+        if (!Hashtab::the_eqtb()[C.eqtb_loc()].val.is_undef()) log_and_tty << "Redefining color " << name << "\n";
         if (model == "named") {
             // case \definecolor{myred}{named}{red}
             // is \global\let\color@myred = \color@red
@@ -1143,7 +1137,7 @@ void Parser::T_color(subtypes c) {
         // case \definecolor{myred}{rgb}{1,2,3}
         // is \global\let \color@myred \colorN
         auto n = all_colors.size();
-        all_colors.push_back(new ColSpec(name, model, value));
+        all_colors.emplace_back(name, model, value);
         CmdChr v(color_cmd, subtypes(n + color_offset));
         eq_define(C.eqtb_loc(), v, true);
         if (tracing_assigns()) {
@@ -1155,7 +1149,7 @@ void Parser::T_color(subtypes c) {
     if (c >= color_offset) {
         auto k = c - color_offset;
         if (k < all_colors.size()) {
-            std::string C = all_colors[k]->get_id();
+            std::string C = all_colors[k].get_id();
             cur_font.set_color(C);
             font_has_changed();
         }
@@ -1165,10 +1159,9 @@ void Parser::T_color(subtypes c) {
 // Add the given dimension as spacebefore value to the paragraph x.
 void Parser::add_vspace(Token T, ScaledInt dimen, Xid x) {
     AttList &L = x.get_att();
-    auto     K = L.lookup(the_names["space_before"]);
-    if (K) {
-        std::string k  = L.get_val(*K);
-        TokenList   La = token_ns::string_to_list(k, false);
+    auto *   K = L.lookup(the_names["space_before"]);
+    if (K != nullptr) {
+        TokenList La = token_ns::string_to_list(*K, false);
         list_to_glue(it_glue, T, La);
         dimen += ScaledInt(cur_val.get_glue_width());
     }
@@ -1181,7 +1174,7 @@ auto Parser::internal_makebox() -> Xml * {
     the_stack.push1(the_names["mbox"]);
     Xml *     mbox = the_stack.top_stack();
     TokenList d    = read_arg();
-    brace_me(d);
+    d.brace_me();
     T_translate(d);
     the_stack.pop(the_names["mbox"]);
     return mbox;
@@ -1251,7 +1244,7 @@ void Parser::T_cap_or_note(bool cap) {
     the_stack.pop(the_names[name]);
     if (opt != nullptr) the_stack.add_last(new Xml(the_names["alt_caption"], opt));
     pop_level(bt_local);
-    if (the_main->footnote_hack) note->remove_par_bal_if_ok();
+    if (the_main.footnote_hack) note->remove_par_bal_if_ok();
 }
 
 void Parser::T_makebox(bool framed, Token C) {
@@ -1261,10 +1254,10 @@ void Parser::T_makebox(bool framed, Token C) {
     leave_v_mode();
     the_stack.push1(the_names["box"]);
     AttList &cur = last_att_list();
-    if (framed) cur.push_back(the_names["framed"], the_names["true"]);
-    if (!oarg.empty()) cur.push_back(the_names["box_pos"], std::string(oarg));
-    cur.push_back(the_names["height"], B);
-    cur.push_back(the_names["width"], A);
+    if (framed) cur[the_names["framed"]] = the_names["true"];
+    if (!oarg.empty()) cur[the_names["box_pos"]] = oarg;
+    cur[the_names["height"]] = B;
+    cur[the_names["width"]]  = A;
     T_arg_local();
     the_stack.pop(the_names["box"]);
 }
@@ -1294,7 +1287,7 @@ void Parser::T_save_box(bool simple) {
         the_stack.set_arg_mode();
         Xml *     mbox = the_stack.top_stack();
         TokenList d    = read_arg();
-        brace_me(d);
+        d.brace_me();
         T_translate(d);
         the_stack.pop(the_names["mbox"]);
         if (ipos && ipos->empty()) ipos.reset();       // \todo this is ugly
@@ -1314,13 +1307,13 @@ void Parser::T_picture() {
     std::string A, B;
     Token       C = cur_tok;
     T_twodims(A, B, C);
-    cur.push_back(the_names["height"], B);
-    cur.push_back(the_names["width"], A);
+    cur[the_names["height"]] = B;
+    cur[the_names["width"]]  = A;
     skip_initial_space_and_back_input();
     if (cur_tok.is_open_paren()) {
         T_twodims(A, B, C);
-        cur.push_back(the_names["ypos"], B);
-        cur.push_back(the_names["xpos"], A);
+        cur[the_names["ypos"]] = B;
+        cur[the_names["xpos"]] = A;
     }
 }
 
@@ -1393,8 +1386,8 @@ void Parser::T_fbox(subtypes cc) {
             if (iwidth) aux->id.add_attribute(std::string("vscale"), *iwidth);
             cur->kill_name();
         } else {
-            AL.push_back(the_names["box_scale"], iscale);
-            if (iwidth) AL.push_back(std::string("vscale"), *iwidth);
+            AL[the_names["box_scale"]] = iscale;
+            if (iwidth) AL["vscale"] = *iwidth; // \toto perhaps the_names for consistency
         }
         return;
     }
@@ -1404,9 +1397,9 @@ void Parser::T_fbox(subtypes cc) {
         aux->id.add_attribute(the_names["framed"], the_names["true"]);
         cur->kill_name();
     } else {
-        AL.push_back(the_names["fbox_rend"], the_names["boxed"]);
-        if (ipos) AL.push_back(the_names["box_pos"], *ipos);
-        if (iwidth) AL.push_back(the_names["box_width"], *iwidth);
+        AL[the_names["fbox_rend"]] = the_names["boxed"];
+        if (ipos) AL[the_names["box_pos"]] = *ipos;
+        if (iwidth) AL[the_names["box_width"]] = *iwidth;
     }
 }
 
@@ -1418,28 +1411,8 @@ void Parser::new_xref(Xml *val, std::string v, bool err) {
     if (err && (v.empty() || v[0] == '(')) parse_error("Invalid URL value");
 }
 
-// Inserts a \allowbreak after dot and slash
-void Parser::url_hack(TokenList &L) const {
-    TokenList R;
-    for (;;) {
-        if (L.empty()) {
-            L.swap(R);
-            return;
-        }
-        Token T = L.front();
-        R.push_back(T);
-        L.pop_front();
-        if (L.empty()) continue;                                        // no break needed at end.
-        if (T.is_slash_token() && L.front().is_slash_token()) continue; // no break at the start of http://
-        if ((T.is_slash_token() || T.val == other_t_offset + '.') && bib_allow_break) R.push_back(hash_table.allowbreak_token);
-    }
-}
-
-// Translates \url. If cur_chr !=0, it is rrrt
-// \rrrt{foo} is the same as \url{http://www.inria.fr/rrrt/foo.html}
-// \url{\rrrt{foo}} is the same as \rrrt{foo}
-void Parser::T_url(subtypes c) {
-    bool is_rrrt = c == 1;
+// Translates \url
+void Parser::T_url() {
     bool no_hack = remove_initial_star();
     leave_v_mode();
     auto      guard1 = SaveCatcode('~', other_catcode);
@@ -1451,34 +1424,22 @@ void Parser::T_url(subtypes c) {
     if (!X.empty()) {
         Token T = X.front();
         token_from_list(T);
-        if (cur_cmd_chr.chr == 1 && cur_cmd_chr.cmd == url_cmd) {
-            X.pop_front();
-            is_rrrt = true;
-        }
-    }
-    if (is_rrrt) { // \todo deprecate this case
-        Tbuf          = "http://www.inria.fr/rrrt/";
-        TokenList tmp = Tbuf.str_toks(nlt_space); // what about new line here ?
-        X.splice(X.begin(), tmp);
-        Tbuf = ".html";
-        tmp  = Tbuf.str_toks(nlt_space);
-        X.splice(X.end(), tmp);
     }
     TokenList Y;
     bool      in_href = the_stack.is_frame2("hanl"); // \todo what is hanl?
     if (!in_href) {
         Y = X;
-        brace_me(Y);
+        Y.brace_me();
     }
     X.push_front(hash_table.urlfont_token);
     if (in_href) {
-        if (!no_hack) url_hack(X);
-        brace_me(X);
+        if (!no_hack) X.url_hack();
+        X.brace_me();
         T_translate(X);
     } else {
         std::string x = translate_list(Y)->convert_to_string();
-        if (!no_hack) url_hack(X);
-        brace_me(X);
+        if (!no_hack) X.url_hack();
+        X.brace_me();
         Xml *y = translate_list(X);
         new_xref(y, x, true);
     }
@@ -1543,9 +1504,9 @@ auto Parser::special_tpa_arg(const std::string &name, const std::string &y, bool
     bool        has_atts = tpa_buffer.look_at_space(y);
     std::string Y;
     if (!has_atts)
-        Y = std::string(y);
+        Y = y;
     else
-        Y = std::string(tpa_buffer);
+        Y = tpa_buffer;
     if (par) the_stack.set_v_mode();
     the_stack.push(Y, new Xml(Y, nullptr));
     if (has_q) the_stack.mark_omit_cell();
@@ -1556,12 +1517,12 @@ auto Parser::special_tpa_arg(const std::string &name, const std::string &y, bool
     if (!env) {
         B       = name + "@hook";
         cur_tok = hash_table.locate(B);
-        if (!hash_table.eqtb[cur_tok.eqtb_loc()].val.is_undef()) {
+        if (!Hashtab::the_eqtb()[cur_tok.eqtb_loc()].val.is_undef()) {
             Token     T = cur_tok;
             TokenList L = read_arg();
-            brace_me(L);
+            L.brace_me();
             L.push_front(T);
-            brace_me(L);
+            L.brace_me();
             back_input(L);
         }
     }
@@ -1570,7 +1531,7 @@ auto Parser::special_tpa_arg(const std::string &name, const std::string &y, bool
     push_tpa();
     B       = name + "@helper";
     cur_tok = hash_table.locate(B);
-    if (!hash_table.eqtb[cur_tok.eqtb_loc()].val.is_undef()) {
+    if (!Hashtab::the_eqtb()[cur_tok.eqtb_loc()].val.is_undef()) {
         back_input(cur_tok);
         if (!env) special_case = true;
     }
@@ -1647,8 +1608,8 @@ void Parser::T_reevaluate() {
         pop_level(bt_env); // closes current env
     }
     Tbuf.clear();
-    T_reevaluate0(L1, in_env);
-    T_reevaluate0(L2, in_env);
+    L1.reevaluate0(in_env);
+    L2.reevaluate0(in_env);
     if (tracing_commands()) {
         Logger::finish_seq();
         the_log << "{Reeval: " << Tbuf << "}\n";
@@ -1656,18 +1617,6 @@ void Parser::T_reevaluate() {
     push_input_stack("(reevaluate)", false, false);
     lines.push_front(Line(-1));
     lines.split_string(Tbuf, 0);
-}
-
-void Parser::T_reevaluate0(TokenList &L1, bool in_env) {
-    Abuf.clear();
-    while (!L1.empty()) {
-        Abuf << L1.front();
-        L1.pop_front();
-    }
-    if (in_env)
-        Tbuf.format("\\begin{{{}}}{}\\end{{{}}}%\n", Abuf, tpa_buffer, Abuf);
-    else
-        Tbuf.format("{}{{{}}}%\n", Abuf, tpa_buffer);
 }
 
 // Translates \uppercase, \MakeUpperCase, etc
@@ -1767,19 +1716,6 @@ void Parser::T_twoints(TokenList &A, TokenList &B) {
     B = read_until_nopar(Token(other_t_offset, ')'));
 }
 
-// Reads the tokens, converts them to dimension.
-auto Parser::dimen_attrib(ScaledInt A) -> std::string {
-    Buffer B;
-    B.push_back(A, glue_spec_empty);
-    auto i = B.size();
-    if (i > 0 && B[i - 1] == '0') {
-        B.pop_back();
-        i--;
-    }
-    if (i > 0 && B[i - 1] == '.') B.pop_back();
-    return std::string(B);
-}
-
 void Parser::back_input_pt(bool spec) {
     if (spec) {
         back_input(Token(letter_t_offset, 't'));
@@ -1843,13 +1779,13 @@ void Parser::T_bezier(subtypes c) {
     T_twodims(b1, b2, C);
     T_twodims(c1, c2, C);
     AttList &res = the_stack.add_newid0("bezier");
-    if (w) res.push_back(the_names["repeat"], *w);
-    res.push_back(the_names["c2"], c2);
-    res.push_back(the_names["c1"], c1);
-    res.push_back(the_names["b2"], b2);
-    res.push_back(the_names["b1"], b1);
-    res.push_back(the_names["a2"], a2);
-    res.push_back(the_names["a1"], a1);
+    if (w) res[the_names["repeat"]] = *w;
+    res[the_names["c2"]] = c2;
+    res[the_names["c1"]] = c1;
+    res[the_names["b2"]] = b2;
+    res[the_names["b1"]] = b1;
+    res[the_names["a2"]] = a2;
+    res[the_names["a1"]] = a1;
 }
 
 // put \line \vector \oval
@@ -1888,18 +1824,18 @@ void Parser::T_put(subtypes c) {
     if (c == oval_code) {
         auto     specs = nT_optarg_nopar();
         AttList &val   = the_stack.add_newid0(x0);
-        if (specs) val.push_back(the_names["specs"], *specs);
-        val.push_back(the_names["ypos"], B);
-        val.push_back(the_names["xpos"], A);
+        if (specs) val[the_names["specs"]] = *specs;
+        val[the_names["ypos"]] = B;
+        val[the_names["xpos"]] = A;
         return;
     }
     if (c != put_code && c != multiput_code && c != scaleput_code) { // line vector
-        TokenList L = read_arg();
-        D           = token_list_to_att(L, C, false);
-        AttList &AL = the_stack.add_newid0(x0);
-        AL.push_back(the_names["width"], D);
-        AL.push_back(the_names["ydir"], B);
-        AL.push_back(the_names["xdir"], A);
+        TokenList L            = read_arg();
+        D                      = token_list_to_att(L, C, false);
+        AttList &AL            = the_stack.add_newid0(x0);
+        AL[the_names["width"]] = D;
+        AL[the_names["ydir"]]  = B;
+        AL[the_names["xdir"]]  = A;
         return;
     }
     // Case of \put or \multiput \scaleput
@@ -1907,11 +1843,11 @@ void Parser::T_put(subtypes c) {
     the_stack.set_arg_mode();
     Xid cur_id = the_stack.get_top_id();
     if (c == scaleput_code) {
-        AttList &AL = cur_id.get_att();
-        AL.push_back(the_names["yscalex"], get_c_val(hash_table.yscalex_token));
-        AL.push_back(the_names["xscaley"], get_c_val(hash_table.xscaley_token));
-        AL.push_back(the_names["yscale"], get_c_val(hash_table.yscale_token));
-        AL.push_back(the_names["xscale"], get_c_val(hash_table.xscale_token));
+        AttList &AL              = cur_id.get_att();
+        AL[the_names["yscalex"]] = get_c_val(hash_table.yscalex_token);
+        AL[the_names["xscaley"]] = get_c_val(hash_table.xscaley_token);
+        AL[the_names["yscale"]]  = get_c_val(hash_table.yscale_token);
+        AL[the_names["xscale"]]  = get_c_val(hash_table.xscale_token);
     }
     if (c == multiput_code) {
         std::string aa, bb;
@@ -1935,7 +1871,7 @@ void Parser::T_linethickness(subtypes c) {
     if (c == thicklines_code) C = "thicklines";
     if (c == thinlines_code) C = "thinlines";
     AttList &res = the_stack.add_newid0(C);
-    if (c == linethickness_code) res.push_back(the_names["size"], nT_arg_nopar());
+    if (c == linethickness_code) res[the_names["size"]] = nT_arg_nopar();
 }
 
 void Parser::T_curves(subtypes c) {
@@ -1991,15 +1927,15 @@ void Parser::T_multiput() {
     back_input(w);
     auto      r = scan_int(C);
     TokenList L = read_arg();
-    brace_me(L);
+    L.brace_me();
     while (r > 0) {
         TokenList Lc = L;
         back_input(Lc);
         the_stack.push1(the_names["put"]);
         the_stack.set_arg_mode();
-        AttList &AL = last_att_list();
-        AL.push_back(the_names["ypos"], dimen_attrib(Y));
-        AL.push_back(the_names["xpos"], dimen_attrib(X));
+        AttList &AL           = last_att_list();
+        AL[the_names["ypos"]] = dimen_attrib(Y);
+        AL[the_names["xpos"]] = dimen_attrib(X);
         T_arg();
         the_stack.pop(the_names["put"]);
         the_stack.add_nl();
@@ -2018,12 +1954,12 @@ void Parser::T_dashline(subtypes c) {
     if (c == dottedline_code) x0 = "dottedline";
     if (c == circle_code) x0 = "circle";
     if (c == circle_code) { // circle
-        bool        has_star = remove_initial_star();
-        TokenList   L        = read_arg();
-        std::string aa       = token_list_to_att(L, T, false);
-        AttList &   AL       = the_stack.add_newid0(x0);
-        AL.push_back(the_names["size"], aa);
-        if (has_star) AL.push_back(the_names["full"], the_names["true"]);
+        bool        has_star  = remove_initial_star();
+        TokenList   L         = read_arg();
+        std::string aa        = token_list_to_att(L, T, false);
+        AttList &   AL        = the_stack.add_newid0(x0);
+        AL[the_names["size"]] = aa;
+        if (has_star) AL[the_names["full"]] = the_names["true"];
         return;
     }
     auto                       A = nT_optarg_nopar();
@@ -2033,18 +1969,18 @@ void Parser::T_dashline(subtypes c) {
     the_stack.push1(the_names[x0]);
     the_stack.set_arg_mode();
     AttList &AL = last_att_list();
-    if (A) AL.push_back(the_names["arg1"], *A);
-    if (B) AL.push_back(the_names["arg2"], *B);
-    if (C) AL.push_back(the_names["arg3"], *C);
+    if (A) AL[the_names["arg1"]] = *A;
+    if (B) AL[the_names["arg2"]] = *B;
+    if (C) AL[the_names["arg3"]] = *C;
     for (;;) {
         std::string xpos, ypos;
         skip_initial_space();
         if (cur_tok.is_valid()) back_input();
         if (!cur_tok.is_open_paren()) break;
         T_twodims(xpos, ypos, T);
-        AttList &res = the_stack.add_newid0("point");
-        res.push_back(the_names["ypos"], ypos);
-        res.push_back(the_names["xpos"], xpos);
+        AttList &res           = the_stack.add_newid0("point");
+        res[the_names["ypos"]] = ypos;
+        res[the_names["xpos"]] = xpos;
     }
     the_stack.pop(the_names[x0]);
 }

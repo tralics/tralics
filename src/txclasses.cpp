@@ -96,7 +96,7 @@ auto classes_ns::make_keyval(TokenList &key_val) -> KeyAndVal {
 auto classes_ns::make_options(TokenList &L) -> OptionList {
     OptionList res;
     TokenList  key;
-    Token      comma = the_parser.hash_table.comma_token;
+    Token      comma = hash_table.comma_token;
     while (!L.empty()) {
         token_ns::split_at(comma, L, key);
         token_ns::remove_first_last_space(key);
@@ -419,22 +419,22 @@ void classes_ns::unknown_option(KeyAndVal &cur, TokenList &res, TokenList &spec,
         if (X == 1) {
             TokenList w;
             w = string_to_list(cur.name, true);
-            spec.push_back(the_parser.hash_table.def_token);
-            spec.push_back(the_parser.hash_table.CurrentOptionKey_token);
+            spec.push_back(hash_table.def_token);
+            spec.push_back(hash_table.CurrentOptionKey_token);
             spec.splice(spec.end(), w);
 
             w = cur.val;
             if (w.empty())
-                w.push_back(the_parser.hash_table.relax_token);
+                w.push_back(hash_table.relax_token);
             else
                 w.pop_front();
-            the_parser.brace_me(w);
-            spec.push_back(the_parser.hash_table.def_token);
-            spec.push_back(the_parser.hash_table.CurrentOptionValue_token);
+            w.brace_me();
+            spec.push_back(hash_table.def_token);
+            spec.push_back(hash_table.CurrentOptionValue_token);
             spec.splice(spec.end(), w);
-            the_parser.brace_me(u);
-            spec.push_back(the_parser.hash_table.def_token);
-            spec.push_back(the_parser.hash_table.CurrentOption_token);
+            u.brace_me();
+            spec.push_back(hash_table.def_token);
+            spec.push_back(hash_table.CurrentOption_token);
             spec.splice(spec.end(), u);
             u = C->default_handler;
             spec.splice(spec.end(), u);
@@ -442,9 +442,9 @@ void classes_ns::unknown_option(KeyAndVal &cur, TokenList &res, TokenList &spec,
             if (!res.empty()) res.push_back(Token(other_t_offset, ','));
             res.splice(res.end(), u);
         } else {
-            the_parser.brace_me(u);
-            res.push_back(the_parser.hash_table.def_token);
-            res.push_back(the_parser.hash_table.CurrentOption_token);
+            u.brace_me();
+            res.push_back(hash_table.def_token);
+            res.push_back(hash_table.CurrentOption_token);
             res.splice(res.end(), u);
             u = C->default_handler;
             res.splice(res.end(), u);
@@ -626,7 +626,7 @@ void Parser::use_a_package(const std::string &name, bool type, const std::string
     auto   res                         = find_in_confdir(name + (type ? ".clt"s : ".plt"s));
     the_class_data.using_default_class = false;
     if (!res) {
-        std::string D = the_main->default_class;
+        std::string D = the_main.default_class;
         if (type && !D.empty()) {
             res = find_in_confdir(D + ".clt");
             if (res) {
@@ -683,7 +683,7 @@ auto Parser::check_builtin_pack(const std::string &pack) -> bool {
 // Built-in class handler. Class name unused
 void Parser::check_builtin_class() {
     Xid doc_att(1);
-    if (is_raw_option(cur_opt_list, "useallsizes")) the_main->use_all_sizes = true;
+    if (is_raw_option(cur_opt_list, "useallsizes")) the_main.use_all_sizes = true;
     if (is_raw_option(cur_opt_list, "french")) set_default_language(1);
     if (is_raw_option(cur_opt_list, "english")) set_default_language(0);
 }
@@ -726,7 +726,7 @@ void Parser::add_language_att() {
     else if (D == 2)
         b = "german";
     Xid doc_att(1);
-    if ((b != "cst_empty") && !the_names["language"].empty()) doc_att.get_att().push_back(the_names["language"], the_names[b]);
+    if ((b != "cst_empty") && !the_names["language"].empty()) doc_att.get_att()[the_names["language"]] = the_names[b];
 }
 
 auto LatexPackage::find_option(const std::string &nname) -> long {
@@ -1009,7 +1009,7 @@ void Parser::finish_kvo_bool(Token T, const std::string &fam, const std::string 
     aux           = string_to_list(s, true);
     L.splice(L.begin(), aux);
     L.push_front(hash_table.locate("KVO@boolkey"));
-    brace_me(L);
+    L.brace_me();
     aux = string_to_list("[true]", false);
     L.splice(L.begin(), aux);
     call_define_key(L, T, arg, fam);
@@ -1047,7 +1047,7 @@ void Parser::kvo_string_opt() {
     Buffer &    B   = txclasses_local_buf;
     B               = fam + "@" + arg;
     Token T         = hash_table.locate(B);
-    if (!hash_table.eqtb[T.eqtb_loc()].val.is_undef_or_relax()) {
+    if (!Hashtab::the_eqtb()[T.eqtb_loc()].val.is_undef_or_relax()) {
         parse_error(err_tok, "Cannot redefine ", T, "", "bad redef");
         return;
     }
@@ -1056,9 +1056,9 @@ void Parser::kvo_string_opt() {
     add_sharp(L);
     L.push_front(T);
     L.push_front(hash_table.locate("def"));
-    brace_me(L);
+    L.brace_me();
     if (has_default) {
-        brace_me(defval);
+        defval.brace_me();
         defval.push_front(Token(other_t_offset, '['));
         defval.push_back(Token(other_t_offset, ']'));
         L.splice(L.begin(), defval);
@@ -1080,7 +1080,7 @@ void Parser::kvo_process() {
     std::string fam = ok ? kvo_getfam() : sE_arg_nopar();
     TokenList   spec;
     TokenList   L = classes_ns::cur_options(true, spec, true);
-    brace_me(L);
+    L.brace_me();
     back_input(L);
     TokenList aux = string_to_list(fam, true);
     back_input(aux);
@@ -1096,7 +1096,7 @@ void Parser::kvo_void_opt() {
     classes_ns::register_key(arg);
     B       = fam + "@" + arg;
     Token T = hash_table.locate(B);
-    if (!hash_table.eqtb[T.eqtb_loc()].val.is_undef_or_relax()) {
+    if (!Hashtab::the_eqtb()[T.eqtb_loc()].val.is_undef_or_relax()) {
         parse_error(err_tok, "Cannot redefine ", T, "", "bad redef");
         return;
     }
@@ -1111,7 +1111,7 @@ void Parser::kvo_void_opt() {
     aux           = string_to_list(s, true);
     L.splice(L.begin(), aux);
     L.push_front(hash_table.locate("KVO@voidkey"));
-    brace_me(L);
+    L.brace_me();
     aux = string_to_list("[@VOID@]", false);
     L.splice(L.begin(), aux);
     call_define_key(L, cmd, arg, fam);
@@ -1146,7 +1146,7 @@ void Parser::kvo_comp_opt() {
     Buffer &    B    = txclasses_local_buf;
     B                = "if" + fam + '@' + comp;
     Token T          = hash_table.locate(B);
-    if (hash_table.eqtb[T.eqtb_loc()].val.is_undef()) {
+    if (Hashtab::the_eqtb()[T.eqtb_loc()].val.is_undef()) {
         B = "Cannot generate code for `" + arg + "', no parent " + comp;
         parse_error(err_tok, B, "bad redef");
         return;
@@ -1157,8 +1157,8 @@ void Parser::kvo_comp_opt() {
     Token T3 = hash_table.locate(fam + '@' + comp + "false");
     Token T4 = hash_table.locate(fam + '@' + arg + "true");
     B        = fam + '@' + arg + "true"; // \todo useless?
-    if (!hash_table.eqtb[T2.eqtb_loc()].val.is_undef_or_relax()) { parse_error(err_tok, "Cannot redefine ", T2, "", "bad redef"); }
-    if (!hash_table.eqtb[T4.eqtb_loc()].val.is_undef_or_relax()) { parse_error(err_tok, "Cannot redefine ", T4, "", "bad redef"); }
+    if (!Hashtab::the_eqtb()[T2.eqtb_loc()].val.is_undef_or_relax()) { parse_error(err_tok, "Cannot redefine ", T2, "", "bad redef"); }
+    if (!Hashtab::the_eqtb()[T4.eqtb_loc()].val.is_undef_or_relax()) { parse_error(err_tok, "Cannot redefine ", T4, "", "bad redef"); }
     M_let_fast(T2, T1, true);
     M_let_fast(T4, T3, true);
     finish_kvo_bool(cmd, fam, arg);
@@ -1178,7 +1178,7 @@ void Parser::kvo_family_etc(subtypes k) {
     if (k == kvo_fam_set_code || k == kvo_pre_set_code) {
         TokenList L = read_arg();
         new_macro(L, T);
-    } else if (hash_table.eqtb[T.eqtb_loc()].val.is_undef()) {
+    } else if (Hashtab::the_eqtb()[T.eqtb_loc()].val.is_undef()) {
         B = s.substr(1);
         if (k == kvo_pre_get_code) B += "@";
         TokenList res = B.str_toks11(false);
@@ -1203,19 +1203,19 @@ auto Parser::check_if_redef(const std::string &s) -> bool {
     Buffer &B = txclasses_local_buf;
     B         = s + "true";
     Token T2  = hash_table.locate(B);
-    if (!hash_table.eqtb[T2.eqtb_loc()].val.is_undef_or_relax()) {
+    if (!Hashtab::the_eqtb()[T2.eqtb_loc()].val.is_undef_or_relax()) {
         parse_error(err_tok, "Cannot redefine ", T2, "", "bad redef");
         return false;
     }
     B        = s + "false";
     Token T3 = hash_table.locate(B);
-    if (!hash_table.eqtb[T3.eqtb_loc()].val.is_undef_or_relax()) {
+    if (!Hashtab::the_eqtb()[T3.eqtb_loc()].val.is_undef_or_relax()) {
         parse_error(err_tok, "Cannot redefine ", T3, "", "bad redef");
         return false;
     }
     B        = "if" + s;
     Token T1 = hash_table.locate(B);
-    if (!hash_table.eqtb[T1.eqtb_loc()].val.is_undef_or_relax()) {
+    if (!Hashtab::the_eqtb()[T1.eqtb_loc()].val.is_undef_or_relax()) {
         parse_error(err_tok, "Cannot redefine ", T1, "", "bad redef");
         return false;
     }

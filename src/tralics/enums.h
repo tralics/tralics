@@ -72,7 +72,6 @@ enum symcodes : unsigned {
     fontsize_cmd,
     ltfont_cmd,
     item_cmd,
-    pers_cmd,
     doc_class_cmd,
     package_cmd,
     if_package_loaded_cmd,
@@ -115,9 +114,7 @@ enum symcodes : unsigned {
     declaretopics_cmd,
     footnote_cmd,
     caption_cmd,
-    ra_startdoc_cmd,
     fnhack_cmd,
-    interpret_rc_cmd,
     centering_cmd,
     fbox_cmd,
     save_box_cmd,
@@ -180,7 +177,6 @@ enum symcodes : unsigned {
     ignore_content_cmd,
     raw_env_cmd,
     math_env_cmd,
-    RAsection_env_cmd,
     tabular_env_cmd,
     verbatim_env_cmd,
     minipage_cmd,
@@ -203,7 +199,6 @@ enum symcodes : unsigned {
     end_ignore_content_cmd,
     end_raw_env_cmd,
     end_math_env_cmd,
-    end_RAsection_env_cmd,
     end_tabular_env_cmd,
     end_verbatim_env_cmd,
     end_minipage_cmd,
@@ -620,10 +615,7 @@ enum subtypes : unsigned {
     toplevel_sec_code,
     // for cite_cmd
     cite_code = 0,
-    footcite_code,
     nocite_code,
-    refercite_code,
-    yearcite_code,
     natcite_code,
     natcite_e_code,
     // for skip_cmd
@@ -1630,12 +1622,10 @@ enum subtypes : unsigned {
     jobname_code,
     tralicsversion_code,
     etexrevision_code,
-    rayear_code,
     Romannumeral_code,
     at_arabic_code,
     sanitize_code,
     twodigits_code,
-    ra_jobname_code,
     attributeval_code,
     meaning_c_code,
     l3string_code,
@@ -2045,10 +2035,6 @@ enum lex_type { lex_illegal, lex_white_space, lex_alpha, lex_numeric, lex_sep_ch
 
 // is char valid for a bibtex entry name ?
 enum id_type { illegal_id_char, legal_id_char };
-
-// is this citation from foot_bib, refer_bib or normal bib ?
-// Is this bibentry for foot, refer, year or all?
-enum bib_from { from_foot, from_refer, from_year, from_any };
 
 // the type of something like @ARTICLE
 enum entry_type : unsigned {

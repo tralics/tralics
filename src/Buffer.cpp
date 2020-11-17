@@ -46,23 +46,29 @@ namespace {
     }
 
     /// Returns the current escape char (used for printing)
-    auto current_escape_char() -> long { return the_parser.eqtb_int_table[escapechar_code].val; }
-} // namespace
+    auto current_escape_char() -> long { return eqtb_int_table[escapechar_code].val; }
 
-/// Returns a temporary string, corresponding to the command with
-/// an empty name, without initial escape char.
-auto null_cs_name() -> std::string {
-    auto c = current_escape_char();
-    if (c == '\\') return "csname\\endcsname";
-    if (c > 0 && c < int(nb_characters)) {
-        Buffer B = "csname";
-        B.out_log(char32_t(c), the_main->log_encoding);
-        B.append("endcsname");
-        return std::move(B);
+    /// Returns a temporary string, corresponding to the command with
+    /// an empty name, without initial escape char.
+    auto null_cs_name() -> std::string {
+        auto c = current_escape_char();
+        if (c == '\\') return "csname\\endcsname";
+        if (c > 0 && c < int(nb_characters)) {
+            Buffer B = "csname";
+            B.out_log(char32_t(c), the_main.log_encoding);
+            B.append("endcsname");
+            return std::move(B);
+        }
+        if (c == 0) return "csname^^@endcsname";
+        return "csnameendcsname";
     }
-    if (c == 0) return "csname^^@endcsname";
-    return "csnameendcsname";
-}
+
+    void err_in_name(String a, long i) {
+        Bibtex::err_in_entry(a);
+        log_and_tty << "\nbad syntax in author or editor name\n";
+        log_and_tty << "error occurred at character position " << i << " in the string\n" << name_buffer << ".\n";
+    }
+} // namespace
 
 auto Buffer::next_non_space(size_t j) const -> size_t {
     while (is_spaceh(j)) j++;
@@ -89,8 +95,7 @@ void Buffer::push_back_xml_char(char c) {
         push_back(c);
 }
 
-// \todo rename this into push_back_with_xml_escaping or something
-void Buffer::push_back_real_utf8(char32_t c) {
+void Buffer::append_with_xml_escaping(char32_t c) {
     if (c == 0) return;
     if (c == '\n')
         push_back('\n');
@@ -161,7 +166,7 @@ void Buffer::remove_space_at_end() {
 void Buffer::insert_escape_char() {
     auto c = current_escape_char();
     if (c >= 0 && c < int(nb_characters))
-        out_log(char32_t(char32_t(c)), the_main->log_encoding);
+        out_log(char32_t(char32_t(c)), the_main.log_encoding);
     else if (c == 0)
         append("^^@");
 }
@@ -174,36 +179,12 @@ void Buffer::insert_escape_char_raw() {
         append("^^@");
 }
 
-// Returns a temporary string: the name of the token
-// This is used for printing errors in the transcript file
-// Uses the function below, except for characters
-auto Token::tok_to_str() const -> std::string {
-    Buffer B;
-    if (!is_a_char() || cmd_val() == eol_catcode) {
-        B.push_back(*this);
-        return std::move(B);
-    }
-    unsigned cat      = cmd_val();
-    char32_t c        = char_val();
-    bool     good_cat = false;
-    if ((c >= 128) && cat == 12) good_cat = true;
-    if ((std::isalpha(static_cast<int>(c)) != 0) && cat == 11) good_cat = true;
-    if (good_cat)
-        B.out_log(c, the_main->log_encoding);
-    else {
-        B.append("{Character ");
-        B.out_log(c, the_main->log_encoding);
-        B.format(" of catcode {}}}", cat);
-    }
-    return std::move(B);
-}
-
 // This puts the name of the token in the buffer.
 // This is used when printing a token list
 
 // returns true if a space could be added after the token
 auto Buffer::push_back(Token T) -> bool {
-    output_encoding_type enc = the_main->log_encoding;
+    output_encoding_type enc = the_main.log_encoding;
     if (T.is_null()) {
         append("\\invalid.");
         return false;
@@ -224,10 +205,10 @@ auto Buffer::push_back(Token T) -> bool {
     if (!T.char_or_active()) insert_escape_char();
     if (T.active_or_single()) {
         out_log(T.char_val(), enc);
-        return the_parser.has_letter_catcode(T.char_val());
+        return get_catcode(T.char_val()) == letter_catcode;
     }
     if (T.is_in_hash()) {
-        Buffer Tmp = the_parser.hash_table[T.hash_loc()];
+        Buffer Tmp = hash_table[T.hash_loc()];
         append(Tmp.convert_to_log_encoding());
         return true;
     }
@@ -276,10 +257,10 @@ void Buffer::insert_token(Token T, bool sw) {
             append("^^@");
         else
             push_back(c);
-        bool need_space = sw ? (std::isalpha(static_cast<int>(c)) != 0) : the_parser.has_letter_catcode(c);
+        bool need_space = sw ? (std::isalpha(static_cast<int>(c)) != 0) : (get_catcode(c) == letter_catcode);
         if (need_space) push_back(' ');
     } else if (T.is_in_hash()) { // multichar
-        append(the_parser.hash_table[T.hash_loc()]);
+        append(hash_table[T.hash_loc()]);
         push_back(' ');
     } else { // empty or bad
         if (sw)
@@ -355,8 +336,6 @@ void Buffer::push_back(const SthInternal &x) {
     default: append("??");
     }
 }
-
-auto operator<<(std::ostream &fp, Token x) -> std::ostream & { return fp << x.tok_to_str(); }
 
 auto operator<<(std::ostream &fp, const Glue &x) -> std::ostream & {
     Buffer B;
@@ -445,15 +424,14 @@ auto Buffer::skip_string(const std::string &s) -> bool {
 }
 
 auto Buffer::skip_word_ci(const std::string &s) -> bool {
-    auto n = s.size();
-    for (size_t i = 0; i < n; i++) {
+    for (size_t i = 0; i < s.size(); i++) {
         char c = (*this)[ptrs.b + i];
         if (std::isupper(c) != 0) c += 'a' - 'A';
         if (c != s[i]) return false;
     }
-    char c = (*this)[ptrs.b + n];
+    char c = (*this)[ptrs.b + s.size()];
     if (std::isalpha(c) != 0) return false;
-    ptrs.b += n;
+    ptrs.b += s.size();
     return true;
 }
 
@@ -519,7 +497,7 @@ auto Buffer::string_delims() -> bool {
 // Assumes the buffer is of the form foo/bar/etc,
 // with a final slash; returns the next item; Retval false if no string found
 
-auto Buffer::slash_separated(std::string &a) -> bool {
+auto Buffer::slash_separated(std::string &a) -> bool { // \todo std::optional<std::string>
     Buffer tmp;
     size_t p = 0;
     skip_sp_tab();
@@ -586,53 +564,6 @@ auto Buffer::contains_env(const std::string &env) -> bool {
     if (!(contains_braced(env))) return false;
     skip_sp_tab_nl();
     return true;
-}
-
-auto operator<<(std::ostream &X, const Image &Y) -> std::ostream & {
-    X << "see_image(\"" << Y.name << "\",";
-    int k = Y.flags;
-    if (k == 0)
-        X << 0;
-    else {
-        bool first = true;
-        if ((k & 1) != 0) {
-            if (!first) X << "+";
-            X << 1;
-            first = false;
-        }
-        if ((k & 2) != 0) {
-            if (!first) X << "+";
-            X << 2;
-            first = false;
-        }
-        if ((k & 4) != 0) {
-            if (!first) X << "+";
-            X << 4;
-            first = false;
-        }
-        if ((k & 8) != 0) {
-            if (!first) X << "+";
-            X << 8;
-            first = false;
-        }
-        if ((k & 16) != 0) {
-            if (!first) X << "+";
-            X << 16;
-            first = false;
-        }
-        if ((k & 32) != 0) {
-            if (!first) X << "+";
-            X << 32;
-            first = false;
-        }
-        if ((k & 64) != 0) {
-            if (!first) X << "+";
-            X << 64;
-            // first = false;
-        }
-    }
-    X << "," << Y.occ << ");\n";
-    return X;
 }
 
 auto Buffer::is_spaceh(size_t j) const -> bool { return std::isspace((*this)[j]) != 0; }
@@ -914,12 +845,12 @@ void Buffer::fill_table(std::vector<bchar_type> &table) {
             continue;
         }
         if (c == '&') {
-            Bibtex::err_in_name("unexpected character `&' (did you mean `and' ?)", to_signed(i));
+            err_in_name("unexpected character `&' (did you mean `and' ?)", to_signed(i));
             table[i] = bct_bad;
             continue;
         }
         if (c == '}') {
-            Bibtex::err_in_name("too many closing braces", to_signed(i));
+            err_in_name("too many closing braces", to_signed(i));
             table[i] = bct_bad;
             continue;
         }
@@ -931,7 +862,7 @@ void Buffer::fill_table(std::vector<bchar_type> &table) {
             c = head();
             if (!is_accent_char(c)) {
                 table[i] = bct_bad;
-                Bibtex::err_in_name("commands allowed only within braces", to_signed(i));
+                err_in_name("commands allowed only within braces", to_signed(i));
                 continue;
             }
             if (std::isalpha(at(ptrs.b + 1)) != 0) {
@@ -945,7 +876,7 @@ void Buffer::fill_table(std::vector<bchar_type> &table) {
                 table[i]     = bct_bad;
                 table[i + 1] = bct_bad;
                 ptrs.b++;
-                Bibtex::err_in_name("bad accent construct", to_signed(i));
+                err_in_name("bad accent construct", to_signed(i));
                 continue;
             }
             at(ptrs.b + 1) = c;
@@ -959,7 +890,7 @@ void Buffer::fill_table(std::vector<bchar_type> &table) {
         table[i] = bct_brace;
         for (;;) {
             if (head() == 0) {
-                Bibtex::err_in_name("this cannot happen!", to_signed(j));
+                err_in_name("this cannot happen!", to_signed(j));
                 resize(j);
                 table[j] = bct_end;
                 return;
@@ -1004,4 +935,20 @@ auto Buffer::insert_space_here(size_t k) const -> bool {
     if (std::isupper(at(k + 1)) == 0) return false;
     if (std::isupper(at(k - 1)) == 0) return false;
     return true;
+}
+
+// This is the TeX command \string ; if esc is false, no escape char is inserted
+void Buffer::tex_string(Token T, bool esc) {
+    if (T.not_a_cmd())
+        push_back(T.char_val());
+    else {
+        auto x = T.val;
+        if (esc && x >= single_offset) insert_escape_char_raw();
+        if (x >= hash_offset)
+            append(hash_table[T.hash_loc()]);
+        else if (x < first_multitok_val)
+            push_back(T.char_val());
+        else
+            append(null_cs_name());
+    }
 }

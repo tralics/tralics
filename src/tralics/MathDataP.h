@@ -39,33 +39,33 @@ private:
     auto init_builtin(String name, math_loc pos, Xml *x, symcodes t) -> Token;
 
 public:
-    void        boot();
-    void        realloc_list0();
-    void        realloc_list();
-    auto        find_math_location(math_list_type c, subtypes n, std::string s) -> subtypes;
-    auto        find_xml_location() -> subtypes;
-    auto        find_xml_location(Xml *y) -> subtypes;
-    auto        make_mfenced(size_t open, size_t close, gsl::not_null<Xml *> val) -> gsl::not_null<Xml *>;
-    static auto add_style(int lvl, gsl::not_null<Xml *> res) -> gsl::not_null<Xml *>;
-    void        TM_mk(String a, String b, math_types c);
-    void        finish_math_mem();
-    auto        get_mc_table(size_t i) { return gsl::not_null{mc_table[i]}; }
-    auto        get_builtin(size_t p) { return gsl::not_null{built_in_table[p]}; }
-    auto        get_builtin_alt(size_t p) -> Xml * { return built_in_table_alt[p]; }
-    void        init_builtin(size_t i, Xml *X) { built_in_table[i] = X; }
-    void        init_builtin(size_t i, size_t j) { built_in_table[i] = built_in_table[j]; }
-    void        init_builtin(size_t i, Buffer &B) { built_in_table[i] = new Xml(B); }
-    auto        get_xml_val(size_t i) -> Xml * {
+    void boot();
+    void realloc_list0();
+    void realloc_list();
+    auto find_math_location(math_list_type c, subtypes n, std::string s) -> subtypes;
+    auto find_xml_location() -> subtypes;
+    auto find_xml_location(Xml *y) -> subtypes;
+    auto make_mfenced(size_t open, size_t close, gsl::not_null<Xml *> val) -> gsl::not_null<Xml *>;
+    void TM_mk(String a, String b, math_types c);
+    void finish_math_mem();
+    auto get_mc_table(size_t i) { return gsl::not_null{mc_table[i]}; }
+    auto get_builtin(size_t p) { return gsl::not_null{built_in_table[p]}; }
+    auto get_builtin_alt(size_t p) -> Xml * { return built_in_table_alt[p]; }
+    void init_builtin(size_t i, Xml *X) { built_in_table[i] = X; }
+    void init_builtin(size_t i, size_t j) { built_in_table[i] = built_in_table[j]; }
+    void init_builtin(size_t i, Buffer &B) { built_in_table[i] = new Xml(B); }
+    auto get_xml_val(size_t i) -> Xml * {
         if (i < m_offset) return built_in_table[i];
         return xml_math_table[i - m_offset];
     }
-    auto        get_list(size_t k) -> Math & { return (*this)[k]; }
-    void        push_back(size_t k, CmdChr X, subtypes c);
-    auto        get_simplemath_val(size_t i) -> Xml * { return simplemath_table[i]; }
-    auto        get_fence(size_t k) -> std::optional<std::string> { return xml_lr_ptable[k]; }
-    auto        get_math_char_type(size_t i) -> math_types { return math_char_type[i]; }
+    auto get_list(size_t k) -> Math & { return (*this)[k]; }
+    void push_back(size_t k, CmdChr X, subtypes c);
+    auto get_simplemath_val(size_t i) -> Xml * { return simplemath_table[i]; }
+    auto get_fence(size_t k) -> std::optional<std::string> { return xml_lr_ptable[k]; }
+    auto get_math_char_type(size_t i) -> math_types { return math_char_type[i]; }
+    void set_type(size_t k, math_list_type c);
+
     static auto mk_mo(String a) -> gsl::not_null<Xml *>;
-    void        set_type(size_t k, math_list_type c);
 };
 
 inline MathDataP math_data; // \todo unique instance, should we use static stuff?

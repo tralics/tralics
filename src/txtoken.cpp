@@ -16,11 +16,6 @@
 #include <fmt/format.h>
 #include <spdlog/spdlog.h>
 
-// token lists.
-namespace {
-    Buffer buffer_for_log;
-} // namespace
-
 namespace token_ns {
     auto length_normalise(TokenList &L) -> int;
 } // namespace token_ns
@@ -126,15 +121,6 @@ auto token_ns::replace_space(TokenList &A, Token x2, Token x3) -> int {
     return n;
 }
 
-// True if the Token is upper case or lower case x
-auto Token::no_case_letter(char x) const -> bool {
-    if (cmd_val() != letter_catcode) return false;
-    auto c = to_signed(val_as_letter());
-    if (c == x) return true;
-    if (c == x + 'A' - 'a') return true;
-    return false;
-}
-
 auto token_ns::compare(const TokenList &A, const TokenList &B) -> bool {
     auto C1 = A.begin();
     auto E1 = A.end();
@@ -236,7 +222,7 @@ auto Buffer::str_toks(nl_to_tok nl) -> TokenList {
 // Use character code 11 whenever possible
 auto Buffer::str_toks11(bool nl) -> TokenList {
     auto      SP = Token(space_token_val);
-    Token     NL = the_parser.hash_table.newline_token;
+    Token     NL = hash_table.newline_token;
     TokenList L;
     ptrs.b = 0;
     for (;;) {
@@ -261,7 +247,7 @@ auto token_ns::string_to_list(const std::string &s, bool b) -> TokenList {
     Buffer &B   = buffer_for_log;
     B           = s;
     TokenList L = B.str_toks(nlt_space);
-    if (b) the_parser.brace_me(L);
+    if (b) L.brace_me();
     return L;
 }
 
@@ -342,28 +328,6 @@ void token_ns::remove_first_last_space(TokenList &L) {
     while (!L.empty() && L.back().is_space_token()) L.pop_back();
 }
 
-// This prints a control sequence value on the log file.
-// Used when tracing a command (catcode not 11 nor 12)
-// used in the case {\let\x\y}, after the closing brace.
-// It it's not a char, it's a command, with a plain ASCII name.
-void Parser::print_cmd_chr(CmdChr X) {
-    String a = X.special_name();
-    auto   b = X.name();
-    if (a != nullptr) { // print both values
-        the_log << "\\" << b << " " << a;
-        return;
-    }
-    if (a != nullptr) { // chr
-        the_log << a;
-        char32_t y = X.chr;
-        Buffer & B = buffer_for_log;
-        B.clear();
-        B.out_log(y, the_main->log_encoding);
-        return;
-    }
-    the_log << "\\" << b;
-}
-
 // ------------------------ token lists ----------------------------
 
 // kill L. If it has 1 element, returns it, otherwise 0.
@@ -388,12 +352,6 @@ void token_ns::get_unique(TokenList &L, Token &t1, Token &t2) {
     L.pop_front();
     if (!L.empty()) t1.kill();
     L.clear();
-}
-
-// insert an open brace at the beginning, a close brace at the end.
-void Parser::brace_me(TokenList &L) const {
-    L.push_front(hash_table.OB_token);
-    L.push_back(hash_table.CB_token);
 }
 
 void Buffer::dump_prefix(bool err, bool gbl, symcodes K) {
@@ -517,10 +475,10 @@ void Parser::E_split() {
             TokenList tmp = prefix;
             key.splice(key.begin(), tmp);
         }
-        brace_me(key);
+        key.brace_me();
 
         token_ns::double_hack(val);
-        if (seen_val) brace_me(val);
+        if (seen_val) val.brace_me();
         TokenList tmp = seen_val ? cmd : cmd_def;
         R.splice(R.end(), tmp);
         R.splice(R.end(), key);

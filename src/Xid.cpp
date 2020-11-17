@@ -32,14 +32,13 @@ void Xid::add_span(long n) const {
 
 // This returns the attribute list of this id.
 // Uses the global variable the_stack.
-auto Xid::get_att() const -> AttList & { return the_main->the_stack->get_att_list(value); }
+auto Xid::get_att() const -> AttList & { return the_stack.get_att_list(value); }
 
 // Return att value if this id has attribute value n.
 // Returns null string otherwise
 auto Xid::has_attribute(const std::string &n) const -> std::string {
     AttList &X = get_att();
-    auto     i = X.lookup(n);
-    if (i) return X.get_val(*i);
+    if (auto *i = X.lookup(n)) return *i;
     return std::string();
 }
 
@@ -47,25 +46,34 @@ auto Xid::has_attribute(const std::string &n) const -> std::string {
 // (it is unprintable).
 auto Xid::is_font_change() const -> bool {
     std::string n(the_names["'hi_flag"]);
-    return static_cast<bool>(get_att().lookup(n));
+    return get_att().lookup(n) != nullptr;
 }
 
 // Add attribute named A value B to this id.
-void Xid::add_attribute(const std::string &A, const std::string &B, bool force) const { get_att().push_back(A, B, force); }
+void Xid::add_attribute(const std::string &A, const std::string &B, bool force) const {
+    auto &L = get_att();
+    if (force)
+        L[A] = B;
+    else
+        L.emplace(A, B);
+}
 
 // Adds the list L to the attribute list of this id.
 void Xid::add_attribute(const AttList &L, bool force) const {
-    size_t   n = L.size();
     AttList &l = get_att();
-    for (size_t i = 0; i < n; i++) l.push_back(L[i].name, L[i].value, force); // \todo push_back(L)
+    for (const auto &i : L) {
+        if (force)
+            l[i.first] = i.second;
+        else
+            l.emplace(i.first, i.second);
+    }
 }
 
 void Xid::add_attribute_but_rend(Xid b) const {
     AttList &L = b.get_att();
-    size_t   n = L.size();
     AttList &l = get_att();
-    for (size_t i = 0; i < n; i++)
-        if (L[i].name != the_names["rend"]) l.push_back(L[i].name, L[i].value, true); // \todo push_back(L)
+    for (const auto &i : L)
+        if (i.first != the_names["rend"]) l[i.first] = i.second;
 }
 
 // Add attribute list of element B to this id.
@@ -89,6 +97,6 @@ auto operator<<(std::ostream &fp, Xid X) -> std::ostream & { return fp << X.get_
 
 auto fetch_att(Xid idx, const std::string &m) -> std::optional<std::string> {
     AttList &L = idx.get_att();
-    if (auto k = L.lookup(m)) return encode(L.get_val(*k));
+    if (auto *k = L.lookup(m)) return encode(*k);
     return {};
 }

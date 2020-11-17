@@ -32,15 +32,15 @@ void SaveAuxBoundary::dump(int n) {
 // box0.
 SaveAuxBoxend::~SaveAuxBoxend() {
     P.flush_buffer();
-    P.the_stack.pop(the_names["hbox"]);
+    the_stack.pop(the_names["hbox"]);
     the_box_to_end   = val;
     the_box_position = pos;
 }
 
 // This done when we restore an integer value
 SaveAuxInt::~SaveAuxInt() {
-    bool rt = P.eqtb_int_table[pos].level != 1;
-    if (rt) P.eqtb_int_table[pos] = {val, level};
+    bool rt = eqtb_int_table[pos].level != 1;
+    if (rt) eqtb_int_table[pos] = {val, level};
 }
 
 // This done when we restore a string value
@@ -64,13 +64,13 @@ SaveAuxGlue::~SaveAuxGlue() {
 
 // Restore command. We have to take care to free memory for user commands.
 SaveAuxCmd::~SaveAuxCmd() {
-    auto lvl = P.hash_table.eqtb[cs].level;
+    auto lvl = Hashtab::the_eqtb()[cs].level;
     if (lvl == 1) { // retain old value, so kill val
         if (val.is_user()) P.mac_table.delete_macro_ref(val.chr);
     } else {
-        if (P.hash_table.eqtb[cs].val.is_user()) // kill cur and change
-            P.mac_table.delete_macro_ref(P.hash_table.eqtb[cs].val.chr);
-        P.hash_table.eqtb[cs] = {val, level};
+        if (Hashtab::the_eqtb()[cs].val.is_user()) // kill cur and change
+            P.mac_table.delete_macro_ref(Hashtab::the_eqtb()[cs].val.chr);
+        Hashtab::the_eqtb()[cs] = {val, level};
     }
 }
 

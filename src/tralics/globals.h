@@ -12,42 +12,35 @@
 
 struct WordList;
 class LabelInfo;
+class SaveAuxEnv;
 
 inline bool                                                         bad_minus{false};
 inline bool                                                         bib_allow_break{true};
 inline bool                                                         compatibility{false};
-inline bool                                                         cur_sec_no_topic = false;
-inline bool                                                         have_default_ur  = false;
 inline bool                                                         nofloat_hack{false};
-inline bool                                                         only_input_data{false};
 inline bool                                                         raw_bib{false};
 inline bool                                                         seen_enddocument{false};
-inline bool                                                         distinguish_refer = false;
-inline bool                                                         global_in_load    = false;
-inline bool                                                         global_in_url     = false;
+inline bool                                                         global_in_load = false;
+inline bool                                                         global_in_url  = false;
 inline bool                                                         in_hlinee, have_above, have_below;
 inline bool                                                         no_xml_error{false};
-inline bool                                                         old_ra = false;
-inline bool                                                         ra_ok{true};
 inline bool                                                         use_quotes{false};
+inline bool                                                         seen_document = false; // did we see \begin{document} ?
 inline bool                                                         xkv_is_global;
 inline bool                                                         xkv_is_save;
 inline char32_t                                                     leftquote_val{'`'};
 inline char32_t                                                     rightquote_val{'\''};
 inline int                                                          bad_chars{0};
+inline int                                                          first_boundary_loc = 0;
 inline int                                                          cur_entry_line;    // position of entry in source file
 inline int                                                          cur_file_line{0};  // current line number
 inline int                                                          init_file_pos = 0; // position in init file
 inline int                                                          nb_errs{0};
 inline long                                                         cline_first, cline_last;
-inline long                                                         composition_section = -1;
-inline size_t                                                       ur_size{0};
 inline std::array<std::array<char32_t, lmaxchar>, max_encoding - 2> custom_table;
 inline std::array<std::array<std::string, 15>, 128>                 math_chars;
-inline std::array<std::string, 8>                                   ra_pretable;
 inline std::array<String, 3>                                        my_constant_table;
 inline std::optional<size_t>                                        pool_position;  // \todo this is a static variable that should disappear
-inline std::string                                                  all_themes;     //
 inline std::string                                                  cur_entry_name; // name of entry under construction.
 inline std::string                                                  cur_file_name{"tty"};
 inline std::string                                                  everyjob_string; //
@@ -55,7 +48,6 @@ inline std::string                                                  file_name;  
 inline std::string                                                  file_list;       // \todo vector of std::fs::path
 inline std::string                                                  hlinee_above, hlinee_width, hlinee_below;
 inline std::string                                                  tralics_version{"2.15.4"};
-inline std::string                                                  the_default_rc; // \todo RA stuff
 inline std::string                                                  the_tag;
 inline std::string                                                  xkv_header;
 inline std::string                                                  xkv_prefix;
@@ -69,8 +61,10 @@ inline std::vector<std::string>                                     omitcite_lis
 // \todo next are global functions, should we do something with them?
 
 auto        next_label_id() -> std::string;
-auto        null_cs_name() -> std::string;
 inline auto math_to_sub(math_list_type x) -> subtypes { return subtypes(x - fml_offset); }
+auto        fonts1(const std::string &x) -> Xml *;
+auto        first_boundary() -> boundary_type;
+auto        is_env_on_stack(const std::string &s) -> SaveAuxEnv *;
 
 namespace arith_ns {
     auto nx_plus_y(long n, long x, long y) -> long;

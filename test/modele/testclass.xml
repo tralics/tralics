@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE std SYSTEM 'classes.dtd'>
-<!-- Translated from latex by tralics 2.15.4, date: 2015/08/23-->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
 <std>
 <p>OK
 ok
@@ -8,16 +8,16 @@ ok</p>
 <p>Reference to figure: <ref target='uid1'/>
 Reference to first subfigure: <ref target='uid2'/>
 Reference to second subfigure: <ref target='uid3'/></p>
-<figure FOO='BAR' id-text='1' id='uid1' place='htbp' rend='subfigure'><head>main figure caption</head>
-<subfigure file='figure1a' extension='eps' parid='0' id-text='1.1' id='uid2'><head>first subfigure caption</head></subfigure>
-<subfigure width='85.35826pt' file='figure1b' extension='eps' parid='0' id-text='1.2' id='uid3'><head>second subfigure caption</head></subfigure>
-<subfigure file='figure1c' parid='1' id-text='1.3' id='uid4'><head/></subfigure>
+<figure FOO='BAR' id='uid1' id-text='1' place='htbp' rend='subfigure'><head>main figure caption</head>
+<subfigure extension='eps' file='figure1a' id='uid2' id-text='1.1' parid='0'><head>first subfigure caption</head></subfigure>
+<subfigure extension='eps' file='figure1b' id='uid3' id-text='1.2' parid='0' width='85.35826pt'><head>second subfigure caption</head></subfigure>
+<subfigure file='figure1c' id='uid4' id-text='1.3' parid='1'><head/></subfigure>
 </figure>
-<div0 id-text='1' id='cid1'><head>foo</head>
+<div0 id='cid1' id-text='1'><head>foo</head>
 </div0>
-<div0 id-text='1' id='cid2'><head>sec1</head><alt_head>Sec</alt_head>
+<div0 id='cid2' id-text='1'><head>sec1</head><alt_head>Sec</alt_head>
 </div0>
-<div0 id-text='2' id='cid3'><head>foo2</head><alt_head>chapter two</alt_head>
+<div0 id='cid3' id-text='2'><head>foo2</head><alt_head>chapter two</alt_head>
 </div0>
 <div0 rend='nonumber'><head>sec2</head>
 </div0>

@@ -14,8 +14,6 @@ namespace {
 
     bool start_comma = true; // should we scan for an initial comma ?
 
-    class Berror {};
-
     const std::array<String, 9> scan_msgs{
         "bad syntax for a field type",
         "bad syntax for an entry type",
@@ -28,24 +26,11 @@ namespace {
         "\nall characters up to next `=' ignored.\n"                 // 8
     };
 
-    void boot_ra_prefix(String s) {
-        std::array<char, 3 * 8> tmp{};
-        for (unsigned i = 0; i < 8; i++) {
-            size_t j   = i * 3;
-            tmp[j]     = s[1];
-            tmp[j + 1] = static_cast<char>('A' + to_signed(i));
-            tmp[j + 2] = 0;
-        }
-        tmp[0] = s[0];
-        tmp[3] = s[2];
-        for (unsigned i = 0; i < 8; i++) { ra_pretable[i] = tmp.data() + i * 3; }
-    }
-
     // Finds the type of an entry (or comment, string, preamble). \todo without the_names?
     auto find_type(const std::string &s) -> entry_type {
         if (s.empty()) return type_comment; // in case of error.
 
-        std::vector<std::string> &Bib2 = the_main->bibtex_extensions_s;
+        std::vector<std::string> &Bib2 = the_main.bibtex_extensions_s;
         for (auto &i : Bib2)
             if (i == s) return type_comment;
         if (s == the_names["article"]) return type_article;
@@ -68,80 +53,76 @@ namespace {
         if (s == the_names["string"]) return type_string;
         if (s == the_names["unpublished"]) return type_unpublished;
 
-        std::vector<std::string> &Bib = the_main->bibtex_extensions;
+        std::vector<std::string> &Bib = the_main.bibtex_extensions;
         for (size_t i = 0; i < Bib.size(); i++)
             if (Bib[i] == s) return entry_type(type_extension + i + 1);
         return type_unknown;
     }
-} // namespace
 
-// This reads conditionally a file. Returns true if the file exists.
-auto Bibtex::read0(Buffer &B, bib_from ct) -> bool {
-    B.append(".bib");
-    if (auto of = find_in_path(B); of) {
-        spdlog::trace("Found BIB file: {}", *of);
-        read(*of, ct);
-        return true;
+    // Return an integer associated to a field position.
+    auto find_field_pos(const std::string &s) -> field_pos {
+        auto S = std::string(s);
+        // Check is this has to be ignored
+        std::vector<std::string> &Bib_s = the_main.bibtex_fields_s;
+        for (auto &b : Bib_s)
+            if (b == s) return fp_unknown;
+
+        // Check is this is standard
+        if (s == the_names["address"]) return fp_address;
+        if (s == the_names["author"]) return fp_author;
+        if (s == the_names["booktitle"]) return fp_booktitle;
+        if (s == the_names["chapter"]) return fp_chapter;
+        if (s == the_names["doi"]) return fp_doi;
+        if (s == the_names["edition"]) return fp_edition;
+        if (s == the_names["editor"]) return fp_editor;
+        if (s == the_names["howpublished"]) return fp_howpublished;
+        if (s == the_names["institution"]) return fp_institution;
+        if (s == the_names["isbn"]) return fp_isbn;
+        if (s == the_names["issn"]) return fp_issn;
+        if (s == the_names["isrn"]) return fp_isrn;
+        if (s == the_names["journal"]) return fp_journal;
+        if (s == the_names["cstb_key"]) return fp_key;
+        if (s == the_names["month"]) return fp_month;
+        if (s == the_names["langue"]) return fp_langue;
+        if (s == the_names["cstb_language"]) return fp_langue;
+        if (s == the_names["note"]) return fp_note;
+        if (s == the_names["number"]) return fp_number;
+        if (s == the_names["organization"]) return fp_organization;
+        if (s == the_names["pages"]) return fp_pages;
+        if (s == the_names["publisher"]) return fp_publisher;
+        if (s == the_names["school"]) return fp_school;
+        if (s == the_names["series"]) return fp_series;
+        if (s == the_names["title"]) return fp_title;
+        if (s == the_names["cstb_type"]) return fp_type;
+        if (s == the_names["cstb_url"]) return fp_url;
+        if (s == the_names["volume"]) return fp_volume;
+        if (s == the_names["year"]) return fp_year;
+        if (s == the_names["crossref"]) return fp_crossref;
+        // Check is this is additional
+        std::vector<std::string> &Bib = the_main.bibtex_fields;
+        for (size_t i = 0; i < Bib.size(); i++)
+            if (Bib[i] == s) return field_pos(fp_unknown + i + 1);
+        return fp_unknown;
     }
-    return false;
-}
+} // namespace
 
 // This takes a file name. It handles the case where the file has a suffix
 // like miaou+foot. Prints a warning if this is a bad name.
-void Bibtex::read1(const std::string &cur) {
-    Buffer B;
-    B.append(cur);
-    auto n = B.size();
-    if (read0(B, from_year)) return;
-    if (B.ends_with("+foot.bib")) {
-        B.resize(n - 5);
-        if (read0(B, from_foot)) return;
-    }
-    if (B.ends_with("+year.bib")) {
-        B.resize(n - 5);
-        if (read0(B, from_year)) return;
-    }
-    if (B.ends_with("+all.bib")) {
-        B.resize(n - 4);
-        if (read0(B, from_any)) return;
-    }
-    if (B.ends_with("+refer.bib")) {
-        B.resize(n - 6);
-        if (read0(B, from_refer)) return;
-    }
-    if (B.ends_with(".bib")) {
-        B.resize(n - 4);
-        if (read0(B, from_year)) return;
-    }
-    spdlog::warn("Bibtex Info: no biblio file {}", B);
-}
-
-// Handles one bib file for the raweb. Returns true if the file exists.
-// Extension can be foot, year or refer. New in Tralics 2.9.3 it can be any
-auto Bibtex::read2(bib_from pre) -> bool {
-    Buffer B;
-    B.append(no_year);
-    if (pre == from_foot)
-        B.append("_foot");
-    else if (pre == from_refer)
-        B.append("_refer");
-    else if (pre == from_any)
-        B.append("_all");
-    B.append(default_year);
-    return read0(B, pre);
-}
-
-// This loads all three files, if we are compiling the raweb. Otherwise,
-// there is no default.
-// We read apics2006_all.bib if this exists
-void Bibtex::read_ra() {
-    if (in_ra) {
-        bbl.open();
-        if (read2(from_any)) return;
-        read2(from_year);
-        read2(from_foot);
-        read2(from_refer);
-    }
+void Bibtex::read_bib_file(const std::string &s) {
+    if (auto of = find_in_path(s + (s.ends_with(".bib") ? "" : ".bib")); of) {
+        spdlog::trace("Found BIB file: {}", *of);
+        bbl.format("% reading source {}", *of);
+        bbl.flush();
+        in_lines.read(*of, 1);
+        last_ok_line = 0;
+        reset_input();
+        while (parse_one_item()) {};
+        if (!bbl.empty()) {
+            bbl.append("%");
+            bbl.flush();
+        }
+    } else
+        spdlog::warn("Bibtex Info: no biblio file {}", s);
 }
 
 auto Bibtex::look_for_macro(const std::string &name) -> std::optional<size_t> {
@@ -173,64 +154,10 @@ void Bibtex::define_a_macro(String name, String value) {
     find_a_macro(B, true, name, value);
 }
 
-// Return an integer associated to a field position.
-auto Bibtex::find_field_pos(const std::string &s) -> field_pos {
-    auto S = std::string(s);
-    // Check is this has to be ignored
-    std::vector<std::string> &Bib_s        = the_main->bibtex_fields_s;
-    size_t                    additional_s = Bib_s.size();
-    for (size_t i = 0; i < additional_s; i++)
-        if (Bib_s[i] == S) return fp_unknown;
-
-    // Check is this is standard
-    if (S == the_names["address"]) return fp_address;
-    if (S == the_names["author"]) return fp_author;
-    if (S == the_names["booktitle"]) return fp_booktitle;
-    if (S == the_names["chapter"]) return fp_chapter;
-    if (S == the_names["doi"]) return fp_doi;
-    if (S == the_names["edition"]) return fp_edition;
-    if (S == the_names["editor"]) return fp_editor;
-    if (S == the_names["howpublished"]) return fp_howpublished;
-    if (S == the_names["institution"]) return fp_institution;
-    if (S == the_names["isbn"]) return fp_isbn;
-    if (S == the_names["issn"]) return fp_issn;
-    if (S == the_names["isrn"]) return fp_isrn;
-    if (S == the_names["journal"]) return fp_journal;
-    if (S == the_names["cstb_key"]) return fp_key;
-    if (S == the_names["month"]) return fp_month;
-    if (S == the_names["langue"]) return fp_langue;
-    if (S == the_names["cstb_language"]) return fp_langue;
-    if (S == the_names["note"]) return fp_note;
-    if (S == the_names["number"]) return fp_number;
-    if (S == the_names["organization"]) return fp_organization;
-    if (S == the_names["pages"]) return fp_pages;
-    if (S == the_names["publisher"]) return fp_publisher;
-    if (S == the_names["school"]) return fp_school;
-    if (S == the_names["series"]) return fp_series;
-    if (S == the_names["title"]) return fp_title;
-    if (S == the_names["cstb_type"]) return fp_type;
-    if (S == the_names["cstb_url"]) return fp_url;
-    if (S == the_names["volume"]) return fp_volume;
-    if (S == the_names["year"]) return fp_year;
-    if (S == the_names["crossref"]) return fp_crossref;
-    // Check is this is additional
-    std::vector<std::string> &Bib        = the_main->bibtex_fields;
-    size_t                    additional = Bib.size();
-    for (size_t i = 0; i < additional; i++)
-        if (Bib[i] == S) return field_pos(fp_unknown + i + 1);
-    return fp_unknown;
-}
-
 // This finds a citation that matches exactly S
 auto Bibtex::find_entry(const CitationKey &s) -> BibEntry * {
-    auto len = all_entries.size();
-    if (old_ra) {
-        for (size_t i = 0; i < len; i++)
-            if (all_entries[i]->cite_key.is_same_old(s)) return all_entries[i];
-    } else {
-        for (size_t i = 0; i < len; i++)
-            if (all_entries[i]->cite_key.is_same(s)) return all_entries[i];
-    }
+    for (auto &e : all_entries)
+        if (e->cite_key.is_same(s)) return e;
     return nullptr;
 }
 
@@ -239,18 +166,11 @@ auto Bibtex::find_entry(const CitationKey &s) -> BibEntry * {
 auto Bibtex::find_lower_case(const CitationKey &s, int &n) -> BibEntry * {
     n = 0;
     BibEntry *res{nullptr};
-    if (old_ra) {
-        for (auto &all_entrie : all_entries)
-            if (all_entrie->cite_key.is_same_lower_old(s)) {
-                res = all_entrie;
-                n++;
-            }
-    } else
-        for (auto &all_entrie : all_entries)
-            if (all_entrie->cite_key.is_same_lower(s)) {
-                res = all_entrie;
-                n++;
-            }
+    for (auto &entry : all_entries)
+        if (entry->cite_key.is_same_lower(s)) {
+            res = entry;
+            n++;
+        }
     return res;
 }
 
@@ -303,8 +223,8 @@ auto Bibtex::make_entry(const CitationKey &a, bib_creator b, std::string myid) -
     return X;
 }
 
-auto Bibtex::exec_bibitem(const std::string &w, const std::string &b) -> std::string {
-    BibEntry *X = find_entry(b, w, because_all);
+auto Bibtex::exec_bibitem(const std::string &b) -> std::string {
+    BibEntry *X = find_entry(b, because_all);
     if (X->type_int != type_unknown) {
         the_parser.parse_error("Duplicate bibliography entry ignored");
         return std::string();
@@ -332,53 +252,47 @@ void Bibtex::err_in_entry(String a) {
     log_and_tty << "\n" << a;
 }
 
-void Bibtex::err_in_name(String a, long i) {
-    err_in_entry(a);
-    log_and_tty << "\nbad syntax in author or editor name\n";
-    log_and_tty << "error occurred at character position " << i << " in the string\n" << name_buffer << ".\n";
-}
-
 // Returns next line of the .bib file. Error if EOF and what.
 // Throws if EOF.
-void Bibtex::next_line(bool what) {
+auto Bibtex::next_line(bool what) -> bool {
     Buffer scratch;
-    int    n = in_lines.get_next(scratch);
-    if (n > 0)
-        cur_bib_line = n;
-    else {
+    auto   n = in_lines.get_next(scratch);
+    if (!n) {
         if (what) err_in_file("Illegal end of bibtex database file", true);
-        throw Berror();
+        return false;
     }
-    the_parser.set_cur_line(n);
+    cur_bib_line = *n;
+    the_parser.set_cur_line(*n);
     inbuf.insert_without_crlf(scratch);
     input_line     = codepoints(inbuf);
     input_line_pos = 0;
+    return true;
 }
 
 // Skip over a space. Error in case of EOF.
 // This is the only function that reads a new line.
-void Bibtex::skip_space() {
+[[nodiscard]] auto Bibtex::skip_space() -> bool {
     for (;;) {
-        if (at_eol())
-            next_line(true);
-        else {
+        if (at_eol()) {
+            if (!next_line(true)) return false;
+        } else {
             if (std::isspace(static_cast<int>(cur_char())) != 0)
                 advance();
             else
-                return;
+                return true;
         }
     }
 }
 
 // Reads until the next @ sign. This is the only function
 // that accepts to read an EOF without error.
-void Bibtex::scan_for_at() {
+[[nodiscard]] auto Bibtex::scan_for_at() -> bool {
     for (;;) {
-        if (at_eol())
-            next_line(false);
-        else {
+        if (at_eol()) {
+            if (!next_line(false)) return false;
+        } else {
             char32_t c = next_char();
-            if (c == '@') return;
+            if (c == '@') return true;
         }
     }
 }
@@ -388,13 +302,15 @@ void Bibtex::scan_for_at() {
 // If the retval of scan_identifier0 is <=0, but not -4
 // Note: The error message must be output before skip_space,
 // in case we are at EOF.
-auto Bibtex::scan_identifier(size_t what) -> bool {
-    int ret = scan_identifier0(what);
+auto Bibtex::scan_identifier(size_t what) -> std::optional<bool> {
+    auto res = scan_identifier0(what);
+    if (!res) return {};
+    auto ret = *res;
     if (ret != 0) log_and_tty << scan_msgs[to_unsigned(ret > 0 ? ret : -ret)];
     if (ret == 4 || ret == -4) {
         start_comma = false;
         reset_input();
-        skip_space();
+        if (!skip_space()) return {};
     }
     return ret > 0;
 }
@@ -402,7 +318,7 @@ auto Bibtex::scan_identifier(size_t what) -> bool {
 // Scans an identifier. It will be in lower case in token_buf.
 // Scans also something after it. Invariant: at_eol() is false on entry.
 // it is also false on exit
-auto Bibtex::scan_identifier0(size_t what) -> int {
+auto Bibtex::scan_identifier0(size_t what) -> std::optional<int> {
     Buffer &B = token_buf;
     B.clear();
     char32_t c = cur_char();
@@ -419,7 +335,9 @@ auto Bibtex::scan_identifier0(size_t what) -> int {
     }
     // a field part.
     if (what == 0) return check_val_end();
-    if (at_eol() || (std::isspace(static_cast<int>(c)) != 0)) skip_space();
+    if (at_eol() || (std::isspace(static_cast<int>(c)) != 0)) {
+        if (!skip_space()) return {};
+    }
     if (what == 1) return check_entry_end(); // case of @foo
     return check_field_end(what);
 }
@@ -446,7 +364,7 @@ auto Bibtex::wrong_first_char(char32_t c, size_t what) const -> int {
 // Return 0 if OK, a negative value otherwise.
 // We read c; maybe additional characters in case of error
 // @comment(etc) is ignored
-auto Bibtex::check_entry_end() -> int {
+auto Bibtex::check_entry_end() -> std::optional<int> {
     if (token_buf == "comment") return 0; // don't complain
     char32_t c = cur_char();
     if (c == '(' || c == '{') return check_entry_end(0);
@@ -462,20 +380,20 @@ auto Bibtex::check_entry_end() -> int {
 
 // We store in right_outer_delim the closing delimiter.
 // associated to the current char. We skip over spaces.
-auto Bibtex::check_entry_end(int k) -> int {
+auto Bibtex::check_entry_end(int k) -> std::optional<int> {
     right_outer_delim = cur_char() == '(' ? ')' : '}';
     advance();
-    skip_space();
+    if (!skip_space()) return {};
     return k;
 }
 
 // We have seen foo in foo=bar. We have skipped over spaces
 // Returns 0 if OK. We try to read some characters on the current line
 // in case of error
-auto Bibtex::check_field_end(size_t what) -> int {
+auto Bibtex::check_field_end(size_t what) -> std::optional<int> {
     if (cur_char() == '=') {
         advance();
-        skip_space();
+        if (!skip_space()) return {};
         return 0;
     }
     err_in_file(scan_msgs[what], false);
@@ -484,7 +402,7 @@ auto Bibtex::check_field_end(size_t what) -> int {
         if (at_eol()) return what == 2 ? 5 : -4;
         if (cur_char() == '=') {
             advance();
-            skip_space();
+            if (!skip_space()) return {};
             return -8;
         }
         advance();
@@ -508,7 +426,7 @@ auto Bibtex::check_val_end() -> int {
 // The first field is preceded by the key and a comma.
 // Thus, we start reading the comma (unless previous fiels has a syntax err).
 // A null pointer means an entry to be discarded
-void Bibtex::parse_one_field(BibEntry *X) {
+[[nodiscard]] auto Bibtex::parse_one_field(BibEntry *X) -> bool {
     if (start_comma) {
         if (cur_char() != ',')
             err_in_file("expected comma before a field", true);
@@ -516,9 +434,11 @@ void Bibtex::parse_one_field(BibEntry *X) {
             advance();
     }
     start_comma = true;
-    skip_space();
-    if (cur_char() == char32_t(right_outer_delim)) return;
-    if (scan_identifier(3)) return;
+    if (!skip_space()) return false;
+    if (cur_char() == char32_t(right_outer_delim)) return true;
+    auto res = scan_identifier(3);
+    if (!res) return false;
+    if (*res) return true;
     field_pos where = fp_unknown;
     bool      store = false;
     if (X != nullptr) { // if X null, we just read, but store nothing
@@ -526,43 +446,48 @@ void Bibtex::parse_one_field(BibEntry *X) {
         where          = find_field_pos(token_buf);
         if (where != fp_unknown) store = true;
     }
-    read_field(store);
-    if (!store) return;
+    if (!read_field(store)) return false;
+    if (!store) return true;
     bool ok = X->store_field(where);
     if (!ok) {
         err_in_file("", false);
         log_and_tty << "duplicate field `" << cur_field_name << "' ignored.\n";
-        return;
+        return true;
     }
-    if (where != fp_crossref) return;
+    if (where != fp_crossref) return true;
     X->parse_crossref(); // special action
+    return true;
 }
 
 // This parses an @something.
-void Bibtex::parse_one_item() {
+auto Bibtex::parse_one_item() -> bool {
     cur_entry_name = "";
     cur_entry_line = -1;
-    scan_for_at();
+    if (!scan_for_at()) return false;
     last_ok_line = cur_bib_line;
-    skip_space();
-    bool k = scan_identifier(1);
-    if (k) return;
+    if (!skip_space()) return false;
+    auto res = scan_identifier(1);
+    if (!res) return false;
+    bool k = *res;
+    if (k) return true;
     entry_type cn = find_type(token_buf);
-    if (cn == type_comment) return;
+    if (cn == type_comment) return true;
     if (cn == type_preamble) {
-        read_field(true);
+        if (!read_field(true)) return false;
         bbl.append(field_buf);
     } else if (cn == type_string) {
-        k = scan_identifier(2);
-        if (k) return;
+        res = scan_identifier(2);
+        if (!res) return false;
+        k = *res;
+        if (k) return true;
         auto X = *find_a_macro(token_buf, true, nullptr, nullptr);
         mac_def_val(X);
-        read_field(true);
+        if (!read_field(true)) return false;
         mac_set_val(X, field_buf.special_convert(false));
     } else {
         cur_entry_line = cur_bib_line;
         Buffer A;
-        skip_space();
+        if (!skip_space()) return false;
         for (;;) {
             if (at_eol()) break;
             char32_t c = cur_char();
@@ -570,50 +495,40 @@ void Bibtex::parse_one_item() {
             A << c;
             next_char();
         }
-        skip_space();
+        if (!skip_space()) return false;
         cur_entry_name = A;
         BibEntry *X    = see_new_entry(cn, last_ok_line);
         int       m    = similar_entries;
-        while (cur_char() != ')' && cur_char() != '}') parse_one_field(X);
+        while (cur_char() != ')' && cur_char() != '}')
+            if (!parse_one_field(X)) return false;
         if (m > 1) handle_multiple_entries(X);
     }
     char32_t c = cur_char();
     if (c == ')' || c == '}') advance();
     if (c != char32_t(right_outer_delim)) err_in_file("bad end delimiter", true);
+    return true;
 }
 
 void Bibtex::handle_multiple_entries(BibEntry *Y) {
-    CitationKey s   = Y->cite_key;
-    auto        len = all_entries.size();
-    for (size_t i = 0; i < len; i++)
-        if (all_entries[i]->cite_key.is_similar(s)) {
-            BibEntry *X = all_entries[i];
-            if (X == Y) continue;
-            X->copy_from(Y);
+    CitationKey s = Y->cite_key;
+    for (auto *entry : all_entries)
+        if (entry->cite_key.is_similar(s)) {
+            if (entry != Y) entry->copy_from(Y);
         }
 }
 
 // This finds entry named s, or case-equivalent. If create is true,
 // creates entry if not found.
 // Used by see_new_entry (create=auto_cite), or parse_crossref
-// prefix can be from_year, from_refer, from_foot, from_any;
+// prefix can be from_year;
 // If create is true, it is either a crossref, or \nocite{*}+from_year
-// or from_refer, or bug; if prefix is from_any, we use from_year instead.
-//
+// or or bug.
 
 auto Bibtex::find_entry(const std::string &s, bool create, bib_creator bc) -> BibEntry * {
-    bib_from prefix = default_prefix();
-    if (create && prefix == from_any) prefix = from_year;
-    CitationKey key(prefix, s);
+    CitationKey key(s);
     similar_entries = 1;
-    int n           = 0;
-    if (prefix == from_any) {
-        BibEntry *X = find_similar(key, n);
-        if (n > 1) err_in_file("more than one lower case key equivalent", true);
-        if (n < 0) similar_entries = -n;
-        return X;
-    }
-    BibEntry *X = find_entry(key);
+    int       n     = 0;
+    BibEntry *X     = find_entry(key);
     if (X != nullptr) return X;
     X = find_lower_case(key, n);
     if (n > 1) err_in_file("more than one lower case key equivalent", true);
@@ -634,13 +549,12 @@ auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
             the_log << "bib: Omitting " << cur_entry_name << "\n";
             return nullptr;
         }
-    BibEntry *X = find_entry(cur_entry_name, auto_cite(), because_all);
+    BibEntry *X = find_entry(cur_entry_name, nocitestar, because_all);
     if (X == nullptr) return X;
     if (X->type_int != type_unknown) {
         err_in_file("duplicate entry ignored", true);
         return nullptr;
     }
-    if (old_ra && default_prefix() == from_refer) X->cite_key.move_to_refer();
     if (cn > type_extension) {
         X->is_extension = cn - type_extension;
         cn              = type_extension;
@@ -654,19 +568,19 @@ auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
 // This reads a field into field_buf.
 // This can be "foo" # {bar} # 1234 # macro.
 // If store is false, we do not look at the value of a macro
-void Bibtex::read_field(bool store) {
+[[nodiscard]] auto Bibtex::read_field(bool store) -> bool {
     field_buf.clear();
     for (;;) {
-        read_one_field(store);
-        skip_space();
-        if (cur_char() != '#') return;
+        if (!read_one_field(store)) return false;
+        if (!skip_space()) return false;
+        if (cur_char() != '#') return true;
         advance();
-        skip_space();
+        if (!skip_space()) return false;
     }
 }
 
 // This reads a single field
-void Bibtex::read_one_field(bool store) {
+[[nodiscard]] auto Bibtex::read_one_field(bool store) -> bool {
     char32_t c = cur_char();
     if (c == '{' || c == '\"') {
         uchar delimiter = c == '{' ? '}' : '\"';
@@ -675,7 +589,7 @@ void Bibtex::read_one_field(bool store) {
         for (;;) {
             if (at_eol()) {
                 field_buf.push_back(' ');
-                next_line(true);
+                if (!next_line(true)) return false;
                 continue;
             }
             c = cur_char();
@@ -684,14 +598,14 @@ void Bibtex::read_one_field(bool store) {
                 field_buf.push_back(c);
                 if (at_eol()) {
                     field_buf.push_back(' ');
-                    next_line(true);
+                    if (!next_line(true)) return false;
                     continue;
                 }
                 field_buf.push_back(cur_char());
                 advance();
                 continue;
             }
-            if (c == delimiter && bl == 0) return;
+            if (c == delimiter && bl == 0) return true;
             if (c == '}' && bl == 0) {
                 err_in_file("illegal closing brace", true);
                 continue;
@@ -702,14 +616,16 @@ void Bibtex::read_one_field(bool store) {
         }
     } else if (std::isdigit(static_cast<int>(c)) != 0) {
         for (;;) {
-            if (at_eol()) return;
+            if (at_eol()) return true;
             c = cur_char();
-            if (std::isdigit(static_cast<int>(c)) == 0) return;
+            if (std::isdigit(static_cast<int>(c)) == 0) return true;
             field_buf.push_back(c);
             advance();
         }
     } else {
-        bool k = scan_identifier(0);
+        auto res = scan_identifier(0);
+        if (!res) return false;
+        bool k = *res;
         if (store && !k) {
             auto macro = find_a_macro(token_buf, false, nullptr, nullptr);
             if (!macro) {
@@ -719,19 +635,13 @@ void Bibtex::read_one_field(bool store) {
                 field_buf += all_macros[*macro].value;
         }
     }
-}
-
-// Returns true if because of \nocite{*}
-auto Bibtex::auto_cite() const -> bool {
-    if (refer_biblio) return true;
-    if (normal_biblio && nocitestar) return true;
-    return false;
+    return true;
 }
 
 // This finds entry named s, or case-equivalent.
 // creates entry if not found. This is used by exec_bibitem
-auto Bibtex::find_entry(const std::string &s, const std::string &prefix, bib_creator bc) -> BibEntry * {
-    CitationKey key(prefix, s);
+auto Bibtex::find_entry(const std::string &s, bib_creator bc) -> BibEntry * {
+    CitationKey key(s);
     BibEntry *  X = find_entry(key);
     if (X != nullptr) return X;
     int n = 0;
@@ -743,13 +653,11 @@ auto Bibtex::find_entry(const std::string &s, const std::string &prefix, bib_cre
 
 // This is the main function.
 void Bibtex::work() {
-    auto n = all_entries.size();
-    if (n == 0) return;
+    if (all_entries.empty()) return;
     if (!bbl.empty()) bbl.flush();
-    boot_ra_prefix("ABC");
-    all_entries_table.reserve(n);
-    for (size_t i = 0; i < n; i++) all_entries[i]->un_crossref();
-    for (size_t i = 0; i < n; i++) all_entries[i]->work(to_signed(i));
+    all_entries_table.reserve(all_entries.size());
+    for (auto &all_entrie : all_entries) all_entrie->un_crossref();
+    for (size_t i = 0; i < all_entries.size(); i++) all_entries[i]->work(to_signed(i));
     auto nb_entries = all_entries_table.size();
     spdlog::trace("Seen {} bibliographic entries.", nb_entries);
     // Sort the entries
@@ -765,67 +673,9 @@ void Bibtex::work() {
     bbl.too_late = true;
 }
 
-// Signals an error if the year is invalid in the case of refer.
-auto Bibtex::wrong_class(int y, const std::string &Y, bib_from from) -> bool {
-    if (from != from_refer) return false;
-    if (old_ra) return false;
-    int ry = the_parser.get_ra_year();
-    if (y <= 0 || y > ry || (!distinguish_refer && y == ry)) {
-        the_bibtex.err_in_entry("");
-        log_and_tty << "entry moved from refer to year because\n";
-        if (y == 0)
-            log_and_tty << "the year field of this entry is missing.\n";
-        else if (y < 0)
-            log_and_tty << "the year field of this entry is invalid";
-        else if (y == ry)
-            log_and_tty << "it is from this year";
-        else
-            log_and_tty << "it is unpublished";
-        if (!Y.empty()) log_and_tty << " (year field is `" << Y << "').\n";
-        return true;
-    }
-    return false;
-}
-
-void Bibtex::bad_year(const std::string &given, String wanted) {
-    the_bibtex.err_in_entry("");
-    log_and_tty << "the year field of this entry should be " << wanted << ", ";
-    if (given.empty())
-        log_and_tty << "it is missing.\n";
-    else
-        log_and_tty << "it is `" << given << "'.\n";
-}
-
-// Faire un hack: s'il y a un extrabib, et normal_biblio
-// le rajouter a la fin, et virer le extrabib
-// Plus le parser propement
-
-void Bibtex::read(const std::string &src, bib_from ct) {
-    bbl.append("% reading source ");
-    bbl.append(src);
-    bbl.flush();
-    entry_prefix  = ct;
-    normal_biblio = ct == from_year;
-    refer_biblio  = ct == from_refer;
-    in_lines.read(src, 1);
-
-    last_ok_line = 0;
-    reset_input();
-    try {
-        for (;;) parse_one_item();
-    } catch (Berror x) {}
-
-    if (!bbl.empty()) {
-        bbl.append("%");
-        bbl.flush();
-    }
-}
-
-void Bibtex::boot(std::string S, bool inra) {
+void Bibtex::boot(std::string S) {
     no_year      = std::move(S);
-    in_ra        = inra;
     want_numeric = false;
-    if (the_main->handling_ra) want_numeric = true;
     for (auto &id_clas : id_class) id_clas = legal_id_char;
     for (size_t i = 0; i < 32; i++) id_class[i] = illegal_id_char;
     id_class[static_cast<unsigned char>(' ')]  = illegal_id_char;
@@ -844,9 +694,7 @@ void Bibtex::boot(std::string S, bool inra) {
 }
 
 void Bibtex::bootagain() {
-    old_ra = the_parser.get_ra_year() < 2006; // \todo we should really not keep this around
-
-    if (the_parser.cur_lang_fr()) { // french
+    if (cur_lang_fr()) { // french
         define_a_macro("jan", "janvier");
         define_a_macro("feb", "f\\'evrier");
         define_a_macro("mar", "mars");
@@ -862,7 +710,7 @@ void Bibtex::bootagain() {
         my_constant_table[0] = "th\\`ese de doctorat";
         my_constant_table[1] = "rapport technique";
         my_constant_table[2] = "m\\'emoire";
-    } else if (the_parser.cur_lang_german()) { //	      german
+    } else if (cur_lang_german()) { //	      german
         define_a_macro("jan", "Januar");
         define_a_macro("feb", "Februar");
         define_a_macro("mar", "M\\\"arz");

@@ -38,7 +38,7 @@ auto TitlePageAux::classify(tpi_vals w, int &state) -> bool {
             B = "\\" + T1;
             B.format("{{{}}}", T4);
             B.append("%\n");
-            the_main->add_to_from_config(1, B);
+            the_main.add_to_from_config(1, B);
         }
         return true;
     case tpi_CEES: // \author +<aulist> <au> "default"
@@ -110,11 +110,11 @@ void TitlePageAux::exec_start(size_t k) {
         return;
     }
     if (type == tpi_rt_alias) { // \let\this\that
-        the_parser.hash_table.eval_let(T1, T2);
+        hash_table.eval_let(T1, T2);
         return;
     }
     // in all other cases define this as (titlepage,k)
-    the_parser.hash_table.primitive(T1, titlepage_cmd, subtypes(k));
+    hash_table.primitive(T1, titlepage_cmd, subtypes(k));
     if (type == tpi_rt_list) { // initialise the list
         Titlepage[idx] = convert(2, convert(3, std::string(T4)));
         return;

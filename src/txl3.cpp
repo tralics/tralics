@@ -297,7 +297,7 @@ void Parser::L3_generate_form(subtypes c, TokenList parms, TokenList body, subty
     default:;
     }
     B.l3_fabricate_cond(tok_base, tok_sig, c);
-    brace_me(body);
+    body.brace_me();
     back_input(body);
     back_input(parms);
     back_input(hash_table.locate(B));
@@ -510,7 +510,7 @@ void Parser::L3_check_cmd(subtypes c) {
         if (l3_get_name(T)) return;
         what = cur_tok;
     }
-    bool is_free = hash_table.eqtb[what.eqtb_loc()].val.is_undef_or_relax();
+    bool is_free = Hashtab::the_eqtb()[what.eqtb_loc()].val.is_undef_or_relax();
     if (c == 0 || c == 1) {
         if (!is_free) bad_redefinition(0, what);
     } else {
@@ -533,7 +533,7 @@ void Parser::l3_new_token_list(subtypes c) {
         M_let(name, T_empty, c == l3_tl_gclear_code, false);
         return;
     }
-    bool u = hash_table.eqtb[name.eqtb_loc()].val.is_undef_or_relax();
+    bool u = Hashtab::the_eqtb()[name.eqtb_loc()].val.is_undef_or_relax();
     if (c == l3_tl_gclearnew_code || c == l3_tl_clearnew_code) {
         // define globally, reset locally
         if (u)
@@ -1082,7 +1082,7 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
     if (need_prot) prot = true;
     nsig         = tok_base + ':' + osig;
     Token newfun = hash_table.locate(nsig);
-    if (!hash_table.eqtb[newfun.eqtb_loc()].val.is_undef()) {
+    if (!Hashtab::the_eqtb()[newfun.eqtb_loc()].val.is_undef()) {
         the_log << "Variant " << newfun << " already defined, not changing it.\n";
         return;
     }
@@ -1093,7 +1093,7 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
     body.push_back(orig);
     auto *X = new Macro(body);
     mac_define(newfun, X, true, rd_always, prot ? userp_cmd : user_cmd);
-    if (!hash_table.eqtb[converter.eqtb_loc()].val.is_undef()) return;
+    if (!Hashtab::the_eqtb()[converter.eqtb_loc()].val.is_undef()) return;
     TokenList cb;
     for (size_t i = 0;; i++) {
         char c = changes[i];
@@ -1142,7 +1142,7 @@ void Parser::E_l3expand_aux(subtypes c) {
     case l3expo_code: // \::o  argument is processed
     case l3expf_code: // \::f ditto
     case l3expx_code: // \::x ditto
-        brace_me(L3);
+        L3.brace_me();
         break;
     case l3expc_code: // \::c is \csname#3\csname
         get_token();
@@ -1151,7 +1151,7 @@ void Parser::E_l3expand_aux(subtypes c) {
     case l3expV_code: // \::V case of a list
     case l3expv_code: // \::v case of a csname unread
         l3_expand_Vv(L3, c == l3expv_code);
-        brace_me(L3);
+        L3.brace_me();
         break;
     case l3expVu_code: // \::v_unbraced idem, unbraced
     case l3expvu_code: l3_expand_Vv(L3, c == l3expvu_code); break;
@@ -1164,7 +1164,7 @@ void Parser::E_l3expand_aux(subtypes c) {
     if (!L1.empty()) {
         res.splice(res.end(), L1);
         res.push_back(T3col_tok);
-        brace_me(L2);
+        L2.brace_me();
     }
     res.splice(res.end(), L2);
     if (tracing_macros()) {
@@ -1213,7 +1213,7 @@ void Parser::E_l3noexpand(subtypes c) {
         //  case l3expx_code: not needed, everything is expanded
     default: return; // should not happen
     }
-    brace_me(L3);
+    L3.brace_me();
     res.push_back(T_exp_notn);
     res.splice(res.end(), L3);
     if (b) {
@@ -1284,7 +1284,7 @@ void Parser::l3_expand_Vv(TokenList &L, bool spec) {
 // used in the next function
 #define INSERT res.splice(res.end(), L)
 #define INSERT_B                                                                                                                           \
-    brace_me(L);                                                                                                                           \
+    (L.brace_me());                                                                                                                        \
     INSERT
 #define EXPAND_o                                                                                                                           \
     l3_expand_o(L);                                                                                                                        \

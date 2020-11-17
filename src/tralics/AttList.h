@@ -1,20 +1,12 @@
 #pragma once
 #include <cassert>
+#include <map>
 #include <optional>
 #include <string>
 #include <vector>
 
-struct AttPair {
-    std::string name, value;
+struct AttList : public std::map<std::string, std::string> {          // map and not unordered_map for reproducible XML output
+    [[nodiscard]] auto lookup(const std::string &x) -> std::string *; // \todo use map API
 };
 
-struct AttList : public std::vector<AttPair> {
-    [[nodiscard]] auto get_val(size_t i) const -> std::string { return at(i).value; }
-    [[nodiscard]] auto lookup(const std::string &x) const -> std::optional<size_t>;
-
-    using std::vector<AttPair>::push_back;
-    void push_back(const std::string &name, const std::string &value, bool force = true);
-};
-
-auto operator<<(std::ostream &o, const AttPair &a) -> std::ostream &;
-auto operator<<(std::ostream &o, const AttList &a) -> std::ostream &;
+auto operator<<(std::ostream &o, const AttList &l) -> std::ostream &;

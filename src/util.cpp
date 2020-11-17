@@ -57,10 +57,10 @@ auto find_counter(const std::string &s) -> int {
     if (only_digits(s)) return counter_val(std::stoi(s));
     static Buffer B;
     B        = "c@" + s;
-    Token t  = the_parser.hash_table.locate(B);
+    Token t  = hash_table.locate(B);
     auto  cs = t.eqtb_loc();
-    if (the_parser.hash_table.eqtb[cs].val.cmd != assign_int_cmd) return -1;
-    return counter_val(int(the_parser.hash_table.eqtb[cs].val.chr) - int(count_reg_offset));
+    if (Hashtab::the_eqtb()[cs].val.cmd != assign_int_cmd) return -1;
+    return counter_val(int(Hashtab::the_eqtb()[cs].val.chr) - int(count_reg_offset));
 }
 
 auto only_digits(const std::string &s) -> bool {
@@ -136,7 +136,7 @@ auto split_at_colon(const std::string &s) -> std::optional<std::pair<std::string
 }
 
 auto encode(const std::string &s) -> std::string {
-    auto T = the_main->output_encoding;
+    auto T = the_main.output_encoding;
     if (T == en_boot || T == en_utf8 || is_all_ascii(s)) return s.data(); // NOLINT \todo return s would be better but null chars happen
     return convert_to_latin1(s, T == en_latin);
 }

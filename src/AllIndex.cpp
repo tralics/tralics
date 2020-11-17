@@ -10,24 +10,15 @@ AllIndex::AllIndex() {
 
 // Returns the index location associated to the name S
 // If S is not found, the main index is used
-auto AllIndex::find_index(const std::string &s) -> size_t {
-    for (size_t i = 0; i < size(); i++)
-        if (at(i).name == s) return i;
-    return 1;
+auto AllIndex::find_index(const std::string &s) -> OneIndex & {
+    for (auto &i : *this)
+        if (i.name == s) return i;
+    return (*this)[1];
 }
 
 void AllIndex::new_index(const std::string &s, const std::string &title) {
-    for (size_t i = 0; i < size(); i++)
-        if (at(i).name == s) return;
-    auto id = the_main->the_stack->next_xid(nullptr).value;
+    for (auto &i : *this)
+        if (i.name == s) return;
+    auto id = the_stack.next_xid(nullptr).value;
     emplace_back(s, title, id);
-}
-
-// Case \printglossary or \printindex[foo].
-// Marks the place where to insert the index
-void AllIndex::mark_print(size_t g) {
-    Xml *mark = new Xml(std::string(), nullptr);
-    Xml *Foo  = new Xml(std::string(), mark);
-    the_main->the_stack->add_last(Foo);
-    at(g).position = mark;
 }

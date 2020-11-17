@@ -22,7 +22,7 @@ namespace {
         }
         if (cl.find("iso-8859-1") != std::string::npos) return 1;
         if (cl.find("utf8-encoded") != std::string::npos) return 0;
-        if (cl.find("%&TEX encoding = UTF-8") != std::string::npos) return 0; // \todo VB: check, this was 1 but that was dubious
+        if (cl.find("%&TEX encoding = UTF-8") != std::string::npos) return 0;
         auto kk = cl.find("tralics-encoding:");
         if (kk == std::string::npos) return {};
         if (std::isdigit(cl[kk + 17]) == 0) return {};
@@ -151,13 +151,6 @@ void LineList::reset(std::string x) {
 // Insert a line at the end of the file, incrementing the line no
 void LineList::insert(const std::string &c, bool cv) { emplace_back(++cur_line, c, cv); }
 
-// Like insert, but we do not insert an empty line after an empty line.
-// Used by the raweb preprocessor, hence already converted
-void LineList::insert_spec(int n, std::string c) {
-    if (!empty() && back()[0] == '\n' && c[0] == '\n') return;
-    emplace_back(n, c, true);
-}
-
 // insert a file at the start
 void LineList::splice_first(LineList &X) { splice(begin(), X); }
 
@@ -200,14 +193,12 @@ void LineList::before_close(bool sigforce) {
 }
 
 // Puts in b the next line of input.
-// return -1 at EOF, the line number otherwise.
-auto LineList::get_next(Buffer &b) -> int {
-    int  n         = -1;
-    bool converted = false;
-    if (empty()) return -1;
+// return the line number, or std::nullopt if EOF.
+auto LineList::get_next(Buffer &b) -> std::optional<int> {
+    if (empty()) return {};
+    int  n         = front().number;
+    bool converted = front().converted;
     b.append(front());
-    n         = front().number;
-    converted = front().converted;
     pop_front();
     if (!converted) {
         cur_file_name = file_name;
@@ -253,11 +244,11 @@ auto LineList::find_documentclass() -> std::string {
     for (auto C = begin(); C != end(); ++C) {
         if (C->find("%%") != std::string::npos) continue;
         if (auto match = ctre::match<pattern>(*C)) {
-            the_main->doc_class_pos = C;
+            the_main.doc_class_pos = C;
             return match.get<1>().to_string();
         }
     }
-    the_main->doc_class_pos = end();
+    the_main.doc_class_pos = end();
     return "";
 }
 
@@ -468,10 +459,9 @@ void LineList::read(const std::string &x, int spec) {
     std::string   old_name = cur_file_name;
     cur_file_name          = x;
     Buffer B;
-    auto   wc        = the_main->input_encoding; // \todo redundant with encoding?
-    bool   converted = spec < 2;
-    encoding         = the_main->input_encoding;
-    int co_try       = spec == 3 ? 0 : 20;
+    encoding       = the_main.input_encoding;
+    bool converted = spec < 2;
+    int  co_try    = spec == 3 ? 0 : 20;
     for (;;) {
         int  c    = fp.get();
         bool emit = false;
@@ -494,14 +484,13 @@ void LineList::read(const std::string &x, int spec) {
             if (co_try != 0) {
                 co_try--;
                 if (auto k = find_encoding(B)) {
-                    wc       = *k;
-                    encoding = wc;
+                    encoding = *k;
                     co_try   = 0;
                     Logger::finish_seq();
                     spdlog::trace("++ Input encoding number {} detected  at line {} of file {}", *k, cur_line + 1, x);
                 }
             }
-            if (converted) B.convert_line(cur_line + 1, wc);
+            if (converted) B.convert_line(cur_line + 1, encoding);
             if (emit)
                 insert(B, converted);
             else

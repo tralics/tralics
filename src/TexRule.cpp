@@ -18,7 +18,7 @@ void TexRule::reset() {
 }
 
 void TexRule::convert(AttList &res) const {
-    if (rule_h.value != default_rule_dimen) res.push_back(the_names["height"], std::string(rule_h));
-    if (rule_d.value != default_rule_dimen) res.push_back(the_names["depth"], std::string(rule_d));
-    if (rule_w.value != default_rule_dimen) res.push_back(the_names["width"], std::string(rule_w));
+    if (rule_h.value != default_rule_dimen) res[the_names["height"]] = std::string(rule_h);
+    if (rule_d.value != default_rule_dimen) res[the_names["depth"]] = std::string(rule_d);
+    if (rule_w.value != default_rule_dimen) res[the_names["width"]] = std::string(rule_w);
 }

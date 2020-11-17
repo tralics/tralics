@@ -1,20 +1,20 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <?xml-stylesheet href="monstyle" type="text/css"?>
 <!DOCTYPE std SYSTEM 'classes.dtd'>
-<!-- Translated from latex by tralics 2.15.4, date: 2015/08/23-->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
 <std>
 <p>OK
-<anchor id-text='lid1' id='uid1'/>a
-<anchor id-text='lid2' id='uid2'/>b
-<anchor id-text='lid3' id='uid3'/>c
-<anchor id-text='lid4' id='uid4'/>d
-<anchor id-text='lid5' id='uid5'/>e
-<anchor id-text='lid6' id='uid6'/>f
-<anchor id-text='lid7' id='uid7'/>g
-<anchor id-text='lid8' id='uid8'/>h
+<anchor id='uid1' id-text='lid1'/>a
+<anchor id='uid2' id-text='lid2'/>b
+<anchor id='uid3' id-text='lid3'/>c
+<anchor id='uid4' id-text='lid4'/>d
+<anchor id='uid5' id-text='lid5'/>e
+<anchor id='uid6' id-text='lid6'/>f
+<anchor id='uid7' id-text='lid7'/>g
+<anchor id='uid8' id-text='lid8'/>h
 OK</p>
-<theindex title='Index'><index target='uid1 uid3 uid4' level='1'>verb</index>
-<index target='uid2 uid5 uid6' level='1'>vérb</index>
-<index target='uid7 uid8' level='2'>vèrb</index>
+<theindex title='Index'><index level='1' target='uid1 uid3 uid4'>verb</index>
+<index level='1' target='uid2 uid5 uid6'>vérb</index>
+<index level='2' target='uid7 uid8'>vèrb</index>
 </theindex>
 </std>

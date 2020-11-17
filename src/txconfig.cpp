@@ -8,10 +8,7 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-// The file contains code for configurating the Raweb
-
 #include "tralics/Logger.h"
-#include "tralics/ParamDataVector.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
@@ -47,23 +44,6 @@ namespace config_ns {
 // We make sure these four items always exist
 
 // -----------------------------------------------------------
-
-// --------------------------------------------------
-
-// If str is, say `Cog A', this puts ` cog ' in the buffer, returns `cog'.
-auto Buffer::add_with_space(const std::string &s) -> std::string {
-    size_t i = 0;
-    while (s[i] == ' ') ++i;
-    clear();
-    push_back(' ');
-    while ((s[i] != 0) && (s[i] != ' ')) push_back(s[i++]);
-    lowercase();
-    std::string res = substr(1);
-    push_back(' ');
-    return res;
-}
-
-// --------------------------------------------------
 
 // This creates the file foo_.bbl and initiates the bibtex translation.
 

@@ -1,7 +1,9 @@
 #include "tralics/Parser.h"
+#include "tralics/AllIndex.h"
 #include "tralics/Bbl.h"
 #include "tralics/Bibliography.h"
 #include "tralics/Bibtex.h"
+#include "tralics/ColSpec.h"
 #include "tralics/LineList.h"
 #include "tralics/Logger.h"
 #include "tralics/NameMapper.h"
@@ -26,6 +28,142 @@ namespace accent_ns {
 namespace {
     std::string saved_dim;
 
+    // This is now cline
+    void T_cline() {
+        Xml *R       = the_stack.top_stack()->last_addr();
+        auto cl_span = (cline_last - cline_first) + 1;
+        if (R != nullptr) {
+            if (R->try_cline(false)) {
+                R->try_cline(true);
+                return;
+            }
+            long tot_span = 0;
+            if (R->total_span(tot_span)) {
+                tot_span = cline_first - 1 - tot_span;
+                if (0 <= tot_span) {
+                    if (tot_span != 0) {
+                        Xml *x = new Xml(the_names["cell"], nullptr);
+                        R->push_back_unless_nullptr(x);
+                        x->id.add_span(tot_span);
+                    }
+                    Xml *x = new Xml(the_names["cell"], nullptr);
+                    R->push_back_unless_nullptr(x);
+                    x->id.add_span(cl_span);
+                    x->id.add_bottom_rule();
+                    return;
+                }
+            }
+            if (!R->is_xmlc() && R->has_name(the_names["row"])) {
+                if (R->try_cline_again(false)) {
+                    R->try_cline_again(true);
+                    R->name = std::string();
+                    the_stack.add_border(cline_first, cl_span);
+                    the_log << "\\cline killed a cell \n";
+                    return;
+                }
+            }
+        }
+        the_stack.add_border(cline_first, cl_span);
+    }
+
+    // This is for lower-case upper-case conversions.
+    // Defines values for the character c
+    void mklcuc(size_t c, size_t lc, size_t uc) {
+        eqtb_int_table[c + lc_code_offset].val = to_signed(lc);
+        eqtb_int_table[c + uc_code_offset].val = to_signed(uc);
+    }
+
+    // This is for lower-case upper-case conversions.
+    // Defines values for the pair lc, uc
+    void mklcuc(size_t lc, size_t uc) {
+        eqtb_int_table[lc + lc_code_offset].val = to_signed(lc);
+        eqtb_int_table[lc + uc_code_offset].val = to_signed(uc);
+        eqtb_int_table[uc + lc_code_offset].val = to_signed(lc);
+        eqtb_int_table[uc + uc_code_offset].val = to_signed(uc);
+    }
+
+    // This creates the lc and uc tables.
+    // Only ascii characters have a non-zero value
+    void make_uclc_table() {
+        for (unsigned i = 'a'; i <= 'z'; i++) mklcuc(i, i, i - 32);
+        for (unsigned i = 224; i <= 255; i++) mklcuc(i, i, i - 32);
+        for (unsigned i = 'A'; i <= 'Z'; i++) mklcuc(i, i + 32, i);
+        for (unsigned i = 192; i <= 223; i++) mklcuc(i, i + 32, i);
+        mklcuc(215, 0, 0);
+        mklcuc(247, 0, 0);    // multiplication division (\367 \327)
+        mklcuc(223, 0, 0);    // sharp s (\377 347)
+        mklcuc(0xFF, 0x178);  // \"y
+        mklcuc(0x153, 0x152); // oe
+        mklcuc(0x133, 0x132); // ij
+        mklcuc(0x142, 0x141); // \l
+        mklcuc(0x14B, 0x14A); // \ng
+        mklcuc(0x111, 0x110); // \dh
+    }
+
+    void finish_index() {
+        auto labels = std::vector<std::string>(the_index.last_iid, "");
+        tralics_ns::find_index_labels(labels);
+        size_t idx_size = 0, idx_nb = 0;
+        auto   q = the_index.size();
+        for (size_t jj = 1; jj <= q; jj++) {
+            auto  j  = jj == q ? 0 : jj;
+            auto &CI = the_index.at(j);
+            auto  n  = CI.size();
+            if (n == 0) continue;
+            idx_size += n;
+            idx_nb++;
+            Xml *res = new Xml(the_names[j == 0 ? "theglossary" : "theindex"], nullptr); // OK?
+            Xid  id  = res->id;
+            {
+                const std::string &t = CI.title;
+                if (!t.empty()) id.add_attribute(the_names["title"], std::string(t));
+            }
+            {
+                AttList &L = the_stack.get_att_list(CI.AL);
+                id.add_attribute(L, true);
+            }
+            for (size_t i = 0; i < n; i++) {
+                Xml *A = CI.at(i).translation;
+                A->id.add_attribute(the_names["target"], std::string(labels[CI.at(i).iid]));
+            }
+            std::sort(CI.begin(), CI.end(), [](auto &A, auto &B) { return A.key < B.key; });
+            for (size_t i = 0; i < n; i++) {
+                Xml *A = CI.at(i).translation;
+                res->push_back_unless_nullptr(A);
+                res->add_nl();
+            }
+            the_stack.document_element()->insert_bib(res, CI.position);
+        }
+        if (idx_size == 0) return;
+        log_and_tty << "Index has " << idx_size << " entries";
+        if (idx_nb > 1) log_and_tty << " in " << idx_nb << " clusters";
+        log_and_tty << "\n";
+    }
+
+    // This creates the bbl file by running an external program.
+    void create_aux_file_and_run_pgm() {
+        if (!the_main.shell_escape_allowed) {
+            spdlog::warn("Cannot call external program unless using option -shell-escape");
+            return;
+        }
+        Buffer B;
+        bbl.lines.clear();
+        Bibliography &T = the_bibliography;
+        T.dump(B);
+        if (B.empty()) return;
+        T.dump_data(B);
+        std::string auxname = file_name + ".aux";
+        try {
+            std::ofstream(auxname) << B;
+        } catch (...) {
+            spdlog::warn("Cannot open file {} for output, bibliography will be missing", auxname);
+            return;
+        }
+        spdlog::info("Executing bibliography command: {}", T.cmd);
+        system(T.cmd.c_str());
+        bbl.lines.read(file_name + ".bbl", 1);
+    }
+
     // This creates a <ref target='bidN'/> element. This is the REF that needs
     // to be solved later. In the case of \footcite[p.25]{Knuth},
     // the arguments of the function are foot and Knuth; the `p.25' will be
@@ -36,16 +174,6 @@ namespace {
         Xml         res(the_names["ref"], nullptr);
         res.id.add_attribute(the_names["target"], id);
         return res;
-    }
-
-    // \cite[year][]{foo}is the same as \cite{foo}
-    // if distinguish_refer is false,  \cite[refer][]{foo} is also the same.
-    auto normalise_for_bib(std::string w) -> std::string {
-        std::string S = w;
-        if (S == "year") return the_names["cst_empty"];
-        if (!distinguish_refer)
-            if (S == "refer") return the_names["cst_empty"];
-        return w;
     }
 
     // For the case of \'\^e, construct an accent code.
@@ -758,26 +886,26 @@ namespace {
 
         other_accent[unused_accent_even_cc] = Token(0);
         other_accent[unused_accent_odd_cc]  = Token(0);
-        special_double[0]                   = the_parser.hash_table.locate("textsubgrave");
-        special_double[1]                   = the_parser.hash_table.locate("textgravedot");
-        special_double[2]                   = the_parser.hash_table.locate("textsubacute");
-        special_double[3]                   = the_parser.hash_table.locate("textacutemacron");
-        special_double[4]                   = the_parser.hash_table.locate("textsubcircum");
-        special_double[5]                   = the_parser.hash_table.locate("textcircumdot");
-        special_double[6]                   = the_parser.hash_table.locate("textsubtilde");
-        special_double[7]                   = the_parser.hash_table.locate("texttildedot");
-        special_double[8]                   = the_parser.hash_table.locate("textsubumlaut");
-        special_double[9]                   = the_parser.hash_table.locate("textdoublegrave");
-        special_double[10]                  = the_parser.hash_table.locate("textsubring");
-        special_double[11]                  = the_parser.hash_table.locate("textringmacron");
-        special_double[12]                  = the_parser.hash_table.locate("textsubwedge");
-        special_double[13]                  = the_parser.hash_table.locate("textacutewedge");
-        special_double[14]                  = the_parser.hash_table.locate("textsubarch");
-        special_double[15]                  = the_parser.hash_table.locate("textbrevemacron");
-        special_double[16]                  = the_parser.hash_table.locate("textsubbar");
-        special_double[17]                  = the_parser.hash_table.locate("textsubdot");
-        special_double[18]                  = the_parser.hash_table.locate("textdotacute");
-        special_double[19]                  = the_parser.hash_table.locate("textbottomtiebar");
+        special_double[0]                   = hash_table.locate("textsubgrave");
+        special_double[1]                   = hash_table.locate("textgravedot");
+        special_double[2]                   = hash_table.locate("textsubacute");
+        special_double[3]                   = hash_table.locate("textacutemacron");
+        special_double[4]                   = hash_table.locate("textsubcircum");
+        special_double[5]                   = hash_table.locate("textcircumdot");
+        special_double[6]                   = hash_table.locate("textsubtilde");
+        special_double[7]                   = hash_table.locate("texttildedot");
+        special_double[8]                   = hash_table.locate("textsubumlaut");
+        special_double[9]                   = hash_table.locate("textdoublegrave");
+        special_double[10]                  = hash_table.locate("textsubring");
+        special_double[11]                  = hash_table.locate("textringmacron");
+        special_double[12]                  = hash_table.locate("textsubwedge");
+        special_double[13]                  = hash_table.locate("textacutewedge");
+        special_double[14]                  = hash_table.locate("textsubarch");
+        special_double[15]                  = hash_table.locate("textbrevemacron");
+        special_double[16]                  = hash_table.locate("textsubbar");
+        special_double[17]                  = hash_table.locate("textsubdot");
+        special_double[18]                  = hash_table.locate("textdotacute");
+        special_double[19]                  = hash_table.locate("textbottomtiebar");
     }
 
     /// This creates the table with all the names.
@@ -806,6 +934,65 @@ namespace {
         if (acc == 't' && chr == '*') return special_double[19];
         return Token();
     }
+
+    // Creates some little constants.
+    void make_constants() {
+        hash_table.OB_token     = make_char_token('{', 1);
+        hash_table.CB_token     = make_char_token('}', 2);
+        hash_table.dollar_token = make_char_token('$', 3);
+        hash_table.hat_token    = Token(hat_t_offset, '^');
+        hash_table.zero_token   = Token(other_t_offset, '0');
+        Token(other_t_offset, '1');
+        hash_table.comma_token   = Token(other_t_offset, ',');
+        hash_table.equals_token  = Token(other_t_offset, '=');
+        hash_table.dot_token     = Token(other_t_offset, '.');
+        hash_table.star_token    = Token(other_t_offset, '*');
+        hash_table.plus_token    = Token(other_t_offset, '+');
+        hash_table.minus_token   = Token(other_t_offset, '-');
+        hash_table.space_token   = Token(space_token_val);
+        hash_table.newline_token = Token(newline_token_val);
+    }
+
+    // In ref_list, we have  (e,v), (e,v), (e,v) etc
+    // where E is the xid of a <ref> element, and V is an entry in the
+    // hash table of the label. After the translation is complete,
+    // we know the value of the label, and can add the attribute target=...
+    void check_all_ids() {
+        for (auto &i : ref_list) {
+            auto        E = i.first;
+            std::string V = i.second;
+            auto *      L = labinfo(V);
+            if (!L->defined) {
+                Logger::finish_seq();
+                log_and_tty << "Error signaled in postprocessor\n"
+                            << "undefined label `" << V << "' (first use at line " << L->lineno << " in file " << L->filename << ")";
+                Xid(E).add_attribute(the_names["target"], V);
+                std::string B = L->id;
+                for (auto &removed_label : removed_labels) {
+                    if (removed_label.second == B) log_and_tty << "\n(Label was removed with `" << removed_label.first << "')";
+                    break;
+                }
+                log_and_tty << "\n";
+                nb_errs++;
+            }
+            std::string B = L->id;
+            if (!B.empty()) Xid(E).add_attribute(the_names["target"], B);
+        }
+    }
+
+    void finish_color() {
+        int k = 0;
+        for (auto &color : all_colors)
+            if (color.used) k++;
+        if (k == 0) return;
+        Xml *res = new Xml(std::string("colorpool"), nullptr);
+        for (auto &color : all_colors)
+            if (color.used) {
+                res->push_back_unless_nullptr(color.xval);
+                res->add_nl();
+            }
+        the_stack.document_element()->replace_first(res);
+    }
 } // namespace
 
 // This command puts a double accent on a letter.
@@ -824,27 +1011,9 @@ auto accent_ns::fetch_double_accent(int a, int acc3) -> Token {
     return other_accent[double_other_accent(a, acc3)];
 }
 
-auto operator<<(std::ostream &X, const Image &Y) -> std::ostream &; // \todo elsewhere
-
 // In case of error, we add the current line number as attribute
 // via this function
 auto Parser::cur_line_to_istring() const -> std::string { return std::string(fmt::format("{}", get_cur_line())); }
-
-// This is the TeX command \string ; if esc is false, no escape char is inserted
-void Parser::tex_string(Buffer &B, Token T, bool esc) const {
-    if (T.not_a_cmd())
-        B.push_back(T.char_val());
-    else {
-        auto x = T.val;
-        if (esc && x >= single_offset) B.insert_escape_char_raw();
-        if (x >= hash_offset)
-            B.append(hash_table[T.hash_loc()]);
-        else if (x < first_multitok_val)
-            B.push_back(T.char_val());
-        else
-            B.append(null_cs_name());
-    }
-}
 
 // Enter a new image file, if ok is false, do not increase the occ count
 void Parser::enter_file_in_table(const std::string &nm, bool ok) {
@@ -920,8 +1089,7 @@ void Parser::boot_xspace() {
 }
 
 // This computes the current date (first thing done after printing the banner)
-// stores the date in the table of equivalents, computes the default year
-// for the RA.
+// stores the date in the table of equivalents.
 void Parser::boot_time() {
     time_t xx = 0;
     time(&xx);
@@ -943,68 +1111,13 @@ void Parser::boot_time() {
     Buffer    b            = long_date;
     TokenList today_tokens = b.str_toks(nlt_space);
     new_prim("today", today_tokens);
-    the_main->short_date = short_date;
-    // Default year for the raweb. Until April its last year \todo remove RA stuff
-    if (month <= 4) year--;
-    the_parser.set_ra_year(year);
+    the_main.short_date = short_date;
 }
 
 // Installs the default language.
 void Parser::set_default_language(int v) {
     eqtb_int_table[language_code] = {v, 1};
     set_def_language_num(v);
-}
-
-// Creates some little constants.
-void Parser::make_constants() {
-    hash_table.OB_token     = make_char_token('{', 1);
-    hash_table.CB_token     = make_char_token('}', 2);
-    hash_table.dollar_token = make_char_token('$', 3);
-    hash_table.hat_token    = Token(hat_t_offset, '^');
-    hash_table.zero_token   = Token(other_t_offset, '0');
-    Token(other_t_offset, '1');
-    hash_table.comma_token   = Token(other_t_offset, ',');
-    hash_table.equals_token  = Token(other_t_offset, '=');
-    hash_table.dot_token     = Token(other_t_offset, '.');
-    hash_table.star_token    = Token(other_t_offset, '*');
-    hash_table.plus_token    = Token(other_t_offset, '+');
-    hash_table.minus_token   = Token(other_t_offset, '-');
-    hash_table.space_token   = Token(space_token_val);
-    hash_table.newline_token = Token(newline_token_val);
-}
-
-// This is for lower-case upper-case conversions.
-// Defines values for the character c
-void Parser::mklcuc(size_t c, size_t lc, size_t uc) {
-    eqtb_int_table[c + lc_code_offset].val = to_signed(lc);
-    eqtb_int_table[c + uc_code_offset].val = to_signed(uc);
-}
-
-// This is for lower-case upper-case conversions.
-// Defines values for the pair lc, uc
-void Parser::mklcuc(size_t lc, size_t uc) {
-    eqtb_int_table[lc + lc_code_offset].val = to_signed(lc);
-    eqtb_int_table[lc + uc_code_offset].val = to_signed(uc);
-    eqtb_int_table[uc + lc_code_offset].val = to_signed(lc);
-    eqtb_int_table[uc + uc_code_offset].val = to_signed(uc);
-}
-
-// This creates the lc and uc tables.
-// Only ascii characters have a non-zero value
-void Parser::make_uclc_table() {
-    for (unsigned i = 'a'; i <= 'z'; i++) mklcuc(i, i, i - 32);
-    for (unsigned i = 224; i <= 255; i++) mklcuc(i, i, i - 32);
-    for (unsigned i = 'A'; i <= 'Z'; i++) mklcuc(i, i + 32, i);
-    for (unsigned i = 192; i <= 223; i++) mklcuc(i, i + 32, i);
-    mklcuc(215, 0, 0);
-    mklcuc(247, 0, 0);    // multiplication division (\367 \327)
-    mklcuc(223, 0, 0);    // sharp s (\377 347)
-    mklcuc(0xFF, 0x178);  // \"y
-    mklcuc(0x153, 0x152); // oe
-    mklcuc(0x133, 0x132); // ij
-    mklcuc(0x142, 0x141); // \l
-    mklcuc(0x14B, 0x14A); // \ng
-    mklcuc(0x111, 0x110); // \dh
 }
 
 // Locations 2N and 2N+1 are lowercase/uppercase equivalent.
@@ -1043,8 +1156,6 @@ void Parser::load_latex() {
     TokenList body;
     new_prim("@empty", body);
     hash_table.empty_token = hash_table.locate("@empty");
-    // Special raweb compatibility hacks
-    if (the_main->handling_ra) ra_ok = false;
     // this is like \let\bgroup={, etc
     hash_table.primitive("bgroup", open_catcode, subtypes('{'));
     hash_table.primitive("egroup", close_catcode, subtypes('}'));
@@ -1488,16 +1599,16 @@ void Parser::more_bootstrap() {
     {
         auto A    = uchar(' ');
         auto Bval = T.eqtb_loc();
-        eq_define(A, hash_table.eqtb[Bval].val, true);
+        eq_define(A, Hashtab::the_eqtb()[Bval].val, true);
         A    = '#';
         Bval = hash_table.locate("#").eqtb_loc();
-        eq_define(A, hash_table.eqtb[Bval].val, true);
+        eq_define(A, Hashtab::the_eqtb()[Bval].val, true);
         A    = '_';
         Bval = hash_table.locate("_").eqtb_loc();
-        eq_define(A, hash_table.eqtb[Bval].val, true);
+        eq_define(A, Hashtab::the_eqtb()[Bval].val, true);
         A    = '\r'; // eqtbloc of active end-of-line (^^M)
         Bval = hash_table.par_token.eqtb_loc();
-        eq_define(A, hash_table.eqtb[Bval].val, true);
+        eq_define(A, Hashtab::the_eqtb()[Bval].val, true);
     }
     L.clear();
     L.push_back(hash_table.par_token);
@@ -1505,7 +1616,7 @@ void Parser::more_bootstrap() {
     L.push_back(hash_table.locate("sloppy"));
     new_prim("sloppypar", L);
     L.clear();
-    brace_me(L);
+    L.brace_me();
     T = hash_table.locate("hbox");
     L.push_front(T);
     new_prim("null", L);
@@ -1579,28 +1690,28 @@ void Parser::more_bootstrap() {
 // Fills the catcode table. Catcodes are at the start of eqtb_int_table
 void Parser::make_catcodes() {
     for (unsigned i = 0; i < nb_characters; i++) {
-        set_cat(i, other_catcode);
+        set_catcode(i, other_catcode);
         eqtb_int_table[i].level = 1;
     }
-    for (unsigned i = 'a'; i <= 'z'; i++) set_cat(i, letter_catcode);
-    for (unsigned i = 'A'; i <= 'Z'; i++) set_cat(i, letter_catcode);
-    set_cat('\\', 0);
-    set_cat('{', 1);
-    set_cat('}', 2);
-    set_cat('$', 3);
-    set_cat('&', 4);
-    set_cat('\r', 5);
-    set_cat('\n', 12);
-    set_cat('#', 6);
-    set_cat('^', 7);
-    set_cat('_', 8);
-    set_cat('\t', 10);
-    set_cat(' ', 10);
-    set_cat(160, 13); // non breaking space
-    set_cat('~', 13);
-    set_cat('%', 14);
+    for (unsigned i = 'a'; i <= 'z'; i++) set_catcode(i, letter_catcode);
+    for (unsigned i = 'A'; i <= 'Z'; i++) set_catcode(i, letter_catcode);
+    set_catcode('\\', 0);
+    set_catcode('{', 1);
+    set_catcode('}', 2);
+    set_catcode('$', 3);
+    set_catcode('&', 4);
+    set_catcode('\r', 5);
+    set_catcode('\n', 12);
+    set_catcode('#', 6);
+    set_catcode('^', 7);
+    set_catcode('_', 8);
+    set_catcode('\t', 10);
+    set_catcode(' ', 10);
+    set_catcode(160, 13); // non breaking space
+    set_catcode('~', 13);
+    set_catcode('%', 14);
     for (unsigned i = 0; i < nb_shortverb_values; i++) old_catcode[i] = eqtb_int_table[i].val;
-    set_cat('@', 11);
+    set_catcode('@', 11);
 }
 
 // This is the main bootstrap code
@@ -1776,7 +1887,7 @@ void Parser::E_accent() {
     expansion.push_back(res);
     if (spec) {
         expansion.push_front(Y);
-        brace_me(expansion);
+        expansion.brace_me();
         expansion.push_front(hash_table.composite_token);
     }
 
@@ -1859,30 +1970,6 @@ void Parser::T_biblio() {
         if (w.empty()) continue;
         the_bibliography.push_back_src(w);
     }
-}
-
-// This creates the bbl file by running an external program.
-void Parser::create_aux_file_and_run_pgm() {
-    if (!the_main->shell_escape_allowed) {
-        spdlog::warn("Cannot call external program unless using option -shell-escape");
-        return;
-    }
-    Buffer B;
-    bbl.lines.clear();
-    Bibliography &T = the_bibliography;
-    T.dump(B);
-    if (B.empty()) return;
-    T.dump_data(B);
-    std::string auxname = file_name + ".aux";
-    try {
-        std::ofstream(auxname) << B;
-    } catch (...) {
-        spdlog::warn("Cannot open file {} for output, bibliography will be missing", auxname);
-        return;
-    }
-    spdlog::info("Executing bibliography command: {}", T.cmd);
-    system(T.cmd.c_str());
-    bbl.lines.read(file_name + ".bbl", 1);
 }
 
 void Parser::after_main_text() {
@@ -1970,16 +2057,7 @@ void Parser::T_omitcite() {
 // In prenote we put `p. 25' or nothing, in type one of year, foot, refer, bar
 // as an istring, it will be normalised later.
 void Parser::T_cite(subtypes sw, TokenList &prenote, std::string &type) {
-    if (sw == footcite_code) {
-        read_optarg_nopar(prenote);
-        type = the_names["foot"];
-    } else if (sw == yearcite_code) {
-        read_optarg_nopar(prenote);
-        type = the_names["cst_empty"]; // should be year here
-    } else if (sw == refercite_code) {
-        read_optarg_nopar(prenote);
-        type = the_names["refer"];
-    } else if (sw == nocite_code) {
+    if (sw == nocite_code) {
         type = std::string(fetch_name_opt());
     } else if (sw == natcite_code) {
         read_optarg_nopar(prenote); // is really the post note
@@ -2027,11 +2105,7 @@ void Parser::T_cite(subtypes sw) {
     cur_tok = T;
     std::string type;
     T_cite(sw, prenote, type); // reads optional arguments
-    type = normalise_for_bib(type);
-    if (sw == footcite_code) res.push_back(hash_table.footcite_pre_token);
-    Token sep    = sw == footcite_code  ? hash_table.footcite_sep_token
-                   : sw == natcite_code ? hash_table.locate("NAT@sep")
-                                        : hash_table.cite_punct_token;
+    Token sep    = sw == natcite_code ? hash_table.locate("NAT@sep") : hash_table.cite_punct_token;
     cur_tok      = T;
     auto  List   = fetch_name0_nopar();
     int   n      = 0;
@@ -2084,14 +2158,13 @@ void Parser::solve_cite(bool user) {
     if (user) {
         implicit_par(zero_code);
         the_stack.add_last(new Xml(the_names["bibitem"], nullptr));
-        if (auto ukey = nT_optarg_nopar()) Xid(the_stack.get_xid()).get_att().push_back(the_names["bibkey"], *ukey);
+        if (auto ukey = nT_optarg_nopar()) Xid(the_stack.get_xid()).get_att()[the_names["bibkey"]] = *ukey;
         n = the_stack.get_xid();
     } else {
         F    = remove_initial_star();
         n    = read_elt_id(T);
         from = std::string(fetch_name_opt());
     }
-    from     = normalise_for_bib(from);
     cur_tok  = T;
     auto key = std::string(fetch_name0_nopar());
     if (user) insert_every_bib();
@@ -2110,17 +2183,17 @@ void Parser::solve_cite(bool user) {
         return;
     }
     AttList &AL    = N.get_att();
-    auto     my_id = AL.lookup(the_names["id"]);
-    if (my_id) {
+    auto *   my_id = AL.lookup(the_names["id"]);
+    if (my_id != nullptr) {
         if (CI.id.empty())
-            CI.id = AL.get_val(*my_id);
+            CI.id = *my_id;
         else {
             err_buf = "Cannot solve (element has an Id) " + encode(key);
             the_parser.signal_error(the_parser.err_tok, "bad solve");
             return;
         }
     } else
-        AL.push_back(the_names["id"], CI.get_id());
+        AL[the_names["id"]] = CI.get_id();
     CI.solved = N;
 }
 
@@ -2159,7 +2232,7 @@ void Parser::T_empty_bibitem() {
     std::string w;
     std::string a;
     std::string b  = sT_arg_nopar();
-    std::string id = the_bibtex.exec_bibitem(w, b);
+    std::string id = the_bibtex.exec_bibitem(b);
     if (id.empty()) return;
     leave_v_mode();
     the_stack.push1(the_names["citation"]);
@@ -2460,44 +2533,6 @@ auto Parser::T_hline_parse(subtypes c) -> int {
     return rt;
 }
 
-// This is now cline
-void Parser::T_cline() {
-    Xml *R       = the_stack.top_stack()->last_addr();
-    auto cl_span = (cline_last - cline_first) + 1;
-    if (R != nullptr) {
-        if (R->try_cline(false)) {
-            R->try_cline(true);
-            return;
-        }
-        long tot_span = 0;
-        if (R->total_span(tot_span)) {
-            tot_span = cline_first - 1 - tot_span;
-            if (0 <= tot_span) {
-                if (tot_span != 0) {
-                    Xml *x = new Xml(the_names["cell"], nullptr);
-                    R->push_back_unless_nullptr(x);
-                    x->id.add_span(tot_span);
-                }
-                Xml *x = new Xml(the_names["cell"], nullptr);
-                R->push_back_unless_nullptr(x);
-                x->id.add_span(cl_span);
-                x->id.add_bottom_rule();
-                return;
-            }
-        }
-        if (!R->is_xmlc() && R->has_name(the_names["row"])) {
-            if (R->try_cline_again(false)) {
-                R->try_cline_again(true);
-                R->name = std::string();
-                the_stack.add_border(cline_first, cl_span);
-                the_log << "\\cline killed a cell \n";
-                return;
-            }
-        }
-    }
-    the_stack.add_border(cline_first, cl_span);
-}
-
 // Case when the command is found outside the tabular loop.
 // Is this legal? we parse arguments the check again
 void Parser::T_hline(subtypes c) {
@@ -2519,7 +2554,7 @@ auto Parser::false_end_tabular(const std::string &s) -> bool {
     if (the_stack.is_frame("cell")) {
         TokenList L = token_ns::string_to_list(s, true);
         back_input(L);
-        back_input(hash_table.end_token);
+        back_input(hash_table.locate("end"));
         finish_a_cell(hash_table.cr_token, std::string());
         return true;
     }

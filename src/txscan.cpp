@@ -82,6 +82,31 @@ namespace {
         if ('a' <= c && c <= 'f') return c - 'a' + 10;
         return {};
     }
+
+    void trace_scan_expr(String s, const SthInternal &v, char t, Token T) {
+        if (tracing_commands() && t != ' ') {
+            Logger::finish_seq();
+            the_log << "+" << s << " so far for " << T << t << ' ' << v << "\n";
+        }
+    }
+
+    // Implements \currentgrouptype.
+    // (see online doc for the meaning of the numbers).
+    auto cur_group_type() -> int {
+        auto V = first_boundary();
+        switch (V) {
+        case bt_impossible: return 0;
+        case bt_brace: return 1;
+        case bt_math: return 9;
+        case bt_semisimple: return 14;
+        case bt_esemisimple: return 17;
+        case bt_env: return 18;
+        case bt_cell: return 19;
+        case bt_local: return 20;
+        case bt_tpa: return 21;
+        default: return 17;
+        }
+    }
 } // namespace
 
 namespace io_ns {
@@ -132,7 +157,7 @@ void Parser::M_extension(subtypes cc) {
             chan = negative_out_slot;
         else if (chan > max_openout && chan != write18_slot)
             chan = positive_out_slot;
-        if (chan == write18_slot && !the_main->shell_escape_allowed) chan = positive_out_slot;
+        if (chan == write18_slot && !the_main.shell_escape_allowed) chan = positive_out_slot;
     }
     auto uchan = to_unsigned(chan);
     if (cc == openout_code) {
@@ -717,13 +742,13 @@ auto Parser::scan_for_eval(Buffer &B, bool in_env) -> bool {
             Token t = TL.front();
             TL.pop_front();
             if (in_env && b == 0) { // Check end in the case of env
-                if (t == hash_table.end_token) {
+                if (t == hash_table.locate("end")) {
                     if (elevel == 0) {
                         back_input(t);
                         return true;
                     }
                     elevel--;
-                } else if (t == hash_table.begin_token)
+                } else if (t == hash_table.locate("begin"))
                     elevel++;
             }
             // Check brace level
@@ -835,8 +860,10 @@ auto Parser::new_line_for_read(bool spec) -> bool {
         tty_line_no++;
         n = tty_line_no;
         scratch.append(m_ligne.data()); // \todo push_back(std::array<char>)
-    } else
-        n = tex_input_files[cur_in_chan].lines.get_next(scratch);
+    } else {
+        auto nn = tex_input_files[cur_in_chan].lines.get_next(scratch);
+        n       = nn ? *nn : -1; // \todo use optional better
+    }
     if (n < 0) {
         tex_input_files[cur_in_chan].close();
         if (!spec) return true;
@@ -865,7 +892,8 @@ auto Parser::get_a_new_line() -> bool {
         lines.clear();
         force_eof = false;
     } else {
-        n = lines.get_next(scratch);
+        auto nn = lines.get_next(scratch);
+        n       = nn ? *nn : -1; // \todo use optional better
         if (n < 0 && every_eof) {
             every_eof   = false;
             TokenList L = toks_registers[everyeof_code].val;
@@ -1351,7 +1379,7 @@ void Parser::scan_something_internal(internal_type level) {
         else if (m == 2)
             cur_val.set_int(to_signed(lines.encoding));
         else if (m == 3)
-            cur_val.set_int(to_signed(the_main->input_encoding));
+            cur_val.set_int(to_signed(the_main.input_encoding));
         else if (m == 4)
             cur_val.set_int(cur_font.get_size());
         return;
@@ -1906,7 +1934,7 @@ void Parser::M_prefixed_aux(bool gbl) {
         else {
             q = scan_int(T); // \spacefactor or \input@encoding
             if (chr == 2) lines.change_encoding(q);
-            if (chr == 3) the_main->set_input_encoding(q >= 0 ? to_unsigned(q) : 0);
+            if (chr == 3) the_main.set_input_encoding(q >= 0 ? to_unsigned(q) : 0);
             if (chr == 4) {
                 cur_font.change_size(q);
                 font_has_changed();
@@ -2172,7 +2200,7 @@ void Parser::E_convert() {
     case l3string_code: // like \string sans escapechar
     case string_code:
         if (get_token_o()) return; // error ?
-        tex_string(B, cur_tok, c == string_code);
+        B.tex_string(cur_tok, c == string_code);
         break;
     case meaning_c_code: // latex3
         token_show(3, B);
@@ -2185,11 +2213,9 @@ void Parser::E_convert() {
         break;
     }
     case jobname_code: B.append(get_job_name()); break;
-    case ra_jobname_code: B.append(get_projet_val()); break;
     case attributeval_code: B.append(get_attval()); break;
     case tralicsversion_code: B.append(tralics_version); break;
     case etexrevision_code: B.append(".0"); break;
-    case rayear_code: B.format("{}", the_parser.get_ra_year()); break;
     default:;
     }
     TokenList L = B.str_toks(nlt_space); // SPACE
@@ -2222,7 +2248,7 @@ void Parser::scan_expr(subtypes m) {
         parse_error(T, "Arithmetic overflow");
         cur_val.kill();
     }
-    if (the_parser.tracing_commands()) {
+    if (tracing_commands()) {
         Logger::finish_seq();
         the_log << "+scan for " << T << "= " << cur_val << "\n";
     }
@@ -2259,13 +2285,6 @@ void Parser::scan_expr_arg(Token T, internal_type x) {
         scan_glue(it_glue, T);
     else
         scan_glue(it_mu, T);
-}
-
-void Parser::trace_scan_expr(String s, const SthInternal &v, char t, Token T) {
-    if (the_parser.tracing_commands() && t != ' ') {
-        Logger::finish_seq();
-        the_log << "+" << s << " so far for " << T << t << ' ' << v << "\n";
-    }
 }
 
 auto Parser::scan_expr(Token T, internal_type et) -> bool {
@@ -2402,7 +2421,7 @@ void Parser::scan_prime() {
         back_input();
         break;
     }
-    brace_me(L);
+    L.brace_me();
     back_input(L);
     back_input(hash_table.hat_token);
 }

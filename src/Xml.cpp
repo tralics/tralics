@@ -108,7 +108,7 @@ namespace {
                     texte->add_non_empty_to(junk);
                 }
                 to->push_back_unless_nullptr(sf);
-                to->push_back_unless_nullptr(the_main->the_stack->newline_xml);
+                to->push_back_unless_nullptr(the_stack.newline_xml);
             }
         }
     }
@@ -155,7 +155,7 @@ namespace {
         case 2: // a subfigure
             //    T->remove_empty_par();
             X = new Xml(the_names["cst_p"], nullptr); // will contain junk
-            if (the_parser.eqtb_int_table[use_subfigure_code].val != 0)
+            if (eqtb_int_table[use_subfigure_code].val != 0)
                 raw_subfigure(from, to, X);
             else
                 table_subfigure(from, to, X);
@@ -243,7 +243,7 @@ namespace {
 
 // Returns a new element named N, initialised with z (if not empty...)
 Xml::Xml(std::string N, Xml *z) : name(std::move(N)) {
-    id = the_main->the_stack->next_xid(this);
+    id = the_stack.next_xid(this);
     if (z != nullptr) add_tmp(gsl::not_null{z});
 }
 
@@ -253,22 +253,21 @@ Xml::Xml(std::string N, Xml *z) : name(std::move(N)) {
 auto Xml::try_cline(bool action) -> bool {
     auto a    = cline_first - 1;
     bool a_ok = false; // true after skip
-    auto len  = size();
-    for (size_t k = 0; k < len; k++) {
+    for (auto &k : *this) {
         if (a == 0) {
             if (a_ok) return true;
             a    = (cline_last - cline_first) + 1;
             a_ok = true;
         }
-        if (at(k)->is_xmlc()) {
-            std::string N = at(k)->name;
+        if (k->is_xmlc()) {
+            std::string N = k->name;
             if (std::string(N) == "\n") continue; // allow newline separator
             return false;
         }
-        auto c = at(k)->get_cell_span();
+        auto c = k->get_cell_span();
         if (c == -1) return false;
         if (c == 0) continue; // ignore null span cells
-        if (a_ok && action) at(k)->id.add_bottom_rule();
+        if (a_ok && action) k->id.add_bottom_rule();
         a = a - c;
         if (a < 0) return false;
     }
@@ -277,15 +276,14 @@ auto Xml::try_cline(bool action) -> bool {
 
 // Puts the total span in res, return false in case of trouble
 auto Xml::total_span(long &res) const -> bool {
-    long r   = 0;
-    auto len = size();
-    for (size_t k = 0; k < len; k++) {
-        if (at(k)->is_xmlc()) {
-            std::string N = at(k)->name;
+    long r = 0;
+    for (const auto &k : *this) {
+        if (k->is_xmlc()) {
+            std::string N = k->name;
             if (std::string(N) == "\n") continue; // allow newline separator
             return false;
         }
-        auto c = at(k)->get_cell_span();
+        auto c = k->get_cell_span();
         if (c == -1) return false;
         r += c;
     }
@@ -299,7 +297,7 @@ auto Xml::total_span(long &res) const -> bool {
 auto Xml::try_cline_again(bool action) -> bool {
     bool seen_cell = false;
     auto len       = size();
-    for (size_t k = 0; k < len; k++) {
+    for (size_t k = 0; k < size(); k++) {
         if (action) {
             erase(begin() + to_signed(k));
             --k;
@@ -342,8 +340,7 @@ void Xml::bordermatrix() {
 auto Xml::spec_copy() const -> Xml * {
     if (name != the_names["mo"]) return nullptr;
     AttList &X = id.get_att();
-    auto     i = X.lookup(the_names["movablelimits"]);
-    if (i < 0) return nullptr;
+    if (X.find(the_names["movablelimits"]) == X.end()) return nullptr;
     Xml *res                                               = new Xml(name, nullptr);
     static_cast<std::vector<gsl::not_null<Xml *>> &>(*res) = *this;
     res->id.add_attribute(X, true);
@@ -378,7 +375,7 @@ auto Xml::deep_copy() -> gsl::not_null<Xml *> {
     if (is_xmlc()) return gsl::not_null{this};
     gsl::not_null res{new Xml(name, nullptr)};
     res->id.add_attribute(id);
-    for (size_t i = 0; i < size(); i++) { res->push_back_unless_nullptr(at(i)->deep_copy()); }
+    for (size_t i = 0; i < size(); i++) { res->push_back_unless_nullptr((*this)[i]->deep_copy()); }
     return res;
 }
 
@@ -441,8 +438,7 @@ void Xml::recurse(XmlAction &X) {
                 if (!an.empty()) remove_label("module in composition", an);
                 erase(begin() + to_signed(k));
                 k--;
-                auto Len = T->size();
-                for (size_t j = 0; j < Len; j++) {
+                for (size_t j = 0; j < T->size(); j++) {
                     Xml *W = T->at(j);
                     if (W == nullptr) continue;
                     if (!W->is_xmlc() && W->has_name_of("head")) {
@@ -610,7 +606,8 @@ auto Xml::is_empty_p() const -> bool {
     AttList &X = id.get_att();
     if (X.empty()) return true;
     if (X.size() != 1) return false;
-    if (X.front().name == the_names["noindent"]) return true;
+    for (const auto &i : X)
+        if (i.first == the_names["noindent"]) return true; // \todo std::any_of?
     return false;
 }
 
@@ -694,12 +691,12 @@ void Xml::postprocess_fig_table(bool is_fig) {
     if (C != nullptr) {
         push_back(gsl::not_null{C}); // copy caption
         C->change_name("caption");
-        push_back(gsl::not_null{the_main->the_stack->newline_xml});
+        push_back(gsl::not_null{the_stack.newline_xml});
     }
     C = T->get_first_env("alt_caption");
     if (C != nullptr) {
         push_back(gsl::not_null{C});
-        push_back(gsl::not_null{the_main->the_stack->newline_xml});
+        push_back(gsl::not_null{the_stack.newline_xml});
     }
 
     // Move all data from T to this
@@ -734,12 +731,6 @@ void Xml::add_non_empty_to(Xml *res) {
     }
 }
 
-// Postprocessor for <composition>
-void Xml::compo_special() {
-    XmlAction X(the_names["module"], rc_composition);
-    recurse(X);
-}
-
 // This is used by sT_translate. It converts an XML element
 // to a string, using scbuf as temporary. clears the object
 auto Xml::convert_to_string() -> std::string {
@@ -756,8 +747,7 @@ void Xml::convert_to_string(Buffer &b) {
         return;
     }
     if (name.empty() || name == the_names["temporary"]) {
-        auto len = size();
-        for (size_t k = 0; k < len; k++) at(k)->convert_to_string(b);
+        for (auto &k : *this) k->convert_to_string(b);
         return;
     }
     err_buf.clear();
@@ -836,7 +826,7 @@ void Xml::add_last_string(const Buffer &B) {
 void Xml::add_last_nl(Xml *x) {
     if (x != nullptr) {
         push_back_unless_nullptr(x);
-        push_back_unless_nullptr(the_main->the_stack->newline_xml);
+        push_back_unless_nullptr(the_stack.newline_xml);
     }
 }
 
@@ -854,8 +844,8 @@ void Xml::remove_last_space() {
 
 // This adds a NL to the end of the element
 void Xml::add_nl() {
-    if (!all_empty() && back_or_nullptr() == the_main->the_stack->newline_xml) return;
-    push_back_unless_nullptr(the_main->the_stack->newline_xml);
+    if (!all_empty() && back_or_nullptr() == the_stack.newline_xml) return;
+    push_back_unless_nullptr(the_stack.newline_xml);
 }
 
 // This returns the span of the current cell; -1 in case of trouble

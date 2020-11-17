@@ -16,6 +16,7 @@
 #include "tralics/MathDataP.h"
 #include "tralics/MathHelper.h"
 #include "tralics/Parser.h"
+#include "tralics/SaveAux.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include <algorithm>
@@ -32,6 +33,20 @@ namespace {
     Token              fct_caller;
     std::vector<Xml *> all_maths;
 
+    // This adds a style element above res.
+    auto add_style(int lvl, gsl::not_null<Xml *> res) -> gsl::not_null<Xml *> {
+        if (lvl < 0) return res; // special case
+        res = gsl::not_null{new Xml(the_names["mstyle"], res)};
+        if (lvl == 0) {
+            res->add_att(the_names["displaystyle"], the_names["true"]);
+            res->add_att(the_names["scriptlevel"], the_names["0"]);
+        } else {
+            res->add_att(the_names["displaystyle"], the_names["false"]);
+            res->add_att(the_names["scriptlevel"], the_names[std::to_string(lvl - 1)]);
+        }
+        return res;
+    }
+
     auto sub_to_math(subtypes x) -> math_list_type { return math_list_type(long(x) + long(fml_offset)); }
 
     // Creates a table for array specifications.
@@ -41,9 +56,9 @@ namespace {
             if (c != 'r' && c != 'l' && c != 'c') continue;
             AttList L;
             if (c == 'l')
-                L.push_back(the_names["columnalign"], the_names["left"]);
+                L[the_names["columnalign"]] = the_names["left"];
             else if (c == 'r')
-                L.push_back(the_names["columnalign"], the_names["right"]);
+                L[the_names["columnalign"]] = the_names["right"];
             res.push_back(L);
         }
         return res;
@@ -184,6 +199,36 @@ namespace {
         case '/': return del_slash;
         default: return del_invalid;
         }
+    }
+
+    // As above, but if B1 is not empty, adds b1 as attribute with value true.
+    auto xml2_space(std::string elt, const std::string &b1, Xml *first_arg, Xml *second_arg) -> gsl::not_null<Xml *> {
+        auto tmp = gsl::not_null{new Xml(std::move(elt), nullptr)};
+        if (!b1.empty()) tmp->add_att(b1, the_names["true"]);
+        tmp->add_tmp(gsl::not_null{first_arg});
+        tmp->push_back_unless_nullptr(new Xml(std::string(" ")));
+        tmp->add_tmp(gsl::not_null{second_arg});
+        return tmp;
+    }
+
+    // case where a table preamble says  >{}c<{xx$yy} and we see &
+    // here xy can be } or \endgroup
+    auto stack_math_in_cell() -> bool {
+        auto n     = the_save_stack.size();
+        bool first = true;
+        for (size_t i = n; i > 0; i--) {
+            SaveAuxBase *p = the_save_stack[i - 1].get();
+            if (p->type != st_boundary) continue;
+            auto cur = dynamic_cast<SaveAuxBoundary *>(p)->val;
+            if (cur == bt_brace || cur == bt_semisimple) continue;
+            if (first) {
+                if (cur != bt_math) return false;
+                first = false;
+                continue;
+            }
+            return cur == bt_cell;
+        }
+        return false;
     }
 } // namespace
 
@@ -487,20 +532,6 @@ auto MathDataP::make_mfenced(size_t open, size_t close, gsl::not_null<Xml *> val
     return res;
 }
 
-// This adds a style element above res.
-auto MathDataP::add_style(int lvl, gsl::not_null<Xml *> res) -> gsl::not_null<Xml *> {
-    if (lvl < 0) return res; // special case
-    res = gsl::not_null{new Xml(the_names["mstyle"], res)};
-    if (lvl == 0) {
-        res->add_att(the_names["displaystyle"], the_names["true"]);
-        res->add_att(the_names["scriptlevel"], the_names["0"]);
-    } else {
-        res->add_att(the_names["displaystyle"], the_names["false"]);
-        res->add_att(the_names["scriptlevel"], the_names[std::to_string(lvl - 1)]);
-    }
-    return res;
-}
-
 void math_ns::add_attribute_spec(const std::string &a, const std::string &b) { cmi.cur_texmath_id.add_attribute(a, b, true); }
 
 // Adds a label to the formula X
@@ -571,7 +602,7 @@ void Math::push_front(CmdChr X, subtypes c) { std::list<MathElt>::push_front(Mat
 
 // Adds a character (cmd+chr). Uses current math font.
 void Math::push_back(CmdChr X) {
-    auto font = subtypes(the_parser.eqtb_int_table[math_font_pos].val);
+    auto font = subtypes(eqtb_int_table[math_font_pos].val);
     std::list<MathElt>::push_back(MathElt(X, font));
 }
 
@@ -740,7 +771,7 @@ auto Parser::start_scan_math(Math &u, subtypes type) -> bool {
 // and look at the next (expanded) token. If it is no \par, we insert
 // a \noindent.
 void Parser::after_math(bool is_inline) {
-    MathHelper::finish_math_mem();
+    math_data.finish_math_mem();
     if (is_inline)
         leave_v_mode();
     else if (the_stack.is_frame("fbox"))
@@ -779,12 +810,9 @@ void Parser::finish_trivial_math(Xml *res) {
     }
     the_parser.my_stats.one_more_trivial();
     leave_v_mode();
-    MathHelper::finish_math_mem();
+    math_data.finish_math_mem();
     the_stack.top_stack()->add_tmp(gsl::not_null{res});
 }
-
-// Needed for implementation of \ifinner
-auto Parser::is_inner_math() -> bool { return cmi.is_inline(); }
 
 // Toplevel function. Reads and translates a formula.
 // Argument as in start_scan_math
@@ -1009,10 +1037,10 @@ void Parser::scan_math(size_t res, math_list_type type) {
                 if (h) {
                     c           = mathlabel_code;
                     TokenList L = token_ns::string_to_list(a, true);
-                    // brace_me(L);
+                    // L.brace_me();
                     back_input(L);
                     TokenList L1 = token_ns::string_to_list(s, true);
-                    // brace_me(L1);
+                    // L1.brace_me();
                     back_input(L1);
                     math_list_type cc = sub_to_math(c);
                     Token          ct = cur_tok;
@@ -1147,7 +1175,7 @@ void Parser::scan_math(size_t res, math_list_type type) {
             }
             if (T >= first_mode_independent) {
                 remove_from_trace();
-                translate01();
+                if (!translate03()) throw EndOfData();
                 continue;
             }
             if (T < 16 && cur_tok.not_a_cmd()) {
@@ -1236,7 +1264,7 @@ auto Parser::scan_math_env(size_t res, math_list_type type) -> bool {
                 back_input(eenv);
             } else {
                 // FIXME
-                T_end(s);
+                if (!T_end(s)) throw EndOfData();
                 return false;
             }
         }
@@ -1260,7 +1288,7 @@ auto Parser::scan_math_env(size_t res, math_list_type type) -> bool {
     if (at_level_zero && cmi.has_tag()) {
         TokenList L = token_ns::string_to_list(s, true);
         back_input(L);
-        back_input(hash_table.end_token);
+        back_input(hash_table.locate("end"));
         cmi.handle_tags();
         return false;
     }
@@ -1350,7 +1378,7 @@ void Parser::scan_math_tag(subtypes c) {
         L.push_front(hash_table.relax_token);
         L.push_front(hash_table.ref_token);
         L.push_front(hash_table.let_token);
-        brace_me(L);
+        L.brace_me();
         std::string val = sT_translate(L);
         cmi.new_multi_label(val, (is_star ? 3 : 2));
         return;
@@ -1360,7 +1388,7 @@ void Parser::scan_math_tag(subtypes c) {
         return;
     }
     if (c == 0) {
-        brace_me(L);
+        L.brace_me();
         L.remove_if([](const Token &m) { return m.is_math_shift(); });
         L.push_front(is_star ? hash_table.ytag_token : hash_table.xtag_token);
         back_input(L);
@@ -1398,7 +1426,7 @@ void Parser::scan_eqno(math_list_type type) {
         L.push_back(cur_tok);
     }
     back_input();
-    brace_me(L);
+    L.brace_me();
     L.push_front(hash_table.ytag_token);
     back_input(L);
 }
@@ -1579,7 +1607,7 @@ void Parser::scan_math_mi(size_t res, subtypes c, subtypes k, CmdChr W) {
         if (!cur_tok.is_open_bracket()) break;
         TokenList L;
         read_optarg_nopar(L);
-        brace_me(L);
+        L.brace_me();
         back_input(L);
         subtypes r1 = math_argument(0, ct);
         T.emplace_back(CmdChr(math_list_cmd, r1), subtypes(math_argument_cd));
@@ -1615,7 +1643,7 @@ void Parser::interpret_mathchoice_cmd(size_t res, subtypes k, CmdChr W) {
 void Parser::opt_to_mandatory() {
     TokenList L;
     read_optarg(L);
-    brace_me(L);
+    L.brace_me();
     back_input(L);
 }
 
@@ -1804,7 +1832,7 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
             cmi.cur_cell_id = cid;
             cell.clear();
             first_cell = false;
-            if (numbered) cmi.ml_second_pass(row, the_parser.tracing_math());
+            if (numbered) cmi.ml_second_pass(row, tracing_math());
 
             n              = 0;
             row            = new Xml(the_names["mtr"], nullptr);
@@ -1825,10 +1853,10 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
     if (row->empty()) // kill the last empty row
         res->pop_back();
     else {
-        if (numbered) cmi.ml_second_pass(row, the_parser.tracing_math());
+        if (numbered) cmi.ml_second_pass(row, tracing_math());
     }
 
-    Xid w = the_main->the_stack->next_xid(res);
+    Xid w = the_stack.next_xid(res);
     w.add_attribute(cmi.cur_table_id); // move the attributes
     cmi.cur_row_id   = rid;
     cmi.cur_table_id = taid;
@@ -1906,10 +1934,10 @@ auto Math::trivial_math_index(symcodes cmd) -> Xml * {
         }
     } else
         return nullptr;
-    Xml *tmp  = Stack::fonts1(loc);
+    Xml *tmp  = fonts1(loc);
     Xml *xval = new Xml(std::string(B));
     if (have_font) {
-        Xml *tmp2 = Stack::fonts1(font_pos);
+        Xml *tmp2 = fonts1(font_pos);
         tmp2->push_back_unless_nullptr(xval);
         xval = tmp2;
     }
@@ -1972,7 +2000,7 @@ auto Math::trivial_math(long action) -> Xml * {
 
 // Inserts the current font in the list
 void Math::add_cur_font() {
-    auto c = the_parser.eqtb_int_table[math_font_pos].val;
+    auto c = eqtb_int_table[math_font_pos].val;
     push_back_font(subtypes(c), zero_code);
 }
 
@@ -2025,7 +2053,7 @@ auto MathElt::cv_char() const -> MathElt {
     else if ((std::isalpha(static_cast<char>(c)) != 0) && F < 2) {
         a = math_char_normal_loc + F * nb_mathchars + c;
     } else if (std::isalpha(static_cast<char>(c)) != 0) {
-        auto w = the_parser.eqtb_int_table[mathprop_ctr_code].val;
+        auto w = eqtb_int_table[mathprop_ctr_code].val;
         if ((w & (1 << F)) != 0) return MathElt(math_ns::mk_mi(static_cast<uchar>(c), F), mt);
         return MathElt(math_ns::make_math_char(static_cast<uchar>(c), F), mt);
     } else {
@@ -2185,7 +2213,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         auto        A  = std::string(s1);
         auto        B  = std::string(s2);
         if (c == math_attribute_code)
-            the_main->the_stack->add_att_to_last(A, B, true);
+            the_stack.add_att_to_last(A, B, true);
         else
             cmi.add_attribute(A, B, c);
         return MathElt(CmdChr(error_cmd, zero_code), zero_code);
@@ -2196,7 +2224,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         Xml *       x   = new Xml(the_names["mrow"], nullptr);
         std::string id  = next_label_id();
         Xid         xid = x->id;
-        the_parser.the_stack.create_new_anchor(xid, id, std::string(s1));
+        the_stack.create_new_anchor(xid, id, std::string(s1));
         the_parser.create_label(s2, id);
         return MathElt(x, mt_flag_small);
     }
@@ -2506,7 +2534,7 @@ auto math_ns::finish_cv_special(bool isfrac, std::string s, const std::string &p
                                 int denalign, int style, size_t open, size_t close) -> Xml * {
     std::string Pos;
     if (pos != "cst_empty") Pos = the_names[pos];
-    auto R = Stack::xml2_space(std::move(s), Pos, a, b);
+    auto R = xml2_space(std::move(s), Pos, a, b);
     if (!sz.empty()) R->add_att(the_names["np_linethickness"], sz);
     if (isfrac) {
         if (numalign == 1) R->add_att(the_names["numalign"], the_names["left"]);
@@ -2514,7 +2542,7 @@ auto math_ns::finish_cv_special(bool isfrac, std::string s, const std::string &p
         if (denalign == 1) R->add_att(the_names["denomalign"], the_names["left"]);
         if (denalign == 2) R->add_att(the_names["denomalign"], the_names["right"]);
     }
-    if (style >= 0) R = math_data.add_style(style, R);
+    if (style >= 0) R = add_style(style, R);
     if (!(open == del_dot && close == del_dot)) R = math_data.make_mfenced(open, close, R);
     return R;
 }
@@ -2612,13 +2640,13 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
     res.handle_cmd_Big(cms);
     Math       res1     = res.M_cv3(cms);
     math_types res_type = mt_flag_small;
-    if (res1.finish_translate1(the_parser.tracing_math())) res_type = mt_flag_big;
+    if (res1.finish_translate1(tracing_math())) res_type = mt_flag_big;
     if (res1.size() == 1) {
         Xml *W = res1.front().get_xml_val();
         if (need_row == 2) W = new Xml(the_names["mrow"], W);
         if (!seen_style) return {W, res_type};
 
-        Xml *res2 = math_data.add_style(cms, gsl::not_null{W});
+        Xml *res2 = add_style(cms, gsl::not_null{W});
         return {res2, res_type};
     }
     Xml *tmp = new Xml(the_names["temporary"], nullptr);
@@ -2628,7 +2656,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
         res22 = new Xml(the_names["mrow"], tmp);
     else
         res22 = tmp;
-    if (seen_style) res22 = math_data.add_style(cms, gsl::not_null{res22});
+    if (seen_style) res22 = add_style(cms, gsl::not_null{res22});
     return {res22, res_type};
 }
 
@@ -2677,7 +2705,7 @@ auto Math::M_mbox1(Buffer &B, subtypes &f) -> int {
             default: return 3;
             }
         } else if (cmd == 11 || cmd == 12) {
-            B.push_back_real_utf8(char32_t(chr));
+            B.append_with_xml_escaping(char32_t(chr));
             f = fn;
             continue;
         } else if (cmd == mathfont_cmd)
@@ -2690,7 +2718,7 @@ auto Math::M_mbox1(Buffer &B, subtypes &f) -> int {
             if (front().cmd == math_list_cmd && front().get_list().type == math_open_cd) return 4;
             return 2; // Should signal an error
         } else if (cmd == char_given_cmd || cmd == math_given_cmd) {
-            B.push_back_real_utf8(char32_t(chr));
+            B.append_with_xml_escaping(char32_t(chr));
             continue;
         } else if (cmd == relax_cmd)
             continue;
@@ -2832,7 +2860,7 @@ auto Math::large1(MathElt &cl, math_style cms) -> Xml * {
     } else
         pop_front();
     Math res0 = M_cv3(cms);
-    res0.finish_translate1(the_parser.tracing_math());
+    res0.finish_translate1(tracing_math());
     Xml *res1 = new Xml(the_names["temporary"], nullptr);
     res0.concat_space(res1);
     if (bad) {

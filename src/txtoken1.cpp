@@ -9,6 +9,7 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics/Buffer.h"
+#include "tralics/Dispatcher.h"
 #include <fmt/format.h>
 #include <spdlog/spdlog.h>
 
@@ -690,27 +691,6 @@ auto CmdChr::token_math_name() const -> String {
     }
 }
 
-auto CmdChr::tipa_name() const -> String {
-    switch (chr) {
-    case 0: return "tipa@star";
-    case 1: return "tipa@semi";
-    case 2: return "tipa@colon";
-    case 3: return "tipa@exclam";
-    case 4: return "tipa@normal";
-    case 5: return "tipa@syllabic";
-    case 6: return "tipa@subumlaut";
-    case 7: return "tipa@subtilde";
-    case 8: return "tipa@subring";
-    case 9: return "tipa@dotacute";
-    case 10: return "tipa@gravedot";
-    case 11: return "tipa@acutemacron";
-    case 12: return "tipa@circumdot";
-    case 13: return "tipa@tildedot";
-    case 14: return "tipa@brevemacro";
-    default: return nullptr;
-    }
-}
-
 // Aux functions for CmdChr::name() const
 auto CmdChr::token_fancy_name() const -> String {
     switch (chr) {
@@ -860,12 +840,10 @@ auto CmdChr::token_convert_name() const -> String {
     case fontname_code: return "fontname";
     case jobname_code: return "jobname";
     case attributeval_code: return "XMLgetatt";
-    case ra_jobname_code: return "ra@jobname";
     case tralicsversion_code: return "tralicsversion";
     case etexrevision_code: return "eTeXrevision";
     case sanitize_code: return "@onelevel@sanitize";
     case twodigits_code: return "two@digits";
-    case rayear_code: return "ra@year";
     default: return nullptr;
     }
 }
@@ -1134,10 +1112,7 @@ auto CmdChr::token_section_name() const -> String {
 auto CmdChr::token_cite_name() const -> String {
     switch (chr) {
     case cite_code: return "cite";
-    case footcite_code: return "footcite";
     case nocite_code: return "nocite";
-    case refercite_code: return "refercite";
-    case yearcite_code: return "yearcite";
     case natcite_code: return "natcite";
     case natcite_e_code: return "endnatcite";
     default: return nullptr;
@@ -2449,6 +2424,8 @@ auto CmdChr::special_name() const -> String {
 // This returns the name of a CmdChr pair.
 // The result is a UTF8 string
 auto CmdChr::name() const -> std::string {
+    if (auto res = Dispatcher::name(cmd, chr)) return *res;
+
     switch (cmd) {
     case mathbin_cmd:
     case mathrel_cmd:
@@ -2534,13 +2511,6 @@ auto CmdChr::name() const -> std::string {
         case kvo_process_code: return "ProcessKeyvalOptions";
         default: return nullptr;
         }
-    case pers_cmd:
-        switch (chr) {
-        case 3: return "@persB";
-        case 2: return "persB";
-        case 1: return "@persA";
-        default: return "persA";
-        }
     case doc_class_cmd: return chr == 0 ? "documentclass" : "LoadClass";
     case package_cmd: return "usepackage";
     case inputclass_cmd: return "InputClass";
@@ -2593,7 +2563,7 @@ auto CmdChr::name() const -> std::string {
     case fancy_cmd: return token_fancy_name();
     case xfancy_cmd: return "fancyinternal";
     case xthepage_cmd: return "inert@thepage";
-    case url_cmd: return chr == 0 ? "url" : "rrrt";
+    case url_cmd: return "url";
     case hanl_cmd: return chr == 0 ? "htmladdnormallink" : (chr == 1 ? "htmladdnormallinkfoot" : "href");
     case addatt_cmd:
         switch (chr) {
@@ -2607,13 +2577,11 @@ auto CmdChr::name() const -> std::string {
     case over_cmd: return token_over_name();
     case begingroup_cmd: return chr == 0 ? "begingroup" : chr == 1 ? "endgroup" : "endenv";
     case startprojet_cmd: return "RAstartprojet";
-    case ra_startdoc_cmd: return "rawebstartdocument";
     case declaretopics_cmd: return "declaretopic";
     case footnote_cmd: return "footnote";
     case popmodule_cmd: return "tralics@pop@module";
     case pushmodule_cmd: return "tralics@push@module";
     case fnhack_cmd: return "tralics@fnhack";
-    case interpret_rc_cmd: return "tralics@interpret@rc";
     case caption_cmd: return "caption";
     case centering_cmd: return token_centering_name();
     case save_box_cmd: return chr == 0 ? "sbox" : "savebox";
@@ -2716,7 +2684,6 @@ auto CmdChr::name() const -> std::string {
     case ignore_content_cmd: return strip_end(token_eignorec_name());
     case raw_env_cmd: return "rawxml";
     case math_env_cmd: return strip_end(tralics_ns::math_env_name(chr));
-    case RAsection_env_cmd: return "RAsection";
     case tabular_env_cmd: return chr == 0 ? "tabular" : "tabular*";
     case verbatim_env_cmd: return chr == 0 ? "verbatim" : chr == 1 ? "Verbatim" : "@verbatim";
     case minipage_cmd: return "minipage";
@@ -2738,7 +2705,6 @@ auto CmdChr::name() const -> std::string {
     case end_ignore_content_cmd: return token_eignorec_name();
     case end_raw_env_cmd: return "endrawxml";
     case end_math_env_cmd: return tralics_ns::math_env_name(chr);
-    case end_RAsection_env_cmd: return "endRAsection";
     case end_tabular_env_cmd: return chr == 0 ? "endtabular" : "endtabular*";
     case end_verbatim_env_cmd: return chr == 0 ? "endverbatim" : chr == 1 ? "endVerbatim" : "end@verbatim";
     case end_minipage_cmd: return "endminipage";
@@ -3006,7 +2972,6 @@ auto CmdChr::name() const -> std::string {
     case car_cmd: return chr == 0 ? "@car" : "@cdr";
     case latex_error_cmd: return token_error_name();
     case xkeyval_cmd: return token_xkeyval_name();
-    case ipa_cmd: return tipa_name();
     case curves_cmd:
         switch (chr) {
         case arc_code: return "arc";

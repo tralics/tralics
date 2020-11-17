@@ -68,7 +68,6 @@ private:
     [[nodiscard]] auto l3str_case_name() const -> String;
     [[nodiscard]] auto l3str_ifeq_name() const -> String;
     [[nodiscard]] auto specchar_cmd_name() const -> std::string;
-    [[nodiscard]] auto tipa_name() const -> String;
     [[nodiscard]] auto tl_concat_name() const -> String;
     [[nodiscard]] auto tl_put_left_name() const -> String;
     [[nodiscard]] auto tl_set_name() const -> String;
@@ -150,6 +149,8 @@ private:
     [[nodiscard]] auto token_unimp_name() const -> String;
     [[nodiscard]] auto token_xkeyval_name() const -> String;
     [[nodiscard]] auto token_xray_name() const -> String;
+
+public: // for use in plugins
 };
 
 using EqtbCmdChr = EQTB<CmdChr>;

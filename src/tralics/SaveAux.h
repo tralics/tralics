@@ -8,7 +8,7 @@
 // \todo this needs some overhaul...
 class SaveAuxBase {
 public:
-    Parser &  P;
+    Parser &  P;    // \todo always the_parser, remove
     save_type type; // the type of the real thing
     int       line; // current line number at start
     long      level;
@@ -16,6 +16,8 @@ public:
     SaveAuxBase(Parser &p, save_type t, long l) : P(p), type(t), line(P.get_cur_line()), level(l) {}
     virtual ~SaveAuxBase() = default;
 };
+
+inline std::vector<std::unique_ptr<SaveAuxBase>> the_save_stack;
 
 // A boundary object is created when we see an open brace, or something
 // like that.

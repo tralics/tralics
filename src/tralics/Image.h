@@ -12,3 +12,5 @@ struct Image {
     void check_existence();
     void check(Buffer &B1, Buffer &B2) const;
 };
+
+auto operator<<(std::ostream &X, const Image &Y) -> std::ostream &;

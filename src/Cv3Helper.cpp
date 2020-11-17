@@ -177,7 +177,7 @@ void Cv3Helper::add_kernel(math_style cms) {
     }
     the_parser.my_stats.one_more_kernel();
     auto bl = find_operator(cms);
-    if (the_main->prime_hack && exponent == math_data.get_mc_table(27) && bl == "msup") {
+    if (the_main.prime_hack && exponent == math_data.get_mc_table(27) && bl == "msup") {
         bl       = "mrow";
         exponent = math_ns::get_builtin(varprime_code);
     }

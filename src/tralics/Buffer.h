@@ -7,7 +7,6 @@
 #include <optional>
 #include <vector>
 
-struct AttPair;
 struct Glue;
 struct ScaledInt;
 struct SthInternal;
@@ -73,11 +72,10 @@ public:
 
     // Those are not const and have a return value, mostly they leave some
     // crucial info in ptrs.b and ptrs.a or just reset. \todo refactor all that
-    [[nodiscard]] auto add_with_space(const std::string &s) -> std::string; ///< Weird RA stuff \todo remove
-    [[nodiscard]] auto backup_space() -> bool;                              ///< Remove trailing spaces
-    [[nodiscard]] auto contains_braced(const std::string &s) -> bool;       ///< Do we contain s with braces? (sets ptrs.b after `}`)
-    [[nodiscard]] auto contains_env(const std::string &env) -> bool;        ///< Do we contain `\end{env}`?
-    [[nodiscard]] auto fetch_spec_arg() -> bool;                            ///< Try to read a braced argument
+    [[nodiscard]] auto backup_space() -> bool;                        ///< Remove trailing spaces
+    [[nodiscard]] auto contains_braced(const std::string &s) -> bool; ///< Do we contain s with braces? (sets ptrs.b after `}`)
+    [[nodiscard]] auto contains_env(const std::string &env) -> bool;  ///< Do we contain `\end{env}`?
+    [[nodiscard]] auto fetch_spec_arg() -> bool;                      ///< Try to read a braced argument
     [[nodiscard]] auto find_alias(const std::vector<std::string> &SL, std::string &res) -> bool; ///< Find one aliases in the config file.
     [[nodiscard]] auto find_and(const bchar_type *table) -> bool;                                ///< True iff we do not contain 'and'
     [[nodiscard]] auto find_equals() -> bool;     ///< Locate a `sth=` pattern into ptrs.b and ptrs.a
@@ -117,7 +115,7 @@ public:
     void push_back_math_tag(std::string s, int type);
     void push_back_math_token(const CmdChr &x, bool space);
     void push_back_newline();
-    void push_back_real_utf8(char32_t c);
+    void append_with_xml_escaping(char32_t c);
     void push_back_roman(long n);
     void push_back_Roman(long n);
     void push_back_special_att(const Xid &id);
@@ -135,6 +133,7 @@ public:
     void skip_sp_tab_nl();
     void skip_sp_tab(); // \todo skip(const std::string&)
     void special_title(std::string s);
+    void tex_string(Token T, bool esc);
 
     auto push_back(Token T) -> bool;
     void push_back(char32_t c);
@@ -155,4 +154,4 @@ template <typename T> auto operator<<(Buffer &B, const T &t) -> Buffer & {
 }
 
 inline Buffer err_buf, name_buffer, field_buf, shbuf, scbuf, Thbuf1, errbuf, Trace, sec_buffer, tp_main_buf, aux_buffer,
-    txparser2_local_buf, tp_local_buf, tkbuf;
+    txparser2_local_buf, tp_local_buf, tkbuf, Tbuf, tpa_buffer, buffer_for_log;

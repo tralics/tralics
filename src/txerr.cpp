@@ -26,7 +26,7 @@ namespace {
             char32_t c = T.char_val();
             if (c == 0) return "^^@";
             Buffer B;
-            B.push_back_real_utf8(c); // \todo without Buffer
+            B.append_with_xml_escaping(c); // \todo without Buffer
             return std::move(B);
         }
 
@@ -34,12 +34,12 @@ namespace {
             char32_t c = T.char_val();
             if (c == 0) return "\\^^@";
             Buffer B("\\");
-            B.push_back_real_utf8(c);
+            B.append_with_xml_escaping(c);
             return std::move(B);
         }
 
         if (T.is_in_hash()) {
-            auto s = the_parser.hash_table[T.hash_loc()];
+            auto s = hash_table[T.hash_loc()];
             if (std::none_of(s.begin(), s.end(), [](char c) { return c == '<' || c == '>' || c == '&' || c < 32; })) return "\\" + s;
 
             Buffer B("\\");
@@ -82,12 +82,10 @@ void Parser::signal_error(Token T, const std::string &s) {
     signal_error();
     if (no_xml_error) return;
     if (T.is_null()) return;
-    auto str = std::string(s);
     the_stack.add_newid0("error");
-    std::string cmd = convert_for_xml_err(T);
-    the_stack.add_att_to_last(the_names["c"], str);
+    the_stack.add_att_to_last(the_names["c"], s);
     the_stack.add_att_to_last(the_names["l"], cur_line_to_istring());
-    the_stack.add_att_to_last(the_names["n"], cmd);
+    the_stack.add_att_to_last(the_names["n"], convert_for_xml_err(T));
 }
 
 // identical to  ostream& operator<<(ostream&fp, const TokenList& L)
@@ -265,7 +263,7 @@ void Parser::bad_counter1(const Buffer &B, EqtbCmdChr &E) {
 // This is a hack. In some cases, we define the command after signaling
 // the error. The hack is that no <error/> element must be created.
 void Parser::undefined_mac() {
-    bool noxml = the_main->no_undef_mac;
+    bool noxml = the_main.no_undef_mac;
     err_buf    = "Undefined command " + cur_tok.tok_to_str();
     if (!cur_cmd_chr.is_undef()) err_buf.format("; command code = {}", cur_cmd_chr.cmd);
     if (noxml) {

@@ -41,10 +41,10 @@ void MathHelper::reset(bool dual) {
     is_tag_starred = false;
     math_env_ctr   = 0;
     all_env_ctr    = 0;
-    cur_math_id    = the_main->the_stack->next_xid(nullptr);
-    cur_formula_id = the_main->the_stack->next_xid(nullptr);
+    cur_math_id    = the_stack.next_xid(nullptr);
+    cur_formula_id = the_stack.next_xid(nullptr);
     if (dual)
-        cur_texmath_id = the_main->the_stack->next_xid(nullptr);
+        cur_texmath_id = the_stack.next_xid(nullptr);
     else
         cur_texmath_id = cur_math_id;
     multi_labels.clear();
@@ -57,10 +57,6 @@ void MathHelper::set_type(bool b) {
     current_mode = b;
     pos_att      = b ? "inline" : "display";
 }
-
-// Destroys all math lists, and resets pointers,
-// for use with another math object
-void MathHelper::finish_math_mem() { math_data.finish_math_mem(); }
 
 // Defines how many equation numbers are to be created
 // If multi is true, more than one is allowed
@@ -76,7 +72,7 @@ void MathHelper::check_for_eqnum(subtypes type, bool multi) {
 
 // nnewt item in the list of tags
 void MathHelper::add_tag(TokenList &L) {
-    if (!tag_list.empty()) tag_list.push_back(the_parser.hash_table.comma_token);
+    if (!tag_list.empty()) tag_list.push_back(hash_table.comma_token);
     tag_list.splice(tag_list.end(), L);
 }
 
@@ -84,8 +80,8 @@ void MathHelper::add_tag(TokenList &L) {
 void MathHelper::handle_tags() {
     TokenList L = tag_list;
     token_ns::remove_first_last_space(L);
-    the_parser.brace_me(L);
-    L.push_front(is_tag_starred ? the_parser.hash_table.ytag1_token : the_parser.hash_table.xtag1_token);
+    L.brace_me();
+    L.push_front(is_tag_starred ? hash_table.ytag1_token : hash_table.xtag1_token);
     the_parser.back_input(L);
     tag_list = TokenList();
 }
@@ -120,7 +116,7 @@ void MathHelper::dump_labels() {
 void MathHelper::ml_check_labels() {
     auto        n = multi_labels.size();
     int         l = 1;
-    Buffer      B; // \todo std::string
+    std::string B;
     static bool warned = false;
     for (size_t i = 0; i < n; i++) {
         int v = multi_labels_type[i];
@@ -131,7 +127,7 @@ void MathHelper::ml_check_labels() {
             if (eqnum_status == 1)
                 B += " for the current the formula";
             else {
-                B.format(" on row {} of the formula", l);
+                B += fmt::format(" on row {} of the formula", l);
                 if (!warned) B += "\n(at most one \\label and at most one \\tag allowed per row)";
                 warned = true;
             }
@@ -142,7 +138,7 @@ void MathHelper::ml_check_labels() {
             if (eqnum_status == 1)
                 B += " for the current formula";
             else {
-                B.format(" on row {} of formula", l);
+                B += fmt::format(" on row {} of formula", l);
                 if (!warned) B += "\n(at most one \\label and at most one \\tag allowed per row)";
                 warned = true;
             }
@@ -208,7 +204,7 @@ void MathHelper::ml_second_pass(Xml *row, bool vb) {
     }
     if (stag) {
         std::string id = next_label_id();
-        the_parser.the_stack.create_new_anchor(row->id, id, std::string(tag));
+        the_stack.create_new_anchor(row->id, id, std::string(tag));
         if (slabel) the_parser.create_label(label, id);
     } else if (slabel)
         the_parser.parse_error("Internal error");

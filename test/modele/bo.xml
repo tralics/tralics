@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE cedram SYSTEM 'cedram.dtd'>
-<!-- Translated from latex by tralics 2.14.5, date: 2012/05/14-->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
 <cedram>
 <article><production>
 <fichier_tex>bo</fichier_tex>
 <fichier_bib>bo</fichier_bib>
-<date_prod>2012-5-14</date_prod></production>
+<date_prod>2020-11-11</date_prod></production>
 
 <date_reception>2004-06-14</date_reception>
 <date_acceptation>2004-12-09</date_acceptation>
@@ -38,7 +38,7 @@ O(\sqrt{n}\log {n})</texmath>, où <texmath textype='inline' type='inline'>C_1(\
 <msc>11M26, 11M36, 11S40</msc>
 </article>
 <p/><biblio>
-<citation from='year' key='Bar03' id='bid0' userid='cite:Ba03' type='article'>
+<citation from='year' id='bid0' key='Bar03' type='article' userid='cite:Ba03'>
 <bauteurs><nom>Barnes</nom><prenom>E. W.</prenom><initiale>E. W.</initiale><particule/><junior/></bauteurs>
 <title>On the éxpression of Euler's constant as a definite integral</title>
 <bjournal>Messenger of Math.</bjournal>
@@ -46,7 +46,7 @@ O(\sqrt{n}\log {n})</texmath>, où <texmath textype='inline' type='inline'>C_1(\
 <byear>1903</byear>
 <bpages>59–61</bpages>
 </citation>
-<citation from='year' key='Bom00' id='bid2' userid='cite:Bo99' type='article'>
+<citation from='year' id='bid2' key='Bom00' type='article' userid='cite:Bo99'>
 <bauteurs><nom>Bombieri</nom><prenom>E.</prenom><initiale>E.</initiale><particule/><junior/></bauteurs>
 <title>Remarks on Weil's quadratic functional in the theory of prime numbers I</title>
 <bjournal>Rend. Mat. Acc. Lincei, Ser. IX</bjournal>
@@ -54,7 +54,7 @@ O(\sqrt{n}\log {n})</texmath>, où <texmath textype='inline' type='inline'>C_1(\
 <byear>2000</byear>
 <bpages>183–233</bpages>
 </citation>
-<citation from='year' key='BPY01' id='bid1' userid='cite:BPY01' type='article'>
+<citation from='year' id='bid1' key='BPY01' type='article' userid='cite:BPY01'>
 <bauteurs><nom>Biane</nom><prenom>P.</prenom><initiale>P.</initiale><particule/><junior/><nom>Pitman</nom><prenom>J.</prenom><initiale>J.</initiale><particule/><junior/><nom>Yor</nom><prenom>M.</prenom><initiale>M.</initiale><particule/><junior/></bauteurs>
 <title>Probability laws related to the Jacobi $\theta$ and Riemann $\zeta$ functions, and Brownian excursions</title>
 <bjournal>Bull. Amer. Math. Soc.</bjournal>

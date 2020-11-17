@@ -11,7 +11,7 @@ void NewArray::boot(Parser *Q) {
     P = Q;
     for (unsigned i = 0; i < nb_newcolumn; i++) {
         nct_bool[i] = false;
-        nct_tok[i]  = P->hash_table.relax_token;
+        nct_tok[i]  = hash_table.relax_token;
     }
     nct_size = 0;
 }
@@ -164,7 +164,7 @@ void NewArray::run(Xid ID, bool main_fct) {
     preamble = P->read_arg(); // read the preamble
     preamble.expand_star();
     P->expand_nct(preamble);
-    if (main_fct) AI = &P->the_stack.new_array_info(id);
+    if (main_fct) AI = &the_stack.new_array_info(id);
     u_list.clear();
     v_list.clear();
     ac_cell_no    = 0;
@@ -172,29 +172,29 @@ void NewArray::run(Xid ID, bool main_fct) {
     first_bar     = true;
     bool seen     = false;
     cur_h_pos     = "cell_center";
-    if (P->tracing_commands()) the_log << "array preamble parse: ";
+    if (tracing_commands()) the_log << "array preamble parse: ";
     for (;;) {
         if (preamble.empty()) break;
         if (ac_next()) continue;
         test_pach();
-        if (P->tracing_commands()) the_log << dump_slot();
+        if (tracing_commands()) the_log << dump_slot();
         switch (ch_class) {
         case chc_cell:
             if (main_fct)
                 ac_maybe_finish(); // finish previous
             else
                 ac_maybe_finish_multi(seen);
-            attribs.push_back(the_names["halign"], the_names[cur_h_pos], false); // set attributes
-            cur_h_pos = "cell_center";                                           // add a default
+            attribs.emplace(the_names["halign"], the_names[cur_h_pos]); // set attributes
+            cur_h_pos = "cell_center";                                  // add a default
             current_list.clear();
             break;
         case chc_bar:
             if (ch_num == chn_c) {
                 if (last_ch_class == chc_start)
-                    attribs.push_back(the_names["cell_leftborder"], the_names["true"]);
+                    attribs[the_names["cell_leftborder"]] = the_names["true"];
                 else if (last_ch_class == chc_bar) {
                 } else
-                    attribs.push_back(the_names["cell_rightborder"], the_names["true"], false);
+                    attribs.emplace(the_names["cell_rightborder"], the_names["true"]);
             }
             current_list.clear();
             break;
@@ -246,7 +246,7 @@ void NewArray::run(Xid ID, bool main_fct) {
         P->parse_error(errbuf);
     }
     }
-    if (P->tracing_commands()) the_log << "\n";
+    if (tracing_commands()) the_log << "\n";
     if (main_fct) {
         ac_maybe_finish();
         return;
@@ -260,7 +260,7 @@ void NewArray::run(Xid ID, bool main_fct) {
     cell.splice(cell.end(), v_list);
     u_list.clear();
     v_list.clear();
-    P->brace_me(cell);
+    cell.brace_me();
     P->back_input(cell);
 }
 
@@ -305,7 +305,7 @@ auto NewArray::ac_next() -> bool {
         return true;
     }
     // strange
-    if (current_token == the_parser.hash_table.verb_token) {
+    if (current_token == hash_table.verb_token) {
         preamble.pop_front();
         return true;
     }

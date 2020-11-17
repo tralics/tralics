@@ -29,3 +29,50 @@ void Image::check(Buffer &B1, Buffer &B2) const {
         B2.append(name);
     }
 }
+
+auto operator<<(std::ostream &X, const Image &Y) -> std::ostream & {
+    X << "see_image(\"" << Y.name << "\",";
+    int k = Y.flags;
+    if (k == 0)
+        X << 0;
+    else {
+        bool first = true;
+        if ((k & 1) != 0) {
+            if (!first) X << "+";
+            X << 1;
+            first = false;
+        }
+        if ((k & 2) != 0) {
+            if (!first) X << "+";
+            X << 2;
+            first = false;
+        }
+        if ((k & 4) != 0) {
+            if (!first) X << "+";
+            X << 4;
+            first = false;
+        }
+        if ((k & 8) != 0) {
+            if (!first) X << "+";
+            X << 8;
+            first = false;
+        }
+        if ((k & 16) != 0) {
+            if (!first) X << "+";
+            X << 16;
+            first = false;
+        }
+        if ((k & 32) != 0) {
+            if (!first) X << "+";
+            X << 32;
+            first = false;
+        }
+        if ((k & 64) != 0) {
+            if (!first) X << "+";
+            X << 64;
+            // first = false;
+        }
+    }
+    X << "," << Y.occ << ");\n";
+    return X;
+}

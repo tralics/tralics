@@ -12,7 +12,6 @@
 // It contains also some eTeX extensions.
 
 #include "tralics/AllIndex.h"
-#include "tralics/Indexer.h"
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/OneIndex.h"
@@ -37,14 +36,22 @@ namespace {
     Buffer                 local_buf;
     std::array<size_t, 13> month_length_table = {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     Token                  day_ctr, year_ctr, month_ctr;
+
+    // Case \printglossary or \printindex[foo].
+    // Marks the place where to insert the index
+    void mark_print(OneIndex &g) {
+        Xml *mark = new Xml(std::string(), nullptr);
+        Xml *Foo  = new Xml(std::string(), mark);
+        the_stack.add_last(Foo);
+        g.position = mark;
+    }
 } // namespace
 
 // For \addatttoindex[foo]{bar}{gee}, returns the idx of foo,
 // then we can say \XMLaddatt{idx}{bar}{gee}
 auto Parser::get_index_value() -> size_t {
     std::string s = sT_optarg_nopar();
-    auto        i = the_index.find_index(s);
-    return the_index.at(i).AL;
+    return the_index.find_index(s).AL;
 }
 
 // Case of \index{key@value|encap}
@@ -70,7 +77,7 @@ void trees_ns::normalise_space(TokenList &L) {
     L.swap(res);
 }
 
-auto Parser::index_aux(TokenList &L, std::optional<size_t> father, size_t g) -> size_t {
+auto Parser::index_aux(TokenList &L, std::optional<size_t> father, OneIndex &g) -> size_t {
     static const Token escape_t(other_t_offset, '"');
     static const Token actual_t(other_t_offset, '@');
     static const Token actualb_t(letter_t_offset, '@');
@@ -96,7 +103,7 @@ auto Parser::index_aux(TokenList &L, std::optional<size_t> father, size_t g) -> 
     z               = L;
     std::string aux = to_stringE(z);
     // We have now: key@aux|encap
-    std::vector<Indexer> &IR    = the_index.at(g);
+    std::vector<Indexer> &IR    = g;
     int                   level = 1;
     if (father) level = 1 + IR[*father].level;
     auto n = IR.size();
@@ -114,7 +121,7 @@ auto Parser::index_aux(TokenList &L, std::optional<size_t> father, size_t g) -> 
     if (!encap.empty()) x->id.add_attribute(the_names["encap"], std::string(encap));
     x->id.add_attribute(the_names["level"], the_names[std::to_string(level)]);
     auto iid = the_index.last_iid++;
-    IR.emplace_back(B, aux, x, level, iid);
+    IR.push_back({B, aux, x, level, iid});
     return n;
 }
 
@@ -129,13 +136,9 @@ void Parser::T_index(subtypes c) {
         the_index.new_index(s, title);
         return;
     }
-    size_t g = 0;
-    if (c == printindex_code || c == index_code) {
-        std::string s = sT_optarg_nopar();
-        g             = the_index.find_index(s);
-    }
+    auto &g = (c == printindex_code || c == index_code) ? the_index.find_index(sT_optarg_nopar()) : the_index[0];
     if (c == printindex_code || c == printglossary_code) {
-        the_index.mark_print(g);
+        mark_print(g);
         return;
     }
     TokenList L = read_arg();
@@ -159,7 +162,7 @@ void Parser::T_index(subtypes c) {
     // make sure this exists
     auto pposition = index_aux(L, position, g);
     // Now, add a label here
-    auto iid = the_index.at(g).at(pposition).iid;
+    auto iid = g.at(pposition).iid;
     auto nid = ++the_index.last_index;
 
     local_buf             = fmt::format("lid{}", nid);
@@ -167,46 +170,6 @@ void Parser::T_index(subtypes c) {
     std::string        id = the_stack.add_anchor(W, false);
     create_label(W, id);
     tralics_ns::add_ref(to_signed(iid), W, true);
-}
-
-void Parser::finish_index() {
-    auto labels = std::vector<std::string>(the_index.last_iid, "");
-    tralics_ns::find_index_labels(labels);
-    size_t idx_size = 0, idx_nb = 0;
-    auto   q = the_index.size();
-    for (size_t jj = 1; jj <= q; jj++) {
-        auto  j  = jj == q ? 0 : jj;
-        auto &CI = the_index.at(j);
-        auto  n  = CI.size();
-        if (n == 0) continue;
-        idx_size += n;
-        idx_nb++;
-        Xml *res = new Xml(the_names[j == 0 ? "theglossary" : "theindex"], nullptr); // OK?
-        Xid  id  = res->id;
-        {
-            const std::string &t = CI.title;
-            if (!t.empty()) id.add_attribute(the_names["title"], std::string(t));
-        }
-        {
-            AttList &L = the_stack.get_att_list(CI.AL);
-            id.add_attribute(L, true);
-        }
-        for (size_t i = 0; i < n; i++) {
-            Xml *A = CI.at(i).translation;
-            A->id.add_attribute(the_names["target"], std::string(labels[CI.at(i).iid]));
-        }
-        std::sort(CI.begin(), CI.end(), [](auto &A, auto &B) { return A.key < B.key; });
-        for (size_t i = 0; i < n; i++) {
-            Xml *A = CI.at(i).translation;
-            res->push_back_unless_nullptr(A);
-            res->add_nl();
-        }
-        the_stack.document_element()->insert_bib(res, CI.position);
-    }
-    if (idx_size == 0) return;
-    log_and_tty << "Index has " << idx_size << " entries";
-    if (idx_nb > 1) log_and_tty << " in " << idx_nb << " clusters";
-    log_and_tty << "\n";
 }
 
 // -----------------------------------------------
@@ -249,8 +212,8 @@ void Parser::T_node() {
     std::string A = nT_arg_nopar();
     leave_v_mode();
     the_stack.push1(the_names["node"]);
-    AttList &cur = last_att_list();
-    cur.push_back(the_names["name"], A);
+    AttList &cur           = last_att_list();
+    cur[the_names["name"]] = A;
     T_arg();
     the_stack.pop(the_names["node"]);
 }
@@ -263,10 +226,10 @@ void Parser::T_nodepoint() {
     auto        B = nT_optarg_nopar();
     auto        C = nT_optarg_nopar();
     the_stack.push1(the_names["node"]);
-    AttList &cur = last_att_list();
-    cur.push_back(the_names["name"], A);
-    if (B) cur.push_back(the_names["xpos"], *B); // default value is zero
-    if (C) cur.push_back(the_names["ypos"], *C); // default value is zero
+    AttList &cur           = last_att_list();
+    cur[the_names["name"]] = A;
+    if (B) cur[the_names["xpos"]] = *B; // default value is zero
+    if (C) cur[the_names["ypos"]] = *C; // default value is zero
     the_stack.pop(the_names["node"]);
 }
 
@@ -279,11 +242,11 @@ void Parser::T_nodeconnect(const std::string &W) {
     if (!A) A = "b";
     if (!C) C = "t";
     the_stack.push1(W);
-    AttList &cur = last_att_list();
-    cur.push_back(the_names["posB"], the_names[*C]);
-    cur.push_back(the_names["posA"], the_names[*A]);
-    cur.push_back(the_names["nameB"], D);
-    cur.push_back(the_names["nameA"], B);
+    AttList &cur            = last_att_list();
+    cur[the_names["posB"]]  = the_names[*C];
+    cur[the_names["posA"]]  = the_names[*A];
+    cur[the_names["nameB"]] = D;
+    cur[the_names["nameA"]] = B;
     the_stack.pop(W);
 }
 
@@ -294,9 +257,9 @@ void Parser::T_barnodeconnect(const std::string &W) {
     std::string C = nT_arg_nopar();
     the_stack.push1(W);
     AttList &cur = last_att_list();
-    if (A) cur.push_back(the_names["depth"], *A);
-    cur.push_back(the_names["nameB"], C);
-    cur.push_back(the_names["nameA"], B);
+    if (A) cur[the_names["depth"]] = *A;
+    cur[the_names["nameB"]] = C;
+    cur[the_names["nameA"]] = B;
     the_stack.pop(W);
 }
 
@@ -313,21 +276,21 @@ void Parser::T_nodecurve(const std::string &W) {
     if (!C) C = "t";
     if (!F || F->empty()) F = E;
     the_stack.push1(W);
-    AttList &cur = last_att_list();
-    cur.push_back(the_names["depthA"], E);
-    cur.push_back(the_names["depthB"], *F);
-    cur.push_back(the_names["posB"], the_names[*C]);
-    cur.push_back(the_names["posA"], the_names[*A]);
-    cur.push_back(the_names["nameB"], D);
-    cur.push_back(the_names["nameA"], B);
+    AttList &cur             = last_att_list();
+    cur[the_names["depthA"]] = E;
+    cur[the_names["depthB"]] = *F;
+    cur[the_names["posB"]]   = the_names[*C];
+    cur[the_names["posA"]]   = the_names[*A];
+    cur[the_names["nameB"]]  = D;
+    cur[the_names["nameA"]]  = B;
     the_stack.pop(W);
 }
 
 void Parser::T_nodebox(const std::string &W) {
     std::string A = nT_arg_nopar();
     the_stack.push1(W);
-    AttList &cur = last_att_list();
-    cur.push_back(the_names["nameA"], A);
+    AttList &cur            = last_att_list();
+    cur[the_names["nameA"]] = A;
     the_stack.pop(W);
 }
 
@@ -335,9 +298,9 @@ void Parser::T_nodetriangle(const std::string &W) {
     std::string A = nT_arg_nopar();
     std::string B = nT_arg_nopar();
     the_stack.push1(W);
-    AttList &cur = last_att_list();
-    cur.push_back(the_names["nameA"], A);
-    cur.push_back(the_names["nameB"], B);
+    AttList &cur            = last_att_list();
+    cur[the_names["nameA"]] = A;
+    cur[the_names["nameB"]] = B;
     the_stack.pop(W);
 }
 
@@ -347,8 +310,8 @@ void Parser::T_nodecircle(const std::string &W) {
     std::string A = nT_arg_nopar();
     the_stack.push1(W);
     AttList &cur = last_att_list();
-    if (B) cur.push_back(the_names["depth"], *B);
-    cur.push_back(the_names["nameA"], A);
+    if (B) cur[the_names["depth"]] = *B;
+    cur[the_names["nameA"]] = A;
     the_stack.pop(W);
 }
 

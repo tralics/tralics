@@ -11,9 +11,9 @@
 // This file contains the TeX parser of tralics It contains a lot of other
 // things, but not the XML generator.
 
+#include "tralics/ConfigData.h"
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"
-#include "tralics/ParamDataVector.h"
 #include "tralics/Saver.h"
 #include "tralics/XkvSetkeys.h"
 #include "tralics/util.h"
@@ -37,142 +37,8 @@ namespace {
         auto interpret(const std::string &s, Token T) -> bool;
     };
 
-    Buffer    mac_buf, buf_for_del;
     TokenList KV_list;
     TokenList xkv_action;
-
-    // return non-empty string only if section is new
-    auto check_section(const std::string &s) -> std::string {
-        static long cur_section = -1;
-        long        k           = -1;
-        err_buf.clear();
-        std::vector<ParamDataSlot> &X = config_data[1];
-        auto                        n = X.size(); // number of sections
-        if (s.empty())
-            k = cur_section;
-        else
-            for (size_t i = 0; i < n; i++)
-                if (X[i].key == s) {
-                    k = to_signed(i + 1);
-                    break;
-                }
-        if (k > 0 && k < cur_section) {
-            err_buf.format("Bad section {} after {}\nOrder of sections is{}", s, X[to_unsigned(cur_section - 1)].key, sec_buffer);
-            the_parser.signal_error();
-        } else if (k == -1) {
-            if (n == 0) {
-                the_parser.parse_error("Illegal access to fullsection list.");
-                return "";
-            }
-            if (!s.empty()) {
-                err_buf.format("Invalid section {}\nValid sections are{}", s, sec_buffer);
-                the_parser.signal_error();
-                if (cur_section < 0) cur_section = 1;
-            }
-        } else
-            cur_section = k;
-        if (cur_section < 0) {
-            the_parser.parse_error("No default section");
-            cur_section = 1;
-        }
-        if (cur_section == composition_section) {
-            static bool first_module = true;
-            if (first_module)
-                first_module = false;
-            else {
-                the_parser.parse_error("Only one module accepted in composition");
-                cur_section++;
-                return "";
-            }
-        }
-        static long prev = -1;
-        if (prev == cur_section) return "";
-        prev                                    = cur_section;
-        cur_sec_no_topic                        = X[to_unsigned(cur_section - 1)].no_topic();
-        X[to_unsigned(cur_section - 1)].is_used = true; // incompatible with topics
-        return X[to_unsigned(cur_section - 1)].value;
-    }
-
-    auto is_good_ur(const std::string &x) -> bool {
-        std::vector<ParamDataSlot> &ur_list = config_data[0];
-        auto                        n       = ur_list.size();
-        if (ur_size == 0) {
-            for (size_t i = 0; i < n; i++) ur_list[i].is_used = true;
-            ur_size = n;
-        }
-        for (size_t i = 0; i < n; i++)
-            if (ur_list[i].matches(x)) return true;
-        return false;
-    }
-
-    // Interprets the RC argument of a pers command \todo RA
-    // This returns the short name, said otherwise, the argument.
-    // Notice the space case when argument is empty, or +foo or =foo.
-    auto pers_rc(const std::string &rc) -> std::string {
-        if (rc.empty()) {
-            if (have_default_ur) return the_default_rc;
-            if (the_main->handling_ra && the_parser.get_ra_year() > 2006) {
-                // signal error, make a default
-                the_parser.parse_error("No default Research Centre defined");
-                the_default_rc = "unknown";
-            }
-            have_default_ur = true;
-            return the_default_rc;
-        }
-        if (rc[0] == '+') { return rc.substr(1); }
-        bool spec = (rc.size() >= 2 && rc[0] == '=');
-        auto RC   = spec ? rc.substr(1) : rc;
-        if (!is_good_ur(RC)) {
-            err_buf                       = "Invalid Unit Centre " + rc + "\nUse one of:";
-            std::vector<ParamDataSlot> &V = config_data[0];
-            for (auto &i : V)
-                if (i.is_used) err_buf += " " + i.key;
-            the_parser.signal_error(the_parser.err_tok, "illegal data");
-        }
-        if (spec) {
-            the_default_rc  = RC;
-            have_default_ur = true;
-        }
-        return RC;
-    }
-
-    // Special command. We assume that cur_sec_no_topic
-    // is correctlty set.
-    auto check_spec_section(const std::string &s) -> std::string {
-        if (cur_sec_no_topic) return "";
-        if (s.empty()) return "default";
-        return s;
-    }
-
-    // Return the value of the key in a list.
-    auto find_one_key(const std::string &name, const std::string &key) -> std::string {
-        if (name == "ur") return pers_rc(key);
-        if (name == "theme") return MainClass::check_theme(key);
-        if (name == "fullsection") return check_section(key);
-        if (name == "section") return check_spec_section(key);
-        ParamDataList *X = config_data.find_list(name, false);
-        if (X == nullptr) {
-            the_parser.parse_error(the_parser.err_tok, "Configuration file does not define ", name, "no list");
-            return "";
-        }
-        auto n = X->size();
-        for (size_t i = 0; i < n; i++)
-            if ((*X)[i].key == key) return (*X)[i].value;
-        err_buf = fmt::format("Illegal value '{}' for {}\nUse one of:", key, name);
-        X->keys_to_buffer(err_buf);
-        the_parser.signal_error(the_parser.err_tok, "illegal data");
-        return "";
-    }
-
-    // Converts the whole data struture as foo1=bar1,foo2=bar2,
-    auto find_keys(const std::string &name) -> std::string {
-        ParamDataList *X = config_data.find_list(name, false); // \todo optional?
-        if (X == nullptr) return "";
-        std::string res;
-        for (const auto &d : *X) res.append(fmt::format("{}={},", d.key, d.value));
-        if (!X->empty()) res.pop_back();
-        return res;
-    }
 } // namespace
 
 namespace xkv_ns {
@@ -228,7 +94,7 @@ void Parser::T_fancy(String s, TokenList &L) {
     hash_table.eval_let("thepage", "inert@thepage");
     back_input(hash_table.CB_token);
     TokenList tmp = L; // make a copy of the list
-    brace_me(tmp);
+    tmp.brace_me();
     back_input(tmp);
     TokenList sl = token_ns::string_to_list(s, true);
     back_input(sl);
@@ -398,19 +264,18 @@ auto Parser::T_xmllatex() -> std::string {
 }
 
 void Parser::E_get_config(unsigned c) {
-    Token       T        = cur_tok;
-    TokenList   L1       = read_arg();
-    std::string resource = list_to_string_c(L1, "Problem scanning resource name");
-    std::string key;
-    std::string res;
+    Token                      T        = cur_tok;
+    TokenList                  L1       = read_arg();
+    std::string                resource = list_to_string_c(L1, "Problem scanning resource name");
+    std::string                key;
+    std::optional<std::string> res;
     if (c != 0) {
         TokenList L2 = read_arg();
         key          = list_to_string_c(L2, "Problem scanning key");
-        res          = find_one_key(resource, key);
+        res          = config_data.find_one_key(resource, key);
     } else
-        res = find_keys(resource);
-    mac_buf     = res;
-    TokenList L = mac_buf.str_toks11(false);
+        res = config_data.format_keys(resource);
+    TokenList L = Buffer(res ? *res : "").str_toks11(false);
     if (tracing_macros()) {
         Logger::finish_seq();
         the_log << T << " #1=" << resource;
@@ -491,10 +356,10 @@ void Parser::T_raisebox() {
     auto        C = nT_optarg_nopar();
     leave_v_mode();
     the_stack.push1(the_names["raisebox"]);
-    AttList &cur = last_att_list();
-    cur.push_back(the_names["val"], A);
-    if (B) cur.push_back(the_names["height"], *B);
-    if (C) cur.push_back(the_names["depth"], *C);
+    AttList &cur          = last_att_list();
+    cur[the_names["val"]] = A;
+    if (B) cur[the_names["height"]] = *B;
+    if (C) cur[the_names["depth"]] = *C;
     T_arg_local();
     the_stack.pop(the_names["raisebox"]);
 }
@@ -552,8 +417,8 @@ void Parser::T_line(subtypes c) {
         leave_v_mode();
     }
     the_stack.push1(the_names["lineC"]);
-    AttList &cur = last_att_list();
-    cur.push_back(the_names["rend"], the_names[k]);
+    AttList &cur           = last_att_list();
+    cur[the_names["rend"]] = the_names[k];
     T_arg_local();
     the_stack.pop(the_names["lineC"]);
 }
@@ -618,7 +483,7 @@ void Parser::T_xkv_for(subtypes c) {
         TokenList function = read_arg();
         expand_first(L);
         if (L.empty()) break;
-        brace_me(function);
+        function.brace_me();
         res.push_back(hash_table.forloop_token);
         res.splice(res.end(), L);
         res.push_back(comma);
@@ -641,9 +506,9 @@ void Parser::T_xkv_for(subtypes c) {
         TokenList aux = function;
         res.splice(res.end(), aux);
         if (token_ns::has_a_single_token(next_entry, nil)) break;
-        brace_me(next_entry);
+        next_entry.brace_me();
         TokenList aux2 = function;
-        brace_me(function);
+        function.brace_me();
         res.push_back(hash_table.def_token);
         res.push_back(cmd);
         res.splice(res.end(), next_entry);
@@ -661,7 +526,7 @@ void Parser::T_xkv_for(subtypes c) {
         TokenList L        = read_until(hash_table.do_token);
         TokenList function = read_arg();
         if (token_ns::has_a_single_token(L, hash_table.space_token)) break;
-        brace_me(function);
+        function.brace_me();
         res.push_back(hash_table.tforloop_token);
         res.splice(res.end(), L);
         res.push_back(nil);
@@ -696,7 +561,7 @@ void Parser::T_xkv_for(subtypes c) {
         new_macro(entry, cmd);
         TokenList aux = function;
         res.splice(res.end(), aux);
-        brace_me(function);
+        function.brace_me();
         res.push_back(hash_table.relax_token);
         res.push_back(c == iforloop_code ? hash_table.iforloop_token : hash_table.tforloop_token);
         res.splice(res.end(), remainder);
@@ -714,7 +579,7 @@ void Parser::T_xkv_for(subtypes c) {
         TokenList cmd      = read_arg();
         TokenList function = read_arg();
         if (L.empty() && (c == xkv_for_n_code || c == xkv_for_o_code)) break;
-        brace_me(function);
+        function.brace_me();
         res.push_front(hash_table.xkv_for_i_token);
         res.splice(res.end(), cmd);
         res.splice(res.end(), function);
@@ -731,7 +596,7 @@ void Parser::T_xkv_for(subtypes c) {
         if (token_ns::has_a_single_token(entry, nil)) break;
         new_macro(entry, cmd);
         TokenList aux = function;
-        brace_me(function);
+        function.brace_me();
         res.splice(res.end(), aux);
         res.push_back(hash_table.xkv_for_i_token);
         res.push_back(cmd);
@@ -782,7 +647,7 @@ void Parser::T_testopt() {
     skip_initial_space();
     if (cur_tok.is_valid()) back_input();
     if (!cur_tok.is_open_bracket()) {
-        brace_me(R);
+        R.brace_me();
         R.push_front(Token(other_t_offset, '['));
         R.push_back(Token(other_t_offset, ']'));
         back_input(R);
@@ -815,8 +680,8 @@ void Parser::expand_twoargs() {
     TokenList L = read_arg();
     TokenList M = read_arg();
     TokenList N = read_arg();
-    brace_me(M);
-    brace_me(N);
+    M.brace_me();
+    N.brace_me();
     M.splice(M.end(), N);
     read_toks_edef(M);
     back_input(M);
@@ -956,7 +821,7 @@ void Parser::define_cmd_key(subtypes c) {
         LL.push_front(hash_table.OB_token);
         LL.push_front(cmd);
         LL.push_front(hash_table.locate("def"));
-        brace_me(LL);
+        LL.brace_me();
         back_input(LL);
         auto *X = new Macro;
         X->set_nbargs(1);
@@ -984,13 +849,13 @@ void Parser::define_choice_key() {
     if (if_plus) {
         TokenList x = read_arg();
         TokenList y = read_arg();
-        brace_me(x);
-        brace_me(y);
+        x.brace_me();
+        y.brace_me();
         F.splice(F.end(), x);
         F.splice(F.end(), y);
     } else {
         F = read_arg();
-        brace_me(F);
+        F.brace_me();
     }
     TokenList body;
     body.push_back(hash_table.xkv_cc_token);
@@ -1002,12 +867,12 @@ void Parser::define_choice_key() {
     TokenList argument;
     argument.push_back(make_char_token('#', 6));
     argument.push_back(Token(other_t_offset, '1'));
-    brace_me(argument);
+    argument.brace_me();
     body.splice(body.end(), argument);
-    brace_me(allowed);
+    allowed.brace_me();
     body.splice(body.end(), allowed);
     body.splice(body.end(), F);
-    brace_me(body);
+    body.brace_me();
     back_input(body);
     internal_define_key(T);
 }
@@ -1100,15 +965,15 @@ void Parser::define_bool_key(subtypes c) {
             TokenList add1 = read_arg();
             u.splice(u.end(), add1);
         }
-        brace_me(u);
+        u.brace_me();
         TokenList LL;
         LL.splice(LL.end(), u);
         if (if_plus) {
             TokenList add2 = read_arg();
-            brace_me(add2);
+            add2.brace_me();
             LL.splice(LL.end(), add2);
         }
-        brace_me(v);
+        v.brace_me();
         LL.splice(LL.begin(), v);
         LL.push_front(hash_table.CB_token);
         LL.push_front(Token(other_t_offset, '1'));
@@ -1120,7 +985,7 @@ void Parser::define_bool_key(subtypes c) {
         if (if_plus) LL.push_front(Token(other_t_offset, '+'));
         LL.push_front(Token(other_t_offset, '*'));
         LL.push_front(hash_table.xkv_cc_token);
-        brace_me(LL);
+        LL.brace_me();
         back_input(LL);
         auto *X = new Macro;
         X->set_nbargs(1);
@@ -1168,13 +1033,13 @@ void Parser::disable_keys() {
             B.append("@default");
             if (hash_table.is_defined(B)) {
                 TokenList L;
-                brace_me(L);
+                L.brace_me();
                 L.push_front(T);
                 new_macro(L, hash_table.last_tok);
             }
             B           = "Key `" + Key + "' has been disabled";
             TokenList L = B.str_toks(nlt_space); // should be irrelevant
-            brace_me(L);
+            L.brace_me();
             L.push_front(hash_table.xkv_warn_token);
             auto *X = new Macro(L);
             X->set_nbargs(1);
@@ -1207,7 +1072,7 @@ auto Parser::xkv_save_keys_aux(bool c, int c2) -> bool {
 // Otherwise we look for \savevalue or \gsavevalue, skip equals.
 // We set some booleans
 auto xkv_ns::find_key_of(const TokenList &L, int type) -> std::string {
-    Hashtab & H      = the_parser.hash_table;
+    Hashtab & H      = hash_table;
     Token     equals = H.equals_token;
     auto      C      = L.begin();
     auto      E      = L.end();
@@ -1250,7 +1115,7 @@ void xkv_ns::find_aux(int c) {
 // This merges L into W; both lists have the form \global{key}=value
 // or, depenfing on the type, are lists of keys
 void xkv_ns::merge(TokenList &W, TokenList &L, int type) {
-    Token     comma = the_parser.hash_table.comma_token;
+    Token     comma = hash_table.comma_token;
     TokenList key;
     TokenList tmp;
     if (W.empty()) {
@@ -1288,10 +1153,10 @@ void xkv_ns::merge(TokenList &W, TokenList &L, int type) {
 
 // This deletes L from W. Here L is a simple list of keys
 void xkv_ns::remove(TokenList &W, TokenList &L, int type) {
-    Buffer &B   = buf_for_del;
+    Buffer  B;
     Buffer &aux = txparser2_local_buf;
     the_parser.list_to_string_c(L, ",", ",", "Invalid key name list", B);
-    Token     comma = the_parser.hash_table.comma_token;
+    Token     comma = hash_table.comma_token;
     TokenList tmp;
     TokenList key;
     W.swap(tmp);
@@ -1337,7 +1202,7 @@ void Parser::xkv_merge(bool gbl, int type, TokenList &L, bool mg) {
 
 // Assume txparser2_local_buf contains the name of T without the extension
 void Parser::internal_define_key_default(Token T, TokenList &L) {
-    brace_me(L);
+    L.brace_me();
     L.push_front(T);
     txparser2_local_buf.append("@default");
     cur_tok = hash_table.locate(txparser2_local_buf);
@@ -1423,7 +1288,7 @@ void token_ns::lower_case(TokenList &L) {
         Token a = *P;
         if (a.val < single_offset) {
             auto b  = a.chr_val();
-            auto cx = the_parser.eqtb_int_table[b + offset].val;
+            auto cx = eqtb_int_table[b + offset].val;
             if (cx != 0) *P = Token(a.val - b + to_unsigned(cx));
         }
         ++P;
@@ -1473,7 +1338,7 @@ void Parser::xkv_process_options() {
     data.special_fams();
     TokenList uo;
     TokenList L = classes_ns::cur_options(s, uo, false);
-    brace_me(L);
+    L.brace_me();
     back_input(L);
     data.fetch_keys(true);
     data.set_aux();
@@ -1572,9 +1437,9 @@ void Parser::formatdate() {
     Xml *X = new Xml(std::string("date"), nullptr);
     the_stack.add_last(X);
     AttList &AL = X->id.get_att();
-    AL.push_back(std::string("year"), std::string(std::to_string(FP.year)));
-    AL.push_back(std::string("month"), std::string(std::to_string(abs(FP.month))));
-    AL.push_back(std::string("day"), std::string(std::to_string(FP.day)));
+    AL["year"]  = std::to_string(FP.year);
+    AL["month"] = std::to_string(abs(FP.month));
+    AL["day"]   = std::to_string(FP.day);
 }
 
 // True if ok, parse_error otherwise
@@ -1893,7 +1758,7 @@ void Parser::dbl_arg() {
     if (cur_tok.is_valid()) back_input();
     if (!cur_tok.is_open_bracket()) {
         TokenList A = read_arg();
-        brace_me(A);
+        A.brace_me();
         TokenList B = A;
         B.push_front(Token(other_t_offset, '['));
         B.push_back(Token(other_t_offset, ']'));
@@ -1928,7 +1793,7 @@ void Parser::numberwithin() {
     auto barname      = b.substr(2);
     b                 = "cl@" + barname;
     Token clbar_token = hash_table.locate(b);
-    brace_me(A);
+    A.brace_me();
     TokenList B = A;
     M_cons(clbar_token, B);
     b            = "the" + barname;
@@ -1961,7 +1826,7 @@ auto Parser::make_label_inner(const std::string &name) -> std::string {
 // the name of the counter is in txparser2_local_buf abd L
 void Parser::refstepcounter_inner(TokenList &L, bool star) {
     std::string name = txparser2_local_buf;
-    brace_me(L);
+    L.brace_me();
     L.push_front(hash_table.stepcounter_token);
     T_translate(L);
     std::string v = make_label_inner(name);
@@ -2005,7 +1870,7 @@ void Parser::T_use_counter(const std::string &s) {
     Buffer &b     = txparser2_local_buf;
     b             = "c@" + s;
     Token       T = hash_table.locate(b);
-    EqtbCmdChr &E = hash_table.eqtb[T.eqtb_loc()];
+    EqtbCmdChr &E = Hashtab::the_eqtb()[T.eqtb_loc()];
     if (E.val.cmd != assign_int_cmd) return;
     word_define(E.val.chr, 0, true);
 }
@@ -2032,7 +1897,7 @@ void Parser::T_ifdefinable() {
         bad = true;
     else if (C == hash_table.relax_token)
         bad = true;
-    else if (!hash_table.eqtb[C.eqtb_loc()].val.is_undef_or_relax())
+    else if (!Hashtab::the_eqtb()[C.eqtb_loc()].val.is_undef_or_relax())
         bad = true;
     else {
         if (C.is_in_hash()) {
@@ -2094,7 +1959,7 @@ auto Parser::optional_enumerate(TokenList &L, const std::string &ctr) -> bool {
     mac_define(t, X, false, rd_always, user_cmd);
     B                       = ctr;
     TokenList the_ctr_value = B.str_toks11(true);
-    brace_me(the_ctr_value);
+    the_ctr_value.brace_me();
     the_ctr_value.push_front(cmd);
     auto *Y = new Macro(the_ctr_value);
     mac_define(the_ctr, Y, false, rd_always, user_cmd);
@@ -2158,7 +2023,7 @@ void Parser::T_listenv(symcodes x) {
         b += "@hook";
         Token T   = hash_table.locate(b);
         auto  pos = T.eqtb_loc();
-        if (!hash_table.eqtb[pos].val.is_undef()) back_input(T);
+        if (!Hashtab::the_eqtb()[pos].val.is_undef()) back_input(T);
     }
     Xml *res = new Xml(the_names["list"], nullptr);
     the_stack.push(the_names["list"], res);

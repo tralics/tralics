@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE std SYSTEM 'classes.dtd'>
-<!-- Translated from latex by tralics 2.15.4, date: 2017/05/26-->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
 <std>
 <p>This file is an example of <hi rend='tt'>\omitcite</hi>,
 it explains usage and some errors.
@@ -15,20 +15,20 @@ citation; it will omit it everywhere</p>
 <p>We first define a bibliography file, :</p>
 <p>We use this file as the bibliography file and import everything
 <biblio>
-<citation from='year' key='Ana' id='bid0' userid='cite:refa' type='book'>
-<bauteurs><bpers prenom='A.' nom='Aname' prenomcomplet='Afirst'/></bauteurs>
+<citation from='year' id='bid0' key='Ana' type='book' userid='cite:refa'>
+<bauteurs><bpers nom='Aname' prenom='A.' prenomcomplet='Afirst'/></bauteurs>
 <btitle>Atitle</btitle>
 </citation>
-<citation from='year' key='Bna' id='bid1' userid='cite:refB' type='book'>
-<bauteurs><bpers prenom='B.' nom='Bname' prenomcomplet='Bfirst'/></bauteurs>
+<citation from='year' id='bid1' key='Bna' type='book' userid='cite:refB'>
+<bauteurs><bpers nom='Bname' prenom='B.' prenomcomplet='Bfirst'/></bauteurs>
 <btitle>Btitle</btitle>
 </citation>
-<citation from='year' key='Cna' id='bid2' userid='cite:refC' type='book'>
-<bauteurs><bpers prenom='C.' nom='Cname' prenomcomplet='Cfirst'/></bauteurs>
+<citation from='year' id='bid2' key='Cna' type='book' userid='cite:refC'>
+<bauteurs><bpers nom='Cname' prenom='C.' prenomcomplet='Cfirst'/></bauteurs>
 <btitle>Ctitle</btitle>
 </citation>
-<citation from='year' key='Ena' id='bid5' userid='cite:refE' type='book'>
-<bauteurs><bpers prenom='E.' nom='Ename' prenomcomplet='Efirst'/></bauteurs>
+<citation from='year' id='bid5' key='Ena' type='book' userid='cite:refE'>
+<bauteurs><bpers nom='Ename' prenom='E.' prenomcomplet='Efirst'/></bauteurs>
 <btitle>Etitle</btitle>
 </citation></biblio>
 
