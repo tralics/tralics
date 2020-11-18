@@ -98,7 +98,7 @@ found at http://www.cecill.info.)";
 
     /// Display usage message, then exit the program \todo Manage this centrally
     void usage_and_quit(int v) {
-        std::cout << usage;
+        std::cout << usage << "\n";
         exit(v);
     }
 
