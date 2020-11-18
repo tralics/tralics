@@ -149,11 +149,13 @@ found at http://www.cecill.info.)";
     /// Locate the config dir, using a few standard sources \todo this should be
     /// managed by CMake, or by kpathsea
     void find_conf_path() {
-        static const std::array<std::filesystem::path, 7> paths{
-            conf_path[0], "/usr/share/tralics", "/usr/lib/tralics/confdir", "/usr/local/lib/tralics/confdir", "/sw/share/tralics/confdir",
-            "../confdir", "../../confdir"};
+        static const std::array<std::filesystem::path, 7> paths{"/usr/share/tralics", "/usr/lib/tralics/confdir",
+                                                                "/usr/local/lib/tralics/confdir", "/sw/share/tralics/confdir",
+                                                                "../../confdir"};
+        auto                                              ps = conf_path;
+        for (const auto &p : paths) ps.emplace_back(p);
 
-        for (const auto &S : paths) {
+        for (const auto &S : ps) {
             if (exists(S / "book.clt")) {
                 conf_path.emplace_back(S);
                 spdlog::info("Found configuration folder: {}", S);
