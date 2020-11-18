@@ -372,7 +372,6 @@ void MainClass::set_ent_names(const std::string &s) { no_entnames = (s == "false
 void MainClass::add_to_from_config(int n, const std::string &b) { from_config.emplace_back(n, b + "\n", true); }
 
 void MainClass::parse_args(int argc, char **argv) {
-    find_conf_path();
     if (argc == 1) end_with_help(0);
     if ((argc == 2) && (std::string(argv[1]) == "-?")) usage_and_quit(0);
     for (int i = 1; i < argc; i++) {
@@ -382,6 +381,7 @@ void MainClass::parse_args(int argc, char **argv) {
         else
             see_name(s);
     }
+    find_conf_path();
     if (infile.empty()) {
         spdlog::critical("Fatal: no source file given");
         end_with_help(1);
