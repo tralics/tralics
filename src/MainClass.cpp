@@ -12,6 +12,7 @@
 #include "tralics/Xml.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
+#include <ctre.hpp>
 #include <filesystem>
 #include <fmt/ostream.h>
 #include <spdlog/sinks/basic_file_sink.h>
@@ -83,6 +84,7 @@ found at http://www.cecill.info.)";
     std::filesystem::path out_dir;
     std::filesystem::path no_ext;
 
+    std::string dtd_uri; ///< the external location of the DTD
     std::string log_name;
     std::string machine;
     std::string opt_doctype;
@@ -801,31 +803,22 @@ void MainClass::find_dtd() {
     std::string res = opt_doctype;
     if (res.empty()) res = config_file.find_top_val("DocType", false);
 
-    Buffer B(res); // \todo refactor this to avoid using a Buffer
-    B.skip_letter_dig_dot();
-    if (B.ptrs.b != 0) {
-        B.ptrs.a = 0;
-        dtd      = B.substring();
-        B.skip_sp_tab();
-        if (B.head() == '-' || B.head() == '+' || B.head() == ',') {
-            B.advance();
-            B.skip_sp_tab();
-        }
-        B.ptrs.a = B.ptrs.b;
-        B.skip_letter_dig_dot_slash();
-        if (B.ptrs.a != B.ptrs.b) dtdfile = B.substring();
+    static constexpr auto pattern = ctll::fixed_string{R"(([a-zA-Z0-9.]+) *([a-zA-Z./]+).*)"};
+    if (auto [w, d, f] = ctre::match<pattern>(res); w) {
+        dtd     = d.to_string();
+        dtd_uri = f.to_string();
     }
 
-    if (dtdfile.empty()) {
+    if (dtd_uri.empty()) {
         if (dft == 3) {
             dtd     = "unknown";
-            dtdfile = "unknown.dtd";
+            dtd_uri = "unknown.dtd";
         } else {
             dtd     = "std";
-            dtdfile = "classes.dtd";
+            dtd_uri = "classes.dtd";
         }
     }
-    spdlog::trace("dtd is {} from {}", dtd, dtdfile);
+    spdlog::info("DTD is {} from {}", dtd, dtd_uri);
 }
 
 void MainClass::read_config_and_other() {
@@ -958,7 +951,7 @@ void MainClass::out_xml() {
     fmt::print(fp, "<?xml version='1.0' encoding='{}'?>\n", utf8 ? "UTF-8" : "iso-8859-1");
     if (auto sl = the_names["stylesheet"]; !sl.empty())
         fmt::print(fp, "<?xml-stylesheet href=\"{}\" type=\"{}\"?>\n", sl, the_names["stylesheettype"]);
-    fmt::print(fp, "<!DOCTYPE {} SYSTEM '{}'>\n", dtd, std::string(dtdfile)); // \todo keep double quotes from fs::path
+    fmt::print(fp, "<!DOCTYPE {} SYSTEM '{}'>\n", dtd, dtd_uri);
     fmt::print(fp, "<!-- Translated from LaTeX by tralics {}, date: {} -->\n", tralics_version, short_date);
     fp << the_stack.document_element() << "\n";
 

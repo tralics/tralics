@@ -6,7 +6,6 @@
 class Stack;
 
 class MainClass {
-    std::filesystem::path                dtdfile;  ///< the external location of the DTD
     std::filesystem::path                infile;   ///< file argument given to the program
     std::optional<std::filesystem::path> tcf_file; ///< File name of the `tcf` to use, if found
 

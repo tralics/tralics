@@ -124,8 +124,6 @@ public:
     void remove_last_space();
     void remove_space_at_end();
     void show_uncomplete(String m);
-    void skip_letter_dig_dot_slash();
-    void skip_letter_dig_dot();
     void skip_letter_dig();
     void skip_letter();
     void skip_over_brace();
