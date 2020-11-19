@@ -803,7 +803,7 @@ void MainClass::find_dtd() {
     std::string res = opt_doctype;
     if (res.empty()) res = config_file.find_top_val("DocType", false);
 
-    static constexpr auto pattern = ctll::fixed_string{R"(([a-zA-Z0-9.]+) *([a-zA-Z./]+).*)"};
+    static constexpr auto pattern = ctll::fixed_string{R"(([a-zA-Z0-9.]+) *([^\s]+).*)"};
     if (auto [w, d, f] = ctre::match<pattern>(res); w) {
         dtd     = d.to_string();
         dtd_uri = f.to_string();
