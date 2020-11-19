@@ -7,8 +7,8 @@ auto Dispatcher::the_actions() -> std::unordered_map<symcodes, std::function<boo
     return m;
 }
 
-auto Dispatcher::the_name_fns() -> std::unordered_map<symcodes, std::function<std::string(symcodes, subtypes)>> & {
-    static std::unordered_map<symcodes, std::function<std::string(symcodes, subtypes)>> m;
+auto Dispatcher::the_name_fns() -> std::unordered_map<symcodes, std::function<std::string(subtypes)>> & {
+    static std::unordered_map<symcodes, std::function<std::string(subtypes)>> m;
     return m;
 }
 
@@ -29,7 +29,7 @@ auto Dispatcher::name(symcodes x, subtypes c) -> std::optional<std::string> {
         if (auto it2 = it->second.find(c); it2 != it->second.end()) return it2->second;
 
     static auto &m = the_name_fns();
-    if (auto it = m.find(x); it != m.end()) return it->second(x, c);
+    if (auto it = m.find(x); it != m.end()) return it->second(c);
 
     return {};
 }
@@ -121,7 +121,7 @@ void Dispatcher::register_action(symcodes x, parser_fn_with_cmdchr_void f) {
     });
 }
 
-void Dispatcher::register_name(symcodes x, const std::function<std::string(symcodes, subtypes)> &f) { the_name_fns().emplace(x, f); }
+void Dispatcher::register_name(symcodes x, const std::function<std::string(subtypes)> &f) { the_name_fns().emplace(x, f); }
 
 void Dispatcher::register_name(symcodes x, subtypes c, const std::string &s) { the_names()[x][c] = s; }
 

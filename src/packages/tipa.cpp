@@ -147,7 +147,7 @@ namespace {
         the_parser.back_input(the_parser.cur_tok);
     }
 
-    void T_ipa(symcodes, subtypes c) {
+    void T_ipa(subtypes c) {
         if (c == 0) tipa_star();
         if (c == 1) tipa_semi();
         if (c == 2) tipa_colon();
