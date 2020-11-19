@@ -2216,7 +2216,7 @@ auto Parser::env_helper(const std::string &s) -> SaveAuxEnv * {
 [[nodiscard]] auto Parser::T_end(const std::string &s) -> bool {
     if (s == "document") // hack, because document is at outer level
     {
-        T_begin(s);
+        if (!T_begin(s)) return false;
         get_token();
     }
     if (s == "tabular" || s == "tabular*") {
