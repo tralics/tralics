@@ -5,17 +5,17 @@
 auto Dispatcher::the_actions() -> std::unordered_map<symcodes, std::function<bool(symcodes, subtypes)>> & {
     static std::unordered_map<symcodes, std::function<bool(symcodes, subtypes)>> m;
     return m;
-};
+}
 
 auto Dispatcher::the_name_fns() -> std::unordered_map<symcodes, std::function<std::string(symcodes, subtypes)>> & {
     static std::unordered_map<symcodes, std::function<std::string(symcodes, subtypes)>> m;
     return m;
-};
+}
 
 auto Dispatcher::the_names() -> std::unordered_map<symcodes, std::unordered_map<subtypes, std::string>> & {
     static std::unordered_map<symcodes, std::unordered_map<subtypes, std::string>> m;
     return m;
-};
+}
 
 auto Dispatcher::call(symcodes x, subtypes c) -> std::optional<bool> {
     static auto &m = the_actions();
@@ -35,19 +35,19 @@ auto Dispatcher::name(symcodes x, subtypes c) -> std::optional<std::string> {
 }
 
 void Dispatcher::register_action(symcodes x, const std::function<bool()> &f) {
-    the_actions().emplace(x, [f](symcodes /*unused*/, subtypes /*unused*/) { return f(); });
+    the_actions().emplace(x, [=](symcodes /*unused*/, subtypes /*unused*/) { return f(); });
 }
 
 void Dispatcher::register_action(symcodes x, const std::function<void()> &f) {
-    the_actions().emplace(x, [f](symcodes /*unused*/, subtypes /*unused*/) { return f(), true; });
+    the_actions().emplace(x, [=](symcodes /*unused*/, subtypes /*unused*/) { return f(), true; });
 }
 
 void Dispatcher::register_action(symcodes x, const std::function<bool(symcodes)> &f) {
-    the_actions().emplace(x, [f](symcodes x, subtypes /*unused*/) { return f(x); });
+    the_actions().emplace(x, [=](symcodes /*unused*/, subtypes /*unused*/) { return f(x); });
 }
 
 void Dispatcher::register_action(symcodes x, const std::function<void(symcodes)> &f) {
-    the_actions().emplace(x, [f](symcodes x, subtypes /*unused*/) { return f(x), true; });
+    the_actions().emplace(x, [=](symcodes /*unused*/, subtypes /*unused*/) { return f(x), true; });
 }
 
 void Dispatcher::register_action(symcodes x, const std::function<bool(subtypes)> &f) {
@@ -58,14 +58,16 @@ void Dispatcher::register_action(symcodes x, const std::function<void(subtypes)>
     the_actions().emplace(x, [f](symcodes /*unused*/, subtypes c) { return f(c), true; });
 }
 
-void Dispatcher::register_action(symcodes x, const std::function<bool(symcodes, subtypes)> &f) { the_actions().emplace(x, f); }
+void Dispatcher::register_action(symcodes x, const std::function<bool(symcodes, subtypes)> &f) {
+    the_actions().emplace(x, [=](symcodes /*unused*/, subtypes c) { return f(x, c); });
+}
 
 void Dispatcher::register_action(symcodes x, const std::function<void(symcodes, subtypes)> &f) {
-    the_actions().emplace(x, [f](symcodes x, subtypes c) { return f(x, c), true; });
+    the_actions().emplace(x, [=](symcodes /*unused*/, subtypes c) { return f(x, c), true; });
 }
 
 void Dispatcher::register_action(symcodes x, parser_fn f) {
-    the_actions().emplace(x, [f](symcodes /*unused*/, subtypes /*unused*/) { return std::invoke(f, the_parser); });
+    the_actions().emplace(x, [=](symcodes /*unused*/, subtypes /*unused*/) { return std::invoke(f, the_parser); });
 }
 
 void Dispatcher::register_action(symcodes x, parser_fn_void f) {
@@ -76,11 +78,11 @@ void Dispatcher::register_action(symcodes x, parser_fn_void f) {
 }
 
 void Dispatcher::register_action(symcodes x, parser_fn_with_x f) {
-    the_actions().emplace(x, [f](symcodes x, subtypes /*unused*/) { return std::invoke(f, the_parser, x); });
+    the_actions().emplace(x, [=](symcodes /*unused*/, subtypes /*unused*/) { return std::invoke(f, the_parser, x); });
 }
 
 void Dispatcher::register_action(symcodes x, parser_fn_with_x_void f) {
-    the_actions().emplace(x, [f](symcodes x, subtypes /*unused*/) {
+    the_actions().emplace(x, [=](symcodes /*unused*/, subtypes /*unused*/) {
         std::invoke(f, the_parser, x);
         return true;
     });
@@ -98,22 +100,22 @@ void Dispatcher::register_action(symcodes x, parser_fn_with_c_void f) {
 }
 
 void Dispatcher::register_action(symcodes x, parser_fn_with_xc f) {
-    the_actions().emplace(x, [f](symcodes x, subtypes c) { return std::invoke(f, the_parser, x, c); });
+    the_actions().emplace(x, [=](symcodes /*unused*/, subtypes c) { return std::invoke(f, the_parser, x, c); });
 }
 
 void Dispatcher::register_action(symcodes x, parser_fn_with_xc_void f) {
-    the_actions().emplace(x, [f](symcodes x, subtypes c) {
+    the_actions().emplace(x, [=](symcodes /*unused*/, subtypes c) {
         std::invoke(f, the_parser, x, c);
         return true;
     });
 }
 
 void Dispatcher::register_action(symcodes x, parser_fn_with_cmdchr f) {
-    the_actions().emplace(x, [f](symcodes x, subtypes c) { return std::invoke(f, the_parser, CmdChr{x, c}); });
+    the_actions().emplace(x, [=](symcodes /*unused*/, subtypes c) { return std::invoke(f, the_parser, CmdChr{x, c}); });
 }
 
 void Dispatcher::register_action(symcodes x, parser_fn_with_cmdchr_void f) {
-    the_actions().emplace(x, [f](symcodes x, subtypes c) {
+    the_actions().emplace(x, [=](symcodes /*unused*/, subtypes c) {
         std::invoke(f, the_parser, CmdChr{x, c});
         return true;
     });
@@ -121,7 +123,7 @@ void Dispatcher::register_action(symcodes x, parser_fn_with_cmdchr_void f) {
 
 void Dispatcher::register_name(symcodes x, const std::function<std::string(symcodes, subtypes)> &f) { the_name_fns().emplace(x, f); }
 
-void Dispatcher::register_name(symcodes x, subtypes c, const std::string &s) { the_names()[x][c] = s; };
+void Dispatcher::register_name(symcodes x, subtypes c, const std::string &s) { the_names()[x][c] = s; }
 
 Dispatcher::Dispatcher() {
     register_action(addatt_cmd, &Parser::T_xmladdatt);
