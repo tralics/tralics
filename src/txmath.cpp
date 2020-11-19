@@ -925,7 +925,7 @@ void Parser::scan_math3(size_t x, math_list_type t, int m) {
     }
     push_level(aux);
     if (m == 0 && cmi.eqnum_status == 3) refstepcounter("equation", false);
-    scan_math(x, t);
+    if (!scan_math(x, t)) throw EndOfData();
     if (m == 0 && (cmi.eqnum_status == 2 || cmi.eqnum_status == 1)) {
         if (!cmi.end_of_row()) {
             refstepcounter("equation", false);
@@ -998,10 +998,10 @@ auto Parser::scan_math1(size_t res) -> int {
 
 // The function that reads a math formula. Read tokens until the end
 // of the current group is seen. Fills the list number res, of type type
-void Parser::scan_math(size_t res, math_list_type type) {
+bool Parser::scan_math(size_t res, math_list_type type) {
     for (;;) {
         int w = scan_math1(res);
-        if (w == 0) return;
+        if (w == 0) return true;
         if (w == 1) continue;
         symcodes T = cur_cmd_chr.cmd;
         subtypes c = cur_cmd_chr.chr;
@@ -1011,17 +1011,17 @@ void Parser::scan_math(size_t res, math_list_type type) {
             new_math_list(res, math_open_cd, nomathenv_code);
             continue;
         case 2: // close brace, end group
-            if (type == math_open_cd || type == math_argument_cd || type == math_hbox_cd) return;
+            if (type == math_open_cd || type == math_argument_cd || type == math_hbox_cd) return true;
             parse_error("Unexpected }");
-            return;
+            return true;
         case 3: // dollar, open or close ?
-            if (scan_math_dollar(res, type)) return;
+            if (scan_math_dollar(res, type)) return true;
             continue;
         case par_cmd:
             err_buf = "Unexpected \\par";
             if (type == math_argument_cd) err_buf += " while scanning argument of " + fct_caller.tok_to_str();
             signal_error(err_tok, "Unexpected par");
-            return;
+            return true;
         case eqno_cmd: scan_eqno(type); continue;
         case tag_cmd: scan_math_tag(c); continue;
         case label_cmd:
@@ -1073,7 +1073,7 @@ void Parser::scan_math(size_t res, math_list_type type) {
             continue;
         case begin_cmd:
         case end_cmd:
-            if (scan_math_env(res, type)) return;
+            if (scan_math_env(res, type)) return true;
             continue;
         case left_cmd: {
             del_pos k   = math_lr_value();
@@ -1090,7 +1090,7 @@ void Parser::scan_math(size_t res, math_list_type type) {
             del_pos k = math_lr_value();
             if (type == math_LR_cd) {
                 math_data.get_list(res).push_back(CmdChr(right_cmd, subtypes(k)));
-                return;
+                return true;
             }
             parse_error("Unexpected \\right");
             continue;
@@ -1121,7 +1121,7 @@ void Parser::scan_math(size_t res, math_list_type type) {
         case alignment_catcode: // case & and \\ in a table
         case backslash_cmd:
             if (stack_math_in_cell()) {
-                if (scan_math_endcell(t)) return;
+                if (scan_math_endcell(t)) return true;
 
                 continue;
             }
@@ -1175,7 +1175,7 @@ void Parser::scan_math(size_t res, math_list_type type) {
             }
             if (T >= first_mode_independent) {
                 remove_from_trace();
-                if (!translate03()) throw EndOfData();
+                if (!translate03()) return false;
                 continue;
             }
             if (T < 16 && cur_tok.not_a_cmd()) {
@@ -1527,7 +1527,7 @@ auto Parser::math_argument(int w, Token t) -> subtypes {
     subtypes k   = math_data.find_math_location(math_argument_cd, nomathenv_code, "");
     auto     aux = bt_brace;
     push_level(aux);
-    scan_math(k, math_argument_cd);
+    if (!scan_math(k, math_argument_cd)) throw EndOfData();
     pop_level(aux);
     fct_caller = xfct_caller;
     return k;
