@@ -604,4 +604,36 @@ Dispatcher::Dispatcher() {
             the_parser.token_list_define(c, L, false);
         }
     });
+
+    register_action(start_thm_cmd, [](subtypes c) {
+        if (c == 2)
+            the_parser.T_end_theorem();
+        else
+            the_parser.T_start_theorem(c);
+    });
+    register_action(ignore_env_cmd, [] {});
+    register_action(math_env_cmd, [](subtypes c) {
+        the_parser.cur_tok.kill();
+        the_parser.pop_level(bt_env);
+        the_parser.T_math(c);
+    });
+    register_action(end_ignore_env_cmd, [] {});
+    register_action(end_minipage_cmd, [] {
+        the_parser.flush_buffer();
+        the_stack.pop_if_frame(::the_names["cst_p"]);
+        the_stack.pop_if_frame(::the_names["item"]);
+        the_stack.pop(::the_names["minipage"]);
+    });
+    register_action(mathinner_cmd, [](subtypes c) {
+        if (math_loc(c) == vdots_code) {
+            the_parser.back_input(hash_table.dollar_token);
+            the_parser.back_input(the_parser.cur_tok);
+            the_parser.back_input(hash_table.dollar_token);
+        } else
+            the_parser.math_only();
+    });
+    register_action(self_insert_cmd, [] {
+        the_parser.LC();
+        the_parser.unprocessed_xml.push_back(the_parser.cur_tok);
+    });
 }
