@@ -1,6 +1,23 @@
 #include "tralics/Dispatcher.h"
+#include "tralics/MainClass.h"
 #include "tralics/globals.h"
 #include <spdlog/spdlog.h>
+
+namespace {
+    auto hfill_to_np(subtypes c) -> std::string {
+        if (c == hfill_code) return "hfill";
+        if (c == hfilneg_code) return "hfilneg";
+        if (c == hss_code) return "hss";
+        return "hfil";
+    }
+
+    auto vfill_to_np(subtypes c) -> std::string {
+        if (c == vfill_code) return "vfill";
+        if (c == vfilneg_code) return "vfilneg";
+        if (c == vss_code) return "vss";
+        return "vfil";
+    }
+} // namespace
 
 auto Dispatcher::the_actions() -> std::unordered_map<symcodes, std::function<bool(subtypes)>> & {
     static std::unordered_map<symcodes, std::function<bool(subtypes)>> m;
@@ -384,4 +401,73 @@ Dispatcher::Dispatcher() {
     });
     register_action(last_item_cmd,
                     [] { the_parser.parse_error(the_parser.cur_tok, "Read only variable ", the_parser.cur_tok, "", "readonly"); });
+
+    register_action(hfill_cmd, [](subtypes c) {
+        the_parser.leave_v_mode();
+        the_stack.add_newid0(hfill_to_np(c));
+    });
+    register_action(vfill_cmd, [](subtypes c) {
+        the_parser.leave_h_mode();
+        the_stack.add_newid0(vfill_to_np(c));
+    });
+
+    register_action(space_catcode, [](subtypes c) {
+        if (!the_stack.in_v_mode() && !the_stack.in_no_mode() && !the_stack.in_bib_mode()) the_parser.process_char(char32_t(c));
+    });
+    register_action(inhibit_xml_cmd, [] {
+        the_main.no_xml = true;
+        spdlog::warn("syntaxonly: no XML file will be produced");
+    });
+    register_action(xmllatex_cmd, [] {
+        the_parser.LC();
+        the_parser.unprocessed_xml += the_parser.T_xmllatex();
+    });
+    register_action(aparaitre_cmd, [] { // \todo multilingual stuff somewhere
+        the_parser.LC();
+        if (eqtb_int_table[language_code].val == 1) {
+            the_parser.process_char(char32_t(0xE0U));
+            the_parser.process_string(" para");
+            the_parser.process_char(char32_t(0xEEU));
+            the_parser.process_string("tre");
+        } else
+            the_parser.process_string("to appear");
+    });
+    register_action(dollar_catcode, [] {
+        the_parser.flush_buffer();
+        the_parser.T_math(nomathenv_code);
+    });
+    register_action(begingroup_cmd, [](subtypes c) {
+        the_parser.flush_buffer();
+        if (c == 0)
+            the_parser.push_level(bt_semisimple);
+        else if (c == 1)
+            the_parser.pop_level(bt_semisimple);
+        else {
+            the_parser.get_token();
+            the_parser.pop_level(bt_env);
+        }
+    });
+    register_action(hat_catcode, [](subtypes c) {
+        if (global_in_load || is_pos_par(nomath_code))
+            the_parser.translate_char(CmdChr(letter_catcode, c));
+        else
+            the_parser.parse_error(the_parser.cur_tok, "Missing dollar not inserted, token ignored: ", the_parser.cur_tok.tok_to_str(),
+                                   "Missing dollar");
+    });
+    register_action(underscore_catcode, [](subtypes c) {
+        if (global_in_load || is_pos_par(nomath_code))
+            the_parser.translate_char(CmdChr(letter_catcode, c));
+        else
+            the_parser.parse_error(the_parser.cur_tok, "Missing dollar not inserted, token ignored: ", the_parser.cur_tok.tok_to_str(),
+                                   "Missing dollar");
+    });
+    register_action(backslash_cmd, [](subtypes c) {
+        if (c == 0)
+            the_parser.T_backslash();
+        else
+            the_parser.T_newline();
+    });
+    register_action(skip_cmd, [](subtypes c) {
+        the_parser.append_glue(the_parser.cur_tok, (c == smallskip_code ? 3 : c == medskip_code ? 6 : 12) << 16, true);
+    });
 }

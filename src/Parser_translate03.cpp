@@ -6,22 +6,6 @@
 #include "tralics/globals.h"
 #include "tralics/types.h"
 
-namespace {
-    auto hfill_to_np(subtypes c) -> std::string {
-        if (c == hfill_code) return "hfill";
-        if (c == hfilneg_code) return "hfilneg";
-        if (c == hss_code) return "hss";
-        return "hfil";
-    }
-
-    auto vfill_to_np(subtypes c) -> std::string {
-        if (c == vfill_code) return "vfill";
-        if (c == vfilneg_code) return "vfilneg";
-        if (c == vss_code) return "vss";
-        return "vfil";
-    }
-} // namespace
-
 // \todo make a hash table of methods instead of this huge mess, actions below is a proof of concept.
 
 [[nodiscard]] auto Parser::translate03() -> bool {
@@ -36,69 +20,6 @@ namespace {
     if (auto res = Dispatcher::call(x, c)) return *res;
 
     switch (x) {
-    case space_catcode:
-        if (!the_stack.in_v_mode() && !the_stack.in_no_mode() && !the_stack.in_bib_mode()) process_char(char32_t(c));
-        return true;
-    case inhibit_xml_cmd:
-        the_main.no_xml = true;
-        spdlog::warn("syntaxonly: no XML file will be produced");
-        return true;
-    case xmllatex_cmd:
-        LC();
-        unprocessed_xml += T_xmllatex();
-        return true;
-    case aparaitre_cmd:
-        LC();
-        if (eqtb_int_table[language_code].val == 1) {
-            process_char(char32_t(0xE0U));
-            process_string(" para");
-            process_char(char32_t(0xEEU));
-            process_string("tre");
-        } else
-            process_string("to appear");
-        return true;
-    case dollar_catcode:
-        flush_buffer();
-        T_math(nomathenv_code);
-        return true;
-    case begingroup_cmd:
-        flush_buffer();
-        if (c == 0)
-            push_level(bt_semisimple);
-        else if (c == 1)
-            pop_level(bt_semisimple);
-        else {
-            get_token();
-            pop_level(bt_env);
-        }
-        return true;
-    case hat_catcode:
-        if (global_in_load || is_pos_par(nomath_code))
-            translate_char(CmdChr(letter_catcode, c));
-        else
-            parse_error(cur_tok, "Missing dollar not inserted, token ignored: ", cur_tok.tok_to_str(), "Missing dollar");
-        return true;
-    case underscore_catcode:
-        if (global_in_load || is_pos_par(nomath_code))
-            translate_char(CmdChr(letter_catcode, c));
-        else
-            parse_error(cur_tok, "Missing dollar not inserted, token ignored: ", cur_tok.tok_to_str(), "Missing dollar");
-        return true;
-    case backslash_cmd:
-        if (c == 0)
-            T_backslash();
-        else
-            T_newline();
-        return true;
-    case skip_cmd: return append_glue(cur_tok, (c == smallskip_code ? 3 : c == medskip_code ? 6 : 12) << 16, true), true;
-    case hfill_cmd:
-        leave_v_mode();
-        the_stack.add_newid0(hfill_to_np(c));
-        return true;
-    case vfill_cmd:
-        leave_h_mode();
-        the_stack.add_newid0(vfill_to_np(c));
-        return true;
     case special_math_cmd:
         if (c == overline_code || c == underline_code)
             T_fonts(c == overline_code ? "overline" : "underline");
