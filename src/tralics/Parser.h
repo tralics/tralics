@@ -688,7 +688,7 @@ private:
     void               scan_math_tag(subtypes c);
     auto               scan_math(size_t res, math_list_type type) -> bool;
     void               scan_math2(int, math_list_type, boundary_type);
-    void               scan_math3(size_t X, math_list_type T, int m);
+    [[nodiscard]] auto scan_math3(size_t X, math_list_type T, int m) -> bool;
     void               scan_optional_equals();
     void               scan_prime();
     void               scan_rule(subtypes c);

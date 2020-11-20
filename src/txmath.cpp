@@ -717,7 +717,7 @@ auto MathElt::is_digit() const -> bool { return cmd == 12 && CmdChr::is_digit();
 auto Parser::new_math_list(size_t cur_math, math_list_type c, subtypes s) -> subtypes {
     subtypes k = math_data.find_math_location(c, s, "");
     math_data.get_list(cur_math).push_back_list(k, c);
-    scan_math3(k, c, 1);
+    if (!scan_math3(k, c, 1)) throw EndOfData();
     return k;
 }
 
@@ -837,7 +837,7 @@ void Parser::T_math(subtypes type) {
         }
     }
     select_math_font();
-    scan_math3(0, math_data.get_list(0).get_type(), 0);
+    if (!scan_math3(0, math_data.get_list(0).get_type(), 0)) throw EndOfData();
     if (tracing_math()) {
         Logger::finish_seq();
         the_log << "Math: " << Trace << "\n";
@@ -905,7 +905,7 @@ void Parser::T_math(subtypes type) {
 
 // x is index of result, t is type of math list,
 // m is 0 for outer math, 1 normally, 2 in \hbox
-void Parser::scan_math3(size_t x, math_list_type t, int m) {
+[[nodiscard]] auto Parser::scan_math3(size_t x, math_list_type t, int m) -> bool {
     Token xfct_caller = fct_caller;
     fct_caller        = hash_table.relax_token;
     mode om           = the_stack.get_mode();
@@ -925,7 +925,7 @@ void Parser::scan_math3(size_t x, math_list_type t, int m) {
     }
     push_level(aux);
     if (m == 0 && cmi.eqnum_status == 3) refstepcounter("equation", false);
-    if (!scan_math(x, t)) throw EndOfData();
+    if (!scan_math(x, t)) return false;
     if (m == 0 && (cmi.eqnum_status == 2 || cmi.eqnum_status == 1)) {
         if (!cmi.end_of_row()) {
             refstepcounter("equation", false);
@@ -937,6 +937,7 @@ void Parser::scan_math3(size_t x, math_list_type t, int m) {
     pop_level(aux);
     the_stack.set_mode(om);
     fct_caller = xfct_caller;
+    return true;
 }
 
 // Reads a new token.
@@ -1506,7 +1507,7 @@ void Parser::scan_hbox(size_t ptr, subtypes c) {
     add_to_trace('{');
     subtypes k                  = math_data.find_math_location(math_hbox_cd, nomathenv_code, "");
     math_data.get_list(k).sname = c;
-    scan_math3(k, math_hbox_cd, 2);
+    if (!scan_math3(k, math_hbox_cd, 2)) throw EndOfData();
     math_data.push_back(ptr, CmdChr(math_list_cmd, k), subtypes(math_hbox_cd));
 }
 
