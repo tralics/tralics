@@ -4,6 +4,7 @@
 #include "tralics/Bibliography.h"
 #include "tralics/Bibtex.h"
 #include "tralics/ColSpec.h"
+#include "tralics/Dispatcher.h"
 #include "tralics/LineList.h"
 #include "tralics/Logger.h"
 #include "tralics/NameMapper.h"
@@ -2607,4 +2608,15 @@ void Parser::E_multispan() {
         back_input(omit);
         --n;
     }
+}
+
+[[nodiscard]] auto Parser::translate03() -> bool {
+    auto guard  = SaveErrTok(cur_tok);
+    auto [x, c] = cur_cmd_chr;
+
+    if (x == underscore_catcode && global_in_load) return translate_char(cur_cmd_chr), true;
+    if (auto res = Dispatcher::call(x, c)) return *res;
+
+    undefined_mac();
+    return true;
 }
