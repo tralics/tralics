@@ -128,6 +128,18 @@ void Dispatcher::register_name(symcodes x, const std::function<std::string(subty
 void Dispatcher::register_name(symcodes x, subtypes c, const std::string &s) { the_names()[x][c] = s; }
 
 Dispatcher::Dispatcher() {
+    register_name(mathbin_cmd, token_math_name);
+    register_name(mathrel_cmd, token_math_name);
+    register_name(mathinner_cmd, token_math_name);
+    register_name(mathbetween_cmd, token_math_name);
+    register_name(mathopen_cmd, token_math_name);
+    register_name(mathclose_cmd, token_math_name);
+    register_name(mathspace_cmd, token_math_name);
+    register_name(mathord_cmd, token_math_name);
+    register_name(mathordb_cmd, token_math_name);
+    register_name(mathop_cmd, token_math_name);
+    register_name(mathopn_cmd, token_math_name);
+
     register_action(addatt_cmd, &Parser::T_xmladdatt);
     register_action(advance_cmd, &Parser::M_prefixed);
     register_action(aftergroup_cmd, &Parser::T_aftergroup);

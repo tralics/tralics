@@ -177,9 +177,8 @@ auto CmdChr::token_specialmath_name() const -> String {
     }
 }
 
-// For debug: returns the name of a command
-auto CmdChr::token_math_name() const -> String {
-    switch (int(chr)) {
+auto token_math_name(subtypes c) -> std::string {
+    switch (unsigned(c)) {
     case xml_zero_space_loc: return "zerospace";
     case xml_thinmu_space_loc: return ",";
     case xml_thickmu_space_loc: return ";";
@@ -283,7 +282,6 @@ auto CmdChr::token_math_name() const -> String {
     case Pr_code: return "Pr";
     case gcd_code: return "gcd";
     case deg_code: return "deg";
-
     case forall_code: return "forall";
     case exists_code: return "exists";
     case coprod_code: return "coprod";
@@ -300,9 +298,7 @@ auto CmdChr::token_math_name() const -> String {
     case bigodot_code: return "bigodot";
     case oint_code: return "oint";
     case bigsqcup_code: return "bigsqcup";
-    case smallint_code:
-        return "smallint";
-        // mathbin
+    case smallint_code: return "smallint";
     case triangleleft_code: return "triangleleft";
     case triangleright_code: return "triangleright";
     case bigtriangleup_code: return "bigtriangleup";
@@ -338,9 +334,7 @@ auto CmdChr::token_math_name() const -> String {
     case cdot_code: return "cdot";
     case ast_code: return "ast";
     case times_code: return "times";
-    case star_code:
-        return "star";
-        // Rel
+    case star_code: return "star";
     case propto_code: return "propto";
     case sqsubseteq_code: return "sqsubseteq";
     case sqsupseteq_code: return "sqsupseteq";
@@ -519,9 +513,7 @@ auto CmdChr::token_math_name() const -> String {
     case olessthan_code: return "olessthan";
     case varocircle_code: return "varocircle";
     case llparenthesis_code: return "llparenthesis";
-    case rrparenthesis_code:
-        return "rrparenthesis";
-        //  case bindnasrepma_code: return "bindnasrepma";
+    case rrparenthesis_code: return "rrparenthesis";
     case binampersand_code: return "binampersand";
     case llbracket_code: return "llbracket";
     case rrbracket_code: return "rrbracket";
@@ -687,7 +679,7 @@ auto CmdChr::token_math_name() const -> String {
     case idotsint_code: return "idotsint";
     case mml_none_code: return "mmlnone";
     case mml_prescripts_code: return "mmlprescripts";
-    default: return nullptr;
+    default: return "";
     }
 }
 
@@ -2427,17 +2419,6 @@ auto CmdChr::name() const -> std::string {
     if (auto res = Dispatcher::name(cmd, chr)) return *res;
 
     switch (cmd) {
-    case mathbin_cmd:
-    case mathrel_cmd:
-    case mathinner_cmd:
-    case mathbetween_cmd:
-    case mathopen_cmd:
-    case mathclose_cmd:
-    case mathspace_cmd:
-    case mathord_cmd:
-    case mathordb_cmd:
-    case mathop_cmd:
-    case mathopn_cmd: return token_math_name();
     case section_cmd: return token_section_name();
     case label_cmd: return chr == 0 ? "label" : (chr == 1 ? "anchor" : "anchorlabel");
     case ref_cmd: return chr == 0 ? "ref" : "pageref";

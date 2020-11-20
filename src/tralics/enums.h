@@ -2755,7 +2755,7 @@ enum math_loc : unsigned {
     ogreaterthan_code,
     varocircle_code,
     llparenthesis_code,
-    rrparenthesis_code, // bindnasrepma_code,
+    rrparenthesis_code,
     binampersand_code,
     llbracket_code,
     rrbracket_code,

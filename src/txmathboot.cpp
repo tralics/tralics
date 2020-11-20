@@ -1879,7 +1879,7 @@ void MathDataP::boot() {
     mk_oc("llbracket", "&LeftDoubleBracket;", "&#x301A;", llbracket_code);
     mk_oc("binampersand", "&amp;", "&amp;", binampersand_code);
     // duplicate
-    //  mk_oc("bindnasrepma","&#x214B;","&#x214B;", bindnasrepma_code);
+    mk_oc("bindnasrepma", "&#x214B;", "&#x214B;", bindnasrepma_code);
     mk_oc("llparenthesis", "&#x2987;", "&#x2987;", llparenthesis_code);
     mk_oc("rrparenthesis", "&#x2988;", "&#x2988;", rrparenthesis_code);
 
