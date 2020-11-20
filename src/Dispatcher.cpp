@@ -535,7 +535,7 @@ Dispatcher::Dispatcher() {
     });
     register_action(titlepage_cmd, [](subtypes c) {
         if (!the_stack.in_v_mode()) the_parser.wrong_mode("Bad titlepage command");
-        the_parser.T_titlepage(c);
+        Parser::T_titlepage(c);
     });
     register_action(package_cmd, [] {
         if (!the_stack.in_v_mode() || seen_document) the_parser.wrong_mode("Bad \\usepackage command");

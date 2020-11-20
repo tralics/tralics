@@ -686,7 +686,7 @@ private:
     void               scan_math_mi(size_t res, subtypes c, subtypes k, CmdChr W);
     void               scan_math_rel(subtypes c, size_t res);
     void               scan_math_tag(subtypes c);
-    bool               scan_math(size_t res, math_list_type type);
+    auto               scan_math(size_t res, math_list_type type) -> bool;
     void               scan_math2(int, math_list_type, boundary_type);
     void               scan_math3(size_t X, math_list_type T, int m);
     void               scan_optional_equals();
