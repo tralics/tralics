@@ -1,0 +1,29 @@
+%% commandes TX/PX inconnues de tralics
+%\PrintTeXMML\fint                     {\amp slint;}%X
+%\PrintTeXMML\nasymp                   {\amp nasymp;}%X
+\PrintTeXMML\nbumpeq                  {\amp nbumpe;}%X
+\PrintTeXMML\nBumpeq                  {\amp nbump;}%X
+\PrintTeXMML\ngg                      {\amp nGtv;}%X
+\PrintTeXMML\ngtrless                 {\amp ntgl;}%X
+\PrintTeXMML\ngtrsim                  {\amp ngsim;}%X
+\PrintTeXMML\nlessgtr                 {\amp ntlg;}%X
+\PrintTeXMML\nlesssim                 {\amp nlsim;}%X
+\PrintTeXMML\nll                      {\amp nLtv;}%X
+%\PrintTeXMML\npreceqq                 {\amp nprE;}%X
+%\PrintTeXMML\nprecsim                 {\amp nprsim;}%X
+%\PrintTeXMML\nsqsubset                {\amp nsqsub;}%X
+%\PrintTeXMML\nsqsupset                {\amp nsqsup;}%X
+%\PrintTeXMML\nsucceqq                 {\amp nscE;}%X
+%\PrintTeXMML\nsuccsim                 {\amp nscsim;}%X
+\PrintTeXMML\oiiint                   {\amp Cconint;}%X
+\PrintTeXMML\oiint                    {\amp Conint;}%X
+\PrintTeXMML\ointctrclockwise         {\amp awconint;}%X
+\PrintTeXMML\preceqq                  {\amp prE;}%X
+\PrintTeXMML\sqint                    {\amp quatint;}%X
+\PrintTeXMML\succeqq                  {\amp scE;}%X
+%\PrintTeXMML\varclubsuit              {\amp clubso;}%X
+%\PrintTeXMML\vardiamondsuit           {\amp diamsf;}%X
+%\PrintTeXMML\varheartsuit             {\amp heartsf;}%X
+\PrintTeXMML\varointclockwise         {\amp cwconint;}%X
+%\PrintTeXMML\varspadesuit             {\amp spadeso;}%X
+
