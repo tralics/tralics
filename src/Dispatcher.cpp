@@ -1,5 +1,7 @@
 #include "tralics/Dispatcher.h"
+#include "tralics/Logger.h"
 #include "tralics/MainClass.h"
+#include "tralics/NameMapper.h"
 #include "tralics/globals.h"
 #include <spdlog/spdlog.h>
 
@@ -469,5 +471,137 @@ Dispatcher::Dispatcher() {
     });
     register_action(skip_cmd, [](subtypes c) {
         the_parser.append_glue(the_parser.cur_tok, (c == smallskip_code ? 3 : c == medskip_code ? 6 : 12) << 16, true);
+    });
+
+    register_action(special_math_cmd, [](subtypes c) {
+        if (c == overline_code || c == underline_code)
+            the_parser.T_fonts(c == overline_code ? "overline" : "underline");
+        else
+            the_parser.math_only();
+    });
+    register_action(ltfont_cmd, [](subtypes c) {
+        the_parser.flush_buffer();
+        the_parser.cur_font.ltfont(the_parser.sT_arg_nopar(), c);
+    });
+    register_action(citation_cmd, [] {
+        the_parser.T_citation();
+        the_stack.add_nl();
+    });
+    register_action(ignore_cmd, [](subtypes c) {
+        if (c == addnl_code) {
+            the_parser.flush_buffer();
+            the_stack.add_nl();
+        } else if (c == unskip_code) {
+            if (the_parser.unprocessed_xml.empty())
+                the_stack.remove_last_space();
+            else
+                the_parser.unprocessed_xml.remove_last_space();
+        }
+    });
+    register_action(relax_cmd, [] {});
+    register_action(eof_marker_cmd, [] {});
+    register_action(ignore_one_argument_cmd, [](subtypes c) {
+        if (c == patterns_code || c == hyphenation_code || c == special_code) the_parser.scan_left_brace_and_back_input();
+        the_parser.ignore_arg();
+    });
+    register_action(ignore_two_argument_cmd, [] {
+        the_parser.ignore_arg();
+        the_parser.ignore_arg();
+    });
+    register_action(after_assignment_cmd, [] {
+        the_parser.get_token();
+        the_parser.set_after_ass_tok(the_parser.cur_tok);
+        if (tracing_commands()) {
+            Logger::finish_seq();
+            the_log << "{\\afterassignment: " << the_parser.cur_tok << "}\n";
+        }
+    });
+    register_action(move_cmd, [] {
+        the_parser.scan_dimen(false, the_parser.cur_tok);
+        the_parser.scan_box(move_location);
+    });
+    register_action(leader_ship_cmd, [](subtypes c) {
+        the_parser.scan_box(c == shipout_code    ? shipout_location
+                            : c == leaders_code  ? leaders_location
+                            : c == cleaders_code ? cleaders_location
+                                                 : xleaders_location);
+    });
+    register_action(vglue_cmd, [](subtypes c) {
+        if (c == 0)
+            the_parser.T_par1();
+        else
+            the_parser.leave_v_mode();
+        the_parser.T_scan_glue(c == 0 ? vskip_code : hskip_code);
+    });
+    register_action(titlepage_cmd, [](subtypes c) {
+        if (!the_stack.in_v_mode()) the_parser.wrong_mode("Bad titlepage command");
+        the_parser.T_titlepage(c);
+    });
+    register_action(package_cmd, [] {
+        if (!the_stack.in_v_mode() || seen_document) the_parser.wrong_mode("Bad \\usepackage command");
+        the_parser.T_usepackage();
+    });
+    register_action(needs_format_cmd, [] {
+        the_parser.ignore_arg();
+        the_parser.ignore_optarg();
+    });
+    register_action(label_cmd, [](subtypes c) {
+        the_parser.flush_buffer();
+        the_parser.T_label(c);
+    });
+    register_action(ref_cmd, [](subtypes c) {
+        the_parser.leave_v_mode();
+        the_parser.T_ref(c == 0);
+    });
+    register_action(centering_cmd, [](subtypes c) {
+        the_parser.word_define(incentering_code, c, false);
+        if (c != 0U) the_stack.add_center_to_p();
+    });
+    register_action(fbox_cmd, [](subtypes c) {
+        if (c == dashbox_code)
+            the_parser.T_fbox_dash_box();
+        else if (c == rotatebox_code)
+            the_parser.T_fbox_rotate_box();
+        else
+            the_parser.T_fbox(c);
+    });
+    register_action(xthepage_cmd, [] {
+        the_parser.flush_buffer();
+        the_stack.add_last(the_page_xml);
+    });
+    register_action(only_preamble_cmd, [] {
+        the_parser.get_r_token(true);
+        onlypreamble.push_back(hash_table.let_token);
+        onlypreamble.push_back(the_parser.cur_tok);
+        onlypreamble.push_back(hash_table.notprerr_token);
+    });
+    register_action(toc_cmd, [](subtypes c) {
+        {
+            std::string np = "tableofcontents";
+            if (c == 1) np = "listoftables";
+            if (c == 2) np = "listoffigures";
+            the_parser.remove_initial_star();
+            the_parser.leave_h_mode();
+            the_stack.push1(::the_names[np]);
+            if (c == 0) {
+                static bool inserted = false;
+                if (!inserted) the_stack.top_stack()->id = 4;
+                inserted = true;
+                auto k   = eqtb_int_table[42 + count_reg_offset].val;
+                the_stack.add_att_to_cur(std::string("depth"), std::string(std::to_string(k)));
+            }
+            the_stack.pop(::the_names[np]);
+        }
+    });
+    register_action(center_cmd, [](subtypes c) {
+        the_parser.leave_h_mode();
+        the_stack.add_nl();
+        the_parser.word_define(incentering_code, c, false);
+    });
+    register_action(thm_aux_cmd, [](subtypes c) {
+        {
+            TokenList L = the_parser.read_arg();
+            the_parser.token_list_define(c, L, false);
+        }
     });
 }

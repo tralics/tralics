@@ -20,135 +20,6 @@
     if (auto res = Dispatcher::call(x, c)) return *res;
 
     switch (x) {
-    case special_math_cmd:
-        if (c == overline_code || c == underline_code)
-            T_fonts(c == overline_code ? "overline" : "underline");
-        else
-            math_only();
-        return true;
-    case ltfont_cmd:
-        flush_buffer();
-        cur_font.ltfont(sT_arg_nopar(), c);
-        return true;
-    case citation_cmd:
-        T_citation();
-        the_stack.add_nl();
-        return true;
-    case ignore_cmd:
-        if (c == addnl_code) {
-            flush_buffer();
-            the_stack.add_nl();
-        } else if (c == unskip_code) {
-            if (unprocessed_xml.empty())
-                the_stack.remove_last_space();
-            else
-                unprocessed_xml.remove_last_space();
-        }
-        return true;
-    case relax_cmd: return true;
-    case eof_marker_cmd: return true;
-    case ignore_one_argument_cmd:
-        if (c == patterns_code || c == hyphenation_code || c == special_code) scan_left_brace_and_back_input();
-        ignore_arg();
-        return true;
-    case ignore_two_argument_cmd:
-        ignore_arg();
-        ignore_arg();
-        return true;
-    case after_assignment_cmd:
-        get_token();
-        set_after_ass_tok(cur_tok);
-        if (tracing_commands()) {
-            Logger::finish_seq();
-            the_log << "{\\afterassignment: " << cur_tok << "}\n";
-        }
-        return true;
-    case move_cmd:
-        scan_dimen(false, cur_tok); // ignore dimension
-        scan_box(move_location);    // read a box and insert the value
-        return true;
-    case leader_ship_cmd:
-        scan_box(c == shipout_code    ? shipout_location
-                 : c == leaders_code  ? leaders_location
-                 : c == cleaders_code ? cleaders_location
-                                      : xleaders_location);
-        return true;
-    case vglue_cmd:
-        if (c == 0)
-            T_par1();
-        else
-            leave_v_mode();
-        T_scan_glue(c == 0 ? vskip_code : hskip_code);
-        return true;
-    case titlepage_cmd:
-        if (!the_stack.in_v_mode()) wrong_mode("Bad titlepage command");
-        T_titlepage(c);
-        return true;
-    case package_cmd:
-        if (!the_stack.in_v_mode() || seen_document) wrong_mode("Bad \\usepackage command");
-        T_usepackage();
-        return true;
-    case needs_format_cmd:
-        ignore_arg();
-        ignore_optarg();
-        return true;
-    case label_cmd:
-        flush_buffer();
-        T_label(c);
-        return true;
-    case ref_cmd:
-        leave_v_mode();
-        T_ref(c == 0);
-        return true;
-    case centering_cmd:
-        word_define(incentering_code, c, false);
-        if (c != 0U) the_stack.add_center_to_p();
-        return true;
-    case fbox_cmd:
-        if (c == dashbox_code)
-            T_fbox_dash_box();
-        else if (c == rotatebox_code)
-            T_fbox_rotate_box();
-        else
-            T_fbox(c);
-        return true;
-    case xthepage_cmd:
-        flush_buffer();
-        the_stack.add_last(the_page_xml);
-        return true;
-    case only_preamble_cmd:
-        get_r_token(true);
-        onlypreamble.push_back(hash_table.let_token);
-        onlypreamble.push_back(cur_tok);
-        onlypreamble.push_back(hash_table.notprerr_token);
-        return true;
-    case toc_cmd: { // insert <tableofcontents/>
-        std::string np = "tableofcontents";
-        if (c == 1) np = "listoftables";
-        if (c == 2) np = "listoffigures";
-        remove_initial_star();
-        leave_h_mode();
-        the_stack.push1(the_names[np]);
-        if (c == 0) {
-            static bool inserted = false;
-            if (!inserted) the_stack.top_stack()->id = 4;
-            inserted = true;
-            auto k   = eqtb_int_table[42 + count_reg_offset].val;
-            the_stack.add_att_to_cur(std::string("depth"), std::string(std::to_string(k)));
-        }
-        the_stack.pop(the_names[np]);
-        return true;
-    }
-    case center_cmd:
-        leave_h_mode();     // finish the possibly not-centered paragraph
-        the_stack.add_nl(); // needed ?
-        word_define(incentering_code, c, false);
-        return true;
-    case thm_aux_cmd: {
-        TokenList L = read_arg();
-        token_list_define(c, L, false);
-    }
-        return true;
     case start_thm_cmd:
         if (c == 2)
             T_end_theorem();
@@ -158,7 +29,7 @@
     case ignore_env_cmd: return true;
     case math_env_cmd:
         cur_tok.kill();
-        pop_level(bt_env); // IS THIS OK ?
+        pop_level(bt_env);
         T_math(c);
         return true;
     case end_ignore_env_cmd: return true;

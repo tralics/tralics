@@ -47,7 +47,7 @@ public:
 private:
     static auto the_actions() -> std::unordered_map<symcodes, std::function<bool(subtypes)>> &;
     static auto the_name_fns() -> std::unordered_map<symcodes, std::function<std::string(subtypes)>> &;
-    static auto the_names() -> std::unordered_map<symcodes, std::unordered_map<subtypes, std::string>> &;
+    static auto the_names() -> std::unordered_map<symcodes, std::unordered_map<subtypes, std::string>> &; // \todo name conflict
 };
 
 inline Dispatcher actions;
