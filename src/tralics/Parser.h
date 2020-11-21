@@ -271,7 +271,7 @@ private:
     auto               math_lr_value() -> del_pos;
     auto               my_csname(String s1, String s2, TokenList &L, String s) -> bool;
     auto               new_line_for_read(bool spec) -> bool;
-    auto               new_math_list(size_t cur_math, math_list_type c, subtypes s) -> subtypes;
+    [[nodiscard]] auto new_math_list(size_t cur_math, math_list_type c, subtypes s) -> std::optional<subtypes>;
     auto               next_from_line() -> bool;
     auto               next_from_line0() -> bool;
     auto               ok_to_define(Token a, rd_flag redef) -> bool;

@@ -37,7 +37,6 @@ public:
     [[nodiscard]] auto is_minus_sign() const -> bool { return cmd == other_catcode && chr == '-'; }
     [[nodiscard]] auto is_user() const -> bool { return cmd >= user_cmd; }
     [[nodiscard]] auto is_cst1_cmd() const -> bool { return cmd == cst1_cmd; }
-    [[nodiscard]] auto is_math_font() const -> bool { return cmd == math_font_cmd; }
     [[nodiscard]] auto is_math_list() const -> bool { return cmd == math_list_cmd; }
     [[nodiscard]] auto is_mathml() const -> bool { return cmd == math_xml_cmd; }
     [[nodiscard]] auto is_expandable() const -> bool { return cmd >= max_command; }

@@ -714,10 +714,10 @@ auto MathElt::is_digit() const -> bool { return cmd == 12 && CmdChr::is_digit();
 // we open a group, create a new mathlist res, add it to cur_math.
 // Note that the type c appears both as type of res, and a field of cur_math
 
-auto Parser::new_math_list(size_t cur_math, math_list_type c, subtypes s) -> subtypes {
+[[nodiscard]] auto Parser::new_math_list(size_t cur_math, math_list_type c, subtypes s) -> std::optional<subtypes> {
     subtypes k = math_data.find_math_location(c, s, "");
     math_data.get_list(cur_math).push_back_list(k, c);
-    if (!scan_math3(k, c, 1)) throw EndOfData();
+    if (!scan_math3(k, c, 1)) return {};
     return k;
 }
 
@@ -999,6 +999,7 @@ auto Parser::scan_math1(size_t res) -> int {
 
 // The function that reads a math formula. Read tokens until the end
 // of the current group is seen. Fills the list number res, of type type
+// Return false for EndOfData
 auto Parser::scan_math(size_t res, math_list_type type) -> bool {
     for (;;) {
         int w = scan_math1(res);
@@ -1009,7 +1010,7 @@ auto Parser::scan_math(size_t res, math_list_type type) -> bool {
         Token    t = cur_tok;
         switch (T) {
         case 1: // open brace, read a group
-            new_math_list(res, math_open_cd, nomathenv_code);
+            if (!new_math_list(res, math_open_cd, nomathenv_code)) return false;
             continue;
         case 2: // close brace, end group
             if (type == math_open_cd || type == math_argument_cd || type == math_hbox_cd) return true;
@@ -1079,7 +1080,8 @@ auto Parser::scan_math(size_t res, math_list_type type) -> bool {
         case left_cmd: {
             del_pos k   = math_lr_value();
             auto    tmp = new_math_list(res, math_LR_cd, nomathenv_code);
-            Math &  ww  = math_data.get_list(tmp);
+            if (!tmp) return false;
+            Math &ww = math_data.get_list(*tmp);
             ww.push_front(CmdChr(T, subtypes(k)), zero_code);
             if (ww.back().cmd != right_cmd) {
                 parse_error("Missing \\right. inserted");
@@ -1281,7 +1283,7 @@ auto Parser::scan_math_env(size_t res, math_list_type type) -> bool {
             parse_error(err_tok, B, "bad env");
         }
         if ((math_env_props(et) & 16) != 0) ignore_optarg();
-        new_math_list(res, math_env_cd, et);
+        if (!new_math_list(res, math_env_cd, et)) throw EndOfData();
         return false;
     }
     // Case \end{foo}
@@ -1344,7 +1346,7 @@ auto Parser::scan_math_dollar(size_t res, math_list_type type) -> bool {
             back_input(everymath);
         }
         select_math_font();
-        new_math_list(res, math_dollar_cd, nomathenv_code);
+        if (!new_math_list(res, math_dollar_cd, nomathenv_code)) throw EndOfData();
         return false;
     }
     case math_LR_cd:

@@ -1355,10 +1355,10 @@ auto Math::special1() const -> Xml * {
 // stored somewhere in eqtb. This does not interpret the fonts;
 // It justs reads the tokens, and backinputs them
 void Parser::TM_fonts() {
-    Token *table = hash_table.my_mathfont_table.data();
-    int    T     = 0;
-    bool   bold  = is_pos_par(atmathversion_code);
-    if (cur_cmd_chr.is_math_font()) {
+    const auto &table = hash_table.my_mathfont_table;
+    size_t      T     = 0;
+    bool        bold  = is_pos_par(atmathversion_code);
+    if (cur_cmd_chr.cmd == math_font_cmd) {
         switch (cur_cmd_chr.chr) {
         case cal_code:
             back_input(table[bold ? math_f_bold_script : math_f_script]);
@@ -1373,7 +1373,7 @@ void Parser::TM_fonts() {
         case mathnormal_code: T = bold ? math_f_bold : math_f_normal; break;
         case mathbb_code: T = math_f_doublestruck; break;
         case mathsf_code: T = bold ? math_f_bold_sansserif : math_f_sansserif; break;
-        default: T = -1;
+        default: T = size_t(-1);
         }
     } else { // this is a textfont
         switch (cur_cmd_chr.chr) {
@@ -1387,18 +1387,18 @@ void Parser::TM_fonts() {
             //    case sc_shape_code:
         case sl_shape_code:
         case normalfont_code: T = math_f_normal; break;
-        default: T = -1;
+        default: T = size_t(-1);
         }
     }
     if (cur_cmd_chr.cmd == oldfont_cmd || cur_cmd_chr.cmd == noargfont_cmd) {
-        if (T != -1) {
+        if (T != size_t(-1)) {
             back_input(table[T]);
             back_input(hash_table.nomathsw0_token);
         }
         return;
     }
     TokenList L = read_arg();
-    auto      c = eqtb_int_table[math_font_pos].val;
+    auto      c = to_unsigned(eqtb_int_table[math_font_pos].val);
     back_input(table[c]);
     back_input(hash_table.nomathsw0_token);
     L.push_back(hash_table.nomathsw1_token);
@@ -1408,7 +1408,7 @@ void Parser::TM_fonts() {
     L.push_front(hash_table.nomathsw1_token);
     L.push_front(hash_table.begingroup_token);
     back_input(L);
-    if (T != -1) {
+    if (T != size_t(-1)) {
         back_input(table[T]);
         back_input(hash_table.nomathsw0_token);
     }
