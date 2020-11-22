@@ -10,6 +10,7 @@
 #include "tralics/NameMapper.h"
 #include "tralics/NewArray.h"
 #include "tralics/Saver.h"
+#include "tralics/Symcode.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include <fmt/format.h>
@@ -2615,7 +2616,7 @@ void Parser::E_multispan() {
     auto [x, c] = cur_cmd_chr;
 
     if (x == underscore_catcode && global_in_load) return translate_char(cur_cmd_chr), true;
-    if (auto res = Dispatcher::call(x, c)) return *res;
+    if (auto res = Symcode(x).call(c)) return *res;
 
     undefined_mac();
     return true;
