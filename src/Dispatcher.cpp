@@ -32,11 +32,6 @@ auto Dispatcher::the_names() -> std::unordered_map<symcodes, std::unordered_map<
     return m;
 }
 
-auto Dispatcher::call(symcodes x, subtypes c) -> std::optional<bool> {
-    if (auto a = symcode_map()[x].action) return (*a)(c);
-    return {};
-}
-
 auto Dispatcher::name(symcodes x, subtypes c) -> std::optional<std::string> {
     static auto &n = the_names();
     if (auto it = n.find(x); it != n.end())

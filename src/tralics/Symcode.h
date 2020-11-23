@@ -18,13 +18,7 @@ struct Symcode {
     Symcode(symcodes v) : val(v) {}
     operator symcodes() { return val; }
 
-    auto call(subtypes c) -> std::optional<bool> {
-        if (action) return (*action)(c);
-        return Dispatcher::call(val, c);
-    }
+    auto call(subtypes c) -> std::optional<bool>;
 };
 
-inline automap<symcodes, Symcode> &symcode_map() {
-    static automap<symcodes, Symcode> m;
-    return m;
-}
+automap<symcodes, Symcode> &symcode_map();

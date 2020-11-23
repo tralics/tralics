@@ -2616,7 +2616,7 @@ void Parser::E_multispan() {
     auto [x, c] = cur_cmd_chr;
 
     if (x == underscore_catcode && global_in_load) return translate_char(cur_cmd_chr), true;
-    if (auto res = Symcode(x).call(c)) return *res;
+    if (auto res = symcode_map()[x].call(c)) return *res;
 
     undefined_mac();
     return true;

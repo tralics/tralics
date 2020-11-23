@@ -18,7 +18,6 @@ public:
 
     Dispatcher(); // \todo this method is too big, but easier to split up than translate03 was, do that
 
-    static auto call(symcodes x, subtypes c) -> std::optional<bool>;
     static auto name(symcodes x, subtypes c) -> std::optional<std::string>;
 
     static void register_action(symcodes x, const std::function<bool()> &f);                   // explicit action
