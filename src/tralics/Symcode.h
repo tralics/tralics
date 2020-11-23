@@ -11,6 +11,7 @@ public:
     symcodes                                            val;
     std::optional<std::function<bool(subtypes)>>        action;
     std::optional<std::function<std::string(subtypes)>> name_fn;
+    std::unordered_map<subtypes, std::string>           name_sub;
 
     operator symcodes() const { return val; }
 

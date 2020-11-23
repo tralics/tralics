@@ -13,5 +13,6 @@ auto Symcode::call(subtypes c) const -> std::optional<bool> {
 
 auto Symcode::name(subtypes c) const -> std::optional<std::string> {
     if (name_fn) return (*name_fn)(c);
-    return Dispatcher::name(val, c);
+    if (auto it = name_sub.find(c); it != name_sub.end()) return it->second;
+    return {};
 }

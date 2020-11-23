@@ -18,8 +18,6 @@ public:
 
     Dispatcher(); // \todo this method is too big, but easier to split up than translate03 was, do that
 
-    static auto name(symcodes x, subtypes c) -> std::optional<std::string>;
-
     static void register_action(symcodes x, const std::function<bool()> &f);                   // explicit action
     static void register_action(symcodes x, const std::function<void()> &f);                   // explicit action, return true
     static void register_action(symcodes x, const std::function<bool(symcodes)> &f);           // explicit action
@@ -42,10 +40,6 @@ public:
 
     static void register_name(symcodes x, const std::function<std::string(subtypes)> &f);
     static void register_name(symcodes x, subtypes c, const std::string &s);
-
-private:
-    [[deprecated]] static auto the_name_fns() -> std::unordered_map<symcodes, std::function<std::string(subtypes)>> &;
-    static auto the_names() -> std::unordered_map<symcodes, std::unordered_map<subtypes, std::string>> &; // \todo name conflict
 };
 
 inline Dispatcher actions;

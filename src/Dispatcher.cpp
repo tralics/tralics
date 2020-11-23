@@ -22,23 +22,6 @@ namespace {
     }
 } // namespace
 
-auto Dispatcher::the_name_fns() -> std::unordered_map<symcodes, std::function<std::string(subtypes)>> & {
-    static std::unordered_map<symcodes, std::function<std::string(subtypes)>> m;
-    return m;
-}
-
-auto Dispatcher::the_names() -> std::unordered_map<symcodes, std::unordered_map<subtypes, std::string>> & {
-    static std::unordered_map<symcodes, std::unordered_map<subtypes, std::string>> m;
-    return m;
-}
-
-auto Dispatcher::name(symcodes x, subtypes c) -> std::optional<std::string> {
-    static auto &n = the_names();
-    if (auto it = n.find(x); it != n.end())
-        if (auto it2 = it->second.find(c); it2 != it->second.end()) return it2->second;
-    return {};
-}
-
 void Dispatcher::register_action(symcodes x, const std::function<bool(subtypes)> &f) { Symcode::get(x).action = f; }
 
 void Dispatcher::register_action(symcodes x, const std::function<bool()> &f) {
@@ -111,7 +94,7 @@ void Dispatcher::register_action(symcodes x, parser_fn_with_cmdchr_void f) {
 
 void Dispatcher::register_name(symcodes x, const std::function<std::string(subtypes)> &f) { Symcode::get(x).name_fn = f; }
 
-void Dispatcher::register_name(symcodes x, subtypes c, const std::string &s) { the_names()[x][c] = s; }
+void Dispatcher::register_name(symcodes x, subtypes c, const std::string &s) { Symcode::get(x).name_sub[c] = s; }
 
 Dispatcher::Dispatcher() {
     register_name(mathbin_cmd, token_math_name);
