@@ -44,7 +44,7 @@ public:
     static void register_name(symcodes x, subtypes c, const std::string &s);
 
 private:
-    static auto the_name_fns() -> std::unordered_map<symcodes, std::function<std::string(subtypes)>> &;
+    [[deprecated]] static auto the_name_fns() -> std::unordered_map<symcodes, std::function<std::string(subtypes)>> &;
     static auto the_names() -> std::unordered_map<symcodes, std::unordered_map<subtypes, std::string>> &; // \todo name conflict
 };
 

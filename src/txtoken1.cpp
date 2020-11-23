@@ -10,6 +10,7 @@
 
 #include "tralics/Buffer.h"
 #include "tralics/Dispatcher.h"
+#include "tralics/Symcode.h"
 #include <fmt/format.h>
 #include <spdlog/spdlog.h>
 
@@ -2416,7 +2417,7 @@ auto CmdChr::special_name() const -> String {
 // This returns the name of a CmdChr pair.
 // The result is a UTF8 string
 auto CmdChr::name() const -> std::string {
-    if (auto res = Dispatcher::name(cmd, chr)) return *res;
+    if (auto res = Symcode::get(cmd).name(chr)) return *res;
 
     switch (cmd) {
     case section_cmd: return token_section_name();

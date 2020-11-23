@@ -36,10 +36,6 @@ auto Dispatcher::name(symcodes x, subtypes c) -> std::optional<std::string> {
     static auto &n = the_names();
     if (auto it = n.find(x); it != n.end())
         if (auto it2 = it->second.find(c); it2 != it->second.end()) return it2->second;
-
-    static auto &m = the_name_fns();
-    if (auto it = m.find(x); it != m.end()) return it->second(c);
-
     return {};
 }
 
@@ -113,7 +109,7 @@ void Dispatcher::register_action(symcodes x, parser_fn_with_cmdchr_void f) {
     Symcode::get(x).action = [=](subtypes c) { return std::invoke(f, the_parser, CmdChr{x, c}), true; };
 }
 
-void Dispatcher::register_name(symcodes x, const std::function<std::string(subtypes)> &f) { the_name_fns().emplace(x, f); }
+void Dispatcher::register_name(symcodes x, const std::function<std::string(subtypes)> &f) { Symcode::get(x).name_fn = f; }
 
 void Dispatcher::register_name(symcodes x, subtypes c, const std::string &s) { the_names()[x][c] = s; }
 
