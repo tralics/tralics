@@ -4,21 +4,26 @@
 #include <optional>
 #include <unordered_map>
 
-template <typename K, typename V> struct automap : public std::unordered_map<K, V> {
-    V &operator[](K k) {
-        std::unordered_map<K, V>::try_emplace(k, V{k});
-        return std::unordered_map<K, V>::at(k);
-    }
-};
+class Symcode {
+    struct automap : public std::unordered_map<symcodes, Symcode> {
+        Symcode &operator[](symcodes k) {
+            try_emplace(k, Symcode{k});
+            return at(k);
+        }
+    };
 
-struct Symcode {
+    friend class Dispatcher;
+
+    Symcode(symcodes v) : val(v) {}
+    static automap &get();
+
     symcodes                                     val;
     std::optional<std::function<bool(subtypes)>> action;
 
-    Symcode(symcodes v) : val(v) {}
+public:
+    static Symcode &get(symcodes v) { return get()[v]; }
+
     operator symcodes() { return val; }
 
     auto call(subtypes c) -> std::optional<bool>;
 };
-
-automap<symcodes, Symcode> &symcode_map();

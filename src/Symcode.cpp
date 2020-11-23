@@ -5,7 +5,7 @@ auto Symcode::call(subtypes c) -> std::optional<bool> {
     return {};
 }
 
-automap<symcodes, Symcode> &symcode_map() {
-    static automap<symcodes, Symcode> m;
+auto Symcode::get() -> automap & {
+    static automap m;
     return m;
 }
