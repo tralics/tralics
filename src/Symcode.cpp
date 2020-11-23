@@ -5,7 +5,8 @@ auto Symcode::call(subtypes c) -> std::optional<bool> {
     return {};
 }
 
-auto Symcode::get() -> automap & {
-    static automap m;
-    return m;
+Symcode &Symcode::get(symcodes v) {
+    static std::unordered_map<symcodes, Symcode> m;
+    m.try_emplace(v, Symcode{v});
+    return m.at(v);
 }
