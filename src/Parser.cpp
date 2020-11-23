@@ -1719,6 +1719,7 @@ void Parser::make_catcodes() {
 // This is the main bootstrap code
 void Parser::boot() {
     boot_time();
+    boot_symcode_names();
     boot_accents();
     boot_verbatim();
     boot_xspace();

@@ -30,7 +30,7 @@ namespace {
     auto is_accent_char(char c) -> bool { return c == '\'' || c == '`' || c == '^' || c == '"' || c == '~' || c == '.' || c == '='; }
 
     // True if \sortnoop, \SortNoop, \noopsort plus brace or space
-    // First char to test is at i+1
+    // First char to test is at i+1 \todo regexp
     auto is_noopsort(const std::string &s, size_t i) -> bool {
         auto n = s.size();
         if (i + 10 >= n) return false;

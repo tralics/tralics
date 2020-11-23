@@ -153,7 +153,7 @@ public:
     void add_language_att();
     void after_main_text();
     void boot();
-    void boot_special_names();
+    void boot_symcode_names();
     void box_end(Xml *res, size_t pos);
     auto list_to_string0(Buffer &b) -> bool;
     auto list_to_string(TokenList &L, Buffer &b) -> bool;

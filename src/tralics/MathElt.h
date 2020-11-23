@@ -58,7 +58,7 @@ public:
 private:
     void set_xml_subtype(math_types x) {
         set_xmltype(x);
-        set_mathml();
+        cmd = math_xml_cmd;
     }
     [[nodiscard]] auto cv_char() const -> MathElt;
     [[nodiscard]] auto cv_cst() const -> MathElt;

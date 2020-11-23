@@ -93,18 +93,6 @@ void Dispatcher::register_action(symcodes x, parser_fn_with_cmdchr_void f) {
 }
 
 Dispatcher::Dispatcher() {
-    Symcode::get(mathbin_cmd).name_fn     = token_math_name;
-    Symcode::get(mathrel_cmd).name_fn     = token_math_name;
-    Symcode::get(mathinner_cmd).name_fn   = token_math_name;
-    Symcode::get(mathbetween_cmd).name_fn = token_math_name;
-    Symcode::get(mathopen_cmd).name_fn    = token_math_name;
-    Symcode::get(mathclose_cmd).name_fn   = token_math_name;
-    Symcode::get(mathspace_cmd).name_fn   = token_math_name;
-    Symcode::get(mathord_cmd).name_fn     = token_math_name;
-    Symcode::get(mathordb_cmd).name_fn    = token_math_name;
-    Symcode::get(mathop_cmd).name_fn      = token_math_name;
-    Symcode::get(mathopn_cmd).name_fn     = token_math_name;
-
     register_action(addatt_cmd, &Parser::T_xmladdatt);
     register_action(advance_cmd, &Parser::M_prefixed);
     register_action(aftergroup_cmd, &Parser::T_aftergroup);

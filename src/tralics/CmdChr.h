@@ -20,7 +20,6 @@ public:
 
     void reset() { set(undef_cmd, zero_code); }
     void kill() { set(invalid_cmd, zero_code); }
-    void set_mathml() { cmd = math_xml_cmd; }
 
     [[nodiscard]] auto char_val() const -> char32_t { return char32_t(unsigned(chr)); }
     [[nodiscard]] auto is_letter() const -> bool { return cmd == letter_catcode; }
@@ -150,7 +149,5 @@ private:
 
 public: // for use in plugins
 };
-
-[[nodiscard]] auto token_math_name(subtypes c) -> std::string;
 
 using EqtbCmdChr = EQTB<CmdChr>;
