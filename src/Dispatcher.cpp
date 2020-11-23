@@ -92,22 +92,18 @@ void Dispatcher::register_action(symcodes x, parser_fn_with_cmdchr_void f) {
     Symcode::get(x).action = [=](subtypes c) { return std::invoke(f, the_parser, CmdChr{x, c}), true; };
 }
 
-void Dispatcher::register_name(symcodes x, const std::function<std::string(subtypes)> &f) { Symcode::get(x).name_fn = f; }
-
-void Dispatcher::register_name(symcodes x, subtypes c, const std::string &s) { Symcode::get(x).name_sub[c] = s; }
-
 Dispatcher::Dispatcher() {
-    register_name(mathbin_cmd, token_math_name);
-    register_name(mathrel_cmd, token_math_name);
-    register_name(mathinner_cmd, token_math_name);
-    register_name(mathbetween_cmd, token_math_name);
-    register_name(mathopen_cmd, token_math_name);
-    register_name(mathclose_cmd, token_math_name);
-    register_name(mathspace_cmd, token_math_name);
-    register_name(mathord_cmd, token_math_name);
-    register_name(mathordb_cmd, token_math_name);
-    register_name(mathop_cmd, token_math_name);
-    register_name(mathopn_cmd, token_math_name);
+    Symcode::get(mathbin_cmd).name_fn     = token_math_name;
+    Symcode::get(mathrel_cmd).name_fn     = token_math_name;
+    Symcode::get(mathinner_cmd).name_fn   = token_math_name;
+    Symcode::get(mathbetween_cmd).name_fn = token_math_name;
+    Symcode::get(mathopen_cmd).name_fn    = token_math_name;
+    Symcode::get(mathclose_cmd).name_fn   = token_math_name;
+    Symcode::get(mathspace_cmd).name_fn   = token_math_name;
+    Symcode::get(mathord_cmd).name_fn     = token_math_name;
+    Symcode::get(mathordb_cmd).name_fn    = token_math_name;
+    Symcode::get(mathop_cmd).name_fn      = token_math_name;
+    Symcode::get(mathopn_cmd).name_fn     = token_math_name;
 
     register_action(addatt_cmd, &Parser::T_xmladdatt);
     register_action(advance_cmd, &Parser::M_prefixed);

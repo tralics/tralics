@@ -1,5 +1,6 @@
 #include "tralics/Dispatcher.h"
 #include "tralics/Parser.h"
+#include "tralics/Symcode.h"
 #include <utf8.h>
 
 namespace {
@@ -77,7 +78,7 @@ auto Hashtab::primitive(const std::string &s, symcodes c, subtypes v) -> Token {
 }
 
 auto Hashtab::primitive_plain(const std::string &s, symcodes c, subtypes v) -> Token {
-    Dispatcher::register_name(c, v, s);
+    Symcode::get(c).name_sub[v] = s;
     return primitive(s, c, v);
 }
 

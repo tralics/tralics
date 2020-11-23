@@ -37,9 +37,6 @@ public:
     static void register_action(symcodes x, parser_fn_with_xc_void f);     // x triggers the_parser.f(x,c), return true
     static void register_action(symcodes x, parser_fn_with_cmdchr f);      // x triggers the_parser.f({x,c})
     static void register_action(symcodes x, parser_fn_with_cmdchr_void f); // x triggers the_parser.f({x,c}), return true
-
-    static void register_name(symcodes x, const std::function<std::string(subtypes)> &f);
-    static void register_name(symcodes x, subtypes c, const std::string &s);
 };
 
 inline Dispatcher actions;
