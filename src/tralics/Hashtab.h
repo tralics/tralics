@@ -11,8 +11,6 @@ struct Hashtab : public std::vector<std::string> {
     std::array<Token, 15> my_mathfont_table;
     std::array<Token, 5>  genfrac_mode;
 
-    int usage_normal{0}, usage_unhashed{0};
-
     Hashtab();
 
     auto locate(const std::string &s) -> Token;

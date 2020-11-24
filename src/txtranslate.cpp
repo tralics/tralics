@@ -1227,7 +1227,6 @@ void Parser::T_cap_or_note(bool cap) {
     } else {             // case of footnote, locally redefines fonts
         ignore_optarg(); // is this OK ?
         the_stack.add_att_to_last(the_names["place"], the_names["foot_position"]);
-        my_stats.one_more_footnote();
         refstepcounter("footnote", true);
         note        = the_stack.top_stack();
         FontInfo sv = cur_font;

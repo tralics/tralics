@@ -67,11 +67,8 @@ Parser::Parser() : cur_env_name("document") { // \todo move more to the header
 
 auto operator<<(std::ostream &fp, const boundary_type &x) -> std::ostream & { return fp << bt_to_string(x); }
 
-// This adds a new element to the save stack.
-void Parser::push_save_stack(SaveAuxBase *v) {
-    my_stats.one_more_up();
-    the_save_stack.emplace_back(v);
-}
+// This adds a new element to the save stack. \todo inline
+void Parser::push_save_stack(SaveAuxBase *v) { the_save_stack.emplace_back(v); }
 
 // This is done when we evaluate { or \begingroup.
 void Parser::push_level(boundary_type v) {
@@ -347,7 +344,6 @@ void Parser::pop_level(boundary_type v) {
         }
         auto *p  = the_save_stack.back().get();
         bool  ok = (p != nullptr) && p->type == st_boundary;
-        my_stats.one_more_down();
         the_save_stack.pop_back();
         if (ok) {
             if (must_throw) {
@@ -387,7 +383,6 @@ void Parser::pop_all_levels() {
             if (w == bt_env) B += " `" + ename + "'";
             B.format(" started at line {}", l);
         }
-        my_stats.one_more_down();
         the_save_stack.pop_back();
     }
     if (started) {
@@ -405,7 +400,6 @@ void Parser::final_checks() {
     auto n = the_save_stack.size();
     if (n == 1) {
         if (the_save_stack.back()->type == st_font) {
-            my_stats.one_more_down();
             the_save_stack.pop_back();
             n = the_save_stack.size();
         }

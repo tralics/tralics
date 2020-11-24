@@ -816,7 +816,6 @@ void Xml::add_last_string(const Buffer &B) {
     if (last_is_string()) {
         last_to_SH();
         pop_back();
-        the_parser.my_stats.one_more_merge();
     }
     shbuf.append(B);
     push_back_unless_nullptr(new Xml(shbuf));

@@ -7,7 +7,6 @@
 // be killed or its reference count increased.
 
 auto Mactab::mc_new_macro(Macro *s) -> size_t {
-    the_parser.my_stats.one_more_macro();
     push_back({std::unique_ptr<Macro>(s), 0});
     return size() - 1;
 }
@@ -19,8 +18,5 @@ void Mactab::delete_macro_ref(size_t i) {
         abort();
     }
     at(i).ref--;
-    if (at(i).ref == 0) {
-        the_parser.my_stats.one_less_macro();
-        at(i).ptr.reset();
-    }
+    if (at(i).ref == 0) at(i).ptr.reset(); // \todo shared_ptr or something RAII?
 }

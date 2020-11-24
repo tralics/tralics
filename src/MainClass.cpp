@@ -911,7 +911,6 @@ void MainClass::more_boot() const {
     res.reset(".tex");
     res.emplace_back(1, "\\message{File ignored^^J}\\endinput", false);
     res.register_file();
-    the_parser.my_stats.after_boot();
     the_stack.set_xid_boot();
 }
 

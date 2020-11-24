@@ -34,7 +34,6 @@ auto Hashtab::locate(const std::string &s) -> Token {
 auto Hashtab::hash_find(const std::string &s) -> size_t {
     static auto &map = the_map();
     if (auto i = map.find(s); i != map.end()) return i->second;
-    usage_normal++;
     push_back(s);
     map.emplace(s, size() - 1);
     return size() - 1;
@@ -43,7 +42,6 @@ auto Hashtab::hash_find(const std::string &s) -> size_t {
 // Defines the command named a, but hash_find will not find it.
 // This must be used at bootstrap code.
 auto Hashtab::nohash_primitive(const std::string &a, CmdChr b) -> Token {
-    usage_unhashed++;
     push_back(a);
     auto t                          = size() - 1 + hash_offset;
     the_eqtb()[Token(t).eqtb_loc()] = {b, b.is_undef() ? 0 : 1}; // allows to define an undefined command
