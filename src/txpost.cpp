@@ -86,7 +86,6 @@ void Parser::create_label(const std::string &X, const std::string &S) {
     if (V->set_defined()) {
         multiple_label(m, V->lineno, V->filename);
     } else {
-        my_stats.one_more_label();
         V->id       = S;
         V->lineno   = get_cur_line();
         V->filename = get_cur_filename();
@@ -95,14 +94,12 @@ void Parser::create_label(const std::string &X, const std::string &S) {
 }
 
 void tralics_ns::add_ref(long v, const std::string &s, bool idx) {
-    the_parser.my_stats.one_more_ref();
     auto B = std::string(s);
     if (idx)
         refindex_list.emplace_back(v, B);
     else
         ref_list.emplace_back(v, B);
     auto *V = labinfo(B);
-    if (!V->set_used()) the_parser.my_stats.one_more_used_ref();
     if (V->lineno == 0) V->lineno = the_parser.get_cur_line();
     if (V->filename.empty()) V->filename = the_parser.get_cur_filename();
 }

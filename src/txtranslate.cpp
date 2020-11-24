@@ -1404,7 +1404,6 @@ void Parser::T_fbox(subtypes cc) {
 
 // Returns <xref url='v'>val</xref>
 void Parser::new_xref(Xml *val, std::string v, bool err) {
-    my_stats.one_more_href();
     the_stack.add_last(new Xml(the_names["xref"], val));
     the_stack.add_att_to_last(the_names["url"], std::string(v));
     if (err && (v.empty() || v[0] == '(')) parse_error("Invalid URL value");

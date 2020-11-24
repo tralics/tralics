@@ -10,7 +10,6 @@
 #include "Mactab.h"
 #include "SaveState.h"
 #include "Stack.h"
-#include "Stats.h"
 #include "SthInternal.h"
 
 struct RealNumber;
@@ -43,8 +42,7 @@ public:
     FontInfo                                  cur_font;           // info for the current font
     std::vector<Image>                        the_images;         // file data for images
     std::vector<Xml *>                        all_heads;
-    Stats                                     my_stats; // for the statistics
-    Token                                     err_tok;  // in case of error
+    Token                                     err_tok; // in case of error
 private:
     bool     unexpected_seen_hi{false}; // check for wrongly placed font changes
     bool     calc_loaded;               // did we see \usepackage{calc} ?

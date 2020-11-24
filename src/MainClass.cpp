@@ -934,7 +934,12 @@ void MainClass::run(int argc, char **argv) {
     if (seen_enddocument) the_stack.add_nl();
     the_parser.final_checks();
     if (!no_xml) {
-        the_parser.my_stats.token_stats();
+        if (the_parser.get_list_files()) {
+            log_and_tty << " *File List*\n";
+            log_and_tty << file_list;
+            log_and_tty << " ***********\n";
+        }
+        if (bad_chars != 0) spdlog::warn("Input conversion errors: {} char{}.", bad_chars, bad_chars > 1 ? "s" : "");
         the_parser.finish_images();
         out_xml();
         Logger::log_finish();
