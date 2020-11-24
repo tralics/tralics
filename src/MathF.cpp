@@ -32,7 +32,6 @@ void MathF::handle_t() {
     if (in_mrow) {
         res.push_back(MathElt(new Xml(the_names["mrow"], t), -1, t_big ? mt_flag_big : mt_flag_small));
         t = nullptr;
-        the_parser.my_stats.one_more_small();
     }
 }
 

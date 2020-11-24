@@ -808,7 +808,6 @@ void Parser::finish_trivial_math(Xml *res) {
         Logger::finish_seq();
         the_log << "formula was math\n";
     }
-    the_parser.my_stats.one_more_trivial();
     leave_v_mode();
     math_data.finish_math_mem();
     the_stack.top_stack()->add_tmp(gsl::not_null{res});
@@ -2551,7 +2550,6 @@ auto math_ns::finish_cv_special(bool isfrac, std::string s, const std::string &p
 }
 
 auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
-    the_parser.my_stats.one_more_convert();
     if (has_over()) return M_cv0(cms); // there was an over somewhere
     Math res;
     int  i           = 0;
@@ -2771,7 +2769,6 @@ void Math::handle_mbox(Math &res) {
             Xml *Text = new Xml(the_names["mtext"], new Xml(std::string(s)));
             if (int(font) > 1) Text->add_att(the_names["mathvariant"], the_names.cstf(font));
             res.push_back_small(Text);
-            the_parser.my_stats.one_more_mbox();
         }
         if (ok == 1) return;
         if (ok == 2) continue;
@@ -2853,7 +2850,6 @@ auto MathElt::large2() const -> del_pos { return get_delimiter(chr); }
 // The list holds something like [a+b, et cl is ]
 // returns <mfenced open=[ close=]>a+b</mfenced>
 auto Math::large1(MathElt &cl, math_style cms) -> Xml * {
-    the_parser.my_stats.one_more_large();
     size_t close = cl.large2();      // ok ??
     size_t open  = front().large2(); // ok ??
     bool   bad   = false;

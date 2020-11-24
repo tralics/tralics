@@ -11,18 +11,13 @@ class Stats {
     int sh_boot{0}, sh_find{0}, sh_used{0};
     int nb_ref{0}, nb_used_ref{0}, nb_label_defined{0};
     int nb_href{0};
-    int nb_hdr{0};
-    int m_cv{0}, m_k{0}, m_large{0}, m_small{0};
     int m_special{0};
-    int m_trivial{0};
-    int m_spec_box{0};
     int m_allocated{0}, m_destroyed{0}, m_merge{0};
     int footnotes{0};
 
     size_t nb_xboot{0}; ///< number of elements created at boot tme.
 
 public:
-    void one_more_mbox() { m_spec_box++; }
     void one_more_shorten_list() { st_short++; }
     void one_more_increase_list() { st_inc++; }
     void one_more_alloc_list() { st_alloc++; }
@@ -37,13 +32,7 @@ public:
     void one_more_used_ref() { nb_used_ref++; }
     void one_more_label() { nb_label_defined++; }
     void one_more_href() { nb_href++; }
-    void one_more_hdr() { nb_hdr++; }
     void set_nb_xboot(size_t k) { nb_xboot = k; }
-    void one_more_small() { m_small++; }
-    void one_more_kernel() { m_k++; }
-    void one_more_large() { m_large++; }
-    void one_more_convert() { m_cv++; }
-    void one_more_trivial() { m_trivial++; }
     void one_more_special() { m_special++; }
     void one_more_footnote() { footnotes++; }
     void one_more_allocated() { m_allocated++; }
