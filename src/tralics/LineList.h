@@ -35,7 +35,6 @@ struct LineList : public std::list<Line> { // \todo use a vector instead
     void register_file();
     void reset(std::string x);
     auto skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const;
-    void splice_first(LineList &X); // \todo inline
     void split_string(std::string x, int l);
 };
 

@@ -151,9 +151,6 @@ void LineList::reset(std::string x) {
 // Insert a line at the end of the file, incrementing the line no
 void LineList::insert(const std::string &c, bool cv) { emplace_back(++cur_line, c, cv); }
 
-// insert a file at the start
-void LineList::splice_first(LineList &X) { splice(begin(), X); }
-
 // Copy X here,
 void LineList::clear_and_copy(LineList &X) {
     clear();
@@ -297,7 +294,7 @@ void LineList::split_string(std::string x, int l) {
         }
         if (c == 0) break;
     }
-    splice_first(L);
+    splice(begin(), L);
 }
 
 void LineList::print(std::ostream &outfile) {
@@ -368,7 +365,7 @@ void LineList::parse_and_extract_clean(const std::string &s) {
         if (keep) res.emplace_back(n, B, cv);
     }
     clear();
-    splice_first(res);
+    splice(begin(), res);
 }
 
 // Returns all line in a begin/end block named s

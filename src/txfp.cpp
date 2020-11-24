@@ -1737,7 +1737,7 @@ void FpNum::random() {
     auto  w     = to_signed(xib * 16807) - to_signed(xia * 2836);
     if (w <= 0) w += to_signed(cst_m);
     eqtb_int_table[fpseed_code].val = w;
-    fp_rand2.data[1]                           = to_unsigned(w);
+    fp_rand2.data[1]                = to_unsigned(w);
     div(fp_rand2, fp_rand1);
 }
 
@@ -2261,7 +2261,7 @@ void Parser::boot_fp() {
     L.insert("%% Begin bootstrap commands for FP");
     L.insert("\\def\\FPe{2.718281828459045235}");
     L.insert(R"(\let\ifFPtest\iftrue)");
-    lines.splice_first(L);
+    lines.splice(lines.begin(), L);
     e_powers[0].set(0, 1, 0, 0);
     e_powers[1].set(0, 2, 718281828, 459045235);
     e_powers[2].set(0, 7, 389056098, 930650227);

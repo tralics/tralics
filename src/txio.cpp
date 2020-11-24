@@ -22,10 +22,6 @@
 #include <utf8.h>
 
 namespace {
-    void utf8_ovf(size_t n) { // \todo inline
-        spdlog::error("UTF-8 parsing overflow (char U+{:04X}, line {}, file {})", n, cur_file_line, cur_file_name);
-        bad_chars++;
-    }
     /// Look for a file in the pool
     auto search_in_pool(const std::string &name) -> std::optional<size_t> {
         for (size_t i = 0; i < file_pool.size(); i++)
@@ -77,7 +73,8 @@ auto Buffer::next_utf8_char() -> char32_t {
     auto nn = to_unsigned(it - it0);
     ptrs.b += nn;
     if (cp > 0x1FFFF) {
-        utf8_ovf(cp);
+        spdlog::error("UTF-8 parsing overflow (char U+{:04X}, line {}, file {})", size_t(cp), cur_file_line, cur_file_name);
+        bad_chars++;
         return char32_t(); // \todo nullopt
     }
     return cp;
