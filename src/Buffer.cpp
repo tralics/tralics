@@ -497,29 +497,28 @@ auto Buffer::string_delims() -> bool {
 // Assumes the buffer is of the form foo/bar/etc,
 // with a final slash; returns the next item; Retval false if no string found
 
-auto Buffer::slash_separated(std::string &a) -> bool { // \todo std::optional<std::string>
-    Buffer tmp;
-    size_t p = 0;
+auto Buffer::slash_separated() -> std::optional<std::string> {
+    std::string res;
+    size_t      p = 0;
     skip_sp_tab();
-    if (head() == 0) return false;
+    if (head() == 0) return {};
     for (;;) {
         char c = head();
-        if (c == 0) return false;
+        if (c == 0) return {};
         advance();
         if (c == '/') break;
         if (c == '\\') {
-            if (head() == 0) return false;
-            if (head() == ' ') { p = tmp.size() + 1; }
+            if (head() == 0) return {};
+            if (head() == ' ') { p = res.size() + 1; }
             c = head();
             advance();
         }
-        tmp.push_back(c);
+        res.push_back(c);
     }
-    auto b = tmp.size();
-    while (b > p && (std::isspace(tmp[b - 1]) != 0)) b--;
-    tmp.resize(b);
-    a = tmp;
-    return true;
+    auto b = res.size();
+    while (b > p && (std::isspace(res[b - 1]) != 0)) b--;
+    res.resize(b);
+    return res;
 }
 
 void Buffer::push_back_unless_punct(char c) {

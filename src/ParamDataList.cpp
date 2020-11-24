@@ -9,11 +9,12 @@ void ParamDataList::interpret(const std::string &b) {
     Buffer B(b);
     if (config_ns::start_interpret(B, "//")) clear();
     for (;;) {
-        std::string r1, r2;
-        if (!B.slash_separated(r1)) return;
-        if (!B.slash_separated(r2)) return;
-        if (r1.empty()) continue;
-        if (r2.empty()) r2 = r1;
-        (*this)[r1] = r2;
+        auto r1 = B.slash_separated();
+        if (!r1) return;
+        auto r2 = B.slash_separated();
+        if (!r2) return;
+        if (r1->empty()) continue;
+        if (r2->empty()) r2 = r1;
+        (*this)[*r1] = *r2;
     }
 }
