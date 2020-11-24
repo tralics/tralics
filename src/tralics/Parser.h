@@ -151,7 +151,6 @@ public:
     void add_language_att();
     void after_main_text();
     void boot();
-    void boot_symcode_names();
     void box_end(Xml *res, size_t pos);
     auto list_to_string0(Buffer &b) -> bool;
     auto list_to_string(TokenList &L, Buffer &b) -> bool;
@@ -650,7 +649,6 @@ private:
     void               push_level(boundary_type v);
     void               push_module();
     void               push_module(const std::string &aux);
-    void               push_save_stack(SaveAuxBase *v);
     void               push_tpa();
     void               ratio_evaluate(TokenList &A, TokenList &B, SthInternal &res);
     void               read_into(TokenList &X);
@@ -992,6 +990,8 @@ public: // general methods and variables used from packages
     static auto ileave_v_mode() -> Xid;
     static auto last_att_list() -> AttList &;
     static void add_bib_marker(bool force);
+    static void boot_symcode_names();
+    static void push_save_stack(SaveAuxBase *v);
     static void T_titlepage(size_t v);
 };
 

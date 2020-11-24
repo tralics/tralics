@@ -16,7 +16,7 @@ public:
 
     operator symcodes() const { return val; }
 
-    static auto get(symcodes v) -> Symcode &;
-    auto        call(subtypes c) const -> std::optional<bool>;
-    auto        name(subtypes c) const -> std::optional<std::string>;
+    static auto        get(symcodes v) -> Symcode &;
+    [[nodiscard]] auto call(subtypes c) const -> std::optional<bool>;
+    [[nodiscard]] auto name(subtypes c) const -> std::optional<std::string>;
 };
