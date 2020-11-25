@@ -136,7 +136,6 @@ private:
     [[nodiscard]] auto token_shape_name() const -> String;
     [[nodiscard]] auto token_shorthand_name() const -> String;
     [[nodiscard]] auto token_soul_name() const -> String;
-    [[nodiscard]] auto token_specialmath_name() const -> String;
     [[nodiscard]] auto token_style_name() const -> String;
     [[nodiscard]] auto token_trees_name() const -> String;
     [[nodiscard]] auto token_unbox_name() const -> String;

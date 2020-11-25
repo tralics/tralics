@@ -125,14 +125,6 @@ auto CmdChr::name() const -> std::string {
     case ensuremath_cmd: return "ensuremath";
     case nonumber_cmd: return "nonumber";
     case nonscript_cmd: return "nonscript";
-    case tag_cmd:
-        switch (chr) {
-        case 1: return "@xtag";
-        case 2: return "@ytag";
-        case 3: return "notag";
-        case 4: return "nonumber";
-        default: return "tag";
-        }
     case line_cmd: return token_line_name();
     case linebreak_cmd: return token_linebreak_name();
     case fancy_cmd: return token_fancy_name();

@@ -257,13 +257,6 @@ Hashtab::Hashtab() {
     primitive("noalign", unimp_cmd, noalign_code);
     primitive("noboundary", unimp_cmd, noboundary_code);
     primitive("nonscript", nonscript_cmd);
-    primitive("tag", tag_cmd);
-    xtag_token = primitive("@xtag", tag_cmd, one_code);
-    ytag_token = primitive("@ytag", tag_cmd, two_code);
-    primitive("nonumber", tag_cmd, subtypes(4));
-    primitive("notag", tag_cmd, subtypes(3));
-    xtag1_token = locate("x@tag");
-    ytag1_token = locate("y@tag");
     primitive("omit", unimp_cmd, omit_code);
     primitive("radical", unimp_cmd, radical_code);
     primitive("vadjust", unimp_cmd, vadjust_code);

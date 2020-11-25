@@ -1391,7 +1391,7 @@ void Parser::scan_math_tag(subtypes c) {
     if (c == 0) {
         L.brace_me();
         L.remove_if([](const Token &m) { return m.is_math_shift(); });
-        L.push_front(is_star ? hash_table.ytag_token : hash_table.xtag_token);
+        L.push_front(is_star ? hash_table.locate("@ytag") : hash_table.locate("@xtag"));
         back_input(L);
     } else {
         if (c == 2) cmi.starred_tag();
@@ -1428,7 +1428,7 @@ void Parser::scan_eqno(math_list_type type) {
     }
     back_input();
     L.brace_me();
-    L.push_front(hash_table.ytag_token);
+    L.push_front(hash_table.locate("@ytag"));
     back_input(L);
 }
 

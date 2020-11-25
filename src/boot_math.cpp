@@ -206,5 +206,10 @@ void Dispatcher::boot_math() {
     Symcode::get(special_math_cmd).name_fn = token_specialmath_name;
     register_action_plain(special_math_cmd, special_math);
 
+    hash_table.primitive_plain("tag", tag_cmd);
+    hash_table.primitive_plain("@xtag", tag_cmd, one_code);
+    hash_table.primitive_plain("@ytag", tag_cmd, two_code);
+    hash_table.primitive_plain("notag", tag_cmd, subtypes(3));
+    hash_table.primitive_plain("nonumber", tag_cmd, subtypes(4));
     register_action_plain(tag_cmd, math_only);
 }
