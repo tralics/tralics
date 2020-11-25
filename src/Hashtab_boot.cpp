@@ -788,16 +788,6 @@ Hashtab::Hashtab() {
     primitive("endxmlelement+", end_xmlelement_env_cmd, two_code);
     primitive("begin", begin_cmd);
     primitive("end", end_cmd);
-    primitive("cal", math_font_cmd, cal_code);
-    primitive("mathtt", math_font_cmd, mathtt_code);
-    primitive("mathcal", math_font_cmd, mathcal_code);
-    primitive("mathbf", math_font_cmd, mathbf_code);
-    primitive("mathrm", math_font_cmd, mathrm_code);
-    primitive("mathit", math_font_cmd, mathit_code);
-    primitive("mathbb", math_font_cmd, mathbb_code);
-    primitive("mathsf", math_font_cmd, mathsf_code);
-    primitive("mathfrak", math_font_cmd, mathfrak_code);
-    primitive("mathnormal", math_font_cmd, mathnormal_code);
 
     primitive("leavevmode", leave_v_mode_cmd);
     primitive("epsfbox", epsfbox_cmd, zero_code);

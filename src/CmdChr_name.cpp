@@ -290,7 +290,6 @@ auto CmdChr::name() const -> std::string {
     case begin_cmd: return "begin";
     case end_cmd: return "end";
     case mathfont_cmd: return token_mathfont2_name();
-    case math_font_cmd: return token_mathfont1_name();
     case special_math_cmd:
     case specmath_cmd: return token_specialmath_name();
     case leave_v_mode_cmd: return "leavevmode";

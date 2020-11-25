@@ -46,7 +46,18 @@ void Dispatcher::boot_math() {
     hash_table.primitive_plain("right", right_cmd);
     register_action_plain(right_cmd, math_only);
 
+    hash_table.primitive_plain("cal", math_font_cmd, cal_code);
+    hash_table.primitive_plain("mathtt", math_font_cmd, mathtt_code);
+    hash_table.primitive_plain("mathcal", math_font_cmd, mathcal_code);
+    hash_table.primitive_plain("mathbf", math_font_cmd, mathbf_code);
+    hash_table.primitive_plain("mathrm", math_font_cmd, mathrm_code);
+    hash_table.primitive_plain("mathit", math_font_cmd, mathit_code);
+    hash_table.primitive_plain("mathbb", math_font_cmd, mathbb_code);
+    hash_table.primitive_plain("mathsf", math_font_cmd, mathsf_code);
+    hash_table.primitive_plain("mathfrak", math_font_cmd, mathfrak_code);
+    hash_table.primitive_plain("mathnormal", math_font_cmd, mathnormal_code);
     register_action_plain(math_font_cmd, math_only);
+
     register_action_plain(math_list_cmd, math_only);
     register_action_plain(math_xml_cmd, math_only);
     register_action_plain(mathbetween_cmd, math_only);

@@ -120,7 +120,6 @@ private:
     [[nodiscard]] auto token_makebox_name() const -> String;
     [[nodiscard]] auto token_mark_name() const -> String;
     [[nodiscard]] auto token_mathcomp_name() const -> String;
-    [[nodiscard]] auto token_mathfont1_name() const -> String;
     [[nodiscard]] auto token_mathfont2_name() const -> String;
     [[nodiscard]] auto token_monthday_name() const -> String;
     [[nodiscard]] auto token_move_name() const -> String;

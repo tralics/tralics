@@ -1138,22 +1138,6 @@ auto CmdChr::token_mathfont2_name() const -> String {
     }
 }
 
-auto CmdChr::token_mathfont1_name() const -> String {
-    switch (chr) {
-    case cal_code: return "cal";
-    case mathtt_code: return "mathtt";
-    case mathcal_code: return "mathcal";
-    case mathbf_code: return "mathbf";
-    case mathrm_code: return "mathrm";
-    case mathfrak_code: return "mathfrak";
-    case mathit_code: return "mathit";
-    case mathbb_code: return "mathbb";
-    case mathsf_code: return "mathsf";
-    case mathnormal_code: return "mathnormal";
-    default: return nullptr;
-    }
-}
-
 auto CmdChr::token_setinteraction_name() const -> String {
     switch (chr) {
     case batchmode_code: return "batchmode";
