@@ -919,8 +919,7 @@ void MainClass::run(int argc, char **argv) {
     get_os();
     parse_args(argc, argv); // look at arguments
     more_boot();            // finish bootstrap
-    Dispatcher::boot();
-    check_for_input(); // open the input file
+    check_for_input();      // open the input file
 
     dclass = input_content.find_documentclass();
     if (opt_doctype.empty()) opt_doctype = input_content.find_doctype();

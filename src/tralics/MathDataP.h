@@ -5,24 +5,24 @@
 // This is a global object for math handling
 class MathDataP : public std::vector<Math> {
     static const int                                      m_offset = 10000;
-    std::array<Xml *, last_math_loc>                      built_in_table{};     // the static math table
-    std::array<Xml *, last_math_loc>                      built_in_table_alt{}; // the static math table
-    std::vector<Xml *>                                    xml_math_table;       // the dynamic math table
-    size_t                                                xmath_pos{};          // number of slots used in the dynamic table
-    size_t                                                lmath_pos{};          // number of slots used in the math table
-    std::array<std::optional<std::string>, del_tablesize> xml_lr_ptable;        // table of fence attributes
-    std::array<math_types, nb_mathchars>                  math_char_type{};     // the math type for +, = etc
-    std::array<Xml *, nb_simplemath>                      simplemath_table{};   // translation of $x$ etc
+    std::array<Xml *, last_math_loc>                      built_in_table{};   // the static math table
+    std::vector<Xml *>                                    xml_math_table;     // the dynamic math table
+    size_t                                                xmath_pos{};        // number of slots used in the dynamic table
+    size_t                                                lmath_pos{};        // number of slots used in the math table
+    std::array<std::optional<std::string>, del_tablesize> xml_lr_ptable;      // table of fence attributes
+    std::array<math_types, nb_mathchars>                  math_char_type{};   // the math type for +, = etc
+    std::array<Xml *, nb_simplemath>                      simplemath_table{}; // translation of $x$ etc
     std::array<Xml *, 29>                                 mc_table{};
     bool                                                  no_ent_names{};
     Token                                                 nomathsw0; // says next token is for nomathml only
     Token                                                 nomathsw1; // says next token is for normal mode only
+public:
+    std::array<Xml *, last_math_loc> built_in_table_alt{}; // the static math table
 private:
     void boot_table();
     void boot2();
     void boot_chars();
     void boot_xml_lr_tables();
-    auto mk_gen(String name, String ent, String ent2, math_loc pos, const std::string &bl, symcodes t, bool hack) -> Token;
     auto mk_gen(String name, String ent, String ent2, math_loc pos, math_loc pos2, const std::string &bl, symcodes t, bool hack) -> Token;
     void mk_ic(String name, String ent, String ent2, math_loc pos);
     void mk_icb(String name, String ent, String ent2, math_loc pos);
@@ -33,13 +33,12 @@ private:
     void mk_ocr(String name, String ent, String ent2, math_loc pos);
     void mk_oc(String name, String ent, String ent2, math_loc pos, symcodes t, bool hack);
     void mk_moo(String name, String ent, math_loc pos);
-    void mk_accent(String name, String ent, String ent2, subtypes pos);
     void fill_lr(size_t a, String b, String c);
     void fill_lr(size_t a, String b);
-    auto init_builtin(String name, math_loc pos, Xml *x, symcodes t) -> Token;
 
 public:
     void boot();
+    auto init_builtin(String name, math_loc pos, Xml *x, symcodes t) -> Token;
     void realloc_list0();
     void realloc_list();
     auto find_math_location(math_list_type c, subtypes n, std::string s) -> subtypes;
@@ -66,6 +65,7 @@ public:
     void set_type(size_t k, math_list_type c);
 
     static auto mk_mo(String a) -> gsl::not_null<Xml *>;
+    auto        mk_gen(String name, String ent, String ent2, math_loc pos, const std::string &bl, symcodes t, bool hack) -> Token;
 };
 
 inline MathDataP math_data; // \todo unique instance, should we use static stuff?

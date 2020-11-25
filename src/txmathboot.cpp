@@ -10,6 +10,7 @@
 
 // Tralics math; boot part. This constructs all data structures.
 
+#include "tralics/Dispatcher.h"
 #include "tralics/MainClass.h"
 #include "tralics/MathDataP.h"
 #include "tralics/Parser.h"
@@ -1193,12 +1194,6 @@ void MathDataP::mk_oc(String name, String ent, String ent2, math_loc pos, symcod
     mk_gen(name, ent, ent2, pos, "mo", t, hack);
 }
 
-// This associates to the command named A, a <mo> element with value B
-// with internal code pos. It is something like an accent.
-void MathDataP::mk_accent(String name, String ent, String ent2, subtypes pos) {
-    mk_gen(name, ent, ent2, math_loc(pos), "mo", special_math_cmd, false);
-}
-
 // This is for a character: the single character in A
 // is defined to be <mo> with value b.
 void MathDataP::TM_mk(String a, String b, math_types c) {
@@ -1404,6 +1399,8 @@ void MathDataP::boot() {
     fill_math_char_slots();
     if (!no_ent_names) fill_math_char_slots_ent();
     boot_chars();
+
+    Dispatcher::boot(); // \todo move to a more reasonable and robust place
 
     mk_icb("alpha", "&alpha;", "&#x3B1;", alpha_code);
     mk_icb("beta", "&beta;", "&#x3B2;", beta_code);
@@ -1972,29 +1969,6 @@ void MathDataP::boot() {
     TM_mk("=", "=", mt_flag_rel);
     TM_mk("&", "&amp;", mt_flag_small);
 
-    mk_accent("acute", "&acute;", "&#x000B4;", acute_code);
-    mk_accent("grave", "&grave;", "&#x60;", grave_code);
-    mk_accent("mathring", "&#x2DA;", "&#x2DA;", mathring_code);
-    mk_accent("ddddot", "&#x20DC;", "&#x20DC;", ddddot_code);
-    mk_accent("dddot", "&#x20DB;", "&#x20DB;", dddot_code);
-    mk_accent("ddot", "&die;", "&#xA8;", ddot_code);
-    mk_accent("tilde", "&tilde;", "&#x2DC;", tilde_code);
-    mk_accent("widetilde", "&tilde;", "&#x2DC;", widetilde_code); // No wide....
-    mk_accent("bar", "&OverBar;", "&#xAF;", bar_code);
-    mk_accent("breve", "&breve;", "&#x2D8;", breve_code);
-    mk_accent("check", "&Hacek;", "&#x2C7;", check_code);
-    mk_accent("hat", "&Hat;", "&#x5E;", hat_code);
-    mk_accent("widehat", "&Hat;", "&#x5E;", widehat_code); // No wide....
-    mk_accent("vec", "&rightarrow;", "&#x02192;", vec_code);
-    mk_accent("overrightarrow", "&rightarrow;", "&#x02192;", overrightarrow_code);
-    mk_accent("overleftarrow", "&leftarrow;", "&#x02190;", overleftarrow_code);
-    mk_accent("overleftrightarrow", "&leftrightarrow;", "&#x02194;", overleftrightarrow_code);
-    mk_accent("underrightarrow", "&rightarrow;", "&#x02192;", underrightarrow_code);
-    mk_accent("xrightarrow", "&rightarrow;", "&#x02192;", xrightarrow_code);
-    mk_accent("underleftarrow", "&leftarrow;", "&#x02190;", underleftarrow_code);
-    mk_accent("underleftrightarrow", "&leftrightarrow;", "&#x02194;", underleftrightarrow_code);
-    mk_accent("xleftarrow", "&leftarrow;", "&#x02190;", xleftarrow_code);
-    mk_accent("dot", "&dot;", "&#x002D9;", dot_code);
     eval_let("varbigtriangledown", "bigtriangledown");
     eval_let("varbigtriangleup", "bigtriangleup");
     eval_let("bigcurlyvee", "curlyvee");

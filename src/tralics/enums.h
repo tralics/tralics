@@ -1756,7 +1756,6 @@ enum subtypes : unsigned {
     vphantom_code,
     hphantom_code,
     smash_code,
-    atsmash_code,
     // now comes accent commands
     acute_code,
     first_maccent_code = acute_code,

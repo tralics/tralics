@@ -1,14 +1,21 @@
 #include "tralics/Dispatcher.h"
+#include "tralics/MainClass.h"
+#include "tralics/MathDataP.h"
 #include "tralics/Symcode.h"
 #include <spdlog/spdlog.h>
 
 [[nodiscard]] auto token_math_name(subtypes c) -> std::string;
 
 namespace {
+    void mk_accent(String name, String ent, String ent2, subtypes pos) {
+        Xml *x = new Xml(std::string(the_main.no_entnames ? ent2 : ent));
+        x      = new Xml(the_names["mo"], x);
+        math_data.init_builtin(name, math_loc(pos), x, special_math_cmd);
+    }
+
     auto token_specialmath_name(subtypes chr) -> std::string {
         switch (chr) {
         case acute_code: return "acute";
-        case atsmash_code: return "@smash";
         case bar_code: return "bar";
         case breve_code: return "breve";
         case check_code: return "check";
@@ -147,6 +154,30 @@ void Dispatcher::boot_math() {
 
     Symcode::get(mathspace_cmd).name_fn = token_math_name;
     register_action_plain(mathspace_cmd, math_only);
+
+    mk_accent("acute", "&acute;", "&#x000B4;", acute_code);
+    mk_accent("grave", "&grave;", "&#x60;", grave_code);
+    mk_accent("mathring", "&#x2DA;", "&#x2DA;", mathring_code);
+    mk_accent("ddddot", "&#x20DC;", "&#x20DC;", ddddot_code);
+    mk_accent("dddot", "&#x20DB;", "&#x20DB;", dddot_code);
+    mk_accent("ddot", "&die;", "&#xA8;", ddot_code);
+    mk_accent("tilde", "&tilde;", "&#x2DC;", tilde_code);
+    mk_accent("widetilde", "&tilde;", "&#x2DC;", widetilde_code); // No wide....
+    mk_accent("bar", "&OverBar;", "&#xAF;", bar_code);
+    mk_accent("breve", "&breve;", "&#x2D8;", breve_code);
+    mk_accent("check", "&Hacek;", "&#x2C7;", check_code);
+    mk_accent("hat", "&Hat;", "&#x5E;", hat_code);
+    mk_accent("widehat", "&Hat;", "&#x5E;", widehat_code); // No wide....
+    mk_accent("vec", "&rightarrow;", "&#x02192;", vec_code);
+    mk_accent("overrightarrow", "&rightarrow;", "&#x02192;", overrightarrow_code);
+    mk_accent("overleftarrow", "&leftarrow;", "&#x02190;", overleftarrow_code);
+    mk_accent("overleftrightarrow", "&leftrightarrow;", "&#x02194;", overleftrightarrow_code);
+    mk_accent("underrightarrow", "&rightarrow;", "&#x02192;", underrightarrow_code);
+    mk_accent("xrightarrow", "&rightarrow;", "&#x02192;", xrightarrow_code);
+    mk_accent("underleftarrow", "&leftarrow;", "&#x02190;", underleftarrow_code);
+    mk_accent("underleftrightarrow", "&leftrightarrow;", "&#x02194;", underleftrightarrow_code);
+    mk_accent("xleftarrow", "&leftarrow;", "&#x02190;", xleftarrow_code);
+    mk_accent("dot", "&dot;", "&#x002D9;", dot_code);
 
     hash_table.primitive_plain("@root", special_math_cmd, root_code);
     hash_table.primitive_plain("accentset", special_math_cmd, accentset_code);
