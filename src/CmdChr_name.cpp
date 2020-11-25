@@ -125,12 +125,6 @@ auto CmdChr::name() const -> std::string {
     case ensuremath_cmd: return "ensuremath";
     case nonumber_cmd: return "nonumber";
     case nonscript_cmd: return "nonscript";
-    case eqno_cmd:
-        switch (chr) {
-        case eqno_code: return "eqno";
-        case leqno_code: return "leqno";
-        default: return nullptr;
-        }
     case tag_cmd:
         switch (chr) {
         case 1: return "@xtag";
@@ -295,8 +289,6 @@ auto CmdChr::name() const -> std::string {
     case end_filecontents_env_cmd: return chr == 0 ? "endfilecontents" : "endfilecontents*";
     case begin_cmd: return "begin";
     case end_cmd: return "end";
-    case left_cmd: return "left";
-    case right_cmd: return "right";
     case mathfont_cmd: return token_mathfont2_name();
     case math_font_cmd: return token_mathfont1_name();
     case special_math_cmd:

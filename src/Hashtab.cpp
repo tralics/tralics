@@ -76,7 +76,10 @@ auto Hashtab::primitive(const std::string &s, symcodes c, subtypes v) -> Token {
 }
 
 auto Hashtab::primitive_plain(const std::string &s, symcodes c, subtypes v) -> Token {
-    Symcode::get(c).name_sub[v] = s;
+    if (v == zero_code)
+        Symcode::get(c).name_str = s;
+    else
+        Symcode::get(c).name_sub[v] = s;
     return primitive(s, c, v);
 }
 

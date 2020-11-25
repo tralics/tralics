@@ -1,4 +1,5 @@
 #include "tralics/Dispatcher.h"
+#include "tralics/Symcode.h"
 #include <spdlog/spdlog.h>
 
 namespace {
@@ -35,8 +36,16 @@ namespace {
 } // namespace
 
 void Dispatcher::boot_math() {
+    hash_table.primitive_plain("eqno", eqno_cmd, eqno_code);
+    hash_table.primitive_plain("leqno", eqno_cmd, leqno_code);
     register_action_plain(eqno_cmd, math_only);
+
+    hash_table.primitive_plain("left", left_cmd);
     register_action_plain(left_cmd, math_only);
+
+    hash_table.primitive_plain("right", right_cmd);
+    register_action_plain(right_cmd, math_only);
+
     register_action_plain(math_font_cmd, math_only);
     register_action_plain(math_list_cmd, math_only);
     register_action_plain(math_xml_cmd, math_only);
@@ -52,7 +61,6 @@ void Dispatcher::boot_math() {
     register_action_plain(mathordb_cmd, math_only);
     register_action_plain(mathrel_cmd, math_only);
     register_action_plain(mathspace_cmd, math_only);
-    register_action_plain(right_cmd, math_only);
     register_action_plain(special_math_cmd, special_math);
     register_action_plain(tag_cmd, math_only);
 }

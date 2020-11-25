@@ -1024,7 +1024,7 @@ auto Parser::scan_math(size_t res, math_list_type type) -> bool {
             if (type == math_argument_cd) err_buf += " while scanning argument of " + fct_caller.tok_to_str();
             signal_error(err_tok, "Unexpected par");
             return true;
-        case eqno_cmd: scan_eqno(type); continue;
+        case eqno_cmd: scan_eqno(type); continue; // \todo put this into Symcode
         case tag_cmd: scan_math_tag(c); continue;
         case label_cmd:
             if (c == 1) { // anchor
@@ -1077,7 +1077,7 @@ auto Parser::scan_math(size_t res, math_list_type type) -> bool {
         case end_cmd:
             if (scan_math_env(res, type)) return true;
             continue;
-        case left_cmd: {
+        case left_cmd: { // \todo put this into Symcode
             del_pos k   = math_lr_value();
             auto    tmp = new_math_list(res, math_LR_cd, nomathenv_code);
             if (!tmp) return false;
@@ -1089,7 +1089,7 @@ auto Parser::scan_math(size_t res, math_list_type type) -> bool {
             }
             continue;
         }
-        case right_cmd: {
+        case right_cmd: { // \todo put this into Symcode
             del_pos k = math_lr_value();
             if (type == math_LR_cd) {
                 math_data.get_list(res).push_back(CmdChr(right_cmd, subtypes(k)));

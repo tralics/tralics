@@ -317,8 +317,6 @@ Hashtab::Hashtab() {
     primitive("T1-encoding", ot2enc_cmd);
     primitive("stop", specimp_cmd, atatend_code);
     primitive("tralics load latex3", loadlatex3_cmd);
-    primitive("eqno", eqno_cmd, eqno_code);
-    primitive("leqno", eqno_cmd, leqno_code);
     primitive("message", specimp_cmd, message_code);
     primitive("errmessage", specimp_cmd, errmessage_code);
     primitive("widthof", unimp_cmd, widthof_code);
@@ -800,8 +798,6 @@ Hashtab::Hashtab() {
     primitive("mathsf", math_font_cmd, mathsf_code);
     primitive("mathfrak", math_font_cmd, mathfrak_code);
     primitive("mathnormal", math_font_cmd, mathnormal_code);
-    primitive("left", left_cmd);
-    primitive("right", right_cmd);
 
     primitive("leavevmode", leave_v_mode_cmd);
     primitive("epsfbox", epsfbox_cmd, zero_code);
