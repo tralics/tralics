@@ -202,20 +202,6 @@ void Parser::lost_if(Token T, int l) {
     signal_error(T, "lostif");
 }
 
-void Parser::math_only() {
-    if (is_pos_par(nomath_code)) {
-        LC();
-        unprocessed_xml << cur_tok;
-        return;
-    }
-    parse_error(cur_tok, "Math only command ", cur_tok, "", "Mathonly command");
-    static bool first_time = true;
-    if (first_time) {
-        spdlog::warn("(Contrarily to TeX, Tralics does not switch to math mode in such a case.)");
-        first_time = false;
-    }
-}
-
 void Parser::bad_nbargs(int k) {
     std::string S;
     if (k == -1) S = "Only one token allowed";

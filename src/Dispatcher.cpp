@@ -93,6 +93,8 @@ namespace {
 } // namespace
 
 Dispatcher::Dispatcher() {
+    boot_math();
+
     register_action_plain(add_to_macro_cmd, [](subtypes c) { the_parser.T_addtomacro(c == 1); });
     register_action_plain(addatt_cmd, &Parser::T_xmladdatt);
     register_action_plain(advance_cmd, &Parser::M_prefixed);
@@ -172,7 +174,6 @@ Dispatcher::Dispatcher() {
     register_action_plain(enumerate_cmd, &Parser::T_listenv);
     register_action_plain(eof_marker_cmd, [] {});
     register_action_plain(epsfbox_cmd, &Parser::T_epsfbox);
-    register_action_plain(eqno_cmd, &Parser::math_only);
     register_action_plain(eqref_cmd, [] { Xid(the_parser.read_elt_id(the_parser.cur_tok)).add_ref(the_parser.sT_arg_nopar()); });
     register_action_plain(error_cmd, &Parser::T_error);
     register_action_plain(etex_cmd, &Parser::T_etex);
@@ -239,7 +240,6 @@ Dispatcher::Dispatcher() {
     register_action_plain(label_cmd, [](subtypes c) { the_parser.flush_buffer(), the_parser.T_label(c); });
     register_action_plain(latex_error_cmd, &Parser::T_class_error);
     register_action_plain(leave_v_mode_cmd, &Parser::leave_v_mode);
-    register_action_plain(left_cmd, &Parser::math_only);
     register_action_plain(let_cmd, &Parser::M_prefixed);
     register_action_plain(letter_catcode, &Parser::translate_char);
     register_action_plain(line_cmd, &Parser::T_line);
@@ -251,20 +251,6 @@ Dispatcher::Dispatcher() {
     register_action_plain(make_box_cmd, [](subtypes c) { the_parser.begin_box(makebox_location, c); });
     register_action_plain(makeatletter_cmd, [] { the_parser.word_define('@', letter_catcode, false); });
     register_action_plain(makeatother_cmd, [] { the_parser.word_define('@', other_catcode, false); });
-    register_action_plain(math_font_cmd, &Parser::math_only);
-    register_action_plain(math_list_cmd, &Parser::math_only);
-    register_action_plain(math_xml_cmd, &Parser::math_only);
-    register_action_plain(mathbetween_cmd, &Parser::math_only);
-    register_action_plain(mathbin_cmd, &Parser::math_only);
-    register_action_plain(mathclose_cmd, &Parser::math_only);
-    register_action_plain(mathfont_cmd, &Parser::math_only);
-    register_action_plain(mathop_cmd, &Parser::math_only);
-    register_action_plain(mathopen_cmd, &Parser::math_only);
-    register_action_plain(mathopn_cmd, &Parser::math_only);
-    register_action_plain(mathord_cmd, &Parser::math_only);
-    register_action_plain(mathordb_cmd, &Parser::math_only);
-    register_action_plain(mathrel_cmd, &Parser::math_only);
-    register_action_plain(mathspace_cmd, &Parser::math_only);
     register_action_plain(matter_cmd, &Parser::T_matter);
     register_action_plain(minipage_cmd, &Parser::T_minipage);
     register_action_plain(move_cmd, [] { the_parser.scan_dimen(false, the_parser.cur_tok), the_parser.scan_box(move_location); });
@@ -302,7 +288,6 @@ Dispatcher::Dispatcher() {
     register_action_plain(register_cmd, &Parser::M_prefixed);
     register_action_plain(relax_cmd, [] {});
     register_action_plain(removeelement_cmd, &Parser::T_remove_element);
-    register_action_plain(right_cmd, &Parser::math_only);
     register_action_plain(rule_cmd, &Parser::scan_rule);
     register_action_plain(save_box_cmd, [](subtypes c) { the_parser.T_save_box(c == 0); });
     register_action_plain(saveverb_cmd, &Parser::T_saveverb);
@@ -336,7 +321,6 @@ Dispatcher::Dispatcher() {
     register_action_plain(subfigure_cmd, &Parser::T_subfigure);
     register_action_plain(table_cmd, [](symcodes x, subtypes c) { the_parser.T_figure_table(x, c); });
     register_action_plain(tabular_env_cmd, &Parser::T_start_tabular);
-    register_action_plain(tag_cmd, &Parser::math_only);
     register_action_plain(testopt_cmd, &Parser::T_testopt);
     register_action_plain(thebibliography_cmd, &Parser::T_start_the_biblio);
     register_action_plain(thickness_cmd, &Parser::T_linethickness);
@@ -451,13 +435,6 @@ Dispatcher::Dispatcher() {
 
     register_action_plain(skip_cmd, [](subtypes c) {
         the_parser.append_glue(the_parser.cur_tok, (c == smallskip_code ? 3 : c == medskip_code ? 6 : 12) << 16, true);
-    });
-
-    register_action_plain(special_math_cmd, [](subtypes c) {
-        if (c == overline_code || c == underline_code)
-            the_parser.T_fonts(c == overline_code ? "overline" : "underline");
-        else
-            the_parser.math_only();
     });
 
     register_action_plain(ltfont_cmd, [](subtypes c) {
@@ -583,14 +560,5 @@ Dispatcher::Dispatcher() {
         the_stack.pop_if_frame(::the_names["cst_p"]);
         the_stack.pop_if_frame(::the_names["item"]);
         the_stack.pop(::the_names["minipage"]);
-    });
-
-    register_action_plain(mathinner_cmd, [](subtypes c) {
-        if (math_loc(c) == vdots_code) {
-            the_parser.back_input(hash_table.dollar_token);
-            the_parser.back_input(the_parser.cur_tok);
-            the_parser.back_input(hash_table.dollar_token);
-        } else
-            the_parser.math_only();
     });
 }

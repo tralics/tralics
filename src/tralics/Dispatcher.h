@@ -39,6 +39,8 @@ public:
     static void register_action_plain(symcodes x, parser_fn_with_c_void f);      // x triggers the_parser.f(c)
     static void register_action_plain(symcodes x, parser_fn_with_xc_void f);     // x triggers the_parser.f(x,c)
     static void register_action_plain(symcodes x, parser_fn_with_cmdchr_void f); // x triggers the_parser.f({x,c})
+
+    static void boot_math();
 };
 
 inline Dispatcher actions;
