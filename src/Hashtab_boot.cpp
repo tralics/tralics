@@ -10,22 +10,6 @@ Hashtab::Hashtab() {
     frozen_relax_token = nohash_primitive("relax", CmdChr(relax_cmd, relax_code));
     eof_token          = nohash_primitive("eof", CmdChr(eof_marker_cmd, zero_code));
 
-    my_mathfont_table[0]  = primitive("mml@font@normal", mathfont_cmd, math_f_normal);
-    my_mathfont_table[1]  = primitive("mml@font@upright", mathfont_cmd, math_f_upright);
-    my_mathfont_table[2]  = primitive("mml@font@bold", mathfont_cmd, math_f_bold);
-    my_mathfont_table[3]  = primitive("mml@font@italic", mathfont_cmd, math_f_italic);
-    my_mathfont_table[4]  = primitive("mml@font@bolditalic", mathfont_cmd, math_f_bold_italic);
-    my_mathfont_table[5]  = primitive("mml@font@script", mathfont_cmd, math_f_script);
-    my_mathfont_table[6]  = primitive("mml@font@boldscript", mathfont_cmd, math_f_bold_script);
-    my_mathfont_table[7]  = primitive("mml@font@fraktur", mathfont_cmd, math_f_fraktur);
-    my_mathfont_table[8]  = primitive("mml@font@doublestruck", mathfont_cmd, math_f_doublestruck);
-    my_mathfont_table[9]  = primitive("mml@font@boldfraktur", mathfont_cmd, math_f_bold_fraktur);
-    my_mathfont_table[10] = primitive("mml@font@sansserif", mathfont_cmd, math_f_sansserif);
-    my_mathfont_table[11] = primitive("mml@font@boldsansserif", mathfont_cmd, math_f_bold_sansserif);
-    my_mathfont_table[12] = primitive("mml@font@sansserifitalic", mathfont_cmd, math_f_sansserif_italic);
-    my_mathfont_table[13] = primitive("mml@font@sansserifbolditalic", mathfont_cmd, math_f_sansserif_bold_italic);
-    my_mathfont_table[14] = primitive("mml@font@monospace", mathfont_cmd, math_f_monospace);
-
     // now all tokens, in the order of their command codes.
     primitive("part", section_cmd, part_code);
     primitive("chapter", section_cmd, chapter_code);

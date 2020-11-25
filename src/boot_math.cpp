@@ -2,20 +2,23 @@
 #include "tralics/Symcode.h"
 #include <spdlog/spdlog.h>
 
+[[nodiscard]] auto token_math_name(subtypes c) -> std::string;
+
 namespace {
     void math_only() {
-        if (is_pos_par(nomath_code)) {
-            the_parser.LC();
-            the_parser.unprocessed_xml << the_parser.cur_tok;
+        if (!is_pos_par(nomath_code)) {
+            the_parser.parse_error(the_parser.cur_tok, "Math only command ", the_parser.cur_tok, "", "Mathonly command");
+
+            static bool first_time = true;
+            if (first_time) {
+                spdlog::warn("(Contrarily to TeX, Tralics does not switch to math mode in such a case.)");
+                first_time = false;
+            }
             return;
         }
-        the_parser.parse_error(the_parser.cur_tok, "Math only command ", the_parser.cur_tok, "", "Mathonly command");
 
-        static bool first_time = true;
-        if (first_time) {
-            spdlog::warn("(Contrarily to TeX, Tralics does not switch to math mode in such a case.)");
-            first_time = false;
-        }
+        the_parser.LC();
+        the_parser.unprocessed_xml << the_parser.cur_tok;
     }
 
     void mathinner(subtypes c) {
@@ -60,12 +63,46 @@ void Dispatcher::boot_math() {
 
     register_action_plain(math_list_cmd, math_only);
     register_action_plain(math_xml_cmd, math_only);
+
+    Symcode::get(mathbetween_cmd).name_fn = token_math_name;
     register_action_plain(mathbetween_cmd, math_only);
+
+    Symcode::get(mathbin_cmd).name_fn = token_math_name;
     register_action_plain(mathbin_cmd, math_only);
+
+    Symcode::get(mathclose_cmd).name_fn = token_math_name;
     register_action_plain(mathclose_cmd, math_only);
-    register_action_plain(mathfont_cmd, math_only);
+
+    Symcode::get(mathinner_cmd).name_fn = token_math_name;
     register_action_plain(mathinner_cmd, mathinner);
+
+    Symcode::get(mathop_cmd).name_fn = token_math_name;
     register_action_plain(mathop_cmd, math_only);
+
+    hash_table.primitive_plain("mml@font@normal", mathfont_cmd, math_f_normal);
+    hash_table.primitive_plain("mml@font@upright", mathfont_cmd, math_f_upright);
+    hash_table.primitive_plain("mml@font@bold", mathfont_cmd, math_f_bold);
+    hash_table.primitive_plain("mml@font@italic", mathfont_cmd, math_f_italic);
+    hash_table.primitive_plain("mml@font@bolditalic", mathfont_cmd, math_f_bold_italic);
+    hash_table.primitive_plain("mml@font@script", mathfont_cmd, math_f_script);
+    hash_table.primitive_plain("mml@font@boldscript", mathfont_cmd, math_f_bold_script);
+    hash_table.primitive_plain("mml@font@fraktur", mathfont_cmd, math_f_fraktur);
+    hash_table.primitive_plain("mml@font@doublestruck", mathfont_cmd, math_f_doublestruck);
+    hash_table.primitive_plain("mml@font@boldfraktur", mathfont_cmd, math_f_bold_fraktur);
+    hash_table.primitive_plain("mml@font@sansserif", mathfont_cmd, math_f_sansserif);
+    hash_table.primitive_plain("mml@font@boldsansserif", mathfont_cmd, math_f_bold_sansserif);
+    hash_table.primitive_plain("mml@font@sansserifitalic", mathfont_cmd, math_f_sansserif_italic);
+    hash_table.primitive_plain("mml@font@sansserifbolditalic", mathfont_cmd, math_f_sansserif_bold_italic);
+    hash_table.primitive_plain("mml@font@monospace", mathfont_cmd, math_f_monospace);
+    register_action_plain(mathfont_cmd, math_only);
+
+    Symcode::get(mathopen_cmd).name_fn  = token_math_name;
+    Symcode::get(mathopn_cmd).name_fn   = token_math_name;
+    Symcode::get(mathord_cmd).name_fn   = token_math_name;
+    Symcode::get(mathordb_cmd).name_fn  = token_math_name;
+    Symcode::get(mathrel_cmd).name_fn   = token_math_name;
+    Symcode::get(mathspace_cmd).name_fn = token_math_name;
+
     register_action_plain(mathopen_cmd, math_only);
     register_action_plain(mathopn_cmd, math_only);
     register_action_plain(mathord_cmd, math_only);

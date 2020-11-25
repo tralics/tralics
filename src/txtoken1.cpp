@@ -1117,27 +1117,6 @@ auto CmdChr::token_latexctr_name() const -> String {
     }
 }
 
-auto CmdChr::token_mathfont2_name() const -> String {
-    switch (chr) {
-    case math_f_normal: return "mml@font@normal";
-    case math_f_upright: return "mml@font@upright";
-    case math_f_bold: return "mml@font@bold";
-    case math_f_italic: return "mml@font@italic";
-    case math_f_bold_italic: return "mml@font@bolditalic";
-    case math_f_script: return "mml@font@script";
-    case math_f_bold_script: return "mml@font@boldscript";
-    case math_f_fraktur: return "mml@font@fraktur";
-    case math_f_doublestruck: return "mml@font@doublestruck";
-    case math_f_bold_fraktur: return "mml@font@boldfraktur";
-    case math_f_sansserif: return "mml@font@sansserif";
-    case math_f_bold_sansserif: return "mml@font@boldsansseif";
-    case math_f_sansserif_italic: return "mml@font@sanserifitalic";
-    case math_f_sansserif_bold_italic: return "mml@font@sanserifbolditalic";
-    case math_f_monospace: return "mml@font@monospace";
-    default: return nullptr;
-    }
-}
-
 auto CmdChr::token_setinteraction_name() const -> String {
     switch (chr) {
     case batchmode_code: return "batchmode";

@@ -1355,9 +1355,26 @@ auto Math::special1() const -> Xml * {
 // stored somewhere in eqtb. This does not interpret the fonts;
 // It justs reads the tokens, and backinputs them
 void Parser::TM_fonts() {
-    const auto &table = hash_table.my_mathfont_table;
-    size_t      T     = 0;
-    bool        bold  = is_pos_par(atmathversion_code);
+    static std::vector<Token> table;
+    if (table.empty()) {
+        table.push_back(hash_table.locate("mml@font@normal"));
+        table.push_back(hash_table.locate("mml@font@upright"));
+        table.push_back(hash_table.locate("mml@font@bold"));
+        table.push_back(hash_table.locate("mml@font@italic"));
+        table.push_back(hash_table.locate("mml@font@bolditalic"));
+        table.push_back(hash_table.locate("mml@font@script"));
+        table.push_back(hash_table.locate("mml@font@boldscript"));
+        table.push_back(hash_table.locate("mml@font@fraktur"));
+        table.push_back(hash_table.locate("mml@font@doublestruck"));
+        table.push_back(hash_table.locate("mml@font@boldfraktur"));
+        table.push_back(hash_table.locate("mml@font@sansserif"));
+        table.push_back(hash_table.locate("mml@font@boldsansserif"));
+        table.push_back(hash_table.locate("mml@font@sansserifitalic"));
+        table.push_back(hash_table.locate("mml@font@sansserifbolditalic"));
+        table.push_back(hash_table.locate("mml@font@monospace"));
+    }
+    size_t T    = 0;
+    bool   bold = is_pos_par(atmathversion_code);
     if (cur_cmd_chr.cmd == math_font_cmd) {
         switch (cur_cmd_chr.chr) {
         case cal_code:

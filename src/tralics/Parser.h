@@ -989,7 +989,6 @@ public: // general methods and variables used from packages and boot helpers
     static auto ileave_v_mode() -> Xid;
     static auto last_att_list() -> AttList &;
     static void add_bib_marker(bool force);
-    static void boot_symcode_names();
     static void push_save_stack(SaveAuxBase *v);
     static void T_titlepage(size_t v);
 };

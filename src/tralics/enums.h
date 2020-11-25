@@ -1648,7 +1648,6 @@ enum subtypes : unsigned {
     nonstopmode_code,
     scrollmode_code,
     errorstopmode_code,
-    // mathfont_cmd
     math_f_normal = 0,
     math_f_upright,
     math_f_bold,
@@ -1667,7 +1666,6 @@ enum subtypes : unsigned {
     // arg_font_cmd
     lsc_code = 0,
     fsc_code,
-    // mathfont_cmd
     mathtt_code = 0,
     mathcal_code,
     mathbf_code,
