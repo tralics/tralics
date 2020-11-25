@@ -1101,9 +1101,6 @@ auto Parser::scan_math(size_t res, math_list_type type) -> bool {
         }
         case special_math_cmd: interpret_math_cmd(res, c); continue;
         case multicolumn_cmd: interpret_math_cmd(res, multicolumn_code); continue;
-        case specmath_cmd: // Tralics commands like \mathmi
-            interpret_math_cmd(res, c);
-            continue;
         case make_box_cmd:
             if (c == hbox_code)
                 scan_math_hbox(res, hbox_S_code);

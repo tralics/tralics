@@ -142,7 +142,6 @@ enum symcodes : unsigned {
     isin_cmd,
     nobreakspace_cmd,
     file_cmd,
-    specmath_cmd,
     xmlelt_cmd,
     newcolumntype_cmd,
     arg_font_cmd,

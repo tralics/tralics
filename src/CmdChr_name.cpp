@@ -289,7 +289,6 @@ auto CmdChr::name() const -> std::string {
     case end_filecontents_env_cmd: return chr == 0 ? "endfilecontents" : "endfilecontents*";
     case begin_cmd: return "begin";
     case end_cmd: return "end";
-    case specmath_cmd: return token_specialmath_name();
     case leave_v_mode_cmd: return "leavevmode";
     case epsfbox_cmd: return "epsfbox";
     case put_cmd: return token_put_name();
