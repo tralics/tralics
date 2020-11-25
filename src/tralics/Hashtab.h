@@ -43,11 +43,11 @@ struct Hashtab : public std::vector<std::string> {
         rbrace_token, headercr_token, mathversion_token, xtag_token, ytag_token, xtag1_token, ytag1_token, apostrophe_token, cite_e_token,
         cite_i_token, ref_i_token, label_i_token, ensuremath_i_token, nocase_e_token, nocase_i_token, ref_token, label_token, infalse_token,
         intrue_token, nil_token, CurrentOption_token, xkv_for_i_token, CurrentOptionKey_token, CurrentOptionValue_token, forloop_token,
-        doubleat_token, def_token, iforloop_token, tforloop_token, footnote_token, dblarg_token, mmlprescripts_token, mmlmultiscripts_token,
-        mmlnone_token, mathop_token, limits_token, begingroup_token, endgroup_token, allowbreak_token, stepcounter_token, nomathsw0_token,
-        nomathsw1_token, xkv_resa_token, xkv_warn_token, xkv_prefix_token, xkv_fams_token, xkv_na_token, xkv_rm_token, xkv_tfam_token,
-        usevalue_token, xkv_header_token, xkv_tkey_token, gsavevalue_token, savevalue_token, empty_token, composite_token,
-        ExplFileName_token, ExplFileDate_token, ExplFileVersion_token, ExplFileDescription_token, last_tok;
+        doubleat_token, def_token, iforloop_token, tforloop_token, footnote_token, dblarg_token, mmlprescripts_token, mmlnone_token,
+        mathop_token, limits_token, begingroup_token, endgroup_token, allowbreak_token, stepcounter_token, nomathsw0_token, nomathsw1_token,
+        xkv_resa_token, xkv_warn_token, xkv_prefix_token, xkv_fams_token, xkv_na_token, xkv_rm_token, xkv_tfam_token, usevalue_token,
+        xkv_header_token, xkv_tkey_token, gsavevalue_token, savevalue_token, empty_token, composite_token, ExplFileName_token,
+        ExplFileDate_token, ExplFileVersion_token, ExplFileDescription_token, last_tok;
 };
 
 inline Hashtab hash_table;

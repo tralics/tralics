@@ -2447,7 +2447,7 @@ void Parser::E_sideset() {
             E_scan_up_down(none, none, A, C);
         }
         C.brace_me();
-        C.push_front(hash_table.mmlmultiscripts_token);
+        C.push_front(hash_table.locate("mmlmultiscripts"));
     }
     C.brace_me();
     C.push_front(hash_table.mathop_token);
