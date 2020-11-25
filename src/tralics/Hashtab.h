@@ -16,7 +16,8 @@ struct Hashtab : public std::vector<std::string> {
     auto locate(const std::string &s) -> Token;
     auto hash_find(const std::string &s) -> size_t;
     auto primitive(const std::string &s, symcodes c, subtypes v = zero_code) -> Token;
-    auto primitive_plain(const std::string &s, symcodes c, subtypes v = zero_code) -> Token;
+    auto primitive_plain(const std::string &s, symcodes c) -> Token;
+    auto primitive_plain(const std::string &s, symcodes c, subtypes v) -> Token;
     auto nohash_primitive(const std::string &a, CmdChr b) -> Token;
     auto eval_let(const std::string &a, const std::string &b) -> Token;
     void eval_let_local(const std::string &a, const std::string &b);

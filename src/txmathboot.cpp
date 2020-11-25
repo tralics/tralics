@@ -1207,9 +1207,6 @@ void MathDataP::TM_mk(String a, String b, math_types c) {
     math_char_type[A] = c;
 }
 
-// For a command like \frac.
-auto mk_cmd(String name, subtypes pos) -> Token { return hash_table.primitive(name, special_math_cmd, pos); }
-
 // For a command like \enspace.
 void mk_space(const std::string &name, int b) { hash_table.primitive(name, mathspace_cmd, subtypes(b)); }
 
@@ -2036,36 +2033,6 @@ void MathDataP::boot() {
     eval_let("thickapprox", "approx");
     eval_let("thicksim", "sim");
     eval_let("vartimes", "times");
-    mk_cmd("qopname", qopname_code);
-    mk_cmd("operatorname", operatorname_code);
-    mk_cmd("operatornamewithlimits", operatornamestar_code);
-    mk_cmd("overline", overline_code);
-    mk_cmd("underline", underline_code);
-    mk_cmd("stackrel", stackrel_code);
-    mk_cmd("underset", underset_code);
-    mk_cmd("overset", overset_code);
-    mk_cmd("mathchoice", mathchoice_code);
-    mk_cmd("frac", frac_code);
-    mk_cmd("overbrace", overbrace_code);
-    mk_cmd("underbrace", underbrace_code);
-    mk_cmd("undertilde", undertilde_code);
-    mk_cmd("dfrac", dfrac_code);
-    mk_cmd("cfrac", cfrac_code);
-    mk_cmd("tfrac", tfrac_code);
-    mk_cmd("boxed", boxed_code);
-    mk_cmd("binom", binom_code);
-    mk_cmd("dbinom", dbinom_code);
-    mk_cmd("tbinom", tbinom_code);
-    mk_cmd("sqrt", sqrt_code);
-    mk_cmd("@root", root_code);
-    mk_cmd("mathbox", mathbox_code);
-    mk_cmd("genfrac", genfrac_code);
-    mk_cmd("phantom", phantom_code);
-    mk_cmd("vphantom", vphantom_code);
-    mk_cmd("hphantom", hphantom_code);
-    mk_cmd("smash", smash_code);
-    mk_cmd("accentset", accentset_code);
-    mk_cmd("underaccent", underaccent_code);
     init_builtin(xml_zero_space_loc, mk_space("0.3pt"));
     init_builtin(xml_thinmu_space_loc, mk_space("0.166667em"));
     init_builtin(xml_medmu_space_loc, mk_space("0.222222em"));
