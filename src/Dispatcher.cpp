@@ -399,10 +399,10 @@ Dispatcher::Dispatcher() {
         } else
             the_parser.process_string("to appear");
     });
-    register_action(dollar_catcode, [] {
-        the_parser.flush_buffer();
-        the_parser.T_math(nomathenv_code);
-    });
+    register_action(dollar_catcode, std::function<bool()>([] { // \todo fix this (register_action_plain to return true)
+                        the_parser.flush_buffer();
+                        return the_parser.T_math(nomathenv_code);
+                    }));
     register_action(begingroup_cmd, [](subtypes c) {
         the_parser.flush_buffer();
         if (c == 0)
@@ -577,11 +577,11 @@ Dispatcher::Dispatcher() {
             the_parser.T_start_theorem(c);
     });
     register_action(ignore_env_cmd, [] {});
-    register_action(math_env_cmd, [](subtypes c) {
-        the_parser.cur_tok.kill();
-        the_parser.pop_level(bt_env);
-        the_parser.T_math(c);
-    });
+    register_action(math_env_cmd, std::function<bool(subtypes)>([](subtypes c) {
+                        the_parser.cur_tok.kill();
+                        the_parser.pop_level(bt_env);
+                        return the_parser.T_math(c);
+                    }));
     register_action(end_ignore_env_cmd, [] {});
     register_action(end_minipage_cmd, [] {
         the_parser.flush_buffer();

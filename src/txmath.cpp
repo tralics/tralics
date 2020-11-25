@@ -815,7 +815,7 @@ void Parser::finish_trivial_math(Xml *res) {
 
 // Toplevel function. Reads and translates a formula.
 // Argument as in start_scan_math
-void Parser::T_math(subtypes type) {
+bool Parser::T_math(subtypes type) {
     auto nm = eqtb_int_table[nomath_code].val;
     cmi.reset(nm == -3);
     Trace.clear();
@@ -836,7 +836,7 @@ void Parser::T_math(subtypes type) {
         }
     }
     select_math_font();
-    if (!scan_math3(0, math_data.get_list(0).get_type(), 0)) throw EndOfData();
+    if (!scan_math3(0, math_data.get_list(0).get_type(), 0)) return false;
     if (tracing_math()) {
         Logger::finish_seq();
         the_log << "Math: " << Trace << "\n";
@@ -852,7 +852,7 @@ void Parser::T_math(subtypes type) {
         loc_of_cp = math_data.get_list(0).duplicate(true);
         if (nm != -3) {
             finish_no_mathml(is_inline, loc_of_cp);
-            return;
+            return true;
         }
     }
     Xml *       alter{nullptr};
@@ -876,7 +876,7 @@ void Parser::T_math(subtypes type) {
             res    = u.trivial_math(k);
             if (res != nullptr) {
                 finish_trivial_math(res);
-                return;
+                return true;
             }
         }
         res = u.convert_math(is_inline ? ms_T : ms_D);
@@ -897,6 +897,7 @@ void Parser::T_math(subtypes type) {
     if (cmi.has_label()) add_math_label(res1);
     the_stack.add_last(res1);
     if (!is_inline) the_stack.add_nl();
+    return true;
 }
 
 // --------------------------------------------------

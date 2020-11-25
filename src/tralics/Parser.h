@@ -809,7 +809,7 @@ private:
     void               T_load_with_options(bool c);
     void               T_makebox(bool framed, Token C);
     void               T_mark(subtypes c);
-    void               T_math(subtypes type);
+    bool               T_math(subtypes type);
     void               T_matter(subtypes c);
     void               T_mbox(subtypes c);
     void               T_minipage();
