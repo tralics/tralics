@@ -47,158 +47,136 @@ namespace {
 } // namespace
 
 void Dispatcher::boot_math() {
-    hash_table.primitive_plain("eqno", eqno_cmd, eqno_code);
-    hash_table.primitive_plain("leqno", eqno_cmd, leqno_code);
-    register_action_plain(eqno_cmd, math_only);
-
-    hash_table.primitive_plain("left", left_cmd);
-    register_action_plain(left_cmd, math_only);
-
-    hash_table.primitive_plain("right", right_cmd);
-    register_action_plain(right_cmd, math_only);
-
-    hash_table.primitive_plain("cal", math_font_cmd, cal_code);
-    hash_table.primitive_plain("mathtt", math_font_cmd, mathtt_code);
-    hash_table.primitive_plain("mathcal", math_font_cmd, mathcal_code);
-    hash_table.primitive_plain("mathbf", math_font_cmd, mathbf_code);
-    hash_table.primitive_plain("mathrm", math_font_cmd, mathrm_code);
-    hash_table.primitive_plain("mathit", math_font_cmd, mathit_code);
-    hash_table.primitive_plain("mathbb", math_font_cmd, mathbb_code);
-    hash_table.primitive_plain("mathsf", math_font_cmd, mathsf_code);
-    hash_table.primitive_plain("mathfrak", math_font_cmd, mathfrak_code);
-    hash_table.primitive_plain("mathnormal", math_font_cmd, mathnormal_code);
-    register_action_plain(math_font_cmd, math_only);
-
-    register_action_plain(math_list_cmd, math_only);
-    register_action_plain(math_xml_cmd, math_only);
-
-    Symcode::get(mathbetween_cmd).name_fn = token_math_name;
-    register_action_plain(mathbetween_cmd, math_only);
-
-    Symcode::get(mathbin_cmd).name_fn = token_math_name;
-    register_action_plain(mathbin_cmd, math_only);
-
-    Symcode::get(mathclose_cmd).name_fn = token_math_name;
-    register_action_plain(mathclose_cmd, math_only);
-
-    Symcode::get(mathinner_cmd).name_fn = token_math_name;
-    register_action_plain(mathinner_cmd, mathinner);
-
-    Symcode::get(mathop_cmd).name_fn = token_math_name;
-    register_action_plain(mathop_cmd, math_only);
-
-    hash_table.primitive_plain("mml@font@normal", mathfont_cmd, math_f_normal);
-    hash_table.primitive_plain("mml@font@upright", mathfont_cmd, math_f_upright);
-    hash_table.primitive_plain("mml@font@bold", mathfont_cmd, math_f_bold);
-    hash_table.primitive_plain("mml@font@italic", mathfont_cmd, math_f_italic);
-    hash_table.primitive_plain("mml@font@bolditalic", mathfont_cmd, math_f_bold_italic);
-    hash_table.primitive_plain("mml@font@script", mathfont_cmd, math_f_script);
-    hash_table.primitive_plain("mml@font@boldscript", mathfont_cmd, math_f_bold_script);
-    hash_table.primitive_plain("mml@font@fraktur", mathfont_cmd, math_f_fraktur);
-    hash_table.primitive_plain("mml@font@doublestruck", mathfont_cmd, math_f_doublestruck);
-    hash_table.primitive_plain("mml@font@boldfraktur", mathfont_cmd, math_f_bold_fraktur);
-    hash_table.primitive_plain("mml@font@sansserif", mathfont_cmd, math_f_sansserif);
-    hash_table.primitive_plain("mml@font@boldsansserif", mathfont_cmd, math_f_bold_sansserif);
-    hash_table.primitive_plain("mml@font@sansserifitalic", mathfont_cmd, math_f_sansserif_italic);
-    hash_table.primitive_plain("mml@font@sansserifbolditalic", mathfont_cmd, math_f_sansserif_bold_italic);
-    hash_table.primitive_plain("mml@font@monospace", mathfont_cmd, math_f_monospace);
-    register_action_plain(mathfont_cmd, math_only);
-
-    Symcode::get(mathopen_cmd).name_fn = token_math_name;
-    register_action_plain(mathopen_cmd, math_only);
-
-    Symcode::get(mathopn_cmd).name_fn = token_math_name;
-    register_action_plain(mathopn_cmd, math_only);
-
-    Symcode::get(mathord_cmd).name_fn = token_math_name;
-    register_action_plain(mathord_cmd, math_only);
-
-    Symcode::get(mathordb_cmd).name_fn = token_math_name;
-    register_action_plain(mathordb_cmd, math_only);
-
-    Symcode::get(mathrel_cmd).name_fn = token_math_name;
-    register_action_plain(mathrel_cmd, math_only);
-
-    Symcode::get(mathspace_cmd).name_fn = token_math_name;
-    register_action_plain(mathspace_cmd, math_only);
+    hash_table.primitive_and_action_plain("@root", special_math, special_math_cmd, root_code);
+    hash_table.primitive_and_action_plain("@xtag", math_only, tag_cmd, one_code);
+    hash_table.primitive_and_action_plain("@ytag", math_only, tag_cmd, two_code);
+    hash_table.primitive_and_action_plain("accentset", special_math, special_math_cmd, accentset_code);
+    hash_table.primitive_and_action_plain("binom", special_math, special_math_cmd, binom_code);
+    hash_table.primitive_and_action_plain("boxed", special_math, special_math_cmd, boxed_code);
+    hash_table.primitive_and_action_plain("cal", math_only, math_font_cmd, cal_code);
+    hash_table.primitive_and_action_plain("cellattribute", special_math, special_math_cmd, cell_attribute_code);
+    hash_table.primitive_and_action_plain("cfrac", special_math, special_math_cmd, cfrac_code);
+    hash_table.primitive_and_action_plain("dbinom", special_math, special_math_cmd, dbinom_code);
+    hash_table.primitive_and_action_plain("dfrac", special_math, special_math_cmd, dfrac_code);
+    hash_table.primitive_and_action_plain("eqno", math_only, eqno_cmd, eqno_code);
+    hash_table.primitive_and_action_plain("formulaattribute", special_math, special_math_cmd, formula_attribute_code);
+    hash_table.primitive_and_action_plain("frac", special_math, special_math_cmd, frac_code);
+    hash_table.primitive_and_action_plain("genfrac", special_math, special_math_cmd, genfrac_code);
+    hash_table.primitive_and_action_plain("hphantom", special_math, special_math_cmd, hphantom_code);
+    hash_table.primitive_and_action_plain("left", math_only, left_cmd);
+    hash_table.primitive_and_action_plain("leqno", math_only, eqno_cmd, leqno_code);
+    hash_table.primitive_and_action_plain("mathattribute", special_math, special_math_cmd, math_attribute_code);
+    hash_table.primitive_and_action_plain("mathbb", math_only, math_font_cmd, mathbb_code);
+    hash_table.primitive_and_action_plain("mathbf", math_only, math_font_cmd, mathbf_code);
+    hash_table.primitive_and_action_plain("mathbox", special_math, special_math_cmd, mathbox_code);
+    hash_table.primitive_and_action_plain("mathcal", math_only, math_font_cmd, mathcal_code);
+    hash_table.primitive_and_action_plain("mathchoice", special_math, special_math_cmd, mathchoice_code);
+    hash_table.primitive_and_action_plain("mathci", special_math, special_math_cmd, mathci_code);
+    hash_table.primitive_and_action_plain("mathcn", special_math, special_math_cmd, mathcn_code);
+    hash_table.primitive_and_action_plain("mathcnothing", special_math, special_math_cmd, mathnothing_code);
+    hash_table.primitive_and_action_plain("mathcsymbol", special_math, special_math_cmd, mathcsymbol_code);
+    hash_table.primitive_and_action_plain("mathfrak", math_only, math_font_cmd, mathfrak_code);
+    hash_table.primitive_and_action_plain("mathit", math_only, math_font_cmd, mathit_code);
+    hash_table.primitive_and_action_plain("mathmi", special_math, special_math_cmd, mathmi_code);
+    hash_table.primitive_and_action_plain("mathmn", special_math, special_math_cmd, mathmn_code);
+    hash_table.primitive_and_action_plain("mathmo", special_math, special_math_cmd, mathmo_code);
+    hash_table.primitive_and_action_plain("mathnormal", math_only, math_font_cmd, mathnormal_code);
+    hash_table.primitive_and_action_plain("mathrm", math_only, math_font_cmd, mathrm_code);
+    hash_table.primitive_and_action_plain("mathsf", math_only, math_font_cmd, mathsf_code);
+    hash_table.primitive_and_action_plain("mathtt", math_only, math_font_cmd, mathtt_code);
+    hash_table.primitive_and_action_plain("mml@font@bold", math_only, mathfont_cmd, math_f_bold);
+    hash_table.primitive_and_action_plain("mml@font@boldfraktur", math_only, mathfont_cmd, math_f_bold_fraktur);
+    hash_table.primitive_and_action_plain("mml@font@bolditalic", math_only, mathfont_cmd, math_f_bold_italic);
+    hash_table.primitive_and_action_plain("mml@font@boldsansserif", math_only, mathfont_cmd, math_f_bold_sansserif);
+    hash_table.primitive_and_action_plain("mml@font@boldscript", math_only, mathfont_cmd, math_f_bold_script);
+    hash_table.primitive_and_action_plain("mml@font@doublestruck", math_only, mathfont_cmd, math_f_doublestruck);
+    hash_table.primitive_and_action_plain("mml@font@fraktur", math_only, mathfont_cmd, math_f_fraktur);
+    hash_table.primitive_and_action_plain("mml@font@italic", math_only, mathfont_cmd, math_f_italic);
+    hash_table.primitive_and_action_plain("mml@font@monospace", math_only, mathfont_cmd, math_f_monospace);
+    hash_table.primitive_and_action_plain("mml@font@normal", math_only, mathfont_cmd, math_f_normal);
+    hash_table.primitive_and_action_plain("mml@font@sansserif", math_only, mathfont_cmd, math_f_sansserif);
+    hash_table.primitive_and_action_plain("mml@font@sansserifbolditalic", math_only, mathfont_cmd, math_f_sansserif_bold_italic);
+    hash_table.primitive_and_action_plain("mml@font@sansserifitalic", math_only, mathfont_cmd, math_f_sansserif_italic);
+    hash_table.primitive_and_action_plain("mml@font@script", math_only, mathfont_cmd, math_f_script);
+    hash_table.primitive_and_action_plain("mml@font@upright", math_only, mathfont_cmd, math_f_upright);
+    hash_table.primitive_and_action_plain("mmlmultiscripts", special_math, special_math_cmd, multiscripts_code);
+    hash_table.primitive_and_action_plain("nonumber", math_only, tag_cmd, subtypes(4));
+    hash_table.primitive_and_action_plain("notag", math_only, tag_cmd, subtypes(3));
+    hash_table.primitive_and_action_plain("operatorname", special_math, special_math_cmd, operatorname_code);
+    hash_table.primitive_and_action_plain("operatornamewithlimits", special_math, special_math_cmd, operatornamestar_code);
+    hash_table.primitive_and_action_plain("overbrace", special_math, special_math_cmd, overbrace_code);
+    hash_table.primitive_and_action_plain("overline", special_math, special_math_cmd, overline_code);
+    hash_table.primitive_and_action_plain("overset", special_math, special_math_cmd, overset_code);
+    hash_table.primitive_and_action_plain("phantom", special_math, special_math_cmd, phantom_code);
+    hash_table.primitive_and_action_plain("qopname", special_math, special_math_cmd, qopname_code);
+    hash_table.primitive_and_action_plain("right", math_only, right_cmd);
+    hash_table.primitive_and_action_plain("rowattribute", special_math, special_math_cmd, row_attribute_code);
+    hash_table.primitive_and_action_plain("smash", special_math, special_math_cmd, smash_code);
+    hash_table.primitive_and_action_plain("sqrt", special_math, special_math_cmd, sqrt_code);
+    hash_table.primitive_and_action_plain("stackrel", special_math, special_math_cmd, stackrel_code);
+    hash_table.primitive_and_action_plain("tableattribute", special_math, special_math_cmd, table_attribute_code);
+    hash_table.primitive_and_action_plain("tag", math_only, tag_cmd);
+    hash_table.primitive_and_action_plain("tbinom", special_math, special_math_cmd, tbinom_code);
+    hash_table.primitive_and_action_plain("tfrac", special_math, special_math_cmd, tfrac_code);
+    hash_table.primitive_and_action_plain("thismathattribute", special_math, special_math_cmd, thismath_attribute_code);
+    hash_table.primitive_and_action_plain("underaccent", special_math, special_math_cmd, underaccent_code);
+    hash_table.primitive_and_action_plain("underbrace", special_math, special_math_cmd, underbrace_code);
+    hash_table.primitive_and_action_plain("underline", special_math, special_math_cmd, underline_code);
+    hash_table.primitive_and_action_plain("underset", special_math, special_math_cmd, underset_code);
+    hash_table.primitive_and_action_plain("undertilde", special_math, special_math_cmd, undertilde_code);
+    hash_table.primitive_and_action_plain("vphantom", special_math, special_math_cmd, vphantom_code);
 
     mk_accent("acute", "&acute;", "&#x000B4;", acute_code);
-    mk_accent("grave", "&grave;", "&#x60;", grave_code);
-    mk_accent("mathring", "&#x2DA;", "&#x2DA;", mathring_code);
-    mk_accent("ddddot", "&#x20DC;", "&#x20DC;", ddddot_code);
-    mk_accent("dddot", "&#x20DB;", "&#x20DB;", dddot_code);
-    mk_accent("ddot", "&die;", "&#xA8;", ddot_code);
-    mk_accent("tilde", "&tilde;", "&#x2DC;", tilde_code);
-    mk_accent("widetilde", "&tilde;", "&#x2DC;", widetilde_code); // No wide....
     mk_accent("bar", "&OverBar;", "&#xAF;", bar_code);
     mk_accent("breve", "&breve;", "&#x2D8;", breve_code);
     mk_accent("check", "&Hacek;", "&#x2C7;", check_code);
+    mk_accent("ddddot", "&#x20DC;", "&#x20DC;", ddddot_code);
+    mk_accent("dddot", "&#x20DB;", "&#x20DB;", dddot_code);
+    mk_accent("ddot", "&die;", "&#xA8;", ddot_code);
+    mk_accent("dot", "&dot;", "&#x002D9;", dot_code);
+    mk_accent("grave", "&grave;", "&#x60;", grave_code);
     mk_accent("hat", "&Hat;", "&#x5E;", hat_code);
-    mk_accent("widehat", "&Hat;", "&#x5E;", widehat_code); // No wide....
-    mk_accent("vec", "&rightarrow;", "&#x02192;", vec_code);
-    mk_accent("overrightarrow", "&rightarrow;", "&#x02192;", overrightarrow_code);
+    mk_accent("mathring", "&#x2DA;", "&#x2DA;", mathring_code);
     mk_accent("overleftarrow", "&leftarrow;", "&#x02190;", overleftarrow_code);
     mk_accent("overleftrightarrow", "&leftrightarrow;", "&#x02194;", overleftrightarrow_code);
-    mk_accent("underrightarrow", "&rightarrow;", "&#x02192;", underrightarrow_code);
-    mk_accent("xrightarrow", "&rightarrow;", "&#x02192;", xrightarrow_code);
+    mk_accent("overrightarrow", "&rightarrow;", "&#x02192;", overrightarrow_code);
+    mk_accent("tilde", "&tilde;", "&#x2DC;", tilde_code);
     mk_accent("underleftarrow", "&leftarrow;", "&#x02190;", underleftarrow_code);
     mk_accent("underleftrightarrow", "&leftrightarrow;", "&#x02194;", underleftrightarrow_code);
+    mk_accent("underrightarrow", "&rightarrow;", "&#x02192;", underrightarrow_code);
+    mk_accent("vec", "&rightarrow;", "&#x02192;", vec_code);
+    mk_accent("widehat", "&Hat;", "&#x5E;", widehat_code);        // No wide....
+    mk_accent("widetilde", "&tilde;", "&#x2DC;", widetilde_code); // No wide....
     mk_accent("xleftarrow", "&leftarrow;", "&#x02190;", xleftarrow_code);
-    mk_accent("dot", "&dot;", "&#x002D9;", dot_code);
+    mk_accent("xrightarrow", "&rightarrow;", "&#x02192;", xrightarrow_code);
 
-    hash_table.primitive_plain("@root", special_math_cmd, root_code);
-    hash_table.primitive_plain("accentset", special_math_cmd, accentset_code);
-    hash_table.primitive_plain("binom", special_math_cmd, binom_code);
-    hash_table.primitive_plain("boxed", special_math_cmd, boxed_code);
-    hash_table.primitive_plain("cellattribute", special_math_cmd, cell_attribute_code);
-    hash_table.primitive_plain("cfrac", special_math_cmd, cfrac_code);
-    hash_table.primitive_plain("dbinom", special_math_cmd, dbinom_code);
-    hash_table.primitive_plain("dfrac", special_math_cmd, dfrac_code);
-    hash_table.primitive_plain("formulaattribute", special_math_cmd, formula_attribute_code);
-    hash_table.primitive_plain("frac", special_math_cmd, frac_code);
-    hash_table.primitive_plain("genfrac", special_math_cmd, genfrac_code);
-    hash_table.primitive_plain("hphantom", special_math_cmd, hphantom_code);
-    hash_table.primitive_plain("mathattribute", special_math_cmd, math_attribute_code);
-    hash_table.primitive_plain("mathbox", special_math_cmd, mathbox_code);
-    hash_table.primitive_plain("mathchoice", special_math_cmd, mathchoice_code);
-    hash_table.primitive_plain("mathci", special_math_cmd, mathci_code);
-    hash_table.primitive_plain("mathcn", special_math_cmd, mathcn_code);
-    hash_table.primitive_plain("mathcnothing", special_math_cmd, mathnothing_code);
-    hash_table.primitive_plain("mathcsymbol", special_math_cmd, mathcsymbol_code);
-    hash_table.primitive_plain("mathmi", special_math_cmd, mathmi_code);
-    hash_table.primitive_plain("mathmn", special_math_cmd, mathmn_code);
-    hash_table.primitive_plain("mathmo", special_math_cmd, mathmo_code);
-    hash_table.primitive_plain("mmlmultiscripts", special_math_cmd, multiscripts_code);
-    hash_table.primitive_plain("operatorname", special_math_cmd, operatorname_code);
-    hash_table.primitive_plain("operatornamewithlimits", special_math_cmd, operatornamestar_code);
-    hash_table.primitive_plain("overbrace", special_math_cmd, overbrace_code);
-    hash_table.primitive_plain("overline", special_math_cmd, overline_code);
-    hash_table.primitive_plain("overset", special_math_cmd, overset_code);
-    hash_table.primitive_plain("phantom", special_math_cmd, phantom_code);
-    hash_table.primitive_plain("qopname", special_math_cmd, qopname_code);
-    hash_table.primitive_plain("rowattribute", special_math_cmd, row_attribute_code);
-    hash_table.primitive_plain("smash", special_math_cmd, smash_code);
-    hash_table.primitive_plain("sqrt", special_math_cmd, sqrt_code);
-    hash_table.primitive_plain("stackrel", special_math_cmd, stackrel_code);
-    hash_table.primitive_plain("tableattribute", special_math_cmd, table_attribute_code);
-    hash_table.primitive_plain("tbinom", special_math_cmd, tbinom_code);
-    hash_table.primitive_plain("tfrac", special_math_cmd, tfrac_code);
-    hash_table.primitive_plain("thismathattribute", special_math_cmd, thismath_attribute_code);
-    hash_table.primitive_plain("underaccent", special_math_cmd, underaccent_code);
-    hash_table.primitive_plain("underbrace", special_math_cmd, underbrace_code);
-    hash_table.primitive_plain("underline", special_math_cmd, underline_code);
-    hash_table.primitive_plain("underset", special_math_cmd, underset_code);
-    hash_table.primitive_plain("undertilde", special_math_cmd, undertilde_code);
-    hash_table.primitive_plain("vphantom", special_math_cmd, vphantom_code);
+    register_action_plain(math_list_cmd, math_only);
+    register_action_plain(math_xml_cmd, math_only);
+    register_action_plain(mathbetween_cmd, math_only);
+    register_action_plain(mathbin_cmd, math_only);
+    register_action_plain(mathclose_cmd, math_only);
+    register_action_plain(mathinner_cmd, mathinner);
+    register_action_plain(mathop_cmd, math_only);
+    register_action_plain(mathopen_cmd, math_only);
+    register_action_plain(mathopn_cmd, math_only);
+    register_action_plain(mathord_cmd, math_only);
+    register_action_plain(mathordb_cmd, math_only);
+    register_action_plain(mathrel_cmd, math_only);
+    register_action_plain(mathspace_cmd, math_only);
+
+    Symcode::get(mathbetween_cmd).name_fn = token_math_name;
+    Symcode::get(mathbin_cmd).name_fn     = token_math_name;
+    Symcode::get(mathclose_cmd).name_fn   = token_math_name;
+    Symcode::get(mathinner_cmd).name_fn   = token_math_name;
+    Symcode::get(mathop_cmd).name_fn      = token_math_name;
+    Symcode::get(mathopen_cmd).name_fn    = token_math_name;
+    Symcode::get(mathopn_cmd).name_fn     = token_math_name;
+    Symcode::get(mathord_cmd).name_fn     = token_math_name;
+    Symcode::get(mathordb_cmd).name_fn    = token_math_name;
+    Symcode::get(mathrel_cmd).name_fn     = token_math_name;
+    Symcode::get(mathspace_cmd).name_fn   = token_math_name;
+
     Symcode::get(special_math_cmd).name_sub[mathlabel_code]   = "anchorlabel";
     Symcode::get(special_math_cmd).name_sub[multicolumn_code] = "multicolumn";
     Symcode::get(special_math_cmd).name_sub[tfrac_code]       = "tfrac";
-    register_action_plain(special_math_cmd, special_math);
-
-    hash_table.primitive_plain("tag", tag_cmd);
-    hash_table.primitive_plain("@xtag", tag_cmd, one_code);
-    hash_table.primitive_plain("@ytag", tag_cmd, two_code);
-    hash_table.primitive_plain("notag", tag_cmd, subtypes(3));
-    hash_table.primitive_plain("nonumber", tag_cmd, subtypes(4));
-    register_action_plain(tag_cmd, math_only);
 }
