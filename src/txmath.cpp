@@ -815,7 +815,7 @@ void Parser::finish_trivial_math(Xml *res) {
 
 // Toplevel function. Reads and translates a formula.
 // Argument as in start_scan_math
-bool Parser::T_math(subtypes type) {
+auto Parser::T_math(subtypes type) -> bool {
     auto nm = eqtb_int_table[nomath_code].val;
     cmi.reset(nm == -3);
     Trace.clear();

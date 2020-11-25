@@ -1,6 +1,7 @@
 #pragma once
 #include "EQTB.h"
 #include "Token.h"
+#include <functional>
 #include <unordered_map>
 #include <vector>
 
@@ -18,9 +19,9 @@ struct Hashtab : public std::vector<std::string> {
     auto primitive(const std::string &s, symcodes c, subtypes v = zero_code) -> Token;
     auto primitive_plain(const std::string &s, symcodes c) -> Token;
     auto primitive_plain(const std::string &s, symcodes c, subtypes v) -> Token;
-    auto primitive_and_action_plain(const std::string &s, std::function<void()> f, symcodes c) -> Token;
-    auto primitive_and_action_plain(const std::string &s, std::function<void()> f, symcodes c, subtypes v) -> Token;
-    auto primitive_and_action_plain(const std::string &s, std::function<void(subtypes)> f, symcodes c, subtypes v) -> Token;
+    auto primitive_and_action_plain(const std::string &s, const std::function<void()> &f, symcodes c) -> Token;
+    auto primitive_and_action_plain(const std::string &s, const std::function<void()> &f, symcodes c, subtypes v) -> Token;
+    auto primitive_and_action_plain(const std::string &s, const std::function<void(subtypes)> &f, symcodes c, subtypes v) -> Token;
     auto nohash_primitive(const std::string &a, CmdChr b) -> Token;
     auto eval_let(const std::string &a, const std::string &b) -> Token;
     void eval_let_local(const std::string &a, const std::string &b);

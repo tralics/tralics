@@ -85,17 +85,17 @@ auto Hashtab::primitive_plain(const std::string &s, symcodes c) -> Token {
     return primitive(s, c, zero_code);
 }
 
-auto Hashtab::primitive_and_action_plain(const std::string &s, std::function<void()> f, symcodes c) -> Token {
+auto Hashtab::primitive_and_action_plain(const std::string &s, const std::function<void()> &f, symcodes c) -> Token {
     Dispatcher::register_action_plain(c, f);
     return primitive_plain(s, c);
 }
 
-auto Hashtab::primitive_and_action_plain(const std::string &s, std::function<void()> f, symcodes c, subtypes v) -> Token {
+auto Hashtab::primitive_and_action_plain(const std::string &s, const std::function<void()> &f, symcodes c, subtypes v) -> Token {
     Dispatcher::register_action_plain(c, f);
     return primitive_plain(s, c, v);
 }
 
-auto Hashtab::primitive_and_action_plain(const std::string &s, std::function<void(subtypes)> f, symcodes c, subtypes v) -> Token {
+auto Hashtab::primitive_and_action_plain(const std::string &s, const std::function<void(subtypes)> &f, symcodes c, subtypes v) -> Token {
     Dispatcher::register_action_plain(c, f);
     return primitive_plain(s, c, v);
 }
