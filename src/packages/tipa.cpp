@@ -171,7 +171,7 @@ namespace {
         hash_table.primitive_plain("tipa@circumdot", ipa_cmd, subtypes(12));
         hash_table.primitive_plain("tipa@tildedot", ipa_cmd, subtypes(13));
         hash_table.primitive_plain("tipa@brevemacro", ipa_cmd, subtypes(14));
-        actions.register_action(ipa_cmd, T_ipa);
+        actions.register_action_plain(ipa_cmd, T_ipa);
     }
     bool t = (tipa(), true);
 } // namespace
