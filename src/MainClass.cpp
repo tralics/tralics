@@ -1,5 +1,6 @@
 #include "tralics/Bbl.h"
 #include "tralics/Bibtex.h"
+#include "tralics/Dispatcher.h"
 #include "tralics/Line.h"
 #include "tralics/LineList.h"
 #include "tralics/Logger.h"
@@ -918,7 +919,8 @@ void MainClass::run(int argc, char **argv) {
     get_os();
     parse_args(argc, argv); // look at arguments
     more_boot();            // finish bootstrap
-    check_for_input();      // open the input file
+    Dispatcher::boot();
+    check_for_input(); // open the input file
 
     dclass = input_content.find_documentclass();
     if (opt_doctype.empty()) opt_doctype = input_content.find_doctype();

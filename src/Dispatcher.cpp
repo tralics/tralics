@@ -92,7 +92,7 @@ namespace {
     }
 } // namespace
 
-Dispatcher::Dispatcher() {
+void Dispatcher::boot() {
     boot_math();
 
     register_action_plain(add_to_macro_cmd, [](subtypes c) { the_parser.T_addtomacro(c == 1); });
