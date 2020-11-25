@@ -594,7 +594,6 @@ private:
     void               make_catcodes();
     void               make_token(String s);
     void               makelabel();
-    void               math_only();
     void               minus_sign(CmdChr X);
     void               missing_argument();
     void               missing_close_brace(int cl);
@@ -777,7 +776,6 @@ private:
     void               T_figure_table(symcodes x, subtypes c);
     void               T_filecontents(subtypes spec);
     void               T_float(subtypes c);
-    void               T_fonts(const std::string &x);
     void               T_fonts(subtypes c);
     void               T_glo();
     void               T_gloss(bool c);
@@ -979,11 +977,13 @@ private:
     void tl_set_rescan(subtypes c);
     void Tl3_gen_from_ac(subtypes c);
 
-public: // general methods and variables used from packages
+public: // general methods and variables used from packages and boot helpers
     CmdChr cur_cmd_chr;
     Token  cur_tok;
     void   extended_chars(size_t c);
     auto   get_token() -> bool;
+    void   T_fonts(const std::string &x);
+    void   math_only();
 
     // \todo specific methods used in packages, belong there
     // \todo static methods that would fit better elsewhere
