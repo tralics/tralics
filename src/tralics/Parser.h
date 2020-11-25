@@ -983,7 +983,6 @@ public: // general methods and variables used from packages and boot helpers
     void   extended_chars(size_t c);
     auto   get_token() -> bool;
     void   T_fonts(const std::string &x);
-    void   math_only();
 
     // \todo specific methods used in packages, belong there
     // \todo static methods that would fit better elsewhere
