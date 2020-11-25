@@ -1123,7 +1123,7 @@ auto math_ns::math_space_code(subtypes c) -> bool {
     }
 }
 
-auto MathDataP::init_builtin(String name, math_loc pos, Xml *x, symcodes t) -> Token {
+auto MathDataP::init_builtin(const std::string &name, math_loc pos, Xml *x, symcodes t) -> Token {
     init_builtin(pos, x);
     return hash_table.primitive(name, t, subtypes(pos));
 }

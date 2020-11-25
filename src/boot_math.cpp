@@ -7,43 +7,10 @@
 [[nodiscard]] auto token_math_name(subtypes c) -> std::string;
 
 namespace {
-    void mk_accent(String name, String ent, String ent2, subtypes pos) {
-        Xml *x = new Xml(std::string(the_main.no_entnames ? ent2 : ent));
-        x      = new Xml(the_names["mo"], x);
-        math_data.init_builtin(name, math_loc(pos), x, special_math_cmd);
-    }
-
-    auto token_specialmath_name(subtypes chr) -> std::string {
-        switch (chr) {
-        case acute_code: return "acute";
-        case bar_code: return "bar";
-        case breve_code: return "breve";
-        case check_code: return "check";
-        case ddddot_code: return "ddddot";
-        case dddot_code: return "dddot";
-        case ddot_code: return "ddot";
-        case dot_code: return "dot";
-        case grave_code: return "grave";
-        case hat_code: return "hat";
-        case mathci_code: return "mathco";
-        case mathlabel_code: return "anchorlabel";
-        case mathring_code: return "mathring";
-        case multicolumn_code: return "multicolumn";
-        case overleftarrow_code: return "overleftarrow";
-        case overleftrightarrow_code: return "overleftrightarrow";
-        case overrightarrow_code: return "overrightarrow";
-        case tfrac_code: return "tfrac";
-        case tilde_code: return "tilde";
-        case underleftarrow_code: return "underleftarrow";
-        case underleftrightarrow_code: return "underleftrightarrow";
-        case underrightarrow_code: return "underrightarrow";
-        case vec_code: return "vec";
-        case widehat_code: return "widehat";
-        case widetilde_code: return "widetilde";
-        case xleftarrow_code: return "xleftarrow";
-        case xrightarrow_code: return "xrightarrow";
-        default: return "";
-        }
+    void mk_accent(const std::string &name, const std::string &ent, const std::string &hex, subtypes pos) {
+        auto *x = new Xml(the_names["mo"], new Xml(the_main.no_entnames ? hex : ent));
+        math_data.init_builtin(math_loc(pos), x);
+        hash_table.primitive_plain(name, special_math_cmd, pos);
     }
 
     void math_only() {
@@ -223,7 +190,9 @@ void Dispatcher::boot_math() {
     hash_table.primitive_plain("underset", special_math_cmd, underset_code);
     hash_table.primitive_plain("undertilde", special_math_cmd, undertilde_code);
     hash_table.primitive_plain("vphantom", special_math_cmd, vphantom_code);
-    Symcode::get(special_math_cmd).name_fn = token_specialmath_name;
+    Symcode::get(special_math_cmd).name_sub[mathlabel_code]   = "anchorlabel";
+    Symcode::get(special_math_cmd).name_sub[multicolumn_code] = "multicolumn";
+    Symcode::get(special_math_cmd).name_sub[tfrac_code]       = "tfrac";
     register_action_plain(special_math_cmd, special_math);
 
     hash_table.primitive_plain("tag", tag_cmd);

@@ -38,7 +38,7 @@ private:
 
 public:
     void boot();
-    auto init_builtin(String name, math_loc pos, Xml *x, symcodes t) -> Token;
+    auto init_builtin(const std::string &name, math_loc pos, Xml *x, symcodes t) -> Token;
     void realloc_list0();
     void realloc_list();
     auto find_math_location(math_list_type c, subtypes n, std::string s) -> subtypes;
