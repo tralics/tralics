@@ -23,11 +23,7 @@ class SaveAuxEnv;
 // data structure of the Tralics translator.
 // \todo this should be broken up
 
-class Parser {
-    friend class XkvSetkeys;
-    friend class Dispatcher;
-
-public:
+struct Parser {
     Mactab                                    mac_table;          // the table of macros
     std::array<EqtbString, 10>                eqtb_string_table;  // eqtb strings
     std::array<EqtbDim, dimension_table_size> eqtb_dim_table;     // EQTB, dimensions
@@ -43,43 +39,36 @@ public:
     std::vector<Image>                        the_images;         // file data for images
     std::vector<Xml *>                        all_heads;
     Token                                     err_tok; // in case of error
-private:
-    bool     unexpected_seen_hi{false}; // check for wrongly placed font changes
-    bool     calc_loaded;               // did we see \usepackage{calc} ?
-    bool     numbered_verbatim{};       // has this verbatim line numbers ?
-    bool     restricted;                // are we in restricted mode ?
-    bool     force_eof{false};          // did we see \endinput ?
-    bool     no_new_file{false};        // can we pop the input stack ?
-    bool     file_ended{};              //
-    bool     chapter_has_star{false};   // true in frontmatter, backmatter
-    bool     list_files_p;              // Should we list the files at the end ?
-    bool     tok_is_defined{};          // use by \ifcsname
-    int      old_nberrs{};              // previous number of errors
-    int      cur_line{};                // current input line number
-    int      begin_env_line{0};         // input line number of
-    int      default_language_num{0};   // default language
-    int      cur_level;                 // current level on the execution stack
-    size_t   equation_ctr_pos{};        // position in the table of the counter equation
-    states   state;                     // current state of the scanner
-    Token    after_assignment_token;    // token for \afterassignment
-    subtypes sectionning_offset;        // what is the main section, part, chapter ?
 
-public:
-    l_state   long_state;     // Error recovery handling (\long)
-    scan_stat scanner_status; // Error recovery handling (\outer)
-private:
-    size_t cur_in_chan;     // if get_token call get_a_new_line
-    long   cur_file_pos{0}; // pos of file in the package list (0= none)
-
-    std::string cur_env_name; // name of current environment
-    std::string job_name;     // the name, without extensions
-
-    Buffer input_buffer; // input buffer
-    Buffer mac_buffer;   // buffer the current macro
-    Buffer group_buffer; // buffer for arg of \begin{...} \end(...)
-public:
-    Buffer unprocessed_xml; // chars to be converted into an XML element
-private:
+    bool                  unexpected_seen_hi{false};             // check for wrongly placed font changes
+    bool                  calc_loaded;                           // did we see \usepackage{calc} ?
+    bool                  numbered_verbatim{};                   // has this verbatim line numbers ?
+    bool                  restricted;                            // are we in restricted mode ?
+    bool                  force_eof{false};                      // did we see \endinput ?
+    bool                  no_new_file{false};                    // can we pop the input stack ?
+    bool                  file_ended{};                          //
+    bool                  chapter_has_star{false};               // true in frontmatter, backmatter
+    bool                  list_files_p;                          // Should we list the files at the end ?
+    bool                  tok_is_defined{};                      // use by \ifcsname
+    int                   old_nberrs{};                          // previous number of errors
+    int                   cur_line{};                            // current input line number
+    int                   begin_env_line{0};                     // input line number of
+    int                   default_language_num{0};               // default language
+    int                   cur_level;                             // current level on the execution stack
+    size_t                equation_ctr_pos{};                    // position in the table of the counter equation
+    states                state;                                 // current state of the scanner
+    Token                 after_assignment_token;                // token for \afterassignment
+    subtypes              sectionning_offset;                    // what is the main section, part, chapter ?
+    l_state               long_state;                            // Error recovery handling (\long)
+    scan_stat             scanner_status;                        // Error recovery handling (\outer)
+    size_t                cur_in_chan;                           // if get_token call get_a_new_line
+    long                  cur_file_pos{0};                       // pos of file in the package list (0= none)
+    std::string           cur_env_name;                          // name of current environment
+    std::string           job_name;                              // the name, without extensions
+    Buffer                input_buffer;                          // input buffer
+    Buffer                mac_buffer;                            // buffer the current macro
+    Buffer                group_buffer;                          // buffer for arg of \begin{...} \end(...)
+    Buffer                unprocessed_xml;                       // chars to be converted into an XML element
     Buffer                fetch_name_res;                        // used by fetch_name
     LineList              lines;                                 // the lines to  be read
     TokenList             TL;                                    // list of tokens to be read again
@@ -91,7 +80,6 @@ private:
     std::vector<char32_t> input_line;                            // input line converted to chars
     size_t                input_line_pos{0};                     // position in input_line
     Xml *                 the_xmlA{nullptr}, *the_xmlB{nullptr}; // for XML tree manipulations
-    // private inline functions
 
     auto at_eol() -> bool { return input_line_pos >= input_line.size(); }
     auto get_next_char() -> char32_t { return input_line[input_line_pos++]; }
@@ -113,10 +101,8 @@ private:
     }
     void set_after_ass_tok(Token x) { after_assignment_token = x; }
     void set_def_language_num(int x) { default_language_num = x; }
-    // public inline functions
-public:
-    auto get_cur_env_name() -> std::string & { return cur_env_name; }
 
+    auto               get_cur_env_name() -> std::string & { return cur_env_name; }
     void               back_input() { TL.push_front(cur_tok); }
     void               back_input(Token t) { TL.push_front(t); }
     void               back_input(TokenList &L) { TL.splice(TL.begin(), L); }
@@ -143,7 +129,6 @@ public:
     void set_job_name(std::string s) { job_name = std::move(s); }
     void unexpected_font() { unexpected_seen_hi = true; }
     void L3_load(bool preload);
-    // public functions
 
     Parser();
 
@@ -209,8 +194,6 @@ public:
     void create_label(const std::string &X, const std::string &S);
     void LC();
 
-    // private functions, alphabetic order
-private:
     auto               before_mac_arg() -> bool;
     auto               check_brace(int &b) const -> bool;
     auto               check_builtin_pack(const std::string &pack) -> bool;
@@ -927,7 +910,6 @@ private:
     void               xml_name(Xml *x, internal_type level);
     void               xsetfontsize();
 
-    // For latex3
     auto l3_get_cat(symcodes &a, subtypes &b, Token caller) -> bool;
     auto l3_get_name(Token T) -> bool;
     auto l3_parms_from_ac(long n, Token T, bool s) -> TokenList;
@@ -976,13 +958,12 @@ private:
     void tl_set_rescan(subtypes c);
     void Tl3_gen_from_ac(subtypes c);
 
-public: // general methods and variables used from packages and boot helpers
+    // general methods and variables used from packages and boot helpers
     CmdChr cur_cmd_chr;
     Token  cur_tok;
     void   extended_chars(size_t c);
     auto   get_token() -> bool;
     void   T_fonts(const std::string &x);
-    void   T_xkeyval(subtypes c);
 
     // \todo specific methods used in packages, belong there
     // \todo static methods that would fit better elsewhere

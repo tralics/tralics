@@ -344,7 +344,6 @@ void Dispatcher::boot() {
     register_action_plain(vfill_cmd, [](subtypes c) { the_parser.leave_h_mode(), the_stack.add_newid0(vfill_to_np(c)); });
     register_action_plain(whiledo_cmd, &Parser::T_whiledo);
     register_action_plain(xfancy_cmd, &Parser::T_xfancy);
-    register_action_plain(xkeyval_cmd, &Parser::T_xkeyval);
     register_action_plain(XML_fetch_cmd, &Parser::user_XML_fetch);
     register_action_plain(XML_modify_cmd, &Parser::user_XML_modify);
     register_action_plain(XML_swap_cmd, &Parser::user_XML_swap);
