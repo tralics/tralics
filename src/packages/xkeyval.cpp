@@ -595,7 +595,8 @@ void XkvSetkeys::run(bool c) {
         return;
     }
     extract_keys(fams, Fams);
-    fetch_na();
+    the_parser.read_optarg_nopar(na);
+    extract_keys(na, Na);
     fetch_keys(c);
     check_preset("preseth");
     set_aux(keyvals, -1);

@@ -12,22 +12,10 @@ namespace xkv_ns {
     void makehd(const std::string &fam);
 } // namespace xkv_ns
 
-// This reads and manages the list of families
-void XkvSetkeys::fetch_fams() {
-    fams = the_parser.read_arg();
-    extract_keys(fams, Fams);
-}
-
 // Special case of ExecuteOptions
 void XkvSetkeys::special_fams() {
     fams = the_parser.XKV_parse_filename();
     extract_keys(fams, Fams);
-}
-
-// Reads the optional list of keys that should not be set
-void XkvSetkeys::fetch_na() {
-    the_parser.read_optarg_nopar(na);
-    extract_keys(na, Na);
 }
 
 void XkvSetkeys::fetch_keys(bool c) {
@@ -255,8 +243,9 @@ void XkvSetkeys::check_action(XkvToken &cur) {
         return;
     }
     // This is the normal case
-    if (no_err)
-        new_unknown(cur_opt);
-    else
+    if (no_err) {
+        delayed.splice(delayed.end(), cur_opt);
+        delayed.push_back(hash_table.comma_token);
+    } else
         the_parser.parse_error(the_parser.err_tok, "Undefined key: ", cur.keyname, "undefined key");
 }

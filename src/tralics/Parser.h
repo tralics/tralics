@@ -466,7 +466,6 @@ struct Parser {
     void               expand();
     void               extra_close_brace(int cl);
     void               extra_fi_or_else();
-    void               extract_keys(TokenList, std::vector<std::string> &);
     void               fast_new_macro(TokenList &L, Token name);
     void               fetch_box_id(Xml *X);
     void               fetch_name2();

@@ -16,27 +16,20 @@ class XkvSetkeys {
     bool                     in_pox{false};  // are in in \ProcessOptionsX ?
 
 public:
-    void run(bool c);
-    void run2(bool);
-    void check_preset(String s);
-    void extract_keys(TokenList &L, std::vector<std::string> &R);
-    void fetch_fams();
-    void special_fams();
-    void fetch_na();
-    void fetch_keys(bool c);
-    void check_action(XkvToken &cur);
-    void run_key(Token mac, XkvToken &cur, const std::string &fam);
-    void save_key(const std::string &Key, TokenList &L);
-    void run_default(const std::string &Key, Token mac, bool s);
-    void replace_pointers(TokenList &L);
-    void new_unknown(TokenList &L) {
-        delayed.splice(delayed.end(), L);
-        delayed.push_back(hash_table.comma_token);
-    }
-    void more_action(TokenList &L) { action.splice(action.end(), L); }
-    void finish();
-    void set_aux(TokenList &W, long idx);
-    void set_aux() { set_aux(keyvals, -1); }
-    void set_inpox() { in_pox = true; }
-    void dump_keys();
+    void        run(bool c);
+    void        check_preset(String s);
+    static void extract_keys(TokenList &L, std::vector<std::string> &R);
+    void        special_fams();
+    void        fetch_keys(bool c);
+    void        check_action(XkvToken &cur);
+    void        run_key(Token mac, XkvToken &cur, const std::string &fam);
+    static void save_key(const std::string &Key, TokenList &L);
+    void        run_default(const std::string &Key, Token mac, bool s);
+    static void replace_pointers(TokenList &L);
+    void        more_action(TokenList &L) { action.splice(action.end(), L); }
+    void        finish();
+    void        set_aux(TokenList &W, long idx);
+    void        set_aux() { set_aux(keyvals, -1); }
+    void        set_inpox() { in_pox = true; }
+    void        dump_keys();
 };
