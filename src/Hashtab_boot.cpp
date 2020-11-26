@@ -1332,9 +1332,10 @@ Hashtab::Hashtab() {
     tforloop_token = primitive("@tforloop", for_cmd, tforloop_code);
     primitive("@break@tfor", for_cmd, breaktfor_code);
     primitive("tralics@for@break", for_cmd, xkv_breaktfor_code);
-    xkv_for_i_token = primitive("tralics@for@i", for_cmd, xkv_for_i_code);
+    primitive("tralics@for@i", for_cmd, xkv_for_i_code);
     primitive("tralics@for@o", for_cmd, xkv_for_o_code);
     primitive("tralics@for@eo", for_cmd, xkv_for_eo_code);
+
     primitive("@selective@sanitize", selective_sanitize_cmd);
     primitive("definecolor", color_cmd, definecolor_code);
     primitive("normalcolor", color_cmd, normalcolor_code);

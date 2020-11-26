@@ -567,7 +567,7 @@ void Parser::T_xkv_for(subtypes c) {
         TokenList function = read_arg();
         if (L.empty() && (c == xkv_for_n_code || c == xkv_for_o_code)) break;
         function.brace_me();
-        res.push_front(hash_table.xkv_for_i_token);
+        res.push_front(hash_table.locate("tralics@for@i"));
         res.splice(res.end(), cmd);
         res.splice(res.end(), function);
         res.splice(res.end(), L);
@@ -585,7 +585,7 @@ void Parser::T_xkv_for(subtypes c) {
         TokenList aux = function;
         function.brace_me();
         res.splice(res.end(), aux);
-        res.push_back(hash_table.xkv_for_i_token);
+        res.push_back(hash_table.locate("tralics@for@i"));
         res.push_back(cmd);
         res.splice(res.end(), function);
         break;

@@ -8,8 +8,9 @@
 // Auto-registering package, see tipa.cpp for details
 
 namespace {
-    bool xkv_is_global, xkv_is_save;
-}
+    bool        xkv_is_global, xkv_is_save;
+    std::string xkv_header, xkv_prefix;
+} // namespace
 
 namespace classes_ns {
     auto cur_options(bool, TokenList &, bool) -> TokenList;
@@ -72,6 +73,20 @@ namespace {
     }
 } // namespace
 
+// Evaluate now everything
+void XkvSetkeys::finish() {
+    the_parser.new_macro(xkv_prefix, hash_table.locate("XKV@prefix"));
+    the_parser.new_macro(fams, hash_table.locate("XKV@fams"));
+    the_parser.new_macro(na, hash_table.locate("XKV@na"));
+    if (!delayed.empty()) delayed.pop_back(); // remove trailing comma
+    if (tracing_commands()) {
+        Logger::finish_seq();
+        the_log << "setkeys <- " << action << "\n";
+    }
+    the_parser.new_macro(delayed, hash_table.locate("XKV@rm"));
+    the_parser.back_input(action);
+}
+
 // Splits key=val into pieces
 void XkvToken::extract() {
     TokenList key;
@@ -99,6 +114,85 @@ void XkvSetkeys::check_preset(String s) {
             set_aux(W, to_signed(i));
         }
     }
+}
+
+void XkvSetkeys::run_default(const std::string &Key, Token mac, bool s) {
+    Buffer &B = txparser2_local_buf;
+    B         = xkv_header + Key + "@default";
+    if (!hash_table.is_defined(B)) {
+        B = "No value specified for key `" + Key + "'";
+        the_parser.parse_error(the_parser.err_tok, B);
+        return;
+    }
+    Token     T = hash_table.locate(B);
+    TokenList L = the_parser.get_mac_value(T);
+    if (L.empty() || L.front() != mac) {
+        // no hack needed
+        action.push_back(T);
+        return;
+    }
+    L.pop_front();
+    // We apply mac to L via setkeys and not the macro
+    TokenList args;
+    if (!L.empty()) {
+        if (L.front().is_a_left_brace()) { // get the block without the braces
+            L.fast_get_block(args);
+            args.pop_front();
+            args.pop_back();
+        } else { // otherwise get just a token
+            args.push_back(L.front());
+            L.pop_front();
+        }
+    }
+    // We have now in args the real argument.
+    if (s) save_key(Key, args);
+    replace_pointers(args);
+    action.push_back(mac);
+    args.brace_me();
+    more_action(args);
+}
+
+// Interprets \usevalue{foo} in the list L
+void XkvSetkeys::replace_pointers(TokenList &L) {
+    Buffer &  B = txparser2_local_buf;
+    TokenList res;
+    int       n = 1000;
+    for (;;) {
+        if (L.empty()) break;
+        Token t = L.front();
+        if (t.is_a_left_brace()) {
+            L.fast_get_block(res);
+            continue;
+        }
+        L.pop_front();
+        if (t != hash_table.locate("usevalue")) {
+            res.push_back(t);
+            continue;
+        }
+        if (!L.empty()) t = L.front();
+        if (!t.is_a_left_brace()) {
+            the_parser.parse_error(the_parser.err_tok, "Invalid \\usevalue token", "invalid usevalue");
+            continue;
+        }
+        --n;
+        if (n < 0) {
+            the_parser.parse_error(the_parser.err_tok, "Replace pointer aborted, (infinite loop?)", "key loop");
+            res.clear();
+            break;
+        }
+        TokenList key = L.fast_get_block();
+        token_ns::remove_ext_braces(key);
+        std::string Key     = the_parser.list_to_string_c(key, "Argument of \\savevalue");
+        txparser2_local_buf = "XKV@" + xkv_header + Key + "@value";
+        if (hash_table.is_defined(B)) {
+            TokenList w = the_parser.get_mac_value(hash_table.last_tok);
+            L.splice(L.begin(), w);
+        } else {
+            B = "No value recorded for key `" + Key + "'; ignored";
+            the_parser.parse_error(the_parser.err_tok, B, "no val recorded");
+        }
+    }
+    L.swap(res);
 }
 
 namespace {
