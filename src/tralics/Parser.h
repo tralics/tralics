@@ -882,13 +882,6 @@ struct Parser {
     void               wrong_mode(const std::string &s);
     void               wrong_pop(Token T, const std::string &a, const std::string &b);
     void               xgetfontsize();
-    void               xkv_class_prefix();
-    void               xkv_fetch_prefix();
-    void               xkv_pass_options(bool c);
-    void               XKV_pox();
-    void               XKV_process_execute(bool psw);
-    void               xkv_testopta();
-    void               xkv_unsave_keys(bool c);
     void               xml_name(Xml *x, internal_type level);
     void               xsetfontsize();
 

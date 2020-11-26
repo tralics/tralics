@@ -95,26 +95,6 @@ void XkvSetkeys::dump_keys() {
     the_log << "{Options to execute->" << keyvals << "}\n";
 }
 
-void XkvSetkeys::run(bool c) {
-    no_err  = P->remove_initial_plus(false);
-    set_all = P->remove_initial_plus(true);
-    P->xkv_fetch_prefix();
-    fams = P->read_arg();
-    if (xkv_ns::is_Gin(fams)) {
-        TokenList L = the_parser.read_arg();
-        L.push_back(comma_token);
-        the_parser.new_macro(L, hash_table.locate("Gin@keys"));
-        return;
-    }
-    extract_keys(fams, Fams);
-    fetch_na();
-    fetch_keys(c);
-    check_preset("preseth");
-    set_aux(keyvals, -1);
-    check_preset("presett");
-    finish();
-}
-
 void XkvSetkeys::check_preset(String s) {
     Buffer &B = txparser2_local_buf;
     auto    N = Fams.size();

@@ -19,13 +19,38 @@ namespace token_ns {
 namespace xkv_ns {
     void find_aux(int c);
     auto find_key_of(const TokenList &L, int type) -> std::string;
+    auto is_Gin(const TokenList &x) -> bool;
 } // namespace xkv_ns
 
 namespace {
+    // Reads optional prefix, and family, and handles them
+    void xkv_fetch_prefix() {
+        auto opt = the_parser.read_optarg();
+        if (!opt) {
+            xkv_prefix = "KV@";
+            return;
+        }
+        Buffer &B = txparser2_local_buf;
+        B.clear();
+        token_ns::remove_first_last_space(*opt);
+        bool t = the_parser.list_to_string(*opt, B);
+        if (t) {
+            the_parser.parse_error(the_parser.err_tok, "Bad command ", the_parser.cur_tok, " in XKV prefix (more errors may follow)",
+                                   "bad kv prefix");
+            B.clear();
+        }
+        if (B == "XKV") {
+            the_parser.parse_error(the_parser.err_tok, "xkeyval: `XKV' prefix is not allowed");
+            B.clear();
+        }
+        if (!B.empty()) B.push_back('@');
+        xkv_prefix = B;
+    }
+
     // Implements ExecuteOptionsX
     void xkv_execute_options() {
         XkvSetkeys data(&the_parser);
-        the_parser.xkv_fetch_prefix();
+        xkv_fetch_prefix();
         data.special_fams();
         data.fetch_keys(true);
         data.dump_keys();
@@ -38,7 +63,7 @@ namespace {
         XkvSetkeys data(&the_parser);
         //  data.no_err = remove_initial_plus(false);
         bool s = the_parser.remove_initial_star(); // we should do something with this
-        the_parser.xkv_fetch_prefix();
+        xkv_fetch_prefix();
         data.set_inpox();
         data.special_fams();
         TokenList uo;
@@ -134,7 +159,7 @@ namespace {
     // Implements \key@ifundefined
     void key_ifundefined() {
         Buffer &B = txparser2_local_buf;
-        the_parser.xkv_fetch_prefix();
+        xkv_fetch_prefix();
         TokenList   fams      = the_parser.read_arg();
         bool        undefined = true;
         TokenList   key       = the_parser.read_arg();
@@ -254,7 +279,7 @@ namespace {
             the_parser.T_declare_option_star();
             return;
         }
-        the_parser.xkv_fetch_prefix();
+        xkv_fetch_prefix();
         TokenList FL = the_parser.XKV_parse_filename();
         xkv_makehd(FL);
         TokenList   key  = the_parser.read_arg();
@@ -269,7 +294,7 @@ namespace {
     }
 
     void xkv_fetch_prefix_family() {
-        the_parser.xkv_fetch_prefix();
+        xkv_fetch_prefix();
         TokenList M = the_parser.read_arg();
         xkv_makehd(M);
     }
@@ -556,7 +581,29 @@ namespace {
         default: return;
         }
     }
+} // namespace
 
+void XkvSetkeys::run(bool c) {
+    no_err  = P->remove_initial_plus(false);
+    set_all = P->remove_initial_plus(true);
+    xkv_fetch_prefix();
+    fams = P->read_arg();
+    if (xkv_ns::is_Gin(fams)) {
+        TokenList L = the_parser.read_arg();
+        L.push_back(comma_token);
+        the_parser.new_macro(L, hash_table.locate("Gin@keys"));
+        return;
+    }
+    extract_keys(fams, Fams);
+    fetch_na();
+    fetch_keys(c);
+    check_preset("preseth");
+    set_aux(keyvals, -1);
+    check_preset("presett");
+    finish();
+}
+
+namespace {
     void xkeyval() {
         hash_table.primitive_plain("define@boolkey", xkeyval_cmd, define_boolkey_code);
         hash_table.primitive_plain("define@boolkeys", xkeyval_cmd, define_boolkeys_code);

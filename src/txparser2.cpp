@@ -38,7 +38,6 @@ namespace {
     };
 
     TokenList KV_list;
-    TokenList xkv_action;
 } // namespace
 
 namespace xkv_ns {
@@ -756,29 +755,6 @@ auto Parser::remove_initial_plus(bool plus) -> bool {
     return false;
 }
 
-// Reads optional prefix, and family, and handles them
-void Parser::xkv_fetch_prefix() {
-    auto opt = read_optarg();
-    if (!opt) {
-        xkv_prefix = "KV@";
-        return;
-    }
-    Buffer &B = txparser2_local_buf;
-    B.clear();
-    token_ns::remove_first_last_space(*opt);
-    bool t = list_to_string(*opt, B);
-    if (t) {
-        parse_error(err_tok, "Bad command ", cur_tok, " in XKV prefix (more errors may follow)", "bad kv prefix");
-        B.clear();
-    }
-    if (B == "XKV") {
-        parse_error(err_tok, "xkeyval: `XKV' prefix is not allowed");
-        B.clear();
-    }
-    if (!B.empty()) B.push_back('@');
-    xkv_prefix = B;
-}
-
 // Creates the XKV header
 
 void xkv_ns::makehd(const std::string &fam) {
@@ -812,24 +788,6 @@ void Parser::remove_element(TokenList &A, TokenList &B, Token C) {
     B.pop_front();
     if (!B.empty()) B.pop_back();
     new_macro(B, C);
-}
-
-// Redefinition of T_pass_options if xkvltxp is loaded
-// The idea is to not expand the option.
-// Pushes tokens into \opt@foo.cls
-void Parser::xkv_pass_options(bool c) // true if a class
-{
-    TokenList   opt  = read_arg();
-    std::string name = sE_arg_nopar();
-    name             = "opt@" + name;
-    name += (c ? ".cls" : ".sty");
-    Token t = hash_table.CurrentOption_token;
-    if (token_ns::has_a_single_token(opt, t)) opt = get_mac_value(t);
-    Token     tname = hash_table.locate(name);
-    TokenList res   = get_mac_value(tname);
-    if (!res.empty()) res.push_back(Token(other_t_offset, ','));
-    res.splice(res.end(), opt);
-    new_macro(res, tname, true);
 }
 
 void Parser::selective_sanitize() {
