@@ -691,30 +691,6 @@ void Parser::expand_twoargs() {
 // ------------------------------------------------------------
 // Special commands for xkeyval
 
-// Case \define@key{foo}{bar}{ETC}
-// or   \define@key{foo}{bar}[gee]{ETC}
-// Read foo and bar, construct KV@foo@bar, call it \cmd
-// In the first case, we produce \def\cmd#1{ETC}
-// Otherwise \def\KV@foo@bar@default{\cmd{gee}}, then \def\cmd#1{ETC}
-
-void Parser::T_define_key(bool xkv) { // \todo xkv is always true
-    Buffer &B = txparser2_local_buf;
-    if (xkv)
-        xkv_fetch_prefix_family();
-    else {
-        TokenList fam = read_arg();
-        list_to_string_c(fam, "KV@", "", "Problem in define@key", B);
-        B << '@';
-        xkv_header = B;
-    }
-    TokenList key = read_arg();
-    list_to_string_c(key, xkv_header, "", "bad key name", B);
-    Token     T = hash_table.locate(B);
-    TokenList opt;
-    if (read_optarg(opt)) internal_define_key_default(T, opt);
-    internal_define_key(T);
-}
-
 // Implements \define@cmdkey, \define@cmdkeys
 // We make the assumption that a key does not contain a comma
 void Parser::define_cmd_key(subtypes c) {
@@ -761,51 +737,6 @@ void Parser::define_cmd_key(subtypes c) {
         X->correct_type();
         mac_define(T, X, false, rd_always, user_cmd);
     }
-}
-
-// Implements \define@choicekey
-void Parser::define_choice_key() {
-    bool if_star = remove_initial_plus(false);
-    bool if_plus = remove_initial_plus(true);
-    xkv_fetch_prefix_family();
-    TokenList keytoks = read_arg();
-    list_to_string_c(keytoks, xkv_header, "", "bad key name", txparser2_local_buf);
-    Token     T = hash_table.locate(txparser2_local_buf);
-    TokenList storage_bin;
-    read_optarg_nopar(storage_bin);
-    TokenList allowed = read_arg();
-    TokenList opt;
-    if (read_optarg(opt)) internal_define_key_default(T, opt);
-    TokenList F;
-    if (if_plus) {
-        TokenList x = read_arg();
-        TokenList y = read_arg();
-        x.brace_me();
-        y.brace_me();
-        F.splice(F.end(), x);
-        F.splice(F.end(), y);
-    } else {
-        F = read_arg();
-        F.brace_me();
-    }
-    TokenList body;
-    body.push_back(hash_table.locate("XKV@cc"));
-    if (if_star) body.push_back(Token(other_t_offset, '*'));
-    if (if_plus) body.push_back(Token(other_t_offset, '+'));
-    storage_bin.push_front(Token(other_t_offset, '['));
-    storage_bin.push_back(Token(other_t_offset, ']'));
-    body.splice(body.end(), storage_bin);
-    TokenList argument;
-    argument.push_back(make_char_token('#', 6));
-    argument.push_back(Token(other_t_offset, '1'));
-    argument.brace_me();
-    body.splice(body.end(), argument);
-    allowed.brace_me();
-    body.splice(body.end(), allowed);
-    body.splice(body.end(), F);
-    body.brace_me();
-    back_input(body);
-    internal_define_key(T);
 }
 
 // Implements \XKV@cc

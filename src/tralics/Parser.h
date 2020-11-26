@@ -265,7 +265,7 @@ struct Parser {
     auto               read_mac_body(bool exp) -> TokenList;
     auto               read_mac_nbargs() -> size_t;
     auto               read_optarg_nopar(TokenList &L) -> bool;
-    auto               read_optarg(TokenList &L) -> bool;
+    auto               read_optarg(TokenList &L) -> bool; // \todo std::optional
     auto               read_token_arg(int cl) -> bool;
     auto               read_token_arg(Token t) -> bool;
     auto               read_unit() -> int;
@@ -402,7 +402,6 @@ struct Parser {
     void               declaretopics();
     void               default_bp(Buffer &B, Token T, TokenList &val);
     void               define_bool_key(subtypes c);
-    void               define_choice_key();
     void               define_cmd_key(subtypes c);
     void               define_something(subtypes chr, bool gbl, symcodes w);
     void               dim_define(size_t a, ScaledInt c, bool gbl);
@@ -735,7 +734,6 @@ struct Parser {
     void               T_dashline(subtypes c);
     void               T_declare_option_star();
     void               T_declare_options();
-    void               T_define_key(bool xkv);
     void               T_define_verbatim_env();
     void               T_ding();
     void               T_documentclass(bool bad);

@@ -1,5 +1,6 @@
 #include "../tralics/Dispatcher.h"
 #include "../tralics/Symcode.h"
+#include "../tralics/globals.h"
 
 // Auto-registering package, see tipa.cpp
 
@@ -10,15 +11,71 @@ namespace xkv_ns {
 } // namespace xkv_ns
 
 namespace {
+    void T_define_key() {
+        Buffer &B = txparser2_local_buf;
+        the_parser.xkv_fetch_prefix_family();
+        TokenList key = the_parser.read_arg();
+        the_parser.list_to_string_c(key, xkv_header, "", "bad key name", B);
+        Token     T = hash_table.locate(B);
+        TokenList opt;
+        if (the_parser.read_optarg(opt)) the_parser.internal_define_key_default(T, opt);
+        the_parser.internal_define_key(T);
+    }
+
+    // Implements \define@choicekey
+    void define_choice_key() {
+        bool if_star = the_parser.remove_initial_plus(false);
+        bool if_plus = the_parser.remove_initial_plus(true);
+        the_parser.xkv_fetch_prefix_family();
+        TokenList keytoks = the_parser.read_arg();
+        the_parser.list_to_string_c(keytoks, xkv_header, "", "bad key name", txparser2_local_buf);
+        Token     T = hash_table.locate(txparser2_local_buf);
+        TokenList storage_bin;
+        the_parser.read_optarg_nopar(storage_bin);
+        TokenList allowed = the_parser.read_arg();
+        TokenList opt;
+        if (the_parser.read_optarg(opt)) the_parser.internal_define_key_default(T, opt);
+        TokenList F;
+        if (if_plus) {
+            TokenList x = the_parser.read_arg();
+            TokenList y = the_parser.read_arg();
+            x.brace_me();
+            y.brace_me();
+            F.splice(F.end(), x);
+            F.splice(F.end(), y);
+        } else {
+            F = the_parser.read_arg();
+            F.brace_me();
+        }
+        TokenList body;
+        body.push_back(hash_table.locate("XKV@cc"));
+        if (if_star) body.push_back(Token(other_t_offset, '*'));
+        if (if_plus) body.push_back(Token(other_t_offset, '+'));
+        storage_bin.push_front(Token(other_t_offset, '['));
+        storage_bin.push_back(Token(other_t_offset, ']'));
+        body.splice(body.end(), storage_bin);
+        TokenList argument;
+        argument.push_back(make_char_token('#', 6));
+        argument.push_back(Token(other_t_offset, '1'));
+        argument.brace_me();
+        body.splice(body.end(), argument);
+        allowed.brace_me();
+        body.splice(body.end(), allowed);
+        body.splice(body.end(), F);
+        body.brace_me();
+        the_parser.back_input(body);
+        the_parser.internal_define_key(T);
+    }
+
     void T_xkeyval(subtypes c) {
         switch (c) {
         case boot_keyval_code: return;
-        case xdefinekey_code: the_parser.T_define_key(true); return;
+        case xdefinekey_code: T_define_key(); return;
         case define_cmdkey_code:
         case define_cmdkeys_code: the_parser.define_cmd_key(c); return;
         case define_boolkey_code:
         case define_boolkeys_code: the_parser.define_bool_key(c); return;
-        case define_choicekey_code: the_parser.define_choice_key(); return;
+        case define_choicekey_code: define_choice_key(); return;
         case define_cc_code: the_parser.internal_choice_key(); return;
         case disable_keys_code: the_parser.disable_keys(); return;
         case key_ifundefined_code: the_parser.key_ifundefined(); return;
