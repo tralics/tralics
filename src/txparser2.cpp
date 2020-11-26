@@ -694,7 +694,6 @@ void Parser::expand_twoargs() {
 void Parser::T_xkeyval(subtypes c) {
     switch (c) {
     case boot_keyval_code: hash_table.boot_keyval(); return;
-    case definekey_code: T_define_key(false); return;
     case xdefinekey_code: T_define_key(true); return;
     case define_cmdkey_code:
     case define_cmdkeys_code: define_cmd_key(c); return;
@@ -766,7 +765,7 @@ void Parser::T_xkeyval(subtypes c) {
 // In the first case, we produce \def\cmd#1{ETC}
 // Otherwise \def\KV@foo@bar@default{\cmd{gee}}, then \def\cmd#1{ETC}
 
-void Parser::T_define_key(bool xkv) {
+void Parser::T_define_key(bool xkv) { // \todo xkv is always true
     Buffer &B = txparser2_local_buf;
     if (xkv)
         xkv_fetch_prefix_family();

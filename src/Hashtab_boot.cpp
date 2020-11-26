@@ -2491,12 +2491,6 @@ void Hashtab::boot_keyval() {
     if (booted) return;
     booted       = true;
     xkv_cc_token = primitive("XKV@cc", xkeyval_cmd, define_cc_code);
-    primitive("define@key", xkeyval_cmd, xdefinekey_code);
-    primitive("define@cmdkey", xkeyval_cmd, define_cmdkey_code);
-    primitive("define@cmdkeys", xkeyval_cmd, define_cmdkeys_code);
-    primitive("define@boolkey", xkeyval_cmd, define_boolkey_code);
-    primitive("define@boolkeys", xkeyval_cmd, define_boolkeys_code);
-    primitive("define@choicekey", xkeyval_cmd, define_choicekey_code);
     primitive("key@ifundefined", xkeyval_cmd, key_ifundefined_code);
     primitive("disable@keys", xkeyval_cmd, disable_keys_code);
     primitive("presetkeys", xkeyval_cmd, preset_keys_code);

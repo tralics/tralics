@@ -1876,7 +1876,6 @@ enum subtypes : unsigned {
     fp_pascal_code,
     fp_last_code,
     boot_keyval_code = 0,
-    definekey_code,
     xdefinekey_code,
     define_cmdkey_code,
     define_cmdkeys_code,
