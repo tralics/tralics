@@ -41,12 +41,10 @@ namespace {
 } // namespace
 
 namespace xkv_ns {
-    void find_aux(int c);
     auto find_key_of(const TokenList &L, int type) -> std::string;
     void merge(TokenList &W, TokenList &L, int type);
     void remove(TokenList &W, TokenList &L, int type);
     void makehd(const std::string &fam);
-    auto is_Gin(const TokenList &x) -> bool;
 } // namespace xkv_ns
 
 namespace token_ns {
@@ -687,51 +685,6 @@ void Parser::expand_twoargs() {
 // ------------------------------------------------------------
 // Special commands for xkeyval
 
-// The following function takes in L one item and puts the key in x.
-// If type is 0, we are looking for \global, and there is no equals
-// Otherwise we look for \savevalue or \gsavevalue, skip equals.
-// We set some booleans
-auto xkv_ns::find_key_of(const TokenList &L, int type) -> std::string {
-    Hashtab & H      = hash_table;
-    Token     equals = H.equals_token;
-    auto      C      = L.begin();
-    auto      E      = L.end();
-    TokenList x; // will hold the tokens
-    while (C != E) {
-        if (*C == equals) break;
-        x.push_back(*C);
-        ++C;
-    }
-    xkv_is_save   = false;
-    xkv_is_global = false;
-    if (x.empty()) return "";
-    Token first = x.front();
-    if (type == 0) {
-        if (first == H.global_token) {
-            x.pop_front();
-            xkv_is_global = true;
-        }
-    } else {
-        if (first == H.locate("savevalue")) {
-            x.pop_front();
-            xkv_is_save = true;
-        } else if (first == H.locate("gsavevalue")) {
-            x.pop_front();
-            xkv_is_save   = true;
-            xkv_is_global = true;
-        }
-    }
-    token_ns::remove_ext_braces(x);
-    return the_parser.list_to_string_c(x, "Invalid key name");
-}
-
-// Command savekeys and presetkeys use a common whose name is constructed
-// here
-void xkv_ns::find_aux(int c) {
-    txparser2_local_buf = "XKV@" + xkv_header;
-    txparser2_local_buf += (c == 0 ? "save" : (c == 1 ? "preseth" : "presett"));
-}
-
 // This finds mykey in the list whose name is in the buffer
 auto Parser::find_a_save_key(const std::string &mykey) -> bool {
     Buffer &  B = txparser2_local_buf;
@@ -808,21 +761,6 @@ void Parser::selective_sanitize() {
 // --------------------------------------------------
 // Implementation of \setkeys
 // We start with some auxiliary functions
-
-auto xkv_ns::is_Gin(const TokenList &x) -> bool {
-    auto C = x.begin();
-    auto E = x.end();
-    if (C == E) return false;
-    if (*C != Token(letter_t_offset, 'G')) return false;
-    ++C;
-    if (C == E) return false;
-    if (*C != Token(letter_t_offset, 'i')) return false;
-    ++C;
-    if (C == E) return false;
-    if (*C != Token(letter_t_offset, 'n')) return false;
-    ++C;
-    return C == E;
-}
 
 void Parser::formatdate() {
     flush_buffer();

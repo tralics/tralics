@@ -8,21 +8,6 @@ namespace xkv_ns {
     void makehd(const std::string &fam);
 } // namespace xkv_ns
 
-// Splits key=val into pieces
-void XkvToken::extract() {
-    TokenList key;
-    value   = initial;
-    has_val = token_ns::split_at(Token(other_t_offset, '='), value, key);
-    token_ns::remove_first_last_space(key);
-    token_ns::remove_first_last_space(value);
-    token_ns::remove_ext_braces(value);
-    token_ns::remove_ext_braces(value);
-    keyname   = xkv_ns::find_key_of(key, 1);
-    has_save  = xkv_is_save;
-    is_global = xkv_is_global;
-    token_ns::remove_first_last_space(value);
-}
-
 // True if the key is in the ignore list
 auto XkvToken::ignore_this(std::vector<std::string> &igna) const -> bool {
     for (auto &i : igna) // \todo std::any_of
@@ -61,15 +46,4 @@ auto XkvToken::is_defined(const std::string &fam) const -> bool {
     xkv_ns::makehd(fam);
     txparser2_local_buf += keyname;
     return hash_table.is_defined(txparser2_local_buf);
-}
-
-// Returns true if must be saved; may set xkv_is_global
-auto XkvToken::check_save() const -> bool {
-    if (has_save) {
-        xkv_is_global = is_global;
-        return true;
-    }
-    xkv_ns::find_aux(0);
-    if (!hash_table.is_defined(txparser2_local_buf)) return false;
-    return the_parser.find_a_save_key(keyname);
 }

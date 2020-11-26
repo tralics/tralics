@@ -8,7 +8,6 @@ namespace classes_ns {
 
 namespace xkv_ns {
     auto find_key_of(const TokenList &L, int type) -> std::string;
-    auto is_Gin(const TokenList &x) -> bool;
     void makehd(const std::string &fam);
 } // namespace xkv_ns
 
@@ -126,13 +125,6 @@ void XkvSetkeys::set_aux(TokenList &W, long idx) {
         }
         if (!found) check_action(cur);
     }
-}
-
-// This is called if the value must be saved
-void XkvSetkeys::save_key(const std::string &Key, TokenList &L) {
-    txparser2_local_buf = "XKV@" + xkv_header + Key + "@value";
-    Token T             = hash_table.locate(txparser2_local_buf);
-    the_parser.new_macro(L, T, xkv_is_global);
 }
 
 // This is called when the key is defined

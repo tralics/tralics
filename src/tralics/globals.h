@@ -26,7 +26,6 @@ inline bool                                                         in_hlinee, h
 inline bool                                                         no_xml_error{false};
 inline bool                                                         use_quotes{false};
 inline bool                                                         seen_document = false; // did we see \begin{document} ?
-inline bool                                                         xkv_is_global;
 inline bool                                                         xkv_is_save;
 inline char32_t                                                     leftquote_val{'`'};
 inline char32_t                                                     rightquote_val{'\''};

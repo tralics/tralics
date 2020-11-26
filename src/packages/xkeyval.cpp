@@ -5,7 +5,11 @@
 #include "../tralics/globals.h"
 #include "../tralics/util.h"
 
-// Auto-registering package, see tipa.cpp
+// Auto-registering package, see tipa.cpp for details
+
+namespace {
+    bool xkv_is_global;
+}
 
 namespace classes_ns {
     auto cur_options(bool, TokenList &, bool) -> TokenList;
@@ -19,8 +23,65 @@ namespace token_ns {
 namespace xkv_ns {
     void find_aux(int c);
     auto find_key_of(const TokenList &L, int type) -> std::string;
-    auto is_Gin(const TokenList &x) -> bool;
 } // namespace xkv_ns
+
+void xkv_ns::find_aux(int c) {
+    txparser2_local_buf = "XKV@" + xkv_header;
+    txparser2_local_buf += (c == 0 ? "save" : (c == 1 ? "preseth" : "presett"));
+}
+
+// The following function takes in L one item and puts the key in x.
+// If type is 0, we are looking for \global, and there is no equals
+// Otherwise we look for \savevalue or \gsavevalue, skip equals.
+// We set some booleans
+auto xkv_ns::find_key_of(const TokenList &L, int type) -> std::string {
+    Hashtab & H      = hash_table;
+    Token     equals = H.equals_token;
+    auto      C      = L.begin();
+    auto      E      = L.end();
+    TokenList x; // will hold the tokens
+    while (C != E) {
+        if (*C == equals) break;
+        x.push_back(*C);
+        ++C;
+    }
+    xkv_is_save   = false;
+    xkv_is_global = false;
+    if (x.empty()) return "";
+    Token first = x.front();
+    if (type == 0) {
+        if (first == H.global_token) {
+            x.pop_front();
+            xkv_is_global = true;
+        }
+    } else {
+        if (first == H.locate("savevalue")) {
+            x.pop_front();
+            xkv_is_save = true;
+        } else if (first == H.locate("gsavevalue")) {
+            x.pop_front();
+            xkv_is_save   = true;
+            xkv_is_global = true;
+        }
+    }
+    token_ns::remove_ext_braces(x);
+    return the_parser.list_to_string_c(x, "Invalid key name");
+}
+
+// Splits key=val into pieces
+void XkvToken::extract() {
+    TokenList key;
+    value   = initial;
+    has_val = token_ns::split_at(Token(other_t_offset, '='), value, key);
+    token_ns::remove_first_last_space(key);
+    token_ns::remove_first_last_space(value);
+    token_ns::remove_ext_braces(value);
+    token_ns::remove_ext_braces(value);
+    keyname   = xkv_ns::find_key_of(key, 1);
+    has_save  = xkv_is_save;
+    is_global = xkv_is_global;
+    token_ns::remove_first_last_space(value);
+}
 
 namespace {
     // Reads optional prefix, and family, and handles them
@@ -581,14 +642,47 @@ namespace {
         default: return;
         }
     }
+
+    auto is_Gin(const TokenList &x) -> bool {
+        auto C = x.begin();
+        auto E = x.end();
+        if (C == E) return false;
+        if (*C != Token(letter_t_offset, 'G')) return false;
+        ++C;
+        if (C == E) return false;
+        if (*C != Token(letter_t_offset, 'i')) return false;
+        ++C;
+        if (C == E) return false;
+        if (*C != Token(letter_t_offset, 'n')) return false;
+        ++C;
+        return C == E;
+    }
 } // namespace
+
+// Returns true if must be saved; may set xkv_is_global
+auto XkvToken::check_save() const -> bool {
+    if (has_save) {
+        xkv_is_global = is_global;
+        return true;
+    }
+    xkv_ns::find_aux(0);
+    if (!hash_table.is_defined(txparser2_local_buf)) return false;
+    return the_parser.find_a_save_key(keyname);
+}
+
+// This is called if the value must be saved
+void XkvSetkeys::save_key(const std::string &Key, TokenList &L) {
+    txparser2_local_buf = "XKV@" + xkv_header + Key + "@value";
+    Token T             = hash_table.locate(txparser2_local_buf);
+    the_parser.new_macro(L, T, xkv_is_global);
+}
 
 void XkvSetkeys::run(bool c) {
     no_err  = the_parser.remove_initial_plus(false);
     set_all = the_parser.remove_initial_plus(true);
     xkv_fetch_prefix();
     fams = the_parser.read_arg();
-    if (xkv_ns::is_Gin(fams)) {
+    if (is_Gin(fams)) {
         TokenList L = the_parser.read_arg();
         L.push_back(hash_table.comma_token);
         the_parser.new_macro(L, hash_table.locate("Gin@keys"));
