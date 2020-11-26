@@ -41,7 +41,6 @@ namespace {
 } // namespace
 
 namespace xkv_ns {
-    auto find_key_of(const TokenList &L, int type) -> std::string;
     void merge(TokenList &W, TokenList &L, int type);
     void remove(TokenList &W, TokenList &L, int type);
     void makehd(const std::string &fam);
@@ -684,19 +683,6 @@ void Parser::expand_twoargs() {
 
 // ------------------------------------------------------------
 // Special commands for xkeyval
-
-// This finds mykey in the list whose name is in the buffer
-auto Parser::find_a_save_key(const std::string &mykey) -> bool {
-    Buffer &  B = txparser2_local_buf;
-    TokenList W = get_mac_value(hash_table.locate(B));
-    TokenList key;
-    while (!W.empty()) {
-        token_ns::split_at(hash_table.comma_token, W, key);
-        std::string key_name = xkv_ns::find_key_of(key, 0);
-        if (key_name == mykey) return true;
-    }
-    return false;
-}
 
 // Skips initial + or *, catcode irrelevant
 auto Parser::remove_initial_plus(bool plus) -> bool {

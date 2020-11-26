@@ -8,7 +8,7 @@
 // Auto-registering package, see tipa.cpp for details
 
 namespace {
-    bool xkv_is_global;
+    bool xkv_is_global, xkv_is_save;
 }
 
 namespace classes_ns {
@@ -84,6 +84,19 @@ void XkvToken::extract() {
 }
 
 namespace {
+    // This finds mykey in the list whose name is in the buffer
+    auto find_a_save_key(const std::string &mykey) -> bool {
+        Buffer &  B = txparser2_local_buf;
+        TokenList W = the_parser.get_mac_value(hash_table.locate(B));
+        TokenList key;
+        while (!W.empty()) {
+            token_ns::split_at(hash_table.comma_token, W, key);
+            std::string key_name = xkv_ns::find_key_of(key, 0);
+            if (key_name == mykey) return true;
+        }
+        return false;
+    }
+
     // Reads optional prefix, and family, and handles them
     void xkv_fetch_prefix() {
         auto opt = the_parser.read_optarg();
@@ -659,6 +672,34 @@ namespace {
     }
 } // namespace
 
+// Extract the keys from a list, result in the vector R
+// Will store a normalised version of the list in L
+void XkvSetkeys::extract_keys(TokenList &L, std::vector<std::string> &R) {
+    if (L.empty()) return;
+    Token     T = hash_table.comma_token;
+    TokenList res;
+    TokenList z;
+    int       bl = 0;
+    L.push_back(T);
+    for (;;) {
+        if (L.empty()) break;
+        Token x = L.front();
+        L.pop_front();
+        token_ns::check_brace(x, bl);
+        if (bl == 0 && x.is_a_char() && x.char_val() == ',') {
+            token_ns::remove_first_last_space(z);
+            if (z.empty()) continue;
+            std::string s = xkv_ns::find_key_of(z, 1);
+            R.push_back(s);
+            res.splice(res.end(), z);
+            res.push_back(T);
+        } else
+            z.push_back(x);
+    }
+    if (!res.empty()) res.pop_back(); // remove final comma
+    L.swap(res);
+}
+
 // Returns true if must be saved; may set xkv_is_global
 auto XkvToken::check_save() const -> bool {
     if (has_save) {
@@ -667,7 +708,7 @@ auto XkvToken::check_save() const -> bool {
     }
     xkv_ns::find_aux(0);
     if (!hash_table.is_defined(txparser2_local_buf)) return false;
-    return the_parser.find_a_save_key(keyname);
+    return find_a_save_key(keyname);
 }
 
 // This is called if the value must be saved

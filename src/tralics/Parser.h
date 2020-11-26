@@ -187,7 +187,6 @@ struct Parser {
     void translate0();
     void translate_all();
     void word_define(size_t a, long c, bool gbl);
-    auto find_a_save_key(const std::string &mykey) -> bool;
     void mu_error(String s, int i);
     void expand_nct(TokenList &L);
     void token_for_show(const CmdChr &val);

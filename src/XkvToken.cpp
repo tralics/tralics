@@ -4,7 +4,6 @@
 
 namespace xkv_ns {
     void find_aux(int c);
-    auto find_key_of(const TokenList &L, int type) -> std::string;
     void makehd(const std::string &fam);
 } // namespace xkv_ns
 
