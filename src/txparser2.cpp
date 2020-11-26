@@ -764,36 +764,6 @@ void Parser::key_ifundefined() {
     one_of_two(undefined);
 }
 
-// Implements \disable@keys
-void Parser::disable_keys() {
-    Buffer &B = txparser2_local_buf;
-    xkv_fetch_prefix_family(); // read prefix and family
-    TokenList   keys = read_arg();
-    std::string Keys = list_to_string_c(keys, "problem scanning keys");
-    for (const auto &Key : split_commas(Keys)) {
-        B = xkv_header + Key;
-        if (hash_table.is_defined(B)) {
-            Token T = hash_table.last_tok;
-            B.append("@default");
-            if (hash_table.is_defined(B)) {
-                TokenList L;
-                L.brace_me();
-                L.push_front(T);
-                new_macro(L, hash_table.last_tok);
-            }
-            B           = "Key `" + Key + "' has been disabled";
-            TokenList L = B.str_toks(nlt_space); // should be irrelevant
-            L.brace_me();
-            L.push_front(hash_table.locate("XKV@warn"));
-            auto *X = new Macro(L);
-            X->set_nbargs(1);
-            X->set_type(dt_normal);
-            mac_define(T, X, false, rd_always, user_cmd);
-        } else
-            parse_error(err_tok, "Undefined key cannot be disabled: ", Key, "");
-    }
-}
-
 // Find saved or preset keys, depending on c2. If not found:
 // signals a an error if c is true (creates otherwise), return true.
 // Creates cur_tok if needed

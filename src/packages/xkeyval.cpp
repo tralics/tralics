@@ -12,6 +12,35 @@ namespace xkv_ns {
 } // namespace xkv_ns
 
 namespace {
+    void disable_keys() {
+        Buffer &B = txparser2_local_buf;
+        the_parser.xkv_fetch_prefix_family(); // read prefix and family
+        TokenList   keys = the_parser.read_arg();
+        std::string Keys = the_parser.list_to_string_c(keys, "problem scanning keys");
+        for (const auto &Key : split_commas(Keys)) {
+            B = xkv_header + Key;
+            if (hash_table.is_defined(B)) {
+                Token T = hash_table.last_tok;
+                B.append("@default");
+                if (hash_table.is_defined(B)) {
+                    TokenList L;
+                    L.brace_me();
+                    L.push_front(T);
+                    the_parser.new_macro(L, hash_table.last_tok);
+                }
+                B           = "Key `" + Key + "' has been disabled";
+                TokenList L = B.str_toks(nlt_space); // should be irrelevant
+                L.brace_me();
+                L.push_front(hash_table.locate("XKV@warn"));
+                auto *X = new Macro(L);
+                X->set_nbargs(1);
+                X->set_type(dt_normal);
+                the_parser.mac_define(T, X, false, rd_always, user_cmd);
+            } else
+                the_parser.parse_error(the_parser.err_tok, "Undefined key cannot be disabled: ", Key, "");
+        }
+    }
+
     void define_bool_key(subtypes c) {
         Buffer &B = txparser2_local_buf;
         the_parser.remove_initial_plus(false);
@@ -191,7 +220,7 @@ namespace {
         case define_boolkeys_code: define_bool_key(c); return;
         case define_choicekey_code: define_choice_key(); return;
         case define_cc_code: the_parser.internal_choice_key(); return;
-        case disable_keys_code: the_parser.disable_keys(); return;
+        case disable_keys_code: disable_keys(); return;
         case key_ifundefined_code: the_parser.key_ifundefined(); return;
         case save_keys_code:
         case gsave_keys_code: {

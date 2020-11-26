@@ -404,7 +404,6 @@ struct Parser {
     void               define_something(subtypes chr, bool gbl, symcodes w);
     void               dim_define(size_t a, ScaledInt c, bool gbl);
     void               dimen_from_list0(Token T, TokenList &L);
-    void               disable_keys();
     void               do_register_command(bool gbl);
     void               dump_save_stack() const;
     void               E_accent_a();
