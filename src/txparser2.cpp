@@ -958,7 +958,7 @@ void Parser::define_bool_key(subtypes c) {
             internal_define_key_default(T, D);
         }
         u.push_front(hash_table.csname_token);
-        u.push_back(hash_table.xkv_resa_token);
+        u.push_back(hash_table.locate("XKV@resa"));
         u.push_back(hash_table.endcsname_token);
         if (c == define_boolkey_code) {
             TokenList add1 = read_arg();
@@ -979,7 +979,7 @@ void Parser::define_bool_key(subtypes c) {
         LL.push_front(make_char_token('#', 6));
         LL.push_front(hash_table.OB_token);
         LL.push_front(Token(other_t_offset, ']'));
-        LL.push_front(hash_table.xkv_resa_token);
+        LL.push_front(hash_table.locate("XKV@resa"));
         LL.push_front(Token(other_t_offset, '['));
         if (if_plus) LL.push_front(Token(other_t_offset, '+'));
         LL.push_front(Token(other_t_offset, '*'));
@@ -1039,7 +1039,7 @@ void Parser::disable_keys() {
             B           = "Key `" + Key + "' has been disabled";
             TokenList L = B.str_toks(nlt_space); // should be irrelevant
             L.brace_me();
-            L.push_front(hash_table.xkv_warn_token);
+            L.push_front(hash_table.locate("XKV@warn"));
             auto *X = new Macro(L);
             X->set_nbargs(1);
             X->set_type(dt_normal);
@@ -1094,7 +1094,7 @@ auto xkv_ns::find_key_of(const TokenList &L, int type) -> std::string {
         if (first == H.locate("savevalue")) {
             x.pop_front();
             xkv_is_save = true;
-        } else if (first == H.gsavevalue_token) {
+        } else if (first == H.locate("gsavevalue")) {
             x.pop_front();
             xkv_is_save   = true;
             xkv_is_global = true;

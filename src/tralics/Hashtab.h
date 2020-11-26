@@ -49,9 +49,9 @@ struct Hashtab : public std::vector<std::string> {
         nocase_e_token, nocase_i_token, ref_token, label_token, infalse_token, intrue_token, nil_token, CurrentOption_token,
         xkv_for_i_token, CurrentOptionKey_token, CurrentOptionValue_token, forloop_token, doubleat_token, def_token, iforloop_token,
         tforloop_token, footnote_token, dblarg_token, mmlprescripts_token, mmlnone_token, mathop_token, limits_token, begingroup_token,
-        endgroup_token, allowbreak_token, stepcounter_token, nomathsw0_token, nomathsw1_token, xkv_resa_token, xkv_warn_token,
-        xkv_prefix_token, xkv_fams_token, xkv_na_token, xkv_rm_token, xkv_tfam_token, xkv_header_token, xkv_tkey_token, gsavevalue_token,
-        empty_token, composite_token, ExplFileName_token, ExplFileDate_token, ExplFileVersion_token, ExplFileDescription_token, last_tok;
+        endgroup_token, allowbreak_token, stepcounter_token, nomathsw0_token, nomathsw1_token, xkv_na_token, xkv_rm_token, xkv_tfam_token,
+        xkv_header_token, xkv_tkey_token, empty_token, composite_token, ExplFileName_token, ExplFileDate_token, ExplFileVersion_token,
+        ExplFileDescription_token, last_tok;
 };
 
 inline Hashtab hash_table;

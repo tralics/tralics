@@ -17,7 +17,6 @@ XkvSetkeys::XkvSetkeys(Parser *PP) : P(PP) {
     comma_token  = hash_table.comma_token;
     equals_token = hash_table.equals_token;
     na_token     = hash_table.xkv_na_token;
-    fams_token   = hash_table.xkv_fams_token;
     rm_token     = hash_table.xkv_rm_token;
 }
 
@@ -53,8 +52,8 @@ void XkvSetkeys::fetch_keys(bool c) {
 
 // Evaluate now everything
 void XkvSetkeys::finish() {
-    P->new_macro(xkv_prefix, hash_table.xkv_prefix_token);
-    P->new_macro(fams, fams_token);
+    P->new_macro(xkv_prefix, hash_table.locate("XKV@prefix"));
+    P->new_macro(fams, hash_table.locate("XKV@fams"));
     P->new_macro(na, na_token);
     if (!delayed.empty()) delayed.pop_back(); // remove trailing comma
     if (tracing_commands()) {
