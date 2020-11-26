@@ -8,11 +8,13 @@ class Symcode {
     Symcode(symcodes v) : val(v) {}
 
 public:
-    symcodes                                            val;
-    std::optional<std::function<bool(subtypes)>>        action;
-    std::optional<std::string>                          name_str;
-    std::optional<std::function<std::string(subtypes)>> name_fn;
+    symcodes val;
+
     std::unordered_map<subtypes, std::string>           name_sub;
+    std::optional<std::function<std::string(subtypes)>> name_fun;
+    std::optional<std::string>                          name_str;
+
+    std::optional<std::function<bool(subtypes)>> action; // \todo add a map like name_sub
 
     operator symcodes() const { return val; }
 

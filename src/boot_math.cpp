@@ -164,17 +164,17 @@ void Dispatcher::boot_math() {
     register_action_plain(mathrel_cmd, math_only);
     register_action_plain(mathspace_cmd, math_only);
 
-    Symcode::get(mathbetween_cmd).name_fn = token_math_name;
-    Symcode::get(mathbin_cmd).name_fn     = token_math_name;
-    Symcode::get(mathclose_cmd).name_fn   = token_math_name;
-    Symcode::get(mathinner_cmd).name_fn   = token_math_name;
-    Symcode::get(mathop_cmd).name_fn      = token_math_name;
-    Symcode::get(mathopen_cmd).name_fn    = token_math_name;
-    Symcode::get(mathopn_cmd).name_fn     = token_math_name;
-    Symcode::get(mathord_cmd).name_fn     = token_math_name;
-    Symcode::get(mathordb_cmd).name_fn    = token_math_name;
-    Symcode::get(mathrel_cmd).name_fn     = token_math_name;
-    Symcode::get(mathspace_cmd).name_fn   = token_math_name;
+    Symcode::get(mathbetween_cmd).name_fun = token_math_name;
+    Symcode::get(mathbin_cmd).name_fun     = token_math_name;
+    Symcode::get(mathclose_cmd).name_fun   = token_math_name;
+    Symcode::get(mathinner_cmd).name_fun   = token_math_name;
+    Symcode::get(mathop_cmd).name_fun      = token_math_name;
+    Symcode::get(mathopen_cmd).name_fun    = token_math_name;
+    Symcode::get(mathopn_cmd).name_fun     = token_math_name;
+    Symcode::get(mathord_cmd).name_fun     = token_math_name;
+    Symcode::get(mathordb_cmd).name_fun    = token_math_name;
+    Symcode::get(mathrel_cmd).name_fun     = token_math_name;
+    Symcode::get(mathspace_cmd).name_fun   = token_math_name;
 
     Symcode::get(special_math_cmd).name_sub[mathlabel_code]   = "anchorlabel";
     Symcode::get(special_math_cmd).name_sub[multicolumn_code] = "multicolumn";
