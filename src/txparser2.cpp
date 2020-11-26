@@ -43,7 +43,6 @@ namespace {
 namespace xkv_ns {
     void merge(TokenList &W, TokenList &L, int type);
     void remove(TokenList &W, TokenList &L, int type);
-    void makehd(const std::string &fam);
 } // namespace xkv_ns
 
 namespace token_ns {
@@ -695,13 +694,6 @@ auto Parser::remove_initial_plus(bool plus) -> bool {
 }
 
 // Creates the XKV header
-
-void xkv_ns::makehd(const std::string &fam) {
-    Buffer &B = txparser2_local_buf;
-    B         = xkv_prefix + fam;
-    if (!fam.empty()) B.push_back('@');
-    xkv_header = B;
-}
 
 // Removes A from B, result will be in C
 void Parser::T_remove_element() {

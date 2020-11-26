@@ -6,10 +6,6 @@ namespace classes_ns {
     void unknown_optionX(TokenList &cur_keyval, TokenList &action);
 } // namespace classes_ns
 
-namespace xkv_ns {
-    void makehd(const std::string &fam);
-} // namespace xkv_ns
-
 // Special case of ExecuteOptions
 void XkvSetkeys::special_fams() {
     fams = the_parser.XKV_parse_filename();
@@ -45,20 +41,6 @@ void XkvSetkeys::finish() {
 void XkvSetkeys::dump_keys() {
     Logger::finish_seq();
     the_log << "{Options to execute->" << keyvals << "}\n";
-}
-
-void XkvSetkeys::check_preset(String s) {
-    Buffer &B = txparser2_local_buf;
-    auto    N = Fams.size();
-    for (size_t i = 0; i < N; i++) {
-        xkv_ns::makehd(Fams[i]);
-        B = "XKV@" + xkv_header + s;
-        if (hash_table.is_defined(B)) {
-            Token     T = hash_table.locate(B);
-            TokenList W = the_parser.get_mac_value(T);
-            set_aux(W, to_signed(i));
-        }
-    }
 }
 
 // If i=-1 this is the normal case, else

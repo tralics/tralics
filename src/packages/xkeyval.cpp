@@ -23,11 +23,19 @@ namespace token_ns {
 namespace xkv_ns {
     void find_aux(int c);
     auto find_key_of(const TokenList &L, int type) -> std::string;
+    void makehd(const std::string &fam);
 } // namespace xkv_ns
 
 void xkv_ns::find_aux(int c) {
     txparser2_local_buf = "XKV@" + xkv_header;
     txparser2_local_buf += (c == 0 ? "save" : (c == 1 ? "preseth" : "presett"));
+}
+
+void xkv_ns::makehd(const std::string &fam) {
+    Buffer &B = txparser2_local_buf;
+    B         = xkv_prefix + fam;
+    if (!fam.empty()) B.push_back('@');
+    xkv_header = B;
 }
 
 // The following function takes in L one item and puts the key in x.
@@ -81,6 +89,20 @@ void XkvToken::extract() {
     has_save  = xkv_is_save;
     is_global = xkv_is_global;
     token_ns::remove_first_last_space(value);
+}
+
+void XkvSetkeys::check_preset(String s) {
+    Buffer &B = txparser2_local_buf;
+    auto    N = Fams.size();
+    for (size_t i = 0; i < N; i++) {
+        xkv_ns::makehd(Fams[i]);
+        B = "XKV@" + xkv_header + s;
+        if (hash_table.is_defined(B)) {
+            Token     T = hash_table.locate(B);
+            TokenList W = the_parser.get_mac_value(T);
+            set_aux(W, to_signed(i));
+        }
+    }
 }
 
 namespace {
@@ -737,6 +759,46 @@ void XkvSetkeys::run(bool c) {
     set_aux(keyvals, -1);
     check_preset("presett");
     finish();
+}
+
+// Constructs the header, in xkv_header
+// Constructs the 3 macros in action
+void XkvToken::prepare(const std::string &fam) {
+    Hashtab &H = hash_table;
+    // We start constructing the three macros
+    Buffer &B = txparser2_local_buf;
+    action.push_back(H.def_token);
+    action.push_back(H.locate("XKV@tkey"));
+    B           = keyname;
+    TokenList L = B.str_toks11(false);
+    L.brace_me();
+    action.splice(action.end(), L);
+    action.push_back(H.def_token);
+    action.push_back(H.locate("XKV@tfam"));
+    B = fam;
+    L = B.str_toks11(false);
+    L.brace_me();
+    action.splice(action.end(), L);
+    action.push_back(H.def_token);
+    action.push_back(H.locate("XKV@header"));
+    xkv_ns::makehd(fam);
+    L = B.str_toks11(false);
+    L.brace_me();
+    action.splice(action.end(), L);
+}
+
+// Returns true if the key is defined
+auto XkvToken::is_defined(const std::string &fam) const -> bool {
+    xkv_ns::makehd(fam);
+    txparser2_local_buf += keyname;
+    return hash_table.is_defined(txparser2_local_buf);
+}
+
+// True if the key is in the ignore list
+auto XkvToken::ignore_this(std::vector<std::string> &igna) const -> bool {
+    for (auto &i : igna) // \todo std::any_of
+        if (keyname == i) return true;
+    return false;
 }
 
 namespace {
