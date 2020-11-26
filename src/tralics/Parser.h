@@ -81,7 +81,7 @@ struct Parser {
     size_t                input_line_pos{0};                     // position in input_line
     Xml *                 the_xmlA{nullptr}, *the_xmlB{nullptr}; // for XML tree manipulations
 
-    auto at_eol() -> bool { return input_line_pos >= input_line.size(); }
+    [[nodiscard]] auto at_eol() const -> bool { return input_line_pos >= input_line.size(); }
     auto get_next_char() -> char32_t { return input_line[input_line_pos++]; }
     auto get_after_ass_tok() -> Token {
         Token x = after_assignment_token;
@@ -133,7 +133,7 @@ struct Parser {
     Parser();
 
     void add_buffer_to_document_hook(Buffer &b, const std::string &name);
-    void add_language_att();
+    void add_language_att() const;
     void after_main_text();
     void boot();
     void box_end(Xml *res, size_t pos);
@@ -867,7 +867,7 @@ struct Parser {
     void               token_from_list(Token t);
     void               token_list_define(size_t p, TokenList &c, bool gbl);
     void               token_show(int what, Buffer &B);
-    void               trace_if(int k);
+    void               trace_if(int k) const;
     void               translate_char(CmdChr X);
     void               translate_char(uchar c1, uchar c2);
     void               translate_font_size();

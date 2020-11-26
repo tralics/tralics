@@ -15,7 +15,7 @@
 // <-arg 2   -           b    10 5
 // >-arg 3   -
 
-class Parser;
+struct Parser;
 class ArrayInfo;
 
 // Class used to implement array.sty

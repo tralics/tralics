@@ -2784,7 +2784,7 @@ void Parser::insert_relax() {
 // Prints trace for \if in pass_text
 // If k=-1, this is \if, must print \unless,
 // If k=-2, this is \if, must not print \unless,
-void Parser::trace_if(int k) {
+void Parser::trace_if(int k) const {
     if (tracing_commands()) {
         Logger::finish_seq();
         the_log << "+";

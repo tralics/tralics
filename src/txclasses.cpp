@@ -716,7 +716,7 @@ void Parser::check_language() {
 }
 
 // This adds the language attribute to the main XML element
-void Parser::add_language_att() {
+void Parser::add_language_att() const {
     std::string b = "cst_empty";
     int         D = get_def_language_num();
     if (D == 0)
