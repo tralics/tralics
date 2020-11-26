@@ -49,7 +49,7 @@ namespace {
 
     // Implements ExecuteOptionsX
     void xkv_execute_options() {
-        XkvSetkeys data(&the_parser);
+        XkvSetkeys data;
         xkv_fetch_prefix();
         data.special_fams();
         data.fetch_keys(true);
@@ -60,7 +60,7 @@ namespace {
 
     // Implements ProcessOptionsX
     void xkv_process_options() {
-        XkvSetkeys data(&the_parser);
+        XkvSetkeys data;
         //  data.no_err = remove_initial_plus(false);
         bool s = the_parser.remove_initial_star(); // we should do something with this
         xkv_fetch_prefix();
@@ -77,7 +77,7 @@ namespace {
 
     // May set \XKV@prefix \XKV@fams \XKV@tfam \XKV@header \XKV@tkey \XKV@na
     void setkeys(bool c) {
-        XkvSetkeys data(&the_parser);
+        XkvSetkeys data;
         data.run(c);
     }
 
@@ -584,13 +584,13 @@ namespace {
 } // namespace
 
 void XkvSetkeys::run(bool c) {
-    no_err  = P->remove_initial_plus(false);
-    set_all = P->remove_initial_plus(true);
+    no_err  = the_parser.remove_initial_plus(false);
+    set_all = the_parser.remove_initial_plus(true);
     xkv_fetch_prefix();
-    fams = P->read_arg();
+    fams = the_parser.read_arg();
     if (xkv_ns::is_Gin(fams)) {
         TokenList L = the_parser.read_arg();
-        L.push_back(comma_token);
+        L.push_back(hash_table.comma_token);
         the_parser.new_macro(L, hash_table.locate("Gin@keys"));
         return;
     }

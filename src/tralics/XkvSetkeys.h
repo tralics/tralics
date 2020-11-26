@@ -3,9 +3,6 @@
 #include "XkvToken.h"
 
 class XkvSetkeys {
-    Parser *                 P;
-    Token                    comma_token;
-    Token                    equals_token;
     std::vector<std::string> Fams;           // the list of all families
     std::vector<std::string> Na;             // the list of keys not to set
     std::vector<std::string> Keys;           // the list of keys
@@ -19,7 +16,6 @@ class XkvSetkeys {
     bool                     in_pox{false};  // are in in \ProcessOptionsX ?
 
 public:
-    XkvSetkeys(Parser *P);
     void run(bool c);
     void run2(bool);
     void check_preset(String s);
@@ -35,7 +31,7 @@ public:
     void replace_pointers(TokenList &L);
     void new_unknown(TokenList &L) {
         delayed.splice(delayed.end(), L);
-        delayed.push_back(comma_token);
+        delayed.push_back(hash_table.comma_token);
     }
     void more_action(TokenList &L) { action.splice(action.end(), L); }
     void finish();
