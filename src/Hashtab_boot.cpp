@@ -2485,29 +2485,3 @@ void Hashtab::boot_etex() {
     primitive("widowpenalties", set_shape_cmd, widowpenalties_code);
     primitive("displaywidowpenalties", set_shape_cmd, displaywidowpenalties_code);
 }
-
-void Hashtab::boot_keyval() {
-    static bool booted = false;
-    if (booted) return;
-    booted = true;
-    primitive("XKV@cc", xkeyval_cmd, define_cc_code);
-    primitive("key@ifundefined", xkeyval_cmd, key_ifundefined_code);
-    primitive("disable@keys", xkeyval_cmd, disable_keys_code);
-    primitive("presetkeys", xkeyval_cmd, preset_keys_code);
-    primitive("gpresetkeys", xkeyval_cmd, gpreset_keys_code);
-    primitive("unpresetkeys", xkeyval_cmd, unpreset_keys_code);
-    primitive("gunpresetkeys", xkeyval_cmd, gunpreset_keys_code);
-    primitive("delpresetkeys", xkeyval_cmd, delpreset_keys_code);
-    primitive("gdelpresetkeys", xkeyval_cmd, gdelpreset_keys_code);
-    primitive("savekeys", xkeyval_cmd, save_keys_code);
-    primitive("gsavekeys", xkeyval_cmd, gsave_keys_code);
-    primitive("unsavekeys", xkeyval_cmd, unsave_keys_code);
-    primitive("gunsavekeys", xkeyval_cmd, gunsave_keys_code);
-    primitive("delsavekeys", xkeyval_cmd, delsave_keys_code);
-    primitive("gdelsavekeys", xkeyval_cmd, gdelsave_keys_code);
-    primitive("setkeys", xkeyval_cmd, setkeys_code);
-    primitive("setrmkeys", xkeyval_cmd, setrmkeys_code);
-    primitive("DeclareOptionX", xkeyval_cmd, declare_optionsX_code);
-    primitive("ExecuteOptionsX", xkeyval_cmd, execute_optionsX_code);
-    primitive("ProcessOptionsX", xkeyval_cmd, process_optionsX_code);
-}

@@ -30,7 +30,6 @@ struct Hashtab : public std::vector<std::string> {
     void boot_fancyhdr();
     void boot_etex();
     void boot_latex3();
-    void boot_keyval();
 
     Token par_token, OB_token, CB_token, dollar_token, verb_token, noindent_token, textvisiblespace_token, frozen_dont_expand, relax_token,
         frozen_relax_token, sendgroup_token, frozen_endcsname, eof_token, frozen_undef_token, equals_token, char_token, number_token,

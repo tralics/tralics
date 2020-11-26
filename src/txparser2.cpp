@@ -693,7 +693,7 @@ void Parser::expand_twoargs() {
 
 void Parser::T_xkeyval(subtypes c) {
     switch (c) {
-    case boot_keyval_code: hash_table.boot_keyval(); return;
+    case boot_keyval_code: return;
     case xdefinekey_code: T_define_key(true); return;
     case define_cmdkey_code:
     case define_cmdkeys_code: define_cmd_key(c); return;
