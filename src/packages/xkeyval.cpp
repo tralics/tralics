@@ -1,6 +1,7 @@
 #include "../tralics/Dispatcher.h"
 #include "../tralics/Logger.h"
 #include "../tralics/Symcode.h"
+#include "../tralics/XkvSetkeys.h"
 #include "../tralics/globals.h"
 #include "../tralics/util.h"
 
@@ -16,9 +17,115 @@ namespace token_ns {
 
 namespace xkv_ns {
     void find_aux(int c);
+    auto find_key_of(const TokenList &L, int type) -> std::string;
 } // namespace xkv_ns
 
 namespace {
+    // May set \XKV@prefix \XKV@fams \XKV@tfam \XKV@header \XKV@tkey \XKV@na
+    void setkeys(bool c) {
+        XkvSetkeys data(&the_parser);
+        data.run(c);
+    }
+
+    // This deletes L from W. Here L is a simple list of keys
+    void xkv_ns_remove(TokenList &W, TokenList &L, int type) {
+        Buffer  B;
+        Buffer &aux = txparser2_local_buf;
+        the_parser.list_to_string_c(L, ",", ",", "Invalid key name list", B);
+        Token     comma = hash_table.comma_token;
+        TokenList tmp;
+        TokenList key;
+        W.swap(tmp);
+        while (!tmp.empty()) {
+            token_ns::split_at(comma, tmp, key);
+            std::string key_name = xkv_ns::find_key_of(key, type);
+            aux                  = "," + key_name + ",";
+            if (B.find(aux) == std::string::npos) {
+                if (!W.empty()) W.push_back(comma);
+                W.splice(W.end(), key);
+            }
+        }
+    }
+
+    // This merges L into W; both lists have the form \global{key}=value
+    // or, depenfing on the type, are lists of keys
+    void xkv_ns_merge(TokenList &W, TokenList &L, int type) {
+        Token     comma = hash_table.comma_token;
+        TokenList key;
+        TokenList tmp;
+        if (W.empty()) {
+            while (!L.empty()) {
+                token_ns::split_at(comma, L, key);
+                token_ns::remove_first_last_space(key);
+                if (!W.empty()) W.push_back(comma);
+                W.splice(W.end(), key);
+            }
+            return;
+        }
+        while (!L.empty()) {
+            token_ns::split_at(comma, L, key);
+            token_ns::remove_first_last_space(key);
+            std::string key_name = xkv_ns::find_key_of(key, type);
+            bool        found    = false; // Was key in W ?
+            TokenList   z;
+            W.swap(tmp);
+            while (!tmp.empty()) {
+                token_ns::split_at(comma, tmp, z);
+                std::string zname = xkv_ns::find_key_of(z, type);
+                if (!W.empty()) W.push_back(comma);
+                if (key_name == zname) {
+                    found = true; // replace in W old value z by new value
+                    W.splice(W.end(), key);
+                } else
+                    W.splice(W.end(), z);
+            }
+            if (!found) {
+                if (!W.empty()) W.push_back(comma);
+                W.splice(W.end(), key); // Insert key at the end
+            }
+        }
+    }
+
+    // Merges or deletes depending on mg globally if gbl is true
+    // the keys in L from the variable depending on type
+    // Implements preset or save depending on type
+    void xkv_merge(bool gbl, int type, TokenList &L, bool mg) {
+        token_ns::sanitize_one(L, '=');
+        token_ns::sanitize_one(L, ',');
+        xkv_ns::find_aux(type);
+        Token     T = hash_table.locate(txparser2_local_buf);
+        TokenList W = the_parser.get_mac_value(T);
+        if (mg)
+            xkv_ns_merge(W, L, type);
+        else
+            xkv_ns_remove(W, L, type);
+        the_parser.new_macro(W, T, gbl);
+    }
+
+    // Implements \key@ifundefined
+    void key_ifundefined() {
+        Buffer &B = txparser2_local_buf;
+        the_parser.xkv_fetch_prefix();
+        TokenList   fams      = the_parser.read_arg();
+        bool        undefined = true;
+        TokenList   key       = the_parser.read_arg();
+        std::string Key       = the_parser.list_to_string_c(key, "problem scanning key");
+        std::string Fams      = the_parser.list_to_string_c(fams, "Problem with the families");
+        std::string fam;
+        for (const auto &f : split_commas(Fams)) {
+            fam = f;
+            B   = xkv_prefix + fam;
+            if (!fam.empty()) B.push_back('@');
+            B.append(Key);
+            if (hash_table.is_defined(B)) {
+                undefined = false;
+                break;
+            }
+        }
+        the_parser.new_macro(fam, hash_table.locate("XKV@tfam"));
+        the_parser.one_of_two(undefined);
+    }
+
     void lower_case(TokenList &L) {
         for (auto &a : L) {
             if (a.val < single_offset) {
@@ -364,19 +471,19 @@ namespace {
         case define_choicekey_code: define_choice_key(); return;
         case define_cc_code: internal_choice_key(); return;
         case disable_keys_code: disable_keys(); return;
-        case key_ifundefined_code: the_parser.key_ifundefined(); return;
+        case key_ifundefined_code: key_ifundefined(); return;
         case save_keys_code:
         case gsave_keys_code: {
             xkv_save_keys_aux(false, 0);
             TokenList A = the_parser.read_arg();
-            the_parser.xkv_merge(c == gsave_keys_code, 0, A, true);
+            xkv_merge(c == gsave_keys_code, 0, A, true);
             return;
         }
         case delsave_keys_code:
         case gdelsave_keys_code: {
             bool      bad = xkv_save_keys_aux(false, 0);
             TokenList A   = the_parser.read_arg();
-            if (!bad) the_parser.xkv_merge(c == gdelsave_keys_code, 0, A, false);
+            if (!bad) xkv_merge(c == gdelsave_keys_code, 0, A, false);
             return;
         }
         case unsave_keys_code:
@@ -389,8 +496,8 @@ namespace {
             xkv_save_keys_aux(false, 1);
             TokenList A = the_parser.read_arg();
             TokenList B = the_parser.read_arg();
-            the_parser.xkv_merge(c == gpreset_keys_code, 1, A, true);
-            the_parser.xkv_merge(c == gpreset_keys_code, 2, B, true);
+            xkv_merge(c == gpreset_keys_code, 1, A, true);
+            xkv_merge(c == gpreset_keys_code, 2, B, true);
             return;
         }
         case delpreset_keys_code:
@@ -399,8 +506,8 @@ namespace {
             TokenList A   = the_parser.read_arg();
             TokenList B   = the_parser.read_arg();
             if (bad) return;
-            the_parser.xkv_merge(c == gdelpreset_keys_code, 1, A, false);
-            the_parser.xkv_merge(c == gdelpreset_keys_code, 2, B, false);
+            xkv_merge(c == gdelpreset_keys_code, 1, A, false);
+            xkv_merge(c == gdelpreset_keys_code, 2, B, false);
             return;
         }
         case unpreset_keys_code:
@@ -412,8 +519,8 @@ namespace {
             the_parser.M_let_fast(the_parser.cur_tok, hash_table.frozen_undef_token, c == gunpreset_keys_code);
             return;
         }
-        case setrmkeys_code: the_parser.setkeys(false); return;
-        case setkeys_code: the_parser.setkeys(true); return;
+        case setrmkeys_code: setkeys(false); return;
+        case setkeys_code: setkeys(true); return;
         case declare_optionsX_code: xkv_declare_option(); return;
         case process_optionsX_code: the_parser.xkv_process_options(); return;
         case execute_optionsX_code: the_parser.xkv_execute_options(); return;

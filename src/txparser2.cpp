@@ -689,30 +689,6 @@ void Parser::expand_twoargs() {
 // ------------------------------------------------------------
 // Special commands for xkeyval
 
-// Implements \key@ifundefined
-void Parser::key_ifundefined() {
-    Buffer &B = txparser2_local_buf;
-    xkv_fetch_prefix();
-    TokenList   fams      = read_arg();
-    bool        undefined = true;
-    TokenList   key       = read_arg();
-    std::string Key       = list_to_string_c(key, "problem scanning key");
-    std::string Fams      = list_to_string_c(fams, "Problem with the families");
-    std::string fam;
-    for (const auto &f : split_commas(Fams)) {
-        fam = f;
-        B   = xkv_prefix + fam;
-        if (!fam.empty()) B.push_back('@');
-        B.append(Key);
-        if (hash_table.is_defined(B)) {
-            undefined = false;
-            break;
-        }
-    }
-    new_macro(fam, hash_table.locate("XKV@tfam"));
-    one_of_two(undefined);
-}
-
 // The following function takes in L one item and puts the key in x.
 // If type is 0, we are looking for \global, and there is no equals
 // Otherwise we look for \savevalue or \gsavevalue, skip equals.
@@ -758,65 +734,6 @@ void xkv_ns::find_aux(int c) {
     txparser2_local_buf += (c == 0 ? "save" : (c == 1 ? "preseth" : "presett"));
 }
 
-// This merges L into W; both lists have the form \global{key}=value
-// or, depenfing on the type, are lists of keys
-void xkv_ns::merge(TokenList &W, TokenList &L, int type) {
-    Token     comma = hash_table.comma_token;
-    TokenList key;
-    TokenList tmp;
-    if (W.empty()) {
-        while (!L.empty()) {
-            token_ns::split_at(comma, L, key);
-            token_ns::remove_first_last_space(key);
-            if (!W.empty()) W.push_back(comma);
-            W.splice(W.end(), key);
-        }
-        return;
-    }
-    while (!L.empty()) {
-        token_ns::split_at(comma, L, key);
-        token_ns::remove_first_last_space(key);
-        std::string key_name = find_key_of(key, type);
-        bool        found    = false; // Was key in W ?
-        TokenList   z;
-        W.swap(tmp);
-        while (!tmp.empty()) {
-            token_ns::split_at(comma, tmp, z);
-            std::string zname = find_key_of(z, type);
-            if (!W.empty()) W.push_back(comma);
-            if (key_name == zname) {
-                found = true; // replace in W old value z by new value
-                W.splice(W.end(), key);
-            } else
-                W.splice(W.end(), z);
-        }
-        if (!found) {
-            if (!W.empty()) W.push_back(comma);
-            W.splice(W.end(), key); // Insert key at the end
-        }
-    }
-}
-
-// This deletes L from W. Here L is a simple list of keys
-void xkv_ns::remove(TokenList &W, TokenList &L, int type) {
-    Buffer  B;
-    Buffer &aux = txparser2_local_buf;
-    the_parser.list_to_string_c(L, ",", ",", "Invalid key name list", B);
-    Token     comma = hash_table.comma_token;
-    TokenList tmp;
-    TokenList key;
-    W.swap(tmp);
-    while (!tmp.empty()) {
-        token_ns::split_at(comma, tmp, key);
-        std::string key_name = xkv_ns::find_key_of(key, type);
-        aux                  = "," + key_name + ",";
-        if (B.find(aux) == std::string::npos) {
-            if (!W.empty()) W.push_back(comma);
-            W.splice(W.end(), key);
-        }
-    }
-}
-
 // This finds mykey in the list whose name is in the buffer
 auto Parser::find_a_save_key(const std::string &mykey) -> bool {
     Buffer &  B = txparser2_local_buf;
@@ -828,22 +745,6 @@ auto Parser::find_a_save_key(const std::string &mykey) -> bool {
         if (key_name == mykey) return true;
     }
     return false;
-}
-
-// Merges or deletes depending on mg globally if gbl is true
-// the keys in L from the variable depending on type
-// Implements preset or save depending on type
-void Parser::xkv_merge(bool gbl, int type, TokenList &L, bool mg) {
-    token_ns::sanitize_one(L, '=');
-    token_ns::sanitize_one(L, ',');
-    xkv_ns::find_aux(type);
-    Token     T = hash_table.locate(txparser2_local_buf);
-    TokenList W = get_mac_value(T);
-    if (mg)
-        xkv_ns::merge(W, L, type);
-    else
-        xkv_ns::remove(W, L, type);
-    new_macro(W, T, gbl);
 }
 
 // Skips initial + or *, catcode irrelevant
@@ -978,12 +879,6 @@ void Parser::selective_sanitize() {
 // --------------------------------------------------
 // Implementation of \setkeys
 // We start with some auxiliary functions
-
-// May set \XKV@prefix \XKV@fams \XKV@tfam \XKV@header \XKV@tkey \XKV@na
-void Parser::setkeys(bool c) {
-    XkvSetkeys data(this);
-    data.run(c);
-}
 
 auto xkv_ns::is_Gin(const TokenList &x) -> bool {
     auto C = x.begin();

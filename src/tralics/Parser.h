@@ -530,7 +530,6 @@ struct Parser {
     void               interpret_mathchoice_cmd(size_t res, subtypes k, CmdChr W);
     void               invalid_key(Token T, const std::string &key, const TokenList &val);
     void               is_date_valid();
-    void               key_ifundefined();
     void               kvo_bool_key();
     void               kvo_bool_opt();
     void               kvo_comp_opt();
@@ -674,7 +673,6 @@ struct Parser {
     void               set_boolean();
     void               set_counter(Token T, long c);
     void               set_date_ctrs(long year, size_t month, size_t day);
-    void               setkeys(bool c);
     void               short_verb_error(Token T, Token t, unsigned x);
     void               skip_group(TokenList &);
     void               skip_group0(TokenList &L);
@@ -887,7 +885,6 @@ struct Parser {
     void               xkv_class_prefix();
     void               xkv_execute_options();
     void               xkv_fetch_prefix();
-    void               xkv_merge(bool gbl, int type, TokenList &L, bool mg);
     void               xkv_pass_options(bool c);
     void               XKV_pox();
     void               XKV_process_execute(bool psw);
