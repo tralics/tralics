@@ -9,7 +9,6 @@ class XkvSetkeys {
     Token                    na_token;
     Token                    rm_token;
     Token                    fams_token;
-    Token                    savevalue_token;
     std::vector<std::string> Fams;           // the list of all families
     std::vector<std::string> Na;             // the list of keys not to set
     std::vector<std::string> Keys;           // the list of keys

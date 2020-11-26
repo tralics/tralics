@@ -14,12 +14,11 @@ namespace xkv_ns {
 
 // Ctor
 XkvSetkeys::XkvSetkeys(Parser *PP) : P(PP) {
-    comma_token     = hash_table.comma_token;
-    equals_token    = hash_table.equals_token;
-    na_token        = hash_table.xkv_na_token;
-    fams_token      = hash_table.xkv_fams_token;
-    rm_token        = hash_table.xkv_rm_token;
-    savevalue_token = hash_table.savevalue_token;
+    comma_token  = hash_table.comma_token;
+    equals_token = hash_table.equals_token;
+    na_token     = hash_table.xkv_na_token;
+    fams_token   = hash_table.xkv_fams_token;
+    rm_token     = hash_table.xkv_rm_token;
 }
 
 // This reads and manages the list of families

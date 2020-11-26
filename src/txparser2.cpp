@@ -1091,7 +1091,7 @@ auto xkv_ns::find_key_of(const TokenList &L, int type) -> std::string {
             xkv_is_global = true;
         }
     } else {
-        if (first == H.savevalue_token) {
+        if (first == H.locate("savevalue")) {
             x.pop_front();
             xkv_is_save = true;
         } else if (first == H.gsavevalue_token) {
