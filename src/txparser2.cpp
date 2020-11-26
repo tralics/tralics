@@ -40,11 +40,6 @@ namespace {
     TokenList KV_list;
 } // namespace
 
-namespace xkv_ns {
-    void merge(TokenList &W, TokenList &L, int type);
-    void remove(TokenList &W, TokenList &L, int type);
-} // namespace xkv_ns
-
 namespace token_ns {
     auto find_in(TokenList &A, TokenList &B, Token t, bool sw, int &n) -> bool;
     void int_to_roman(Buffer &b, long n);

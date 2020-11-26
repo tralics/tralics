@@ -20,61 +20,57 @@ namespace token_ns {
     auto find_in(TokenList &A, TokenList &B, Token t, bool sw, int &n) -> bool;
 } // namespace token_ns
 
-namespace xkv_ns {
-    void find_aux(int c);
-    auto find_key_of(const TokenList &L, int type) -> std::string;
-    void makehd(const std::string &fam);
-} // namespace xkv_ns
-
-void xkv_ns::find_aux(int c) {
-    txparser2_local_buf = "XKV@" + xkv_header;
-    txparser2_local_buf += (c == 0 ? "save" : (c == 1 ? "preseth" : "presett"));
-}
-
-void xkv_ns::makehd(const std::string &fam) {
-    Buffer &B = txparser2_local_buf;
-    B         = xkv_prefix + fam;
-    if (!fam.empty()) B.push_back('@');
-    xkv_header = B;
-}
-
-// The following function takes in L one item and puts the key in x.
-// If type is 0, we are looking for \global, and there is no equals
-// Otherwise we look for \savevalue or \gsavevalue, skip equals.
-// We set some booleans
-auto xkv_ns::find_key_of(const TokenList &L, int type) -> std::string {
-    Hashtab & H      = hash_table;
-    Token     equals = H.equals_token;
-    auto      C      = L.begin();
-    auto      E      = L.end();
-    TokenList x; // will hold the tokens
-    while (C != E) {
-        if (*C == equals) break;
-        x.push_back(*C);
-        ++C;
+namespace {
+    void xkv_find_aux(int c) {
+        txparser2_local_buf = "XKV@" + xkv_header;
+        txparser2_local_buf += (c == 0 ? "save" : (c == 1 ? "preseth" : "presett"));
     }
-    xkv_is_save   = false;
-    xkv_is_global = false;
-    if (x.empty()) return "";
-    Token first = x.front();
-    if (type == 0) {
-        if (first == H.global_token) {
-            x.pop_front();
-            xkv_is_global = true;
-        }
-    } else {
-        if (first == H.locate("savevalue")) {
-            x.pop_front();
-            xkv_is_save = true;
-        } else if (first == H.locate("gsavevalue")) {
-            x.pop_front();
-            xkv_is_save   = true;
-            xkv_is_global = true;
-        }
+
+    void xkv_makehd(const std::string &fam) {
+        Buffer &B = txparser2_local_buf;
+        B         = xkv_prefix + fam;
+        if (!fam.empty()) B.push_back('@');
+        xkv_header = B;
     }
-    token_ns::remove_ext_braces(x);
-    return the_parser.list_to_string_c(x, "Invalid key name");
-}
+
+    // The following function takes in L one item and puts the key in x.
+    // If type is 0, we are looking for \global, and there is no equals
+    // Otherwise we look for \savevalue or \gsavevalue, skip equals.
+    // We set some booleans
+    auto xkv_find_key_of(const TokenList &L, int type) -> std::string {
+        Hashtab & H      = hash_table;
+        Token     equals = H.equals_token;
+        auto      C      = L.begin();
+        auto      E      = L.end();
+        TokenList x; // will hold the tokens
+        while (C != E) {
+            if (*C == equals) break;
+            x.push_back(*C);
+            ++C;
+        }
+        xkv_is_save   = false;
+        xkv_is_global = false;
+        if (x.empty()) return "";
+        Token first = x.front();
+        if (type == 0) {
+            if (first == H.global_token) {
+                x.pop_front();
+                xkv_is_global = true;
+            }
+        } else {
+            if (first == H.locate("savevalue")) {
+                x.pop_front();
+                xkv_is_save = true;
+            } else if (first == H.locate("gsavevalue")) {
+                x.pop_front();
+                xkv_is_save   = true;
+                xkv_is_global = true;
+            }
+        }
+        token_ns::remove_ext_braces(x);
+        return the_parser.list_to_string_c(x, "Invalid key name");
+    }
+} // namespace
 
 // Splits key=val into pieces
 void XkvToken::extract() {
@@ -85,7 +81,7 @@ void XkvToken::extract() {
     token_ns::remove_first_last_space(value);
     token_ns::remove_ext_braces(value);
     token_ns::remove_ext_braces(value);
-    keyname   = xkv_ns::find_key_of(key, 1);
+    keyname   = xkv_find_key_of(key, 1);
     has_save  = xkv_is_save;
     is_global = xkv_is_global;
     token_ns::remove_first_last_space(value);
@@ -95,7 +91,7 @@ void XkvSetkeys::check_preset(String s) {
     Buffer &B = txparser2_local_buf;
     auto    N = Fams.size();
     for (size_t i = 0; i < N; i++) {
-        xkv_ns::makehd(Fams[i]);
+        xkv_makehd(Fams[i]);
         B = "XKV@" + xkv_header + s;
         if (hash_table.is_defined(B)) {
             Token     T = hash_table.locate(B);
@@ -113,7 +109,7 @@ namespace {
         TokenList key;
         while (!W.empty()) {
             token_ns::split_at(hash_table.comma_token, W, key);
-            std::string key_name = xkv_ns::find_key_of(key, 0);
+            std::string key_name = xkv_find_key_of(key, 0);
             if (key_name == mykey) return true;
         }
         return false;
@@ -188,7 +184,7 @@ namespace {
         W.swap(tmp);
         while (!tmp.empty()) {
             token_ns::split_at(comma, tmp, key);
-            std::string key_name = xkv_ns::find_key_of(key, type);
+            std::string key_name = xkv_find_key_of(key, type);
             aux                  = "," + key_name + ",";
             if (B.find(aux) == std::string::npos) {
                 if (!W.empty()) W.push_back(comma);
@@ -215,13 +211,13 @@ namespace {
         while (!L.empty()) {
             token_ns::split_at(comma, L, key);
             token_ns::remove_first_last_space(key);
-            std::string key_name = xkv_ns::find_key_of(key, type);
+            std::string key_name = xkv_find_key_of(key, type);
             bool        found    = false; // Was key in W ?
             TokenList   z;
             W.swap(tmp);
             while (!tmp.empty()) {
                 token_ns::split_at(comma, tmp, z);
-                std::string zname = xkv_ns::find_key_of(z, type);
+                std::string zname = xkv_find_key_of(z, type);
                 if (!W.empty()) W.push_back(comma);
                 if (key_name == zname) {
                     found = true; // replace in W old value z by new value
@@ -242,7 +238,7 @@ namespace {
     void xkv_merge(bool gbl, int type, TokenList &L, bool mg) {
         token_ns::sanitize_one(L, '=');
         token_ns::sanitize_one(L, ',');
-        xkv_ns::find_aux(type);
+        xkv_find_aux(type);
         Token     T = hash_table.locate(txparser2_local_buf);
         TokenList W = the_parser.get_mac_value(T);
         if (mg)
@@ -400,7 +396,7 @@ namespace {
     // Creates cur_tok if needed
     auto xkv_save_keys_aux(bool c, int c2) -> bool {
         xkv_fetch_prefix_family();
-        xkv_ns::find_aux(c2);
+        xkv_find_aux(c2);
         Buffer &B   = txparser2_local_buf;
         bool    ret = !hash_table.is_defined(B);
         if (c && ret) {
@@ -664,7 +660,7 @@ namespace {
         case gunpreset_keys_code: {
             if (xkv_save_keys_aux(true, 1)) return;
             the_parser.M_let_fast(the_parser.cur_tok, hash_table.frozen_undef_token, c == gunpreset_keys_code);
-            xkv_ns::find_aux(2);
+            xkv_find_aux(2);
             the_parser.cur_tok = hash_table.locate(txparser2_local_buf);
             the_parser.M_let_fast(the_parser.cur_tok, hash_table.frozen_undef_token, c == gunpreset_keys_code);
             return;
@@ -711,7 +707,7 @@ void XkvSetkeys::extract_keys(TokenList &L, std::vector<std::string> &R) {
         if (bl == 0 && x.is_a_char() && x.char_val() == ',') {
             token_ns::remove_first_last_space(z);
             if (z.empty()) continue;
-            std::string s = xkv_ns::find_key_of(z, 1);
+            std::string s = xkv_find_key_of(z, 1);
             R.push_back(s);
             res.splice(res.end(), z);
             res.push_back(T);
@@ -728,7 +724,7 @@ auto XkvToken::check_save() const -> bool {
         xkv_is_global = is_global;
         return true;
     }
-    xkv_ns::find_aux(0);
+    xkv_find_aux(0);
     if (!hash_table.is_defined(txparser2_local_buf)) return false;
     return find_a_save_key(keyname);
 }
@@ -781,7 +777,7 @@ void XkvToken::prepare(const std::string &fam) {
     action.splice(action.end(), L);
     action.push_back(H.def_token);
     action.push_back(H.locate("XKV@header"));
-    xkv_ns::makehd(fam);
+    xkv_makehd(fam);
     L = B.str_toks11(false);
     L.brace_me();
     action.splice(action.end(), L);
@@ -789,7 +785,7 @@ void XkvToken::prepare(const std::string &fam) {
 
 // Returns true if the key is defined
 auto XkvToken::is_defined(const std::string &fam) const -> bool {
-    xkv_ns::makehd(fam);
+    xkv_makehd(fam);
     txparser2_local_buf += keyname;
     return hash_table.is_defined(txparser2_local_buf);
 }
