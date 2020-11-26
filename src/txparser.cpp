@@ -437,9 +437,9 @@ auto Parser::scan_group_opt(TokenList &L, bool &have_arg) -> bool {
 // Return value does noy say if an error occured
 
 [[nodiscard]] auto Parser::read_optarg() -> std::optional<TokenList> {
-    TokenList L;
     scanner_status = ss_matching;
-    bool retval    = false;
+    TokenList L;
+    bool      retval = false;
     scan_group_opt(L, retval);
     scanner_status = ss_normal;
     if (retval) return L;
@@ -455,9 +455,8 @@ void Parser::ignore_optarg() {
 // Reads an optional argument in L, true if found
 auto Parser::read_optarg_nopar(TokenList &L) -> bool { // \todo std::optional
     auto guard = SaveLongState(ls_normal);
-    auto opt   = read_optarg();
-    if (opt) L.append(*opt);
-    return bool(opt);
+    if (auto opt = read_optarg()) return L.append(*opt), true;
+    return false;
 }
 
 // Read an argument delimited by a token
@@ -746,8 +745,7 @@ void Parser::T_verbatim() {
     // Now, we know if we have an optional argument.
     TokenList largs;
     if (optional) {
-        auto opt = read_optarg();
-        if (opt) largs.append(*opt);
+        if (auto opt = read_optarg()) largs.append(*opt);
     }
     std::string hook = get_cur_env_name() + "@hook";
     if (noparse) {
@@ -1110,8 +1108,7 @@ auto Parser::scan_general_text() -> TokenList {
 
 // number of arguments for \newcommand; tries to be clever.
 auto Parser::read_mac_nbargs() -> size_t {
-    auto opt = read_optarg();
-    auto L   = opt ? *opt : TokenList{};
+    auto L = read_optarg().value_or(TokenList{});
     if (!L.empty() && L.front().is_plus_token()) L.pop_front();
     while (!L.empty() && L.front().is_zero_token()) L.pop_front();
     if (L.empty()) return 0; // case of \newcommand\x[]{x}
@@ -3240,9 +3237,8 @@ auto Parser::read_latex_macro() -> Macro * {
     auto *X = new Macro;
     auto  n = read_mac_nbargs();
     X->set_nbargs(n);
-    auto opt    = read_optarg();
-    auto op_arg = opt ? *opt : TokenList{};
-    X->set_delimiters(1, op_arg);
+    auto opt = read_optarg();
+    X->set_delimiters(1, opt ? *opt : TokenList{});
     X->set_type(opt ? dt_optional : dt_normal);
     read_mac_body(X->body, false, n);
     X->correct_type();
