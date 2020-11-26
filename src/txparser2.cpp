@@ -1015,7 +1015,7 @@ void Parser::key_ifundefined() {
             break;
         }
     }
-    new_macro(fam, hash_table.xkv_tfam_token);
+    new_macro(fam, hash_table.locate("XKV@tfam"));
     one_of_two(undefined);
 }
 

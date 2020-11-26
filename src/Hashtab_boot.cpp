@@ -2510,7 +2510,4 @@ void Hashtab::boot_keyval() {
     primitive("DeclareOptionX", xkeyval_cmd, declare_optionsX_code);
     primitive("ExecuteOptionsX", xkeyval_cmd, execute_optionsX_code);
     primitive("ProcessOptionsX", xkeyval_cmd, process_optionsX_code);
-    xkv_tfam_token   = locate("XKV@tfam");
-    xkv_header_token = locate("XKV@header");
-    xkv_tkey_token   = locate("XKV@tkey");
 }

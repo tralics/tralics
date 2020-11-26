@@ -37,19 +37,19 @@ void XkvToken::prepare(const std::string &fam) {
     // We start constructing the three macros
     Buffer &B = txparser2_local_buf;
     action.push_back(H.def_token);
-    action.push_back(H.xkv_tkey_token);
+    action.push_back(H.locate("XKV@tkey"));
     B           = keyname;
     TokenList L = B.str_toks11(false);
     L.brace_me();
     action.splice(action.end(), L);
     action.push_back(H.def_token);
-    action.push_back(H.xkv_tfam_token);
+    action.push_back(H.locate("XKV@tfam"));
     B = fam;
     L = B.str_toks11(false);
     L.brace_me();
     action.splice(action.end(), L);
     action.push_back(H.def_token);
-    action.push_back(H.xkv_header_token);
+    action.push_back(H.locate("XKV@header"));
     xkv_ns::makehd(fam);
     L = B.str_toks11(false);
     L.brace_me();
