@@ -1,20 +1,163 @@
 #include "../tralics/Dispatcher.h"
+#include "../tralics/Logger.h"
 #include "../tralics/Symcode.h"
 #include "../tralics/globals.h"
 #include "../tralics/util.h"
 
 // Auto-registering package, see tipa.cpp
 
+namespace classes_ns {
+    void register_key(const std::string &);
+} // namespace classes_ns
+
+namespace token_ns {
+    auto find_in(TokenList &A, TokenList &B, Token t, bool sw, int &n) -> bool;
+} // namespace token_ns
+
 namespace xkv_ns {
     void find_aux(int c);
-    auto find_key_of(const TokenList &L, int type) -> std::string;
-    void makehd(const std::string &fam);
 } // namespace xkv_ns
 
 namespace {
+    void lower_case(TokenList &L) {
+        for (auto &a : L) {
+            if (a.val < single_offset) {
+                auto b  = a.chr_val();
+                auto cx = eqtb_int_table[b + lc_code_offset].val;
+                if (cx != 0) a = Token(a.val - b + to_unsigned(cx));
+            }
+        }
+    }
+
+    // Implements \XKV@cc
+    void internal_choice_key() {
+        bool      if_star = the_parser.remove_initial_plus(false);
+        bool      if_plus = the_parser.remove_initial_plus(true);
+        TokenList bin;
+        the_parser.read_optarg_nopar(bin); // \todo std::optional
+        TokenList input   = the_parser.read_arg();
+        TokenList allowed = the_parser.read_arg();
+        TokenList ok_code = the_parser.read_arg();
+        TokenList bad_code;
+        if (if_plus) bad_code = the_parser.read_arg();
+        if (if_star) {
+            lower_case(input);
+            lower_case(allowed);
+        }
+        Token relax = hash_table.relax_token;
+        Token B1 = relax, B2 = relax;
+        if (!bin.empty()) {
+            B1 = bin.front();
+            bin.pop_front();
+        }
+        if (!bin.empty()) {
+            B2 = bin.front();
+            bin.pop_front();
+        }
+        if (B1.not_a_cmd()) B1 = relax;
+        if (B2.not_a_cmd()) B2 = relax;
+        if (B1 != relax) {
+            TokenList u = input;
+            the_parser.new_macro(u, B1);
+        }
+        TokenList xinput = input;
+        int       k      = 0;
+        bool      found  = token_ns::find_in(xinput, allowed, hash_table.comma_token, false, k);
+        if (B2 != relax) {
+            txparser2_local_buf = fmt::format("{}", k);
+            TokenList u         = txparser2_local_buf.str_toks(nlt_cr); // Should be irrelevant ?
+            the_parser.new_macro(u, B2);
+        }
+        if (found)
+            the_parser.back_input(ok_code);
+        else if (if_plus) // invalid, but catched
+            the_parser.back_input(bad_code);
+        else {
+            the_parser.parse_error(the_parser.err_tok, "XKV: value is not allowed");
+            log_and_tty << " " << input << "\n";
+        }
+    }
+
+    // Assume txparser2_local_buf contains the name of T without the extension
+    void internal_define_key_default(Token T, TokenList &L) {
+        L.brace_me();
+        L.push_front(T);
+        txparser2_local_buf.append("@default");
+        the_parser.cur_tok = hash_table.locate(txparser2_local_buf);
+        the_parser.new_macro(L, the_parser.cur_tok);
+    }
+
+    // This is like \def\T#1, optimised
+    void internal_define_key(Token T) {
+        auto *X = new Macro;
+        X->set_nbargs(1);
+        X->set_type(dt_normal);
+        the_parser.read_mac_body(X->body, false, 1);
+        X->correct_type();
+        the_parser.mac_define(T, X, false, rd_always, user_cmd);
+    }
+
+    void xkv_makehd(TokenList &L) {
+        token_ns::remove_first_last_space(L);
+        Buffer &B = txparser2_local_buf;
+        B         = xkv_prefix;
+        auto k    = B.size();
+        if (the_parser.list_to_string(L, B)) {
+            the_parser.parse_error(the_parser.err_tok, "Bad command ", the_parser.cur_tok, " in XKV family (more errors may follow)",
+                                   "bad kv family");
+            B.resize(k);
+        }
+        if (B.size() != k) B.push_back('@');
+        xkv_header = B;
+    }
+
+    void xkv_declare_option() {
+        // \let\@fileswith@pti@ns\@badrequireerror
+        bool star = the_parser.remove_initial_star();
+        if (star) {
+            the_parser.T_declare_option_star();
+            return;
+        }
+        the_parser.xkv_fetch_prefix();
+        TokenList FL = the_parser.XKV_parse_filename();
+        xkv_makehd(FL);
+        TokenList   key  = the_parser.read_arg();
+        TokenList   xkey = key;
+        std::string Key  = the_parser.list_to_string_c(xkey, "Invalid option");
+        classes_ns::register_key(Key);
+        the_parser.list_to_string_c(key, xkv_header, "", "bad option name", txparser2_local_buf);
+        Token T   = hash_table.locate(txparser2_local_buf);
+        auto  opt = the_parser.read_optarg().value_or(TokenList{});
+        internal_define_key_default(T, opt);
+        internal_define_key(T);
+    }
+
+    void xkv_fetch_prefix_family() {
+        the_parser.xkv_fetch_prefix();
+        TokenList M = the_parser.read_arg();
+        xkv_makehd(M);
+    }
+
+    // Find saved or preset keys, depending on c2. If not found:
+    // signals a an error if c is true (creates otherwise), return true.
+    // Creates cur_tok if needed
+    auto xkv_save_keys_aux(bool c, int c2) -> bool {
+        xkv_fetch_prefix_family();
+        xkv_ns::find_aux(c2);
+        Buffer &B   = txparser2_local_buf;
+        bool    ret = !hash_table.is_defined(B);
+        if (c && ret) {
+            B = (c2 != 0 ? "No presets defined for `" : "No save keys defined for `") + xkv_header + "'";
+            the_parser.parse_error(the_parser.err_tok, B);
+            return true;
+        }
+        the_parser.cur_tok = hash_table.last_tok;
+        return ret;
+    }
+
     void disable_keys() {
         Buffer &B = txparser2_local_buf;
-        the_parser.xkv_fetch_prefix_family(); // read prefix and family
+        xkv_fetch_prefix_family(); // read prefix and family
         TokenList   keys = the_parser.read_arg();
         std::string Keys = the_parser.list_to_string_c(keys, "problem scanning keys");
         for (const auto &Key : split_commas(Keys)) {
@@ -46,7 +189,7 @@ namespace {
         the_parser.remove_initial_plus(false);
         bool if_plus = the_parser.remove_initial_plus(true);
         if (c != define_boolkey_code) if_plus = false;
-        the_parser.xkv_fetch_prefix_family(); // read prefix and family
+        xkv_fetch_prefix_family(); // read prefix and family
         TokenList L;
         if (the_parser.read_optarg_nopar(L)) {
             the_parser.list_to_string_c(L, "", "", "Problem scanning macro prefix", B);
@@ -71,7 +214,7 @@ namespace {
             Token T     = hash_table.locate(txparser2_local_buf);
             if (has_dft) {
                 TokenList D = dft;
-                the_parser.internal_define_key_default(T, D);
+                internal_define_key_default(T, D);
             }
             u.push_front(hash_table.csname_token);
             u.push_back(hash_table.locate("XKV@resa"));
@@ -113,25 +256,25 @@ namespace {
 
     void T_define_key() {
         Buffer &B = txparser2_local_buf;
-        the_parser.xkv_fetch_prefix_family();
+        xkv_fetch_prefix_family();
         TokenList key = the_parser.read_arg();
         the_parser.list_to_string_c(key, xkv_header, "", "bad key name", B);
         Token T = hash_table.locate(B);
-        if (auto opt = the_parser.read_optarg()) the_parser.internal_define_key_default(T, *opt);
-        the_parser.internal_define_key(T);
+        if (auto opt = the_parser.read_optarg()) internal_define_key_default(T, *opt);
+        internal_define_key(T);
     }
 
     void define_choice_key() {
         bool if_star = the_parser.remove_initial_plus(false);
         bool if_plus = the_parser.remove_initial_plus(true);
-        the_parser.xkv_fetch_prefix_family();
+        xkv_fetch_prefix_family();
         TokenList keytoks = the_parser.read_arg();
         the_parser.list_to_string_c(keytoks, xkv_header, "", "bad key name", txparser2_local_buf);
         Token     T = hash_table.locate(txparser2_local_buf);
         TokenList storage_bin;
         the_parser.read_optarg_nopar(storage_bin);
         TokenList allowed = the_parser.read_arg();
-        if (auto opt = the_parser.read_optarg()) the_parser.internal_define_key_default(T, *opt);
+        if (auto opt = the_parser.read_optarg()) internal_define_key_default(T, *opt);
         TokenList F;
         if (if_plus) {
             TokenList x = the_parser.read_arg();
@@ -161,13 +304,13 @@ namespace {
         body.splice(body.end(), F);
         body.brace_me();
         the_parser.back_input(body);
-        the_parser.internal_define_key(T);
+        internal_define_key(T);
     }
 
     // We make the assumption that a key does not contain a comma
     void define_cmd_key(subtypes c) {
         Buffer &B = txparser2_local_buf;
-        the_parser.xkv_fetch_prefix_family(); // read prefix and family
+        xkv_fetch_prefix_family(); // read prefix and family
         TokenList L;
         if (the_parser.read_optarg_nopar(L)) {
             the_parser.list_to_string_c(L, "", "", "Problem scanning macro prefix", B);
@@ -186,7 +329,7 @@ namespace {
             Token T   = hash_table.locate(B);
             if (opt) {
                 TokenList D = *opt;
-                the_parser.internal_define_key_default(T, D);
+                internal_define_key_default(T, D);
             }
             TokenList LL;
             if (c == define_cmdkey_code) { // case of cmdkey
@@ -219,31 +362,31 @@ namespace {
         case define_boolkey_code:
         case define_boolkeys_code: define_bool_key(c); return;
         case define_choicekey_code: define_choice_key(); return;
-        case define_cc_code: the_parser.internal_choice_key(); return;
+        case define_cc_code: internal_choice_key(); return;
         case disable_keys_code: disable_keys(); return;
         case key_ifundefined_code: the_parser.key_ifundefined(); return;
         case save_keys_code:
         case gsave_keys_code: {
-            the_parser.xkv_save_keys_aux(false, 0);
+            xkv_save_keys_aux(false, 0);
             TokenList A = the_parser.read_arg();
             the_parser.xkv_merge(c == gsave_keys_code, 0, A, true);
             return;
         }
         case delsave_keys_code:
         case gdelsave_keys_code: {
-            bool      bad = the_parser.xkv_save_keys_aux(false, 0);
+            bool      bad = xkv_save_keys_aux(false, 0);
             TokenList A   = the_parser.read_arg();
             if (!bad) the_parser.xkv_merge(c == gdelsave_keys_code, 0, A, false);
             return;
         }
         case unsave_keys_code:
         case gunsave_keys_code:
-            if (the_parser.xkv_save_keys_aux(true, 0)) return;
+            if (xkv_save_keys_aux(true, 0)) return;
             the_parser.M_let_fast(the_parser.cur_tok, hash_table.frozen_undef_token, c == gunsave_keys_code);
             return;
         case preset_keys_code:
         case gpreset_keys_code: {
-            the_parser.xkv_save_keys_aux(false, 1);
+            xkv_save_keys_aux(false, 1);
             TokenList A = the_parser.read_arg();
             TokenList B = the_parser.read_arg();
             the_parser.xkv_merge(c == gpreset_keys_code, 1, A, true);
@@ -252,7 +395,7 @@ namespace {
         }
         case delpreset_keys_code:
         case gdelpreset_keys_code: {
-            bool      bad = the_parser.xkv_save_keys_aux(true, 1);
+            bool      bad = xkv_save_keys_aux(true, 1);
             TokenList A   = the_parser.read_arg();
             TokenList B   = the_parser.read_arg();
             if (bad) return;
@@ -262,7 +405,7 @@ namespace {
         }
         case unpreset_keys_code:
         case gunpreset_keys_code: {
-            if (the_parser.xkv_save_keys_aux(true, 1)) return;
+            if (xkv_save_keys_aux(true, 1)) return;
             the_parser.M_let_fast(the_parser.cur_tok, hash_table.frozen_undef_token, c == gunpreset_keys_code);
             xkv_ns::find_aux(2);
             the_parser.cur_tok = hash_table.locate(txparser2_local_buf);
@@ -271,7 +414,7 @@ namespace {
         }
         case setrmkeys_code: the_parser.setkeys(false); return;
         case setkeys_code: the_parser.setkeys(true); return;
-        case declare_optionsX_code: the_parser.xkv_declare_option(); return;
+        case declare_optionsX_code: xkv_declare_option(); return;
         case process_optionsX_code: the_parser.xkv_process_options(); return;
         case execute_optionsX_code: the_parser.xkv_execute_options(); return;
         default: return;

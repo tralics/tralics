@@ -51,14 +51,12 @@ namespace xkv_ns {
 } // namespace xkv_ns
 
 namespace token_ns {
-    void lower_case(TokenList &L);
     auto find_in(TokenList &A, TokenList &B, Token t, bool sw, int &n) -> bool;
     void int_to_roman(Buffer &b, long n);
 } // namespace token_ns
 
 namespace classes_ns {
     auto cur_options(bool, TokenList &, bool) -> TokenList;
-    void register_key(const std::string &);
     void unknown_optionX(TokenList &cur_keyval, TokenList &action);
 } // namespace classes_ns
 
@@ -691,55 +689,6 @@ void Parser::expand_twoargs() {
 // ------------------------------------------------------------
 // Special commands for xkeyval
 
-// Implements \XKV@cc
-void Parser::internal_choice_key() {
-    bool      if_star = remove_initial_plus(false);
-    bool      if_plus = remove_initial_plus(true);
-    TokenList bin;
-    read_optarg_nopar(bin);
-    TokenList input   = read_arg();
-    TokenList allowed = read_arg();
-    TokenList ok_code = read_arg();
-    TokenList bad_code;
-    if (if_plus) bad_code = read_arg();
-    if (if_star) {
-        token_ns::lower_case(input);
-        token_ns::lower_case(allowed);
-    }
-    Token relax = hash_table.relax_token;
-    Token B1 = relax, B2 = relax;
-    if (!bin.empty()) {
-        B1 = bin.front();
-        bin.pop_front();
-    }
-    if (!bin.empty()) {
-        B2 = bin.front();
-        bin.pop_front();
-    }
-    if (B1.not_a_cmd()) B1 = relax;
-    if (B2.not_a_cmd()) B2 = relax;
-    if (B1 != relax) {
-        TokenList u = input;
-        new_macro(u, B1);
-    }
-    TokenList xinput = input;
-    int       k      = 0;
-    bool      found  = token_ns::find_in(xinput, allowed, hash_table.comma_token, false, k);
-    if (B2 != relax) {
-        txparser2_local_buf = fmt::format("{}", k);
-        TokenList u         = txparser2_local_buf.str_toks(nlt_cr); // Should be irrelevant ?
-        new_macro(u, B2);
-    }
-    if (found)
-        back_input(ok_code);
-    else if (if_plus) // invalid, but catched
-        back_input(bad_code);
-    else {
-        parse_error(err_tok, "XKV: value is not allowed");
-        log_and_tty << " " << input << "\n";
-    }
-}
-
 // Implements \key@ifundefined
 void Parser::key_ifundefined() {
     Buffer &B = txparser2_local_buf;
@@ -762,23 +711,6 @@ void Parser::key_ifundefined() {
     }
     new_macro(fam, hash_table.locate("XKV@tfam"));
     one_of_two(undefined);
-}
-
-// Find saved or preset keys, depending on c2. If not found:
-// signals a an error if c is true (creates otherwise), return true.
-// Creates cur_tok if needed
-auto Parser::xkv_save_keys_aux(bool c, int c2) -> bool {
-    xkv_fetch_prefix_family();
-    xkv_ns::find_aux(c2);
-    Buffer &B   = txparser2_local_buf;
-    bool    ret = !hash_table.is_defined(B);
-    if (c && ret) {
-        B = (c2 != 0 ? "No presets defined for `" : "No save keys defined for `") + xkv_header + "'";
-        parse_error(err_tok, B);
-        return true;
-    }
-    cur_tok = hash_table.last_tok;
-    return ret;
 }
 
 // The following function takes in L one item and puts the key in x.
@@ -914,25 +846,6 @@ void Parser::xkv_merge(bool gbl, int type, TokenList &L, bool mg) {
     new_macro(W, T, gbl);
 }
 
-// Assume txparser2_local_buf contains the name of T without the extension
-void Parser::internal_define_key_default(Token T, TokenList &L) {
-    L.brace_me();
-    L.push_front(T);
-    txparser2_local_buf.append("@default");
-    cur_tok = hash_table.locate(txparser2_local_buf);
-    new_macro(L, cur_tok);
-}
-
-// This is like \def\T#1, optimised
-void Parser::internal_define_key(Token T) {
-    auto *X = new Macro;
-    X->set_nbargs(1);
-    X->set_type(dt_normal);
-    read_mac_body(X->body, false, 1);
-    X->correct_type();
-    mac_define(T, X, false, rd_always, user_cmd);
-}
-
 // Skips initial + or *, catcode irrelevant
 auto Parser::remove_initial_plus(bool plus) -> bool {
     skip_initial_space();
@@ -968,66 +881,11 @@ void Parser::xkv_fetch_prefix() {
 
 // Creates the XKV header
 
-void Parser::xkv_makehd(TokenList &L) {
-    token_ns::remove_first_last_space(L);
-    Buffer &B = txparser2_local_buf;
-    B         = xkv_prefix;
-    auto k    = B.size();
-    if (list_to_string(L, B)) {
-        parse_error(err_tok, "Bad command ", cur_tok, " in XKV family (more errors may follow)", "bad kv family");
-        B.resize(k);
-    }
-    if (B.size() != k) B.push_back('@');
-    xkv_header = B;
-}
-
 void xkv_ns::makehd(const std::string &fam) {
     Buffer &B = txparser2_local_buf;
     B         = xkv_prefix + fam;
     if (!fam.empty()) B.push_back('@');
     xkv_header = B;
-}
-
-void Parser::xkv_fetch_prefix_family() {
-    xkv_fetch_prefix();
-    TokenList M = read_arg();
-    xkv_makehd(M);
-}
-
-void token_ns::lower_case(TokenList &L) {
-    auto P      = L.begin();
-    auto E      = L.end();
-    auto offset = lc_code_offset;
-    while (P != E) {
-        Token a = *P;
-        if (a.val < single_offset) {
-            auto b  = a.chr_val();
-            auto cx = eqtb_int_table[b + offset].val;
-            if (cx != 0) *P = Token(a.val - b + to_unsigned(cx));
-        }
-        ++P;
-    }
-}
-
-void Parser::xkv_declare_option() {
-    // \let\@fileswith@pti@ns\@badrequireerror
-    bool star = remove_initial_star();
-    if (star) {
-        T_declare_option_star();
-        return;
-    }
-    xkv_fetch_prefix();
-    TokenList FL = XKV_parse_filename();
-    xkv_makehd(FL);
-    TokenList   key  = read_arg();
-    TokenList   xkey = key;
-    std::string Key  = list_to_string_c(xkey, "Invalid option");
-    classes_ns::register_key(Key);
-    list_to_string_c(key, xkv_header, "", "bad option name", txparser2_local_buf);
-    Token T   = hash_table.locate(txparser2_local_buf);
-    auto  opt = read_optarg().value_or(TokenList{});
-    internal_define_key_default(T, opt);
-    internal_define_key(T);
 }
 
 // Implements ExecuteOptionsX

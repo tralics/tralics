@@ -343,7 +343,6 @@ struct Parser {
     auto               translate_list(TokenList &L) -> Xml *;
     auto               vb_tokens(char32_t test, TokenList &L, bool before) -> bool;
     auto               XKV_parse_filename() -> TokenList;
-    auto               xkv_save_keys_aux(bool c, int c2) -> bool;
     auto               xT_arg_nopar() -> Xml *;
     auto               xT_optarg_nopar() -> Xml *;
     void               accent_err1();
@@ -526,9 +525,6 @@ struct Parser {
     void               insert_every_bib();
     void               insert_hook(long n);
     void               insert_relax();
-    void               internal_choice_key();
-    void               internal_define_key_default(Token T, TokenList &L);
-    void               internal_define_key(Token T);
     void               interpret_genfrac_cmd(size_t res, subtypes k, CmdChr W);
     void               interpret_math_cmd(size_t res, subtypes c);
     void               interpret_mathchoice_cmd(size_t res, subtypes k, CmdChr W);
@@ -889,12 +885,8 @@ struct Parser {
     void               wrong_pop(Token T, const std::string &a, const std::string &b);
     void               xgetfontsize();
     void               xkv_class_prefix();
-    void               xkv_declare_option();
     void               xkv_execute_options();
-    void               xkv_fetch_prefix_family();
     void               xkv_fetch_prefix();
-    void               xkv_makehd();
-    void               xkv_makehd(TokenList &L);
     void               xkv_merge(bool gbl, int type, TokenList &L, bool mg);
     void               xkv_pass_options(bool c);
     void               XKV_pox();
