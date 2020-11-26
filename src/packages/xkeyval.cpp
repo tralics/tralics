@@ -12,6 +12,76 @@ namespace xkv_ns {
 } // namespace xkv_ns
 
 namespace {
+    void define_bool_key(subtypes c) {
+        Buffer &B = txparser2_local_buf;
+        the_parser.remove_initial_plus(false);
+        bool if_plus = the_parser.remove_initial_plus(true);
+        if (c != define_boolkey_code) if_plus = false;
+        the_parser.xkv_fetch_prefix_family(); // read prefix and family
+        TokenList L;
+        if (the_parser.read_optarg_nopar(L)) {
+            the_parser.list_to_string_c(L, "", "", "Problem scanning macro prefix", B);
+        } else
+            B = xkv_header;
+        std::string mp      = B;
+        TokenList   keytoks = the_parser.read_arg();
+        TokenList   dft;
+        bool        has_dft = the_parser.read_optarg_nopar(dft);
+        // construct the key or key list
+        std::string Keys = the_parser.list_to_string_c(keytoks, "Problem scanning key");
+        for (const auto &Key : split_commas(Keys)) {
+            if (Key.empty()) continue;
+            B           = mp + Key;
+            TokenList u = B.str_toks11(false);
+            B           = "if" + mp + Key;
+            the_parser.back_input(hash_table.locate(B));
+            the_parser.M_newif();
+            B           = "true,false";
+            TokenList v = B.str_toks11(false);
+            B           = xkv_header + Key;
+            Token T     = hash_table.locate(txparser2_local_buf);
+            if (has_dft) {
+                TokenList D = dft;
+                the_parser.internal_define_key_default(T, D);
+            }
+            u.push_front(hash_table.csname_token);
+            u.push_back(hash_table.locate("XKV@resa"));
+            u.push_back(hash_table.endcsname_token);
+            if (c == define_boolkey_code) {
+                TokenList add1 = the_parser.read_arg();
+                u.splice(u.end(), add1);
+            }
+            u.brace_me();
+            TokenList LL;
+            LL.splice(LL.end(), u);
+            if (if_plus) {
+                TokenList add2 = the_parser.read_arg();
+                add2.brace_me();
+                LL.splice(LL.end(), add2);
+            }
+            v.brace_me();
+            LL.splice(LL.begin(), v);
+            LL.push_front(hash_table.CB_token);
+            LL.push_front(Token(other_t_offset, '1'));
+            LL.push_front(make_char_token('#', 6));
+            LL.push_front(hash_table.OB_token);
+            LL.push_front(Token(other_t_offset, ']'));
+            LL.push_front(hash_table.locate("XKV@resa"));
+            LL.push_front(Token(other_t_offset, '['));
+            if (if_plus) LL.push_front(Token(other_t_offset, '+'));
+            LL.push_front(Token(other_t_offset, '*'));
+            LL.push_front(hash_table.locate("XKV@cc"));
+            LL.brace_me();
+            the_parser.back_input(LL);
+            auto *X = new Macro;
+            X->set_nbargs(1);
+            X->set_type(dt_normal);
+            the_parser.read_mac_body(X->body, false, 1);
+            X->correct_type();
+            the_parser.mac_define(T, X, false, rd_always, user_cmd);
+        }
+    }
+
     void T_define_key() {
         Buffer &B = txparser2_local_buf;
         the_parser.xkv_fetch_prefix_family();
@@ -121,7 +191,7 @@ namespace {
         case define_cmdkey_code:
         case define_cmdkeys_code: define_cmd_key(c); return;
         case define_boolkey_code:
-        case define_boolkeys_code: the_parser.define_bool_key(c); return;
+        case define_boolkeys_code: define_bool_key(c); return;
         case define_choicekey_code: define_choice_key(); return;
         case define_cc_code: the_parser.internal_choice_key(); return;
         case disable_keys_code: the_parser.disable_keys(); return;
