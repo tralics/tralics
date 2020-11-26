@@ -1,6 +1,7 @@
 #include "../tralics/Dispatcher.h"
 #include "../tralics/Symcode.h"
 #include "../tralics/globals.h"
+#include "../tralics/util.h"
 
 // Auto-registering package, see tipa.cpp
 
@@ -22,7 +23,6 @@ namespace {
         the_parser.internal_define_key(T);
     }
 
-    // Implements \define@choicekey
     void define_choice_key() {
         bool if_star = the_parser.remove_initial_plus(false);
         bool if_plus = the_parser.remove_initial_plus(true);
@@ -67,12 +67,59 @@ namespace {
         the_parser.internal_define_key(T);
     }
 
+    // We make the assumption that a key does not contain a comma
+    void define_cmd_key(subtypes c) {
+        Buffer &B = txparser2_local_buf;
+        the_parser.xkv_fetch_prefix_family(); // read prefix and family
+        TokenList L;
+        if (the_parser.read_optarg_nopar(L)) {
+            the_parser.list_to_string_c(L, "", "", "Problem scanning macro prefix", B);
+        } else
+            B = "cmd" + xkv_header;
+        std::string mp      = B;
+        TokenList   keytoks = the_parser.read_arg();
+        TokenList   dft;
+        bool        has_dft = the_parser.read_optarg(dft); // \par ok here
+        // construct the key or key list
+        std::string Keys = the_parser.list_to_string_c(keytoks, "problem scanning key");
+        for (const auto &Key : split_commas(Keys)) {
+            if (Key.empty()) continue;
+            B         = mp + Key;
+            Token cmd = hash_table.locate(B);
+            B         = xkv_header + Key;
+            Token T   = hash_table.locate(B);
+            if (has_dft) {
+                TokenList D = dft;
+                the_parser.internal_define_key_default(T, D);
+            }
+            TokenList LL;
+            if (c == define_cmdkey_code) { // case of cmdkey
+                TokenList u = the_parser.read_arg();
+                LL.splice(LL.end(), u);
+            }
+            LL.push_front(hash_table.CB_token);
+            LL.push_front(Token(other_t_offset, '1'));
+            LL.push_front(make_char_token('#', 6));
+            LL.push_front(hash_table.OB_token);
+            LL.push_front(cmd);
+            LL.push_front(hash_table.locate("def"));
+            LL.brace_me();
+            the_parser.back_input(LL);
+            auto *X = new Macro;
+            X->set_nbargs(1);
+            X->set_type(dt_normal);
+            the_parser.read_mac_body(X->body, false, 1);
+            X->correct_type();
+            the_parser.mac_define(T, X, false, rd_always, user_cmd);
+        }
+    }
+
     void T_xkeyval(subtypes c) {
         switch (c) {
         case boot_keyval_code: return;
         case xdefinekey_code: T_define_key(); return;
         case define_cmdkey_code:
-        case define_cmdkeys_code: the_parser.define_cmd_key(c); return;
+        case define_cmdkeys_code: define_cmd_key(c); return;
         case define_boolkey_code:
         case define_boolkeys_code: the_parser.define_bool_key(c); return;
         case define_choicekey_code: define_choice_key(); return;
