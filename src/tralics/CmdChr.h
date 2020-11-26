@@ -141,7 +141,6 @@ private:
     [[nodiscard]] auto token_unbox_name() const -> String;
     [[nodiscard]] auto token_unimp_font_name() const -> String;
     [[nodiscard]] auto token_unimp_name() const -> String;
-    [[nodiscard]] auto token_xkeyval_name() const -> String;
     [[nodiscard]] auto token_xray_name() const -> String;
 
 public: // for use in plugins

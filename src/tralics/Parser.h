@@ -876,7 +876,6 @@ private:
     void               T_verbatim(int my_number, Token style, Token pre, Token post);
     void               T_whiledo();
     void               T_xfancy();
-    void               T_xkeyval(subtypes c);
     void               T_xkv_for(subtypes c);
     void               T_xmladdatt(subtypes c);
     void               T_xmlelt(subtypes w);
@@ -983,6 +982,7 @@ public: // general methods and variables used from packages and boot helpers
     void   extended_chars(size_t c);
     auto   get_token() -> bool;
     void   T_fonts(const std::string &x);
+    void   T_xkeyval(subtypes c);
 
     // \todo specific methods used in packages, belong there
     // \todo static methods that would fit better elsewhere

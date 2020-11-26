@@ -532,7 +532,6 @@ auto CmdChr::name() const -> std::string {
     case footcitepre_cmd: return "footcitepre";
     case car_cmd: return chr == 0 ? "@car" : "@cdr";
     case latex_error_cmd: return token_error_name();
-    case xkeyval_cmd: return token_xkeyval_name();
     case curves_cmd:
         switch (chr) {
         case arc_code: return "arc";
