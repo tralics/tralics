@@ -848,7 +848,6 @@ Hashtab::Hashtab() {
     primitive("special", ignore_one_argument_cmd, special_code);
     primitive("includeonly", ignore_one_argument_cmd, includeonly_code);
     primitive("showhyphens", ignore_one_argument_cmd, showhyphens_code);
-    //  primitive("HTMLset",ignore_two_argument_cmd,HTMLset_code);
     primitive("fontsize", ignore_two_argument_cmd, fontsize_code);
     primitive("fontencoding", ltfont_cmd, fontencoding_code);
     primitive("fontfamily", ltfont_cmd, fontfamily_code);
@@ -857,7 +856,6 @@ Hashtab::Hashtab() {
     primitive("discretionary", specimp_cmd, discretionary_code);
     primitive("DefineVerbatimEnvironment", defineverbatimenv_cmd);
     primitive("SaveVerb", saveverb_cmd);
-    primitive("define@key", xkeyval_cmd, definekey_code);
     primitive("KVO@family@set", kvo_family_cmd, kvo_fam_set_code);
     primitive("KVO@family", kvo_family_cmd, kvo_fam_get_code);
     primitive("KVO@prefix@set", kvo_family_cmd, kvo_pre_set_code);
@@ -870,7 +868,6 @@ Hashtab::Hashtab() {
     primitive("DeclareStringOption", kvo_family_cmd, kvo_string_opt_code);
     primitive("DeclareVoidOption", kvo_family_cmd, kvo_void_opt_code);
     primitive("DeclareComplementaryOption", kvo_family_cmd, kvo_comp_opt_code);
-    primitive("tralics@boot@keyval", xkeyval_cmd, boot_keyval_code);
     primitive("makeatletter", makeatletter_cmd);
     primitive("makeatother", makeatother_cmd);
     primitive("numberedverbatim", numberedverbatim_cmd);
@@ -2492,14 +2489,14 @@ void Hashtab::boot_etex() {
 void Hashtab::boot_keyval() {
     static bool booted = false;
     if (booted) return;
-    booted = true;
+    booted       = true;
+    xkv_cc_token = primitive("XKV@cc", xkeyval_cmd, define_cc_code);
     primitive("define@key", xkeyval_cmd, xdefinekey_code);
     primitive("define@cmdkey", xkeyval_cmd, define_cmdkey_code);
     primitive("define@cmdkeys", xkeyval_cmd, define_cmdkeys_code);
     primitive("define@boolkey", xkeyval_cmd, define_boolkey_code);
     primitive("define@boolkeys", xkeyval_cmd, define_boolkeys_code);
     primitive("define@choicekey", xkeyval_cmd, define_choicekey_code);
-    xkv_cc_token = primitive("XKV@cc", xkeyval_cmd, define_cc_code);
     primitive("key@ifundefined", xkeyval_cmd, key_ifundefined_code);
     primitive("disable@keys", xkeyval_cmd, disable_keys_code);
     primitive("presetkeys", xkeyval_cmd, preset_keys_code);
@@ -2519,7 +2516,6 @@ void Hashtab::boot_keyval() {
     primitive("DeclareOptionX", xkeyval_cmd, declare_optionsX_code);
     primitive("ExecuteOptionsX", xkeyval_cmd, execute_optionsX_code);
     primitive("ProcessOptionsX", xkeyval_cmd, process_optionsX_code);
-    usevalue_token   = locate("usevalue");
     savevalue_token  = locate("savevalue");
     gsavevalue_token = locate("gsavevalue");
     xkv_resa_token   = locate("XKV@resa");

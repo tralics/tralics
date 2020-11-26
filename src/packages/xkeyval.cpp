@@ -35,6 +35,8 @@ namespace {
     }
 
     void xkeyval() {
+        hash_table.primitive("tralics@boot@keyval", xkeyval_cmd, boot_keyval_code);
+        hash_table.primitive("define@key", xkeyval_cmd, definekey_code);
         Symcode::get(xkeyval_cmd).name_fn = token_xkeyval_name;
         Dispatcher::register_action_plain(xkeyval_cmd, &Parser::T_xkeyval);
     }

@@ -20,7 +20,6 @@ XkvSetkeys::XkvSetkeys(Parser *PP) : P(PP) {
     fams_token      = hash_table.xkv_fams_token;
     rm_token        = hash_table.xkv_rm_token;
     savevalue_token = hash_table.savevalue_token;
-    usevalue_token  = hash_table.usevalue_token;
 }
 
 // This reads and manages the list of families
@@ -211,7 +210,7 @@ void XkvSetkeys::replace_pointers(TokenList &L) {
             continue;
         }
         L.pop_front();
-        if (t != usevalue_token) {
+        if (t != hash_table.locate("usevalue")) {
             res.push_back(t);
             continue;
         }
