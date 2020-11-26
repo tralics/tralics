@@ -975,15 +975,15 @@ auto Parser::remove_initial_plus(bool plus) -> bool {
 
 // Reads optional prefix, and family, and handles them
 void Parser::xkv_fetch_prefix() {
-    TokenList L;
-    if (!read_optarg(L)) {
+    auto opt = read_optarg();
+    if (!opt) {
         xkv_prefix = "KV@";
         return;
     }
     Buffer &B = txparser2_local_buf;
     B.clear();
-    token_ns::remove_first_last_space(L);
-    bool t = list_to_string(L, B);
+    token_ns::remove_first_last_space(*opt);
+    bool t = list_to_string(*opt, B);
     if (t) {
         parse_error(err_tok, "Bad command ", cur_tok, " in XKV prefix (more errors may follow)", "bad kv prefix");
         B.clear();
@@ -1054,9 +1054,8 @@ void Parser::xkv_declare_option() {
     std::string Key  = list_to_string_c(xkey, "Invalid option");
     classes_ns::register_key(Key);
     list_to_string_c(key, xkv_header, "", "bad option name", txparser2_local_buf);
-    Token     T = hash_table.locate(txparser2_local_buf);
-    TokenList opt;
-    read_optarg(opt);
+    Token T   = hash_table.locate(txparser2_local_buf);
+    auto  opt = read_optarg().value_or(TokenList{});
     internal_define_key_default(T, opt);
     internal_define_key(T);
 }
@@ -1516,8 +1515,7 @@ void Parser::dbl_arg() {
 // evaluate: \@cons\cl@bar{{foo}}; i.e. M_cons(\cl@bar, {foo}).
 // and \def\thefoo{\thebar.\c{foo}}
 void Parser::numberwithin() {
-    TokenList L;
-    read_optarg(L);
+    auto L = read_optarg().value_or(TokenList{});
     if (L.empty()) L.push_back(hash_table.arabic_token);
     TokenList foo_list = read_arg();
     TokenList A        = foo_list;

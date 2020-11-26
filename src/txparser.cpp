@@ -436,25 +436,28 @@ auto Parser::scan_group_opt(TokenList &L, bool &have_arg) -> bool {
 // are used by expand_mac that temporarily resets scanner_status.
 // Return value does noy say if an error occured
 
-auto Parser::read_optarg(TokenList &L) -> bool {
+[[nodiscard]] auto Parser::read_optarg() -> std::optional<TokenList> {
+    TokenList L;
     scanner_status = ss_matching;
     bool retval    = false;
     scan_group_opt(L, retval);
     scanner_status = ss_normal;
-    return retval;
+    if (retval) return L;
+    return {};
 }
 
 void Parser::ignore_optarg() {
-    TokenList L;
-    auto      guard = SaveLongState(ls_normal); // \par forbidden
-    read_optarg(L);
+    auto guard = SaveLongState(ls_normal); // \par forbidden
+    (void)read_optarg();
 }
 
 // The three next commands set locally long_state to normal
 // Reads an optional argument in L, true if found
-auto Parser::read_optarg_nopar(TokenList &L) -> bool {
+auto Parser::read_optarg_nopar(TokenList &L) -> bool { // \todo std::optional
     auto guard = SaveLongState(ls_normal);
-    return read_optarg(L);
+    auto opt   = read_optarg();
+    if (opt) L.append(*opt);
+    return bool(opt);
 }
 
 // Read an argument delimited by a token
@@ -742,7 +745,10 @@ void Parser::T_verbatim() {
     }
     // Now, we know if we have an optional argument.
     TokenList largs;
-    if (optional) read_optarg(largs);
+    if (optional) {
+        auto opt = read_optarg();
+        if (opt) largs.append(*opt);
+    }
     std::string hook = get_cur_env_name() + "@hook";
     if (noparse) {
         Token t1 = hash_table.locate(hook);
@@ -1104,8 +1110,8 @@ auto Parser::scan_general_text() -> TokenList {
 
 // number of arguments for \newcommand; tries to be clever.
 auto Parser::read_mac_nbargs() -> size_t {
-    TokenList L;
-    read_optarg(L);
+    auto opt = read_optarg();
+    auto L   = opt ? *opt : TokenList{};
     if (!L.empty() && L.front().is_plus_token()) L.pop_front();
     while (!L.empty() && L.front().is_zero_token()) L.pop_front();
     if (L.empty()) return 0; // case of \newcommand\x[]{x}
@@ -1297,8 +1303,7 @@ void Parser::T_start_theorem(subtypes c) {
     TokenList me        = read_arg();
     TokenList mecounter = read_arg();
     TokenList style     = read_arg();
-    TokenList opt;
-    bool      was_o = read_optarg(opt);
+    auto      opt       = read_optarg();
     leave_h_mode();
     the_stack.push1(the_names["theorem"], the_names["np_theorem"]);
     the_stack.set_v_mode();
@@ -1316,10 +1321,10 @@ void Parser::T_start_theorem(subtypes c) {
     if (c == 0) {
         if (!noref) name.push_back(hash_table.space_token);
         name.splice(name.end(), ctr);
-        if (was_o) {
+        if (opt) {
             name.push_back(hash_table.space_token);
             name.push_back(Token(other_t_offset, '('));
-            name.splice(name.end(), opt);
+            name.splice(name.end(), *opt);
             name.push_back(Token(other_t_offset, ')'));
         }
         name.brace_me();
@@ -1342,8 +1347,8 @@ void Parser::T_start_theorem(subtypes c) {
         back_input_braced(style);
         n = nT_arg_nopar();
         the_stack.add_att_to_cur(the_names["style"], n);
-        if (was_o) {
-            back_input_braced(opt);
+        if (opt) {
+            back_input_braced(*opt);
             T_arg1(the_names["theorem_head"]);
             the_stack.add_nl();
         }
@@ -3235,10 +3240,10 @@ auto Parser::read_latex_macro() -> Macro * {
     auto *X = new Macro;
     auto  n = read_mac_nbargs();
     X->set_nbargs(n);
-    TokenList op_arg;
-    bool      have_op_arg = read_optarg(op_arg);
+    auto opt    = read_optarg();
+    auto op_arg = opt ? *opt : TokenList{};
     X->set_delimiters(1, op_arg);
-    X->set_type(have_op_arg ? dt_optional : dt_normal);
+    X->set_type(opt ? dt_optional : dt_normal);
     read_mac_body(X->body, false, n);
     X->correct_type();
     return X;

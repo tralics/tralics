@@ -87,9 +87,8 @@ namespace {
         the_parser.xkv_fetch_prefix_family();
         TokenList key = the_parser.read_arg();
         the_parser.list_to_string_c(key, xkv_header, "", "bad key name", B);
-        Token     T = hash_table.locate(B);
-        TokenList opt;
-        if (the_parser.read_optarg(opt)) the_parser.internal_define_key_default(T, opt);
+        Token T = hash_table.locate(B);
+        if (auto opt = the_parser.read_optarg()) the_parser.internal_define_key_default(T, *opt);
         the_parser.internal_define_key(T);
     }
 
@@ -103,8 +102,7 @@ namespace {
         TokenList storage_bin;
         the_parser.read_optarg_nopar(storage_bin);
         TokenList allowed = the_parser.read_arg();
-        TokenList opt;
-        if (the_parser.read_optarg(opt)) the_parser.internal_define_key_default(T, opt);
+        if (auto opt = the_parser.read_optarg()) the_parser.internal_define_key_default(T, *opt);
         TokenList F;
         if (if_plus) {
             TokenList x = the_parser.read_arg();
@@ -148,8 +146,7 @@ namespace {
             B = "cmd" + xkv_header;
         std::string mp      = B;
         TokenList   keytoks = the_parser.read_arg();
-        TokenList   dft;
-        bool        has_dft = the_parser.read_optarg(dft); // \par ok here
+        auto        opt     = the_parser.read_optarg();
         // construct the key or key list
         std::string Keys = the_parser.list_to_string_c(keytoks, "problem scanning key");
         for (const auto &Key : split_commas(Keys)) {
@@ -158,8 +155,8 @@ namespace {
             Token cmd = hash_table.locate(B);
             B         = xkv_header + Key;
             Token T   = hash_table.locate(B);
-            if (has_dft) {
-                TokenList D = dft;
+            if (opt) {
+                TokenList D = *opt;
                 the_parser.internal_define_key_default(T, D);
             }
             TokenList LL;

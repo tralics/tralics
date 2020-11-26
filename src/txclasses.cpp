@@ -1037,11 +1037,10 @@ void Parser::kvo_bool_key() {
 // is \define@key{P}{b}[c]{\def\p@b{##1}}
 
 void Parser::kvo_string_opt() {
-    Token     cmd = cur_tok;
-    TokenList init, defval;
-    read_optarg(init);
-    std::string arg         = sE_arg_nopar();
-    bool        has_default = read_optarg(defval);
+    Token       cmd   = cur_tok;
+    auto        init  = read_optarg().value_or(TokenList{});
+    std::string arg   = sE_arg_nopar();
+    auto        deflt = read_optarg();
     classes_ns::register_key(arg);
     std::string fam = kvo_getfam();
     Buffer &    B   = txclasses_local_buf;
@@ -1057,11 +1056,11 @@ void Parser::kvo_string_opt() {
     L.push_front(T);
     L.push_front(hash_table.locate("def"));
     L.brace_me();
-    if (has_default) {
-        defval.brace_me();
-        defval.push_front(Token(other_t_offset, '['));
-        defval.push_back(Token(other_t_offset, ']'));
-        L.splice(L.begin(), defval);
+    if (deflt) {
+        deflt->brace_me();
+        deflt->push_front(Token(other_t_offset, '['));
+        deflt->push_back(Token(other_t_offset, ']'));
+        L.splice(L.begin(), *deflt);
     }
     call_define_key(L, cmd, arg, fam);
 }

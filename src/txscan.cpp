@@ -2365,12 +2365,11 @@ void Parser::scan_rule(subtypes c) {
     TexRule R;
     Token   T = cur_tok;
     if (c == rule_code) {
-        R.rule_d = 0;
-        TokenList L1;
-        bool      b  = read_optarg(L1);
+        R.rule_d     = 0;
+        auto      L1 = read_optarg();
         TokenList L2 = read_arg();
         TokenList L3 = read_arg();
-        if (b) R.rule_d = dimen_from_list(T, L1);
+        if (L1) R.rule_d = dimen_from_list(T, *L1);
         R.rule_w = dimen_from_list(T, L2);
         R.rule_h = dimen_from_list(T, L3);
         R.adjust();

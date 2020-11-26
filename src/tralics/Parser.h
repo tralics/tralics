@@ -82,8 +82,8 @@ struct Parser {
     Xml *                 the_xmlA{nullptr}, *the_xmlB{nullptr}; // for XML tree manipulations
 
     [[nodiscard]] auto at_eol() const -> bool { return input_line_pos >= input_line.size(); }
-    auto get_next_char() -> char32_t { return input_line[input_line_pos++]; }
-    auto get_after_ass_tok() -> Token {
+    auto               get_next_char() -> char32_t { return input_line[input_line_pos++]; }
+    auto               get_after_ass_tok() -> Token {
         Token x = after_assignment_token;
         after_assignment_token.kill();
         return x;
@@ -265,7 +265,7 @@ struct Parser {
     auto               read_mac_body(bool exp) -> TokenList;
     auto               read_mac_nbargs() -> size_t;
     auto               read_optarg_nopar(TokenList &L) -> bool;
-    auto               read_optarg(TokenList &L) -> bool; // \todo std::optional
+    [[nodiscard]] auto read_optarg() -> std::optional<TokenList>;
     auto               read_token_arg(int cl) -> bool;
     auto               read_token_arg(Token t) -> bool;
     auto               read_unit() -> int;

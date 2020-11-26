@@ -1642,8 +1642,7 @@ void Parser::interpret_mathchoice_cmd(size_t res, subtypes k, CmdChr W) {
 
 // This replaces [foo] by {foo}
 void Parser::opt_to_mandatory() {
-    TokenList L;
-    read_optarg(L);
+    auto L = read_optarg().value_or(TokenList{});
     L.brace_me();
     back_input(L);
 }

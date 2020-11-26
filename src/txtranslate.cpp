@@ -206,8 +206,7 @@ void Parser::T_arg_local() {
 
 // translates [foo]
 void Parser::T_optarg() {
-    TokenList L;
-    read_optarg(L);
+    auto L = read_optarg().value_or(TokenList{});
     T_translate(L);
 }
 
@@ -238,10 +237,8 @@ auto Parser::nT_arg_nopar() -> std::string {
 
 // Return 0 if the argument is empty or does not exist.
 auto Parser::xT_optarg_nopar() -> Xml * {
-    TokenList L;
-    read_optarg(L);
-    if (L.empty()) return nullptr;
-    return translate_list(L);
+    auto L = read_optarg().value_or(TokenList{});
+    return L.empty() ? nullptr : translate_list(L);
 }
 
 // Hacked version of sT_arg_nopar.
@@ -920,7 +917,7 @@ void Parser::includegraphics(subtypes C) {
     {
         auto guard = InLoadHandler();
         if (ic) {
-            read_optarg(W);
+            W = read_optarg().value_or(TokenList{});
             flush_buffer();
             file_name_2 = sT_arg_nopar();
         } else
@@ -1768,7 +1765,7 @@ void Parser::T_bezier(subtypes c) {
     {
         TokenList L;
         if (c != 0)
-            read_optarg(L);
+            L = read_optarg().value_or(TokenList{});
         else
             L = read_arg();
         if (!L.empty()) w = token_list_to_att(L, C, true);

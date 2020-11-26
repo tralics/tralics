@@ -2100,7 +2100,7 @@ void Parser::T_cite(subtypes sw) {
     TokenList prenote;
     if (is_natbib) {
         if (auto x = nT_optarg_nopar(); x && !x->empty()) the_stack.add_att_to_last(the_names["citetype"], *x);
-        read_optarg(res);
+        if (auto o = read_optarg()) res.append(*o);
         if (!res.empty()) res.push_back(hash_table.space_token);
         res.push_front(hash_table.locate("NAT@open"));
     }
