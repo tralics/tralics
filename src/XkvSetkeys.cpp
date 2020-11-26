@@ -16,8 +16,6 @@ namespace xkv_ns {
 XkvSetkeys::XkvSetkeys(Parser *PP) : P(PP) {
     comma_token  = hash_table.comma_token;
     equals_token = hash_table.equals_token;
-    na_token     = hash_table.xkv_na_token;
-    rm_token     = hash_table.xkv_rm_token;
 }
 
 // This reads and manages the list of families
@@ -40,7 +38,7 @@ void XkvSetkeys::fetch_na() {
 
 void XkvSetkeys::fetch_keys(bool c) {
     if (!c)
-        keyvals = P->get_mac_value(rm_token); // case of \setrmkeys
+        keyvals = P->get_mac_value(hash_table.locate("XKV@rm")); // case of \setrmkeys
     else
         keyvals = P->read_arg();
     if (tracing_commands()) {
@@ -54,13 +52,13 @@ void XkvSetkeys::fetch_keys(bool c) {
 void XkvSetkeys::finish() {
     P->new_macro(xkv_prefix, hash_table.locate("XKV@prefix"));
     P->new_macro(fams, hash_table.locate("XKV@fams"));
-    P->new_macro(na, na_token);
+    P->new_macro(na, hash_table.locate("XKV@na"));
     if (!delayed.empty()) delayed.pop_back(); // remove trailing comma
     if (tracing_commands()) {
         Logger::finish_seq();
         the_log << "setkeys <- " << action << "\n";
     }
-    P->new_macro(delayed, rm_token);
+    P->new_macro(delayed, hash_table.locate("XKV@rm"));
     P->back_input(action);
 }
 
