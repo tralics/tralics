@@ -857,7 +857,7 @@ void Parser::define_choice_key() {
         F.brace_me();
     }
     TokenList body;
-    body.push_back(hash_table.xkv_cc_token);
+    body.push_back(hash_table.locate("XKV@cc"));
     if (if_star) body.push_back(Token(other_t_offset, '*'));
     if (if_plus) body.push_back(Token(other_t_offset, '+'));
     storage_bin.push_front(Token(other_t_offset, '['));
@@ -983,7 +983,7 @@ void Parser::define_bool_key(subtypes c) {
         LL.push_front(Token(other_t_offset, '['));
         if (if_plus) LL.push_front(Token(other_t_offset, '+'));
         LL.push_front(Token(other_t_offset, '*'));
-        LL.push_front(hash_table.xkv_cc_token);
+        LL.push_front(hash_table.locate("XKV@cc"));
         LL.brace_me();
         back_input(LL);
         auto *X = new Macro;

@@ -2489,8 +2489,8 @@ void Hashtab::boot_etex() {
 void Hashtab::boot_keyval() {
     static bool booted = false;
     if (booted) return;
-    booted       = true;
-    xkv_cc_token = primitive("XKV@cc", xkeyval_cmd, define_cc_code);
+    booted = true;
+    primitive("XKV@cc", xkeyval_cmd, define_cc_code);
     primitive("key@ifundefined", xkeyval_cmd, key_ifundefined_code);
     primitive("disable@keys", xkeyval_cmd, disable_keys_code);
     primitive("presetkeys", xkeyval_cmd, preset_keys_code);
