@@ -8,6 +8,7 @@
 // Auto-registering package, see tipa.cpp
 
 namespace classes_ns {
+    auto cur_options(bool, TokenList &, bool) -> TokenList;
     void register_key(const std::string &);
 } // namespace classes_ns
 
@@ -21,6 +22,34 @@ namespace xkv_ns {
 } // namespace xkv_ns
 
 namespace {
+    // Implements ExecuteOptionsX
+    void xkv_execute_options() {
+        XkvSetkeys data(&the_parser);
+        the_parser.xkv_fetch_prefix();
+        data.special_fams();
+        data.fetch_keys(true);
+        data.dump_keys();
+        data.set_aux();
+        data.finish();
+    }
+
+    // Implements ProcessOptionsX
+    void xkv_process_options() {
+        XkvSetkeys data(&the_parser);
+        //  data.no_err = remove_initial_plus(false);
+        bool s = the_parser.remove_initial_star(); // we should do something with this
+        the_parser.xkv_fetch_prefix();
+        data.set_inpox();
+        data.special_fams();
+        TokenList uo;
+        TokenList L = classes_ns::cur_options(s, uo, false);
+        L.brace_me();
+        the_parser.back_input(L);
+        data.fetch_keys(true);
+        data.set_aux();
+        data.finish();
+    }
+
     // May set \XKV@prefix \XKV@fams \XKV@tfam \XKV@header \XKV@tkey \XKV@na
     void setkeys(bool c) {
         XkvSetkeys data(&the_parser);
@@ -522,8 +551,8 @@ namespace {
         case setrmkeys_code: setkeys(false); return;
         case setkeys_code: setkeys(true); return;
         case declare_optionsX_code: xkv_declare_option(); return;
-        case process_optionsX_code: the_parser.xkv_process_options(); return;
-        case execute_optionsX_code: the_parser.xkv_execute_options(); return;
+        case process_optionsX_code: xkv_process_options(); return;
+        case execute_optionsX_code: xkv_execute_options(); return;
         default: return;
         }
     }

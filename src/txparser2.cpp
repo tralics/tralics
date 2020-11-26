@@ -56,7 +56,6 @@ namespace token_ns {
 } // namespace token_ns
 
 namespace classes_ns {
-    auto cur_options(bool, TokenList &, bool) -> TokenList;
     void unknown_optionX(TokenList &cur_keyval, TokenList &action);
 } // namespace classes_ns
 
@@ -787,34 +786,6 @@ void xkv_ns::makehd(const std::string &fam) {
     B         = xkv_prefix + fam;
     if (!fam.empty()) B.push_back('@');
     xkv_header = B;
-}
-
-// Implements ExecuteOptionsX
-void Parser::xkv_execute_options() {
-    XkvSetkeys data(this);
-    xkv_fetch_prefix();
-    data.special_fams();
-    data.fetch_keys(true);
-    data.dump_keys();
-    data.set_aux();
-    data.finish();
-}
-
-// Implements ProcessOptionsX
-void Parser::xkv_process_options() {
-    XkvSetkeys data(this);
-    //  data.no_err = remove_initial_plus(false);
-    bool s = remove_initial_star(); // we should do something with this
-    xkv_fetch_prefix();
-    data.set_inpox();
-    data.special_fams();
-    TokenList uo;
-    TokenList L = classes_ns::cur_options(s, uo, false);
-    L.brace_me();
-    back_input(L);
-    data.fetch_keys(true);
-    data.set_aux();
-    data.finish();
 }
 
 // Removes A from B, result will be in C
