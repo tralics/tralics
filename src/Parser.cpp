@@ -2062,15 +2062,15 @@ void Parser::T_cite(subtypes sw, TokenList &prenote, std::string &type) {
     if (sw == nocite_code) {
         type = std::string(fetch_name_opt());
     } else if (sw == natcite_code) {
-        read_optarg_nopar(prenote); // is really the post note
+        if (auto L = read_optarg_nopar()) prenote.append(*L); // is really the post note
     } else {
         // we can have two optional arguments, prenote is last
-        TokenList L1;
-        if (read_optarg_nopar(L1)) {
-            if (read_optarg_nopar(prenote))
-                type = std::string(fetch_name1(L1));
-            else
-                prenote = L1;
+        if (auto L1 = read_optarg_nopar()) {
+            if (auto L2 = read_optarg_nopar()) {
+                prenote.append(*L2);
+                type = std::string(fetch_name1(*L1));
+            } else
+                prenote = *L1;
         }
     }
 }

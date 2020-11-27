@@ -1084,8 +1084,7 @@ auto Parser::scan_int(Token t, int n, String s) -> size_t {
 
 // Here we may have an optional argument; default value is d
 auto Parser::scan_special_int_d(Token T, long d) -> long {
-    TokenList L;
-    read_optarg_nopar(L);
+    auto L = read_optarg_nopar().value_or(TokenList{});
     if (L.empty()) {
         if (tracing_commands()) {
             Logger::finish_seq();
@@ -1814,7 +1813,7 @@ void Parser::scan_glue(internal_type level) {
 void Parser::scan_glue(internal_type level, Token t, bool opt) {
     TokenList L;
     if (opt) {
-        read_optarg_nopar(L);
+        if (auto LL = read_optarg_nopar()) L = *LL;
         scan_glue_opt = true;
         if (L.empty()) scan_glue_opt = false;
         if (!scan_glue_opt) return;

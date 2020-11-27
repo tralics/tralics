@@ -262,8 +262,8 @@ struct Parser {
     auto               read_latex_macro() -> Macro *;
     auto               read_mac_body(bool exp) -> TokenList;
     auto               read_mac_nbargs() -> size_t;
-    auto               read_optarg_nopar(TokenList &L) -> bool;
     [[nodiscard]] auto read_optarg() -> std::optional<TokenList>;
+    [[nodiscard]] auto read_optarg_nopar() -> std::optional<TokenList>;
     auto               read_token_arg(int cl) -> bool;
     auto               read_token_arg(Token t) -> bool;
     auto               read_unit() -> int;

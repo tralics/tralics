@@ -453,10 +453,9 @@ void Parser::ignore_optarg() {
 
 // The three next commands set locally long_state to normal
 // Reads an optional argument in L, true if found
-auto Parser::read_optarg_nopar(TokenList &L) -> bool { // \todo std::optional
+auto Parser::read_optarg_nopar() -> std::optional<TokenList> {
     auto guard = SaveLongState(ls_normal);
-    if (auto opt = read_optarg()) return L.append(*opt), true;
-    return false;
+    return read_optarg();
 }
 
 // Read an argument delimited by a token
@@ -1081,8 +1080,7 @@ auto Parser::sE_arg_nopar() -> std::string {
 
 // Returns next arg as a string (not translated)
 auto Parser::sE_optarg_nopar() -> std::string {
-    TokenList L;
-    read_optarg_nopar(L);
+    auto L = read_optarg_nopar().value_or(TokenList{});
     return to_stringE(L);
 }
 
@@ -1216,10 +1214,19 @@ void Parser::M_new_thm() {
     }
     TokenList ctr;
     int       which_case = star ? 4 : 2;
-    if (which_case == 2 && read_optarg_nopar(ctr)) which_case = 3;
+    if (which_case == 2) {
+        if (auto L = read_optarg_nopar()) {
+            ctr.append(*L);
+            which_case = 3;
+        }
+    }
     TokenList text = read_arg();
-    if (which_case == 2 && read_optarg_nopar(ctr)) // ctr is empty here
-        which_case = 1;
+    if (which_case == 2) {
+        if (auto L = read_optarg_nopar()) {
+            ctr.append(*L);
+            which_case = 1;
+        }
+    }
     // We have now read the arguments.
     Token y = find_env_token(name, true);
     err_tok = y; // replaces \newtheorem by \name
@@ -1646,11 +1653,8 @@ auto Parser::fetch_csname(bool exp) -> Token {
 
 // Use a non-long method
 auto Parser::fetch_name_opt() -> std::string {
-    TokenList L;
-    bool      res = read_optarg_nopar(L);
-    if (!res || L.empty()) return "";
-
-    return fetch_name1(L);
+    auto res = read_optarg_nopar();
+    return res ? fetch_name1(*res) : "";
 }
 
 // Implements \@ifundefined{cmd} {A}{B}
@@ -1869,11 +1873,11 @@ auto Parser::counter_read_opt(String s) -> int {
         finish_csname(b, "newcounter");
         return 2;
     }
-    TokenList bar_list;
-    int       ne = nb_errs;
-    if (!read_optarg_nopar(bar_list)) return 0;
+    int  ne       = nb_errs;
+    auto bar_list = read_optarg_nopar();
+    if (!bar_list) return 0;
     if (ne != nb_errs) return 1;
-    if (my_csname("cl@", "", bar_list, "newcounter_opt")) return 1;
+    if (my_csname("cl@", "", *bar_list, "newcounter_opt")) return 1;
     return 2;
 }
 

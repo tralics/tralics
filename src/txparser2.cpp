@@ -96,44 +96,42 @@ void Parser::T_fancy() {
     else if (c == fancy_hf_code)
         hf = 3;
     if (hf == 0) {
-        TokenList L1;
-        bool      o  = read_optarg_nopar(L1);
-        TokenList L2 = read_arg();
-        if (!o) L1 = L2;
+        auto L1 = read_optarg_nopar();
+        auto L2 = read_arg();
+        if (!L1) L1 = L2;
         if (c == fancy_lhead_code) {
-            T_fancy("elh", L1);
+            T_fancy("elh", *L1);
             T_fancy("olh", L2);
             return;
         }
         if (c == fancy_chead_code) {
-            T_fancy("ech", L1);
+            T_fancy("ech", *L1);
             T_fancy("och", L2);
             return;
         }
         if (c == fancy_rhead_code) {
-            T_fancy("erh", L1);
+            T_fancy("erh", *L1);
             T_fancy("orh", L2);
             return;
         }
         if (c == fancy_lfoot_code) {
-            T_fancy("elf", L1);
+            T_fancy("elf", *L1);
             T_fancy("olf", L2);
             return;
         }
         if (c == fancy_cfoot_code) {
-            T_fancy("ecf", L1);
+            T_fancy("ecf", *L1);
             T_fancy("ocf", L2);
             return;
         }
         if (c == fancy_rfoot_code) {
-            T_fancy("erf", L1);
+            T_fancy("erf", *L1);
             T_fancy("orf", L2);
             return;
         }
     }
-    TokenList L1;
-    read_optarg_nopar(L1);
-    TokenList L = read_arg();
+    auto L1 = read_optarg_nopar().value_or(TokenList{});
+    auto L  = read_arg();
     for (;;) {
         bool use_e = false, use_o = false;
         bool use_h = false, use_f = false;
@@ -411,11 +409,10 @@ void Parser::T_line(subtypes c) {
 // Implements \typein[\foo]{bar},  or \typein{bar}. In the first case
 // it is like \typeout{bar}\read0to\foo, otherwise backinputs what is read.
 void Parser::T_typein() {
-    Token     cmd = hash_table.relax_token;
-    TokenList res;
-    bool      has_opt = false;
-    if (read_optarg_nopar(res)) {
-        Token Q = token_ns::get_unique(res);
+    Token cmd     = hash_table.relax_token;
+    bool  has_opt = false;
+    if (auto res = read_optarg_nopar()) {
+        Token Q = token_ns::get_unique(*res);
         back_input(Q);
         cmd     = get_r_token();
         has_opt = true;
@@ -707,10 +704,9 @@ void Parser::remove_element(TokenList &A, TokenList &B, Token C) {
 }
 
 void Parser::selective_sanitize() {
-    Token     T = cur_tok;
-    long      n = 10000;
-    TokenList nb;
-    read_optarg_nopar(nb);
+    Token T  = cur_tok;
+    long  n  = 10000;
+    auto  nb = read_optarg_nopar().value_or(TokenList{});
     if (!nb.empty()) n = scan_int(nb, T);
     TokenList chars = read_arg();
     token_ns::sanitize_one(chars);
@@ -1295,10 +1291,8 @@ void Parser::T_listenv(symcodes x) {
     Token       t        = hash_table.itemlabel_token;
     M_let_fast(t, hash_table.relax_token, false);
     T_use_counter(list_ctr);
-    TokenList L;
     if (x == enumerate_cmd) {
-        read_optarg_nopar(L);
-        // Token cmd = hash_table.relax_token;  unused (why ?)
+        auto L = read_optarg_nopar().value_or(TokenList{});
         if (!optional_enumerate(L, list_ctr)) {
             b = "labelenum";
             token_ns::int_to_roman(b, n);

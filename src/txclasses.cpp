@@ -571,13 +571,12 @@ void Parser::T_load_with_options(bool c) // c is true for a class
 // This implements \documentclass, and \LoadClass
 // bad is true in not vertical mode of after \begin{document}
 void Parser::T_documentclass(bool bad) {
-    auto      c = cur_cmd_chr.chr;
-    Token     T = cur_tok;
-    TokenList Loptions;
-    read_optarg_nopar(Loptions);
-    std::string name = sE_arg_nopar();
-    std::string date = sE_optarg_nopar();
-    cur_opt_list     = make_options(Loptions);
+    auto        c        = cur_cmd_chr.chr;
+    Token       T        = cur_tok;
+    auto        Loptions = read_optarg_nopar().value_or(TokenList{});
+    std::string name     = sE_arg_nopar();
+    std::string date     = sE_optarg_nopar();
+    cur_opt_list         = make_options(Loptions);
     if (c == 0) { // else is LoadClass
         cur_tok = T;
         if (bad || the_class_data.seen_document_class) wrong_mode("Bad \\documentclass");
@@ -590,11 +589,10 @@ void Parser::T_documentclass(bool bad) {
 
 // This implements \usepackage
 void Parser::T_usepackage() {
-    TokenList Loptions;
-    read_optarg_nopar(Loptions);
-    std::string name = sE_arg_nopar(); // can be a list of names
-    std::string date = sE_optarg_nopar();
-    cur_opt_list     = make_options(Loptions);
+    auto        Loptions = read_optarg_nopar().value_or(TokenList{});
+    std::string name     = sE_arg_nopar(); // can be a list of names
+    std::string date     = sE_optarg_nopar();
+    cur_opt_list         = make_options(Loptions);
     for (const auto &pack : split_commas(name)) {
         bool b = check_builtin_pack(pack);
         use_a_package(pack, false, date, b);

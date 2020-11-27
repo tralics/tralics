@@ -1606,8 +1606,7 @@ void Parser::scan_math_mi(size_t res, subtypes c, subtypes k, CmdChr W) {
     for (;;) {
         remove_initial_space_and_back_input();
         if (!cur_tok.is_open_bracket()) break;
-        TokenList L;
-        read_optarg_nopar(L);
+        auto L = read_optarg_nopar().value_or(TokenList{});
         L.brace_me();
         back_input(L);
         subtypes r1 = math_argument(0, ct);

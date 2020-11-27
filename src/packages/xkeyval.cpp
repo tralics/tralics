@@ -471,8 +471,7 @@ namespace {
     void internal_choice_key() {
         bool      if_star = the_parser.remove_initial_plus(false);
         bool      if_plus = the_parser.remove_initial_plus(true);
-        TokenList bin;
-        the_parser.read_optarg_nopar(bin); // \todo std::optional
+        auto      bin     = the_parser.read_optarg_nopar().value_or(TokenList{});
         TokenList input   = the_parser.read_arg();
         TokenList allowed = the_parser.read_arg();
         TokenList ok_code = the_parser.read_arg();
@@ -624,16 +623,14 @@ namespace {
         bool if_plus = the_parser.remove_initial_plus(true);
         if (c != define_boolkey_code) if_plus = false;
         xkv_fetch_prefix_family(); // read prefix and family
-        TokenList L;
-        Buffer    xkv_local_buf;
-        if (the_parser.read_optarg_nopar(L)) {
-            xkv_local_buf = the_parser.list_to_string_c(L, "", "", "Problem scanning macro prefix");
+        Buffer xkv_local_buf;
+        if (auto L = the_parser.read_optarg_nopar()) {
+            xkv_local_buf = the_parser.list_to_string_c(*L, "", "", "Problem scanning macro prefix");
         } else
             xkv_local_buf = xkv_header;
         std::string mp      = xkv_local_buf;
         TokenList   keytoks = the_parser.read_arg();
-        TokenList   dft;
-        bool        has_dft = the_parser.read_optarg_nopar(dft);
+        auto        dft     = the_parser.read_optarg_nopar();
         // construct the key or key list
         std::string Keys = the_parser.list_to_string_c(keytoks, "Problem scanning key");
         for (const auto &Key : split_commas(Keys)) {
@@ -647,10 +644,7 @@ namespace {
             TokenList v   = xkv_local_buf.str_toks11(false);
             xkv_local_buf = xkv_header + Key;
             Token T       = hash_table.locate(xkv_local_buf);
-            if (has_dft) {
-                TokenList D = dft;
-                internal_define_key_default(xkv_local_buf, T, D);
-            }
+            if (dft) { internal_define_key_default(xkv_local_buf, T, *dft); }
             u.push_front(hash_table.csname_token);
             u.push_back(hash_table.locate("XKV@resa"));
             u.push_back(hash_table.endcsname_token);
@@ -705,9 +699,8 @@ namespace {
         TokenList keytoks       = the_parser.read_arg();
         auto      xkv_local_buf = the_parser.list_to_string_c(keytoks, xkv_header, "", "bad key name");
         Token     T             = hash_table.locate(xkv_local_buf);
-        TokenList storage_bin;
-        the_parser.read_optarg_nopar(storage_bin);
-        TokenList allowed = the_parser.read_arg();
+        auto      storage_bin   = the_parser.read_optarg_nopar().value_or(TokenList{});
+        TokenList allowed       = the_parser.read_arg();
         if (auto opt = the_parser.read_optarg()) internal_define_key_default(xkv_local_buf, T, *opt);
         TokenList F;
         if (if_plus) {
@@ -744,10 +737,9 @@ namespace {
     // We make the assumption that a key does not contain a comma
     void define_cmd_key(subtypes c) {
         xkv_fetch_prefix_family(); // read prefix and family
-        TokenList   L;
         std::string xkv_local_buf;
-        if (the_parser.read_optarg_nopar(L)) {
-            xkv_local_buf = the_parser.list_to_string_c(L, "", "", "Problem scanning macro prefix");
+        if (auto L = the_parser.read_optarg_nopar()) {
+            xkv_local_buf = the_parser.list_to_string_c(*L, "", "", "Problem scanning macro prefix");
         } else
             xkv_local_buf = "cmd" + xkv_header;
         std::string mp      = xkv_local_buf;
@@ -951,7 +943,7 @@ namespace {
             return;
         }
         extract_keys(fams, Fams);
-        the_parser.read_optarg_nopar(na);
+        if (auto L = the_parser.read_optarg_nopar()) na.append(*L);
         extract_keys(na, Na);
         fetch_keys(c);
         check_preset("preseth");

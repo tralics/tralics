@@ -260,8 +260,7 @@ auto Parser::sT_optarg_nopar() -> std::string {
 // Returns next optional argument as an attribute value.
 // return 0 if the argument is empty or does not exist.
 auto Parser::nT_optarg_nopar() -> std::optional<std::string> {
-    TokenList L;
-    read_optarg_nopar(L);
+    auto L = read_optarg_nopar().value_or(TokenList{});
     if (L.empty()) return {};
     Xml *       x = translate_list(L);
     std::string y = x->convert_to_string();
@@ -273,8 +272,7 @@ auto Parser::nT_optarg_nopar() -> std::optional<std::string> {
 // Second argument of \makebox \framebox should be [c] [l] or [r] or [s]
 
 auto Parser::get_ctb_opt() -> std::optional<std::string> {
-    TokenList L;
-    read_optarg_nopar(L);
+    auto L = read_optarg_nopar().value_or(TokenList{});
     if (L.empty()) return {};
     Token t = token_ns::get_unique(L);
     if (t.is_null()) return {};
@@ -291,8 +289,7 @@ auto Parser::get_ctb_opt() -> std::optional<std::string> {
 
 // Nodes: tblr, or 2 letters
 auto Parser::get_trees_opt() -> std::optional<std::string> {
-    TokenList L;
-    read_optarg_nopar(L);
+    auto L = read_optarg_nopar().value_or(TokenList{});
     if (L.empty()) return {};
     Token t1, t2;
     token_ns::get_unique(L, t1, t2);
@@ -477,7 +474,7 @@ void Parser::T_item(subtypes c) {
 auto Parser::T_item_label(unsigned c) -> std::string {
     TokenList L;
     bool      opt = cur_tok.is_open_bracket();
-    if (opt) read_optarg_nopar(L);
+    if (opt) L = read_optarg_nopar().value_or(TokenList{});
     std::string list_ctr = the_parser.eqtb_string_table[1].val;
     if (!list_ctr.empty()) refstepcounter(list_ctr, false);
     if (!opt) {
