@@ -307,7 +307,7 @@ namespace {
     }
 
     // This finds mykey in the list whose name is in the buffer
-    // reads local_buf
+    // reads local_buf const
     auto find_a_save_key(const std::string &mykey) -> bool {
         TokenList W = the_parser.get_mac_value(hash_table.locate(local_buf));
         TokenList key;
@@ -378,8 +378,7 @@ namespace {
 
     // This deletes L from W. Here L is a simple list of keys
     void xkv_ns_remove(TokenList &W, TokenList &L, int type) {
-        Buffer B;
-        the_parser.list_to_string_c(L, ",", ",", "Invalid key name list", B);
+        Buffer    B     = the_parser.list_to_string_c(L, ",", ",", "Invalid key name list");
         Token     comma = hash_table.comma_token;
         TokenList tmp;
         TokenList key;
@@ -437,7 +436,7 @@ namespace {
     // Merges or deletes depending on mg globally if gbl is true
     // the keys in L from the variable depending on type
     // Implements preset or save depending on type
-    // reads local_buf
+    // reads local_buf const
     void xkv_merge(bool gbl, int type, TokenList &L, bool mg) {
         token_ns::sanitize_one(L, '=');
         token_ns::sanitize_one(L, ',');
@@ -534,6 +533,7 @@ namespace {
     }
 
     // Assume local_buf contains the name of T without the extension
+    // reads local_buf not const
     void internal_define_key_default(Token T, TokenList &L) {
         L.brace_me();
         L.push_front(T);
@@ -579,7 +579,7 @@ namespace {
         TokenList   xkey = key;
         std::string Key  = the_parser.list_to_string_c(xkey, "Invalid option");
         classes_ns::register_key(Key);
-        the_parser.list_to_string_c(key, xkv_header, "", "bad option name", local_buf);
+        local_buf = the_parser.list_to_string_c(key, xkv_header, "", "bad option name");
         Token T   = hash_table.locate(local_buf);
         auto  opt = the_parser.read_optarg().value_or(TokenList{});
         internal_define_key_default(T, opt);
@@ -595,7 +595,7 @@ namespace {
     // Find saved or preset keys, depending on c2. If not found:
     // signals a an error if c is true (creates otherwise), return true.
     // Creates cur_tok if needed
-    // reads local_buf
+    // reads local_buf not const
     auto xkv_save_keys_aux(bool c, int c2) -> bool {
         xkv_fetch_prefix_family();
         xkv_find_aux(c2);
@@ -637,7 +637,6 @@ namespace {
         }
     }
 
-    // reads local_buf?
     void define_bool_key(subtypes c) {
         the_parser.remove_initial_plus(false);
         bool if_plus = the_parser.remove_initial_plus(true);
@@ -645,7 +644,7 @@ namespace {
         xkv_fetch_prefix_family(); // read prefix and family
         TokenList L;
         if (the_parser.read_optarg_nopar(L)) {
-            the_parser.list_to_string_c(L, "", "", "Problem scanning macro prefix", local_buf);
+            local_buf = the_parser.list_to_string_c(L, "", "", "Problem scanning macro prefix");
         } else
             local_buf = xkv_header;
         std::string mp      = local_buf;
@@ -707,24 +706,22 @@ namespace {
         }
     }
 
-    // reads local_buf?
     void T_define_key() {
         xkv_fetch_prefix_family();
         TokenList key = the_parser.read_arg();
-        the_parser.list_to_string_c(key, xkv_header, "", "bad key name", local_buf);
-        Token T = hash_table.locate(local_buf);
+        local_buf     = the_parser.list_to_string_c(key, xkv_header, "", "bad key name");
+        Token T       = hash_table.locate(local_buf);
         if (auto opt = the_parser.read_optarg()) internal_define_key_default(T, *opt);
         internal_define_key(T);
     }
 
-    // reads local_buf?
     void define_choice_key() {
         bool if_star = the_parser.remove_initial_plus(false);
         bool if_plus = the_parser.remove_initial_plus(true);
         xkv_fetch_prefix_family();
         TokenList keytoks = the_parser.read_arg();
-        the_parser.list_to_string_c(keytoks, xkv_header, "", "bad key name", local_buf);
-        Token     T = hash_table.locate(local_buf);
+        local_buf         = the_parser.list_to_string_c(keytoks, xkv_header, "", "bad key name");
+        Token     T       = hash_table.locate(local_buf);
         TokenList storage_bin;
         the_parser.read_optarg_nopar(storage_bin);
         TokenList allowed = the_parser.read_arg();
@@ -762,12 +759,11 @@ namespace {
     }
 
     // We make the assumption that a key does not contain a comma
-    // reads local_buf?
     void define_cmd_key(subtypes c) {
         xkv_fetch_prefix_family(); // read prefix and family
         TokenList L;
         if (the_parser.read_optarg_nopar(L)) {
-            the_parser.list_to_string_c(L, "", "", "Problem scanning macro prefix", local_buf);
+            local_buf = the_parser.list_to_string_c(L, "", "", "Problem scanning macro prefix");
         } else
             local_buf = "cmd" + xkv_header;
         std::string mp      = local_buf;
@@ -807,6 +803,7 @@ namespace {
         }
     }
 
+    // reads local_buf const
     void T_xkeyval(subtypes c) {
         switch (c) {
         case boot_keyval_code: return;
@@ -919,6 +916,7 @@ namespace {
     }
 
     // Returns true if must be saved; may set xkv_is_global
+    // reads local_buf const
     auto XkvToken::check_save() const -> bool {
         if (has_save) {
             xkv_is_global = is_global;
@@ -999,6 +997,7 @@ namespace {
     }
 
     // Returns true if the key is defined
+    // reads local_buf
     auto XkvToken::is_defined(const std::string &fam) const -> bool {
         xkv_makehd(fam);
         local_buf += keyname;
