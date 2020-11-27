@@ -5,22 +5,24 @@ struct Hashtab;
 
 struct TokenList : public std::list<Token> {
     [[nodiscard]] auto block_size() const -> int;
+    [[nodiscard]] auto expand_mac_inner(TokenList *arguments) const -> TokenList;
 
     void add_env(const std::string &name);
     void add_verbatim_number(const Hashtab &H, long n);
     void append(TokenList &L) { splice(end(), L); }
-    auto expand_mac_inner(TokenList *arguments) const -> TokenList;
-    auto expand_nct(size_t n, uchar c, int &MX, TokenList &body) -> bool;
-    void expand_star();
-    auto fast_get_block() -> TokenList;
-    void fast_get_block(TokenList &res); // \todo rename
-    auto get_a_param() -> TokenList;
-    void prepend(TokenList &L) { splice(begin(), L); }
-    void url_hack();
-    void latex_ctr_fnsymbol(long n);
-    void reevaluate0(bool in_env);
     void brace_me();
+    void expand_star();
+    void fast_get_block(TokenList &res); // \todo rename
+    void latex_ctr_fnsymbol(long n);
     void normalise();
+    void prepend(TokenList &L) { splice(begin(), L); }
+    void reevaluate0(bool in_env);
+    void url_hack();
+
+    auto contains(TokenList &A, bool remove, int &is_in_skipped) -> bool;
+    auto expand_nct(size_t n, uchar c, int &MX, TokenList &body) -> bool;
+    auto fast_get_block() -> TokenList;
+    auto get_a_param() -> TokenList;
 };
 
 inline TokenList onlypreamble; // token-list allowed only in preamble

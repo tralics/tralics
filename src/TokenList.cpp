@@ -229,3 +229,39 @@ void TokenList::normalise() {
     for (auto &a : *this)
         if (a == u) a = v;
 }
+
+// Returns true if A is in B. If the switch is true, the value is removed
+// but the last token of B is not
+// Counts the number of skipped commas.
+auto TokenList::contains(TokenList &A, bool remove, int &is_in_skipped) -> bool {
+    normalise();
+    A.normalise();
+    auto n = A.size(), m = size();
+    if (m < n) return false;
+    auto  k       = to_signed(m - n);
+    auto  AA      = A.begin();
+    auto  BB      = begin();
+    bool  found   = false;
+    int   skipped = -1;
+    Token to_skip = A.front();
+    while (k >= 0) {
+        if (*BB == to_skip) ++skipped;
+        if (token_ns::is_sublist(AA, BB, n)) {
+            found = true;
+            break;
+        }
+        ++BB;
+        --k;
+    }
+    if (remove && found) {
+        auto CC = BB;
+        --n;
+        while (n > 0) {
+            ++CC;
+            --n;
+        }
+        erase(BB, CC);
+    }
+    is_in_skipped = found ? skipped : -1;
+    return found;
+}

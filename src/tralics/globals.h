@@ -119,7 +119,6 @@ namespace token_ns {
     void double_hack(TokenList &key);
     auto split_at(Token m, TokenList &L, TokenList &z) -> bool;
     auto is_sublist(TokenList::iterator A, TokenList::iterator B, int n) -> bool;
-    auto is_in(TokenList &A, TokenList &B, bool remove, int &is_in_skipped) -> bool;
     void normalise_list(char c, TokenList &L);
     void sanitize_one(TokenList &L, uchar c);
     void sanitize_one(TokenList &L, TokenList &s, long n);

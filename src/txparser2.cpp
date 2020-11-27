@@ -355,7 +355,7 @@ void Parser::T_isin() {
     TokenList A     = read_arg();
     TokenList B     = read_arg();
     int       n     = 0; // unused
-    bool      found = token_ns::is_in(A, B, false, n);
+    bool      found = B.contains(A, false, n);
     back_input(found ? hash_table.intrue_token : hash_table.infalse_token);
 }
 
@@ -702,7 +702,7 @@ auto token_ns::find_in(TokenList &A, TokenList &B, Token t, bool sw, int &n) -> 
     B.push_back(t);
     A.push_front(t);
     B.push_front(t);
-    return token_ns::is_in(A, B, sw, n);
+    return B.contains(A, sw, n);
 }
 
 // We add commas around A and B, and must remove them later
