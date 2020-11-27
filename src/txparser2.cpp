@@ -40,7 +40,6 @@ namespace {
 } // namespace
 
 namespace token_ns {
-    auto find_in(TokenList &A, TokenList &B, Token t, bool sw, int &n) -> bool;
     void int_to_roman(Buffer &b, long n);
 } // namespace token_ns
 
@@ -697,19 +696,11 @@ void Parser::T_remove_element() {
     remove_element(A, B, cur_tok);
 }
 
-auto token_ns::find_in(TokenList &A, TokenList &B, Token t, bool sw, int &n) -> bool {
-    A.push_back(t);
-    B.push_back(t);
-    A.push_front(t);
-    B.push_front(t);
-    return B.contains(A, sw, n);
-}
-
 // We add commas around A and B, and must remove them later
 void Parser::remove_element(TokenList &A, TokenList &B, Token C) {
     Token t = hash_table.comma_token;
     int   n = 0;
-    token_ns::find_in(A, B, t, true, n);
+    B.find(A, t, true, n);
     B.pop_front();
     if (!B.empty()) B.pop_back();
     new_macro(B, C);

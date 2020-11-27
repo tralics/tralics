@@ -12,10 +12,6 @@ namespace classes_ns {
     void unknown_optionX(TokenList &cur_keyval, TokenList &action);
 } // namespace classes_ns
 
-namespace token_ns {
-    auto find_in(TokenList &A, TokenList &B, Token t, bool sw, int &n) -> bool;
-} // namespace token_ns
-
 namespace {
     bool        xkv_is_global, xkv_is_save;
     std::string xkv_header, xkv_prefix;
@@ -527,7 +523,7 @@ namespace {
         }
         TokenList xinput = input;
         int       k      = 0;
-        bool      found  = token_ns::find_in(xinput, allowed, hash_table.comma_token, false, k);
+        bool      found  = allowed.find(xinput, hash_table.comma_token, false, k);
         if (B2 != relax) {
             txparser2_local_buf = fmt::format("{}", k);
             TokenList u         = txparser2_local_buf.str_toks(nlt_cr); // Should be irrelevant ?

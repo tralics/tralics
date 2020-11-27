@@ -265,3 +265,11 @@ auto TokenList::contains(TokenList &A, bool remove, int &is_in_skipped) -> bool 
     is_in_skipped = found ? skipped : -1;
     return found;
 }
+
+auto TokenList::find(TokenList &A, Token t, bool sw, int &n) -> bool {
+    A.push_front(t);
+    A.push_back(t);
+    push_front(t);
+    push_back(t);
+    return contains(A, sw, n);
+}
