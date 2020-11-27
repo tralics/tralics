@@ -222,3 +222,10 @@ void TokenList::brace_me() {
     push_front(hash_table.OB_token);
     push_back(hash_table.CB_token);
 }
+
+void TokenList::normalise() {
+    auto u = Token(space_t_offset + '\n');
+    auto v = Token(space_t_offset + ' ');
+    for (auto &a : *this)
+        if (a == u) a = v;
+}

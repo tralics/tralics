@@ -16,10 +16,6 @@
 #include <fmt/format.h>
 #include <spdlog/spdlog.h>
 
-namespace token_ns {
-    auto length_normalise(TokenList &L) -> int;
-} // namespace token_ns
-
 // Converts an integer into a token list, catcode 12
 // Assumes n>0, otherwise result is empty.
 auto token_ns::posint_to_list(long n) -> TokenList {
@@ -491,20 +487,6 @@ void Parser::E_split() {
     back_input(R);
 }
 
-auto token_ns::length_normalise(TokenList &L) -> int {
-    auto u = Token(space_t_offset + '\n');
-    auto v = Token(space_t_offset + ' ');
-    auto A = L.begin();
-    auto B = L.end();
-    int  n = 0;
-    while (A != B) {
-        if (*A == u) *A = v;
-        ++n;
-        ++A;
-    }
-    return n;
-}
-
 auto token_ns::is_sublist(TokenList::iterator A, TokenList::iterator B, int n) -> bool {
     while (n > 0) {
         if (*A != *B) return false;
@@ -519,10 +501,11 @@ auto token_ns::is_sublist(TokenList::iterator A, TokenList::iterator B, int n) -
 // but the last token of B is not
 // Counts the number of skipped commas.
 auto token_ns::is_in(TokenList &A, TokenList &B, bool remove, int &is_in_skipped) -> bool {
-    int n = length_normalise(A);
-    int m = length_normalise(B);
-    int k = m - n;
-    if (k < 0) return false;
+    A.normalise();
+    B.normalise();
+    auto n = A.size(), m = B.size();
+    if (m < n) return false;
+    auto  k       = to_signed(m - n);
     auto  AA      = A.begin();
     auto  BB      = B.begin();
     bool  found   = false;

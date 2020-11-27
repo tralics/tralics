@@ -20,6 +20,7 @@ struct TokenList : public std::list<Token> {
     void latex_ctr_fnsymbol(long n);
     void reevaluate0(bool in_env);
     void brace_me();
+    void normalise();
 };
 
 inline TokenList onlypreamble; // token-list allowed only in preamble
