@@ -2,7 +2,7 @@
 #include "KeyAndVal.h"
 #include <vector>
 
-using OptionList = std::vector<KeyAndVal>;
+using OptionList = std::vector<KeyAndVal>; // \todo std::unordered_map? order relevant?
 
 // This defines what is in a package or a class
 class LatexPackage {
