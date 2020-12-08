@@ -72,7 +72,6 @@ public:
     bool no_xml{false}; ///< Are we in syntax-only mode (no XML output)?
     bool no_zerowidthelt{false};
     bool no_zerowidthspace{false};
-    bool old_phi{false}; ///< Are we using `\phi` or `\varphi` to generate `&phi;`?
     bool pack_font_elt{false};
     bool prime_hack{false};
     bool shell_escape_allowed{false};

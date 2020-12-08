@@ -630,10 +630,6 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         compatibility = true;
         return;
     }
-    if (s == "oldphi") {
-        old_phi = true;
-        return;
-    }
     if (s == "badminus") {
         bad_minus = true;
         return;
@@ -664,7 +660,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
     }
     if ((s == "radebug") || (s == "check") || (s == "ps") || (s == "xmlfo") || (s == "xmlhtml") || (s == "xmltex") || (s == "xmllint") ||
         (s == "xmlall") || (s == "all") || (s == "nobibyearerror") || (s == "nobibyearmodify") || (s == "findwords") ||
-        (s == "interactivemath") || (s == "i") || (s == "adventure")) {
+        (s == "interactivemath") || (s == "i") || (s == "adventure") || (s == "oldphi")) {
         obsolete(s);
         return;
     }

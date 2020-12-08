@@ -646,13 +646,13 @@
 \makemo{x003C3}{sigma}    %/sigma small sigma, Greek 
 \makemo{x003C4}{tau}    %/tau small tau, Greek 
 \makemo{x003C5}{upsi}    %/upsilon small upsilon, Greek 
-\makemo{x003C6}{phiv}    %/varphi - curly or open phi 
+\makemo{x003C6}{phi}    %/varphi - curly or open phi 
 \makemo{x003C7}{chi}    %/chi small chi, Greek 
 \makemo{x003C8}{psi}    %/psi small psi, Greek 
 \makemo{x003C9}{omega}    %/omega small omega, Greek 
 \makemo{x003D1}{thetav}    %/vartheta - curly or open theta 
 \makemo{x003D2}{Upsi}    %/Upsilon capital Upsilon, Greek 
-\makemo{x003D5}{phi}    %/straightphi - small phi, Greek 
+\makemo{x003D5}{phiv}    %/straightphi - small phi, Greek 
 \makemo{x003D6}{piv}    %/varpi 
 \makemo{x003DC}{Gammad}    %capital digamma 
 \makemo{x003DD}{gammad}    %/digamma 

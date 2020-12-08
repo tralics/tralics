@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE std SYSTEM 'classes.dtd'>
-<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/12/08 -->
 <std equation-number='left'>
 <Metadata>
 <shortitle>Ams-art example</shortitle>
@@ -43,19 +43,19 @@ the quantity <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/Mat
 Then a natural question is to describe the
 space of “restricted sigma functions”
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>H</mi> <mn>0</mn> </msup><mrow><mo>(</mo><msubsup><mi>&Mscr;</mi> <mi>G</mi> <mstyle displaystyle='false' scriptlevel='2'><mo>&bullet;</mo></mstyle> </msubsup><mo>,</mo><msubsup><mi>&Lscr;</mi> <mi>G</mi> <mstyle displaystyle='false' scriptlevel='2'><mo>&bullet;</mo></mstyle> </msubsup><mo>)</mo></mrow></mrow></math></formula> and the associated irrational map
-<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msubsup><mi>&phi;</mi> <mi>G</mi> <mstyle displaystyle='false' scriptlevel='2'><mo>&bullet;</mo></mstyle> </msubsup><mo>:</mo><msubsup><mi>&Mscr;</mi> <mi>G</mi> <mstyle displaystyle='false' scriptlevel='2'><mo>&bullet;</mo></mstyle> </msubsup><mo>&rBarr;</mo><msubsup><mrow><mo>|</mo><msubsup><mi>&Lscr;</mi> <mi>G</mi> <mstyle displaystyle='false' scriptlevel='2'><mo>&bullet;</mo></mstyle> </msubsup><mo>|</mo></mrow> <mrow/> <mo>*</mo> </msubsup></mrow></math></formula>.</p>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msubsup><mi>&phiv;</mi> <mi>G</mi> <mstyle displaystyle='false' scriptlevel='2'><mo>&bullet;</mo></mstyle> </msubsup><mo>:</mo><msubsup><mi>&Mscr;</mi> <mi>G</mi> <mstyle displaystyle='false' scriptlevel='2'><mo>&bullet;</mo></mstyle> </msubsup><mo>&rBarr;</mo><msubsup><mrow><mo>|</mo><msubsup><mi>&Lscr;</mi> <mi>G</mi> <mstyle displaystyle='false' scriptlevel='2'><mo>&bullet;</mo></mstyle> </msubsup><mo>|</mo></mrow> <mrow/> <mo>*</mo> </msubsup></mrow></math></formula>.</p>
 <p>The model we have in mind is the case <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>G</mi><mo>=</mo><msub><mo form='prefix'>SL</mo> <mi>r</mi> </msub></mrow></math></formula>.
 Give a sigma multiplier <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Theta;</mi></math></formula> and a general <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>E</mi><mo>&Element;</mo><msub><mi>&Mscr;</mi> <msub><mo form='prefix'>SL</mo> <mi>r</mi> </msub> </msub></mrow></math></formula>, the locus</p>
 <formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>&Theta;</mi> <mi>E</mi> </msub><mo>=</mo><mfenced close='&rbrace;' open='&lbrace;' separators=''><mi>L</mi> <mo>&Element;</mo> <msup><mi>J</mi> <mrow><mi>g</mi><mo>-</mo><mn>1</mn></mrow> </msup> <mo>&mid;</mo> <msup><mi>H</mi> <mn>0</mn> </msup> <mrow><mo>(</mo><mi>C</mi><mo>,</mo><mi>E</mi><mo>&otimes;</mo><mi>L</mi><mo>)</mo></mrow> <mo>&ne;</mo> <mn>0</mn></mfenced></mrow></math></formula>
 <p noindent='true'>is in a natural way a multiplier.
 We thus obtain a irrational map <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&thetav;</mi><mo>:</mo><msub><mi>&Mscr;</mi> <msub><mo form='prefix'>SL</mo> <mi>r</mi> </msub> </msub><mo>&rBarr;</mo><mrow><mo>|</mo><mi>r</mi><mi>&Theta;</mi><mo>|</mo></mrow></mrow></math></formula>. The main result of <cit><ref target='bid0'/></cit> is that <hi rend='slanted'>there exists an
 monomorphism <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mrow><mo>|</mo></mrow><msub><mi>&Lscr;</mi> <msub><mo form='prefix'>SL</mo> <mi>r</mi> </msub> </msub><msup><mrow><mo>|</mo></mrow> <mo>*</mo> </msup><mover><mo>&longrightarrow;</mo> <mo>&sim;</mo></mover><mrow><mo>|</mo><mi>r</mi><mi>&Theta;</mi><mo>|</mo></mrow></mrow></math></formula> which identifies the
-irrational maps <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mi>&phi;</mi> <msub><mo form='prefix'>SL</mo> <mi>r</mi> </msub> </msub></math></formula> and</hi> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&thetav;</mi></math></formula>. This gives a reasonably
-concrete description of <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mi>&phi;</mi> <msub><mo form='prefix'>SL</mo> <mi>r</mi> </msub> </msub></math></formula>
+irrational maps <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mi>&phiv;</mi> <msub><mo form='prefix'>SL</mo> <mi>r</mi> </msub> </msub></math></formula> and</hi> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&thetav;</mi></math></formula>. This gives a reasonably
+concrete description of <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mi>&phiv;</mi> <msub><mo form='prefix'>SL</mo> <mi>r</mi> </msub> </msub></math></formula>
 (see <cit><ref target='bid1'/></cit> for a survey of recent results).</p>
 <p>Let us consider now the case <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>G</mi><mo>=</mo><msub><mo form='prefix'>SO</mo> <mi>r</mi> </msub></mrow></math></formula> with <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>r</mi><mo>&ge;</mo><mn>3</mn></mrow></math></formula>. Our main result is:</p>
 <p><hi rend='bold'>Theorem</hi> There are canonical monomorphisms
-<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>A</mi><mover><mo>&longrightarrow;</mo> <mo>&sim;</mo></mover><mi>B</mi></mrow></math></formula> which identify <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&phi;</mi><mo>:</mo><mi>C</mi><mo>&rBarr;</mo><mi>A</mi></mrow></math></formula>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>A</mi><mover><mo>&longrightarrow;</mo> <mo>&sim;</mo></mover><mi>B</mi></mrow></math></formula> which identify <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&phiv;</mi><mo>:</mo><mi>C</mi><mo>&rBarr;</mo><mi>A</mi></mrow></math></formula>
 with the map <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&Theta;</mi><mo>:</mo><mi>C</mi><mo>&rBarr;</mo><mi>B</mi></mrow></math></formula> induced by <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&theta;</mi></math></formula>.</p>
 
 <p>This is easily seen to be equivalent to the fact that the pull-back map
@@ -251,7 +251,7 @@ The section <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/Math
 induces an monomorphism</p>
 <formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>&delta;</mi> <mo>&sharp;</mo> </msup><mo>:</mo><msup><mi>Z</mi> <mo>*</mo> </msup><mover><mo>&longrightarrow;</mo> <mo>&sim;</mo></mover><mi>Z</mi><mo>.</mo></mrow></math></formula>
 
-<p>If the conjecture holds, the irrational map <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&phi;</mi></math></formula> is also rational.
+<p>If the conjecture holds, the irrational map <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&phiv;</mi></math></formula> is also rational.
 Therefore the conjecture is equivalent to:</p>
 <p id='uid24' id-text='4.4'><hi rend='bold'>Claim 4.4</hi> 
 Two is the oddest prime of all.</p>
