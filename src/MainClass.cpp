@@ -299,7 +299,11 @@ void MainClass::get_os() {
 #endif
 
     std::array<char, 200> tmp{};
+#if defined(_MSC_VER) || defined(_WIN32)
+    auto res = 1;
+#else
     auto                  res = gethostname(tmp.data(), 199);
+#endif
     if (res != 0)
         machine = "unknown";
     else {
