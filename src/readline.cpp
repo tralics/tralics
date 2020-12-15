@@ -915,7 +915,7 @@ void Slined::do_n_command(size_t n, char c) {
     case 23: delete_string(1, m_mark, pos); return;
     case 26:
         reset_termio();
-        kill(0, SIGTSTP);
+        // kill(0, SIGTSTP);
         set_termio();
         redisplay();
         return;

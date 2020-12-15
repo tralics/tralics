@@ -58,16 +58,16 @@ auto read_xml(const std::string &s) -> Xml * {
         the_parser.parse_error(the_parser.err_tok, "Unable to read the XML input file", s, "noinput");
         return nullptr;
     }
-    spdlog::trace("Reading XML file: {}", *of);
+    spdlog::trace("Reading XML file: {}", of->string());
     XmlIO res;
-    if (res.init(*of)) return nullptr;
+    if (res.init(of->string())) return nullptr;
     return res.prun();
 }
 
 auto XmlIO::prun() -> Xml * {
     try {
         run();
-    } catch (EndOfData cc) {};
+    } catch (EndOfData) {};
     return cur_xml;
 }
 

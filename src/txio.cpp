@@ -203,7 +203,7 @@ auto Buffer::convert_to_log_encoding() const -> std::string {
 
 // --------------------------------------------
 
-// This exits if the file cannot be opened and argument is true
+// This exits if the file cannot be opened and argument is true \todo fs::path
 auto open_file(const std::string &name, bool fatal) -> std::ofstream {
     std::ofstream fp(name);
     if (!fp && fatal) {
@@ -238,7 +238,7 @@ void Parser::T_filecontents(subtypes spec) {
         spdlog::warn("File {} already exists, not generating from source.", *of);
     } else {
         auto fn = get_out_dir(filename);
-        outfile = open_file(fn, false);
+        outfile = open_file(fn.string(), false);
         Logger::finish_seq();
         log_and_tty << "Writing file `" << fn << "'\n";
         if (!outfile)

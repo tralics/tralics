@@ -21,9 +21,7 @@ conan_cmake_run(REQUIRES
                 ctre/3.3.2
                 BASIC_SETUP NO_OUTPUT_DIRS BUILD missing)
 
-add_compile_options(-fdiagnostics-color=always -pedantic -Wall -Wextra -Wshadow
-                    -Wpedantic -Wold-style-cast -Wunused -Wconversion
-                    -Wsign-conversion -Wnull-dereference)
+add_compile_options(-fdiagnostics-color=always -pedantic -Wall)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   message("-- Debug mode")

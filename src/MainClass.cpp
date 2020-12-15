@@ -133,15 +133,15 @@ found at http://www.cecill.info.)";
     /// Sometimes, we want `bar` if `\jobname` is `foo/bar`
     auto hack_for_input(const std::filesystem::path &s) -> std::string {
         std::filesystem::path path = s.parent_path();
-        the_parser.set_job_name(no_ext);
-        file_name = s.stem();
+        the_parser.set_job_name(no_ext.string());
+        file_name = s.stem().string();
         if (out_dir.empty()) out_dir = path;
         if (log_name.empty()) log_name = file_name;
         if (input_path.size() == 1) {
             input_path[0] = path;
             if (!path.empty()) input_path.emplace_back("");
         }
-        return s.filename();
+        return s.filename().string();
     }
 
     void end_with_help(int v) {
@@ -319,8 +319,8 @@ void MainClass::check_for_input() {
         exit(1);
     }
     spdlog::trace("Found input file: {}", *of);
-    s        = *of;
-    ult_name = of->replace_extension(".ult");
+    s        = of->string();
+    ult_name = of->replace_extension(".ult").string();
 
     if (!std::filesystem::exists(s)) {
         spdlog::critical("Fatal: Nonexistent input file {}", s);
@@ -341,13 +341,13 @@ void MainClass::check_for_input() {
 
 void MainClass::open_log() { // \todo spdlog etc
     auto f   = std::filesystem::path(out_dir) / (log_name + ".log");
-    log_file = open_file(f, true);
+    log_file = open_file(f.string(), true);
     if (output_encoding == en_boot) output_encoding = en_utf8;
     if (log_encoding == en_boot) log_encoding = output_encoding;
 
     spdlog::info("Transcript written to {}", f);
     spdlog::set_level(spdlog::level::trace);
-    auto sink = std::make_shared<spdlog::sinks::basic_file_sink_st>(f.replace_extension("spdlog"), true);
+    auto sink = std::make_shared<spdlog::sinks::basic_file_sink_st>(f.replace_extension("spdlog").string(), true);
     spdlog::default_logger()->sinks().push_back(sink);
     spdlog::default_logger()->sinks()[0]->set_level(spdlog::level::info); // \todo Link this with verbose (later in startup)
 
@@ -362,9 +362,7 @@ void MainClass::open_log() { // \todo spdlog etc
     if (!default_class.empty()) spdlog::trace("Default class is {}", default_class);
     if (input_path.size() > 1) {
         std::vector<std::string> tmp;
-        tmp.reserve(input_path.size());
-
-        for (const auto &s : input_path) tmp.push_back(s);
+        for (const auto &s : input_path) tmp.push_back(s.string());
         spdlog::trace("Input path: ({})", fmt::format("{}", fmt::join(tmp, ",")));
     }
 
@@ -719,14 +717,14 @@ void MainClass::open_config_file(std::filesystem::path f) {
         spdlog::warn("Dummy default configuration file used.");
         return;
     }
-    config_file.read(f, 0);
+    config_file.read(f.string(), 0); // \todo fs::path
     config_file.normalise_final_cr();
     spdlog::info("Read configuration file {}", f);
     if (f.extension() != ".tcf") return;
 
     tcf_file = f;
     f.replace_extension();
-    dtype = f.filename();
+    dtype = f.filename().string();
     for (size_t i = dtype.size() - 1; i > 0; --i) {
         if (std::isdigit(dtype[i]) == 0) {
             dtype.resize(i + 1);
@@ -772,7 +770,7 @@ auto MainClass::check_for_alias_type(bool vb) -> bool {
         if (!config_file.find_aliases(all_config_types, dtype)) return false;
     }
     if (tcf_file) {
-        config_file.read(*tcf_file, 0);
+        config_file.read(tcf_file->string(), 0);
         config_file.normalise_final_cr();
         spdlog::info("Read tcf file {}", *tcf_file);
     }
@@ -846,7 +844,7 @@ void MainClass::read_config_and_other() {
     bool hr = dtype == "ra" || dtype == "RA" || (dtype.empty() && dft == 4);
     if (dclass.empty()) hr = false;
     find_dtd();
-    if (out_name.empty()) out_name = no_ext.filename();
+    if (out_name.empty()) out_name = no_ext.filename().string();
     the_parser.set_default_language((hr && year <= 2002) ? 1 : 0);
     LineList cmds = config_file.parse_and_extract("Commands");
     from_config.splice(from_config.end(), cmds);
@@ -885,7 +883,7 @@ void MainClass::trans0() {
 
 void MainClass::boot_bibtex() {
     auto fn  = out_dir / (out_name + "_.bbl");
-    bbl.name = fn;
+    bbl.name = fn.string();
     the_bibtex.boot(out_name);
 }
 
@@ -946,7 +944,7 @@ void MainClass::run(int argc, char **argv) {
 
 void MainClass::out_xml() {
     auto p    = out_dir / (out_name + ".xml");
-    auto fp   = open_file(p, true);
+    auto fp   = open_file(p.string(), true);
     auto utf8 = output_encoding == en_utf8 || output_encoding == en_ascii8; // \todo make this always true
 
     fmt::print(fp, "<?xml version='1.0' encoding='{}'?>\n", utf8 ? "UTF-8" : "iso-8859-1");

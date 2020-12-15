@@ -41,7 +41,7 @@ namespace {
             Logger::finish_seq();
             the_log << "++ Cannot open file " << file << " for input\n";
         } else {
-            lines.read(fn, 1);
+            lines.read(fn.string(), 1);
             is_open = true;
             cur_line.clear();
             line_no = 0;
@@ -410,7 +410,7 @@ void Parser::T_input(subtypes q) {
     if (q == inputifexists_code) {
         TokenList A = read_arg();
         TokenList B = read_arg();
-        if (res) open_tex_file(*res, seen_star);
+        if (res) open_tex_file(res->string(), seen_star);
         if (A.empty() && B.empty()) return; // optimise
         if (tracing_commands()) {
             Logger::finish_seq();
@@ -423,7 +423,7 @@ void Parser::T_input(subtypes q) {
         parse_error(T, "Cannot open input file ", file, "cannot open input");
         return;
     }
-    open_tex_file(*res, seen_star);
+    open_tex_file(res->string(), seen_star);
 }
 
 // On-the-fly conversion allowed

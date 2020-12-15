@@ -113,7 +113,7 @@ void Bibtex::read_bib_file(const std::string &s) {
         spdlog::trace("Found BIB file: {}", *of);
         bbl.format("% reading source {}", *of);
         bbl.flush();
-        in_lines.read(*of, 1);
+        in_lines.read(of->string(), 1);
         last_ok_line = 0;
         reset_input();
         while (parse_one_item()) {};
