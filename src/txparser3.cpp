@@ -289,11 +289,11 @@ void Parser::save_font() {
 
 void Parser::dump_save_stack() const {
     int  L = cur_level - 1;
-    auto n = the_save_stack.size();
-    for (size_t i = n; i > 0; i--) {
-        SaveAuxBase *p = the_save_stack[i - 1].get();
+    for (size_t i = the_save_stack.size(); i > 0; i--) {
+        auto &p = the_save_stack[i - 1];
+        if (!p) continue;
         if (p->type != st_boundary) continue;
-        dynamic_cast<SaveAuxBoundary *>(p)->dump(L);
+        dynamic_cast<SaveAuxBoundary *>(p.get())->dump(L);
         --L;
     }
     the_log << "### bottom level\n";
@@ -342,16 +342,15 @@ void Parser::pop_level(boundary_type v) {
             parse_error(err_tok, "Internal error: empty save stack");
             return;
         }
-        auto *p  = the_save_stack.back().get();
-        bool  ok = (p != nullptr) && p->type == st_boundary;
+        auto p = std::move(the_save_stack.back());
         the_save_stack.pop_back();
-        if (ok) {
-            if (must_throw) {
-                cur_level++;
-                throw EndOfData();
-            }
-            return;
+        if (!p) continue;
+        if (p->type != st_boundary) continue;
+        if (must_throw) {
+            cur_level++;
+            throw EndOfData();
         }
+        return;
     }
 }
 

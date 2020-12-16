@@ -23,25 +23,23 @@ auto fonts1(const std::string &x) -> Xml * {
 }
 
 auto first_boundary() -> boundary_type {
-    auto n = the_save_stack.size();
-    for (size_t i = n; i > 0; i--) {
-        SaveAuxBase *p = the_save_stack[i - 1].get();
-        if (p == nullptr) continue;
+    for (size_t i = the_save_stack.size(); i > 0; i--) {
+        auto &p = the_save_stack[i - 1];
+        if (!p) continue;
         if (p->type != st_boundary) continue;
         first_boundary_loc = p->line;
-        return dynamic_cast<SaveAuxBoundary *>(p)->val;
+        return dynamic_cast<SaveAuxBoundary *>(p.get())->val;
     }
     return bt_impossible;
 }
 
 // Returns the slot associated to the env S
 auto is_env_on_stack(const std::string &s) -> SaveAuxEnv * {
-    auto n = the_save_stack.size();
-    for (size_t i = n; i > 0; i--) {
-        SaveAuxBase *p = the_save_stack[i - 1].get();
-        if (p == nullptr) continue; // \todo this should never happen but it does on linux+clang9
+    for (size_t i = the_save_stack.size(); i > 0; i--) {
+        auto &p = the_save_stack[i - 1];
+        if (!p) continue; // \todo this should never happen but it does on linux+clang9
         if (p->type != st_env) continue;
-        auto *q = dynamic_cast<SaveAuxEnv *>(p);
+        auto *q = dynamic_cast<SaveAuxEnv *>(p.get());
         if (q->name == s) return q;
     }
     return nullptr;

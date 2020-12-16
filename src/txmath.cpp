@@ -214,12 +214,12 @@ namespace {
     // case where a table preamble says  >{}c<{xx$yy} and we see &
     // here xy can be } or \endgroup
     auto stack_math_in_cell() -> bool {
-        auto n     = the_save_stack.size();
         bool first = true;
-        for (size_t i = n; i > 0; i--) {
-            SaveAuxBase *p = the_save_stack[i - 1].get();
+        for (size_t i = the_save_stack.size(); i > 0; i--) {
+            auto &p = the_save_stack[i - 1];
+            if (!p) continue;
             if (p->type != st_boundary) continue;
-            auto cur = dynamic_cast<SaveAuxBoundary *>(p)->val;
+            auto cur = dynamic_cast<SaveAuxBoundary *>(p.get())->val;
             if (cur == bt_brace || cur == bt_semisimple) continue;
             if (first) {
                 if (cur != bt_math) return false;

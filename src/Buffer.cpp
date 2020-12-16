@@ -147,7 +147,7 @@ void Buffer::remove_last(size_t n) {
 // FIXME: utf8 space ok  here ?
 // This removes one space or an &nbspace;
 void Buffer::remove_last_space() {
-    if (!empty() && (std::isspace(back()) != 0))
+    if (!empty() && (std::isspace(uchar(back())) != 0))
         pop_back();
     else if (ends_with("&nbsp;"))
         remove_last(6);
@@ -158,7 +158,7 @@ void Buffer::remove_last_space() {
 // FIXME: utf8 space ok  here ?
 // This removes all spaces, and terminates the string
 void Buffer::remove_space_at_end() {
-    while (!empty() && (std::isspace(back()) != 0)) pop_back();
+    while (!empty() && (std::isspace(uchar(back())) != 0)) pop_back();
 }
 
 // Inserts the current escape char, unless zero or out of range.
@@ -662,7 +662,7 @@ auto Buffer::special_convert(bool init) -> std::string {
     for (;;) {
         auto c = next_char();
         if (c == 0) break;
-        if (std::isspace(c) != 0) {
+        if (std::isspace(uchar(c)) != 0) {
             if (!space) {
                 bb1.push_back(' ');
                 space = true;
