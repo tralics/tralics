@@ -111,7 +111,7 @@ run_tralics testclass -defaultclass=article
 run_tralics_with_err testkeyval "There were 35 errors."
 run_tralics xii
 run_tralics_with_param comp_pi 100
-run_tralics_with_err teststr "There were 82 errors."
+run_tralics_with_err teststr "There were 81 errors."
 run_tralics_with_err testerr "Following images not defined: gee."
 run_tralics beauvilams2
 run_tralics testbe

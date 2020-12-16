@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE unknown SYSTEM 'unknown.dtd'>
-<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/12/08 -->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/12/16 -->
 <unknown>
 <p>This tests also a certain number of errors</p>
 <p>OK
@@ -120,7 +120,7 @@ Today is Tuesday March 25, 2008.
 Today is Tuesday 25th March 2008.</p>
 <p>Tuesday</p>
 <p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mfenced close='' open='(' separators=''><mn>1</mn><mo>&middot;</mo><mn>25</mn><mo>&gt;</mo><mn>0</mn><mo>.</mo></mfenced><mtext>textṡ.</mtext></mrow></math></formula></p>
-<error c='Undefined command' l='224' n='\bad'/><error c='Undefined command' l='227' n='\bad'/><error c='Undefined command' l='233' n='\bad'/><error c='no list' l='240' n='\tralics@get@config'/><error c='illegal data' l='241' n='\tralics@get@config'/><catperso><head>BB</head>
+<error c='Undefined command' l='224' n='\bad'/><error c='Undefined command' l='233' n='\bad'/><error c='no list' l='240' n='\tralics@get@config'/><error c='illegal data' l='241' n='\tralics@get@config'/><catperso><head>BB</head>
 </catperso>
 <catperso><head>CC</head>
 </catperso>
