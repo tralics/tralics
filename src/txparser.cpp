@@ -2207,7 +2207,7 @@ auto Parser::env_helper(const std::string &s) -> SaveAuxEnv * {
     find_env_token(s, false);
     Token t = cur_tok;
     if (cur_cmd_chr.is_undef()) cur_cmd_chr = CmdChr(relax_cmd, relax_code);
-    return new SaveAuxEnv(*this, cur_e_name, s, cl, t, cur_cmd_chr);
+    return new SaveAuxEnv(cur_e_name, s, cl, t, cur_cmd_chr);
 }
 
 // This implements \begin{foo}
@@ -4189,7 +4189,7 @@ void Parser::begin_box(size_t src, subtypes c) {
         back_input(L);
     }
     Xml *        cur_boxa = the_stack.push_hbox(box_name);
-    SaveAuxBase *x        = new SaveAuxBoxend(*this, src, cur_boxa);
+    SaveAuxBase *x        = new SaveAuxBoxend(src, cur_boxa);
     push_save_stack(x);
     the_stack.set_arg_mode();
 }

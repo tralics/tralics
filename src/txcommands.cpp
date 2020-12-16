@@ -778,7 +778,7 @@ void Parser::T_setmode() {
 // Translates \aftergroup\token
 void Parser::T_aftergroup() {
     get_token();
-    SaveAuxBase *y = new SaveAuxAftergroup(*this, cur_tok);
+    SaveAuxBase *y = new SaveAuxAftergroup(cur_tok);
     push_save_stack(y);
 }
 

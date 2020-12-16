@@ -8,12 +8,11 @@
 // \todo this needs some overhaul...
 class SaveAuxBase {
 public:
-    Parser &  P;    // \todo always the_parser, remove
     save_type type; // the type of the real thing
     int       line; // current line number at start
     long      level;
 
-    SaveAuxBase(Parser &p, save_type t, long l) : P(p), type(t), line(P.get_cur_line()), level(l) {}
+    SaveAuxBase(save_type t, long l) : type(t), line(the_parser.get_cur_line()), level(l) {}
     virtual ~SaveAuxBase() = default;
 };
 
@@ -25,7 +24,7 @@ class SaveAuxBoundary : public SaveAuxBase {
 public:
     boundary_type val; // explains why we opened a new group
 
-    SaveAuxBoundary(Parser &p, boundary_type v) : SaveAuxBase(p, st_boundary, 0), val(v) {}
+    SaveAuxBoundary(boundary_type v) : SaveAuxBase(st_boundary, 0), val(v) {}
     ~SaveAuxBoundary() override;
 
     void dump(int n);
@@ -36,7 +35,7 @@ class SaveAuxInt : public SaveAuxBase {
     size_t pos; // the position in eqbt_int_table
     long   val; // the value to be restored
 public:
-    SaveAuxInt(Parser &p, long l, size_t a, long b) : SaveAuxBase(p, st_int, l), pos(a), val(b) {}
+    SaveAuxInt(long l, size_t a, long b) : SaveAuxBase(st_int, l), pos(a), val(b) {}
     ~SaveAuxInt() override;
 };
 
@@ -45,7 +44,7 @@ class SaveAuxDim : public SaveAuxBase {
     size_t    pos; // the position in eqbt_dim_table
     ScaledInt val; // the value to be restored
 public:
-    SaveAuxDim(Parser &p, long l, size_t a, ScaledInt b) : SaveAuxBase(p, st_int, l), pos(a), val(b) {}
+    SaveAuxDim(long l, size_t a, ScaledInt b) : SaveAuxBase(st_int, l), pos(a), val(b) {}
     ~SaveAuxDim() override;
 };
 
@@ -54,7 +53,7 @@ class SaveAuxCmd : public SaveAuxBase {
     size_t cs;  // ths position in eqtb to be restored
     CmdChr val; // the CmdChr to be restored
 public:
-    SaveAuxCmd(Parser &p, size_t a, const EqtbCmdChr &X) : SaveAuxBase(p, st_cmd, X.level), cs(a), val(X.val) {}
+    SaveAuxCmd(size_t a, const EqtbCmdChr &X) : SaveAuxBase(st_cmd, X.level), cs(a), val(X.val) {}
     ~SaveAuxCmd() override;
 };
 
@@ -63,7 +62,7 @@ class SaveAuxBox : public SaveAuxBase {
     size_t pos; // the position in box_table to be restored
     Xml *  val; // the value to be restored
 public:
-    SaveAuxBox(Parser &p, long l, size_t a, Xml *b) : SaveAuxBase(p, st_box, l), pos(a), val(b) {}
+    SaveAuxBox(long l, size_t a, Xml *b) : SaveAuxBase(st_box, l), pos(a), val(b) {}
     ~SaveAuxBox() override;
 };
 
@@ -72,7 +71,7 @@ class SaveAuxBoxend : public SaveAuxBase {
     size_t pos; // the box number
     Xml *  val; // the value of the box
 public:
-    SaveAuxBoxend(Parser &p, size_t a, Xml *b) : SaveAuxBase(p, st_box_end, 0), pos(a), val(b) {}
+    SaveAuxBoxend(size_t a, Xml *b) : SaveAuxBase(st_box_end, 0), pos(a), val(b) {}
     ~SaveAuxBoxend() override;
 };
 
@@ -81,7 +80,7 @@ class SaveAuxToken : public SaveAuxBase {
     size_t    pos; // pthe position in toks_registers
     TokenList val; // the value to be restored
 public:
-    SaveAuxToken(Parser &PP, long l, size_t p, TokenList v) : SaveAuxBase(PP, st_token, l), pos(p), val(std::move(v)) {}
+    SaveAuxToken(long l, size_t p, TokenList v) : SaveAuxBase(st_token, l), pos(p), val(std::move(v)) {}
     ~SaveAuxToken() override;
 };
 
@@ -90,7 +89,7 @@ class SaveAuxGlue : public SaveAuxBase {
     size_t pos; // the position in glue_table
     Glue   val; // the value to be restored
 public:
-    SaveAuxGlue(Parser &PP, long l, size_t p, Glue g) : SaveAuxBase(PP, st_glue, l), pos(p), val(g) {}
+    SaveAuxGlue(long l, size_t p, Glue g) : SaveAuxBase(st_glue, l), pos(p), val(g) {}
     ~SaveAuxGlue() override;
 };
 
@@ -99,7 +98,7 @@ class SaveAuxString : public SaveAuxBase {
     size_t      pos; // the position in glue_table
     std::string val; // the value to be restored
 public:
-    SaveAuxString(Parser &PP, long l, size_t p, std::string s) : SaveAuxBase(PP, st_string, l), pos(p), val(std::move(s)) {}
+    SaveAuxString(long l, size_t p, std::string s) : SaveAuxBase(st_string, l), pos(p), val(std::move(s)) {}
     ~SaveAuxString() override;
 };
 
@@ -112,9 +111,9 @@ public:
     Token       token;
     CmdChr      cc;
 
-    SaveAuxEnv(Parser &p, std::string a, std::string aa, int ll, Token b, CmdChr c)
-        : SaveAuxBase(p, st_env, 0), oldname(std::move(a)), name(std::move(aa)), line(ll), token(b), cc(c) {}
-    ~SaveAuxEnv() override { P.set_cur_env_name(oldname, line); };
+    SaveAuxEnv(std::string a, std::string aa, int ll, Token b, CmdChr c)
+        : SaveAuxBase(st_env, 0), oldname(std::move(a)), name(std::move(aa)), line(ll), token(b), cc(c) {}
+    ~SaveAuxEnv() override { the_parser.set_cur_env_name(oldname, line); };
 };
 
 // data structure for a font change
@@ -122,7 +121,7 @@ class SaveAuxFont : public SaveAuxBase {
     long        val;   // the value to be restored
     std::string color; // the color to restore
 public:
-    SaveAuxFont(Parser &p, long l, long v, std::string c) : SaveAuxBase(p, st_font, l), val(v), color(std::move(c)) {}
+    SaveAuxFont(long l, long v, std::string c) : SaveAuxBase(st_font, l), val(v), color(std::move(c)) {}
     ~SaveAuxFont() override;
 };
 
@@ -130,7 +129,7 @@ public:
 class SaveAuxAftergroup : public SaveAuxBase {
     Token val; // the token to pop
 public:
-    SaveAuxAftergroup(Parser &p, Token v) : SaveAuxBase(p, st_save, 0), val(v) {}
+    SaveAuxAftergroup(Token v) : SaveAuxBase(st_save, 0), val(v) {}
     ~SaveAuxAftergroup() override;
 };
 
