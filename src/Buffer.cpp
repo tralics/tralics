@@ -911,13 +911,13 @@ auto Buffer::find_and(const bchar_type *table) -> bool {
 
 // True if this is an `and'
 auto Buffer::is_and(size_t k) const -> bool {
-    char c = at(k);
+    char c = (*this)[k];
     if (c != 'a' && c != 'A') return false;
-    c = at(k + 1);
+    c = (*this)[k + 1];
     if (c != 'n' && c != 'N') return false;
-    c = at(k + 2);
+    c = (*this)[k + 2];
     if (c != 'd' && c != 'D') return false;
-    c = at(k + 3);
+    c = (*this)[k + 3];
     return (c == ' ') || (c == '\t') || (c == '\n');
 }
 
