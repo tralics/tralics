@@ -900,25 +900,21 @@ void Buffer::fill_table(std::vector<bchar_type> &table) {
     }
 }
 
-auto Buffer::find_and(const bchar_type *table) -> bool {
+auto Buffer::find_and(const bchar_type *table) -> bool { // \todo regexp "\s*[aA][nN][dD]\s"
     for (;;) {
         char c = head();
         if (c == 0) return true;
         ptrs.b++;
-        if (table[ptrs.b - 1] == bct_space && is_and(ptrs.b)) return false;
+        if (table[ptrs.b-1] != bct_space) continue;
+        c = (*this)[ptrs.b];
+        if (c != 'a' && c != 'A') continue;
+        c = (*this)[ptrs.b + 1];
+        if (c != 'n' && c != 'N') continue;
+        c = (*this)[ptrs.b + 2];
+        if (c != 'd' && c != 'D') continue;
+        c = (*this)[ptrs.b + 3];
+        if ((c == ' ') || (c == '\t') || (c == '\n')) return false;
     }
-}
-
-// True if this is an `and'
-auto Buffer::is_and(size_t k) const -> bool {
-    char c = (*this)[k];
-    if (c != 'a' && c != 'A') return false;
-    c = (*this)[k + 1];
-    if (c != 'n' && c != 'N') return false;
-    c = (*this)[k + 2];
-    if (c != 'd' && c != 'D') return false;
-    c = (*this)[k + 3];
-    return (c == ' ') || (c == '\t') || (c == '\n');
 }
 
 // In J.G. Grimm,only the first dot matches.
