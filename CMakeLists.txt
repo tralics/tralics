@@ -16,11 +16,11 @@ set(CONAN_SYSTEM_INCLUDES ON)
 conan_cmake_run(REQUIRES
                 fmt/7.1.2
                 ms-gsl/3.1.0
-                spdlog/1.8.1
                 BASIC_SETUP NO_OUTPUT_DIRS BUILD missing)
 
-include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/utfcpp-3.1.2/source)
 include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/ctre-3.3.4/include)
+include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/spdlog-1.8.2/include)
+include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/utfcpp-3.1.2/source)
 
 add_compile_options(-fdiagnostics-color=always -pedantic -Wall)
 

@@ -2,5 +2,6 @@ This folder contains external headers-only dependencies, to ease compilation on
 as many systems as possible. The list so far is below; licenses and copyright
 information can be found inside each subfolder.
 
-utfcpp (version 3.1.2), from https://github.com/nemtrif/utfcpp
 ctre   (version 3.3.4), from https://github.com/hanickadot/compile-time-regular-expressions
+spdlog (version 1.8.2), from https://github.com/gabime/spdlog
+utfcpp (version 3.1.2), from https://github.com/nemtrif/utfcpp
