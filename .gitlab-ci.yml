@@ -4,7 +4,6 @@ before_script:
   - export DEBIAN_FRONTEND=noninteractive
   - apt-get update -qq
   - apt-get install -qq texlive-base python3-pip cmake
-  - pip3 install -q conan
 
 everything:
   stage: build

@@ -24,10 +24,7 @@ jobs:
         python-version: '3.x'
 
     - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip setuptools wheel 
-        python -m pip install conan
-        sudo apt-get install texlive-base gcc-9
+      run: sudo apt-get install texlive-base gcc-9
 
     - name: configure
       env:

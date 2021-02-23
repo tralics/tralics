@@ -10,12 +10,6 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
-include(${PROJECT_SOURCE_DIR}/cmake/conan.cmake)
-conan_add_remote(NAME bincrafters URL https://api.bintray.com/conan/bincrafters/public-conan)
-set(CONAN_SYSTEM_INCLUDES ON)
-conan_cmake_run(REQUIRES
-                BASIC_SETUP NO_OUTPUT_DIRS BUILD missing)
-
 include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/ctre-3.3.4/include)
 include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/fmt-7.1.3/include)
 include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/gsl-3.1.0/include)
@@ -26,10 +20,10 @@ add_compile_definitions(FMT_HEADER_ONLY)
 add_compile_options(-fdiagnostics-color=always -pedantic -Wall)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-  message("-- Debug mode")
+  message(STATUS "Debug mode")
 	add_compile_options(-g -O0)
 else()
-  message("-- Release mode")
+  message(STATUS "Release mode")
   add_compile_options(-O3 -DNDEBUG)
 endif()
 
@@ -42,7 +36,6 @@ endif()
 file (GLOB_RECURSE sources CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/src/*.cpp ${PROJECT_SOURCE_DIR}/src/packages/*.cpp)
 
 add_executable(tralics ${sources})
-target_link_libraries (tralics ${CONAN_LIBS})
 
 add_custom_target(alltests ALL 
     ../test/alltests ${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR}
