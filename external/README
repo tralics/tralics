@@ -1,0 +1,5 @@
+This folder contains external headers-only dependencies, to ease compilation on
+as many systems as possible. The list so far is below; licenses and copyright
+information can be found inside each subfolder.
+
+utfcpp (version 3.1.2), from https://github.com/nemtrif/utfcpp
