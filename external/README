@@ -4,5 +4,6 @@ information can be found inside each subfolder.
 
 ctre   (version 3.3.4), from https://github.com/hanickadot/compile-time-regular-expressions
 fmtlib (version 7.1.3), from https://github.com/fmtlib/fmt
+ms-gsl (version 3.1.0), from https://github.com/microsoft/GSL
 spdlog (version 1.8.2), from https://github.com/gabime/spdlog
 utfcpp (version 3.1.2), from https://github.com/nemtrif/utfcpp
