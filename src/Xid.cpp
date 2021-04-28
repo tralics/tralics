@@ -70,17 +70,13 @@ void Xid::add_attribute(const AttList &L, bool force) const {
 }
 
 void Xid::add_attribute_but_rend(Xid b) const {
-    AttList &L = b.get_att();
     AttList &l = get_att();
-    for (const auto &i : L)
+    for (const auto &i : b.get_att())
         if (i.first != the_names["rend"]) l[i.first] = i.second;
 }
 
 // Add attribute list of element B to this id.
-void Xid::add_attribute(Xid b) const {
-    AttList &L = b.get_att();
-    add_attribute(L, true);
-}
+void Xid::add_attribute(Xid b) const { add_attribute(b.get_att(), true); }
 
 // Implementation of \ref{foo}. We enter foo in the hashtab.
 // and create/update the LabelInfo. We remember the ref in the ref_list.

@@ -33,7 +33,6 @@ namespace date_ns {
 } // namespace date_ns
 
 namespace {
-    Buffer                 local_buf;
     std::array<size_t, 13> month_length_table = {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     Token                  day_ctr, year_ctr, month_ctr;
 
@@ -109,8 +108,7 @@ auto Parser::index_aux(TokenList &L, std::optional<size_t> father, OneIndex &g) 
     auto n = IR.size();
     for (size_t i = 0; i < n; i++)
         if (IR[i].is_same(level, aux)) return i;
-    Buffer &B = local_buf;
-    B.clear();
+    Buffer B;
     if (father) B += IR[*father].key + "____";
     B += key;
     B.lowercase();
@@ -165,9 +163,8 @@ void Parser::T_index(subtypes c) {
     auto iid = g.at(pposition).iid;
     auto nid = ++the_index.last_index;
 
-    local_buf             = fmt::format("lid{}", nid);
-    const std::string &W  = local_buf;
-    std::string        id = the_stack.add_anchor(W, false);
+    auto        W  = fmt::format("lid{}", nid);
+    std::string id = the_stack.add_anchor(W, false);
     create_label(W, id);
     tralics_ns::add_ref(to_signed(iid), W, true);
 }
@@ -469,7 +466,7 @@ auto date_ns::check_date(long y, size_t m, size_t d) -> bool {
     size_t      ml = 0;
     if (y <= 0)
         Bad = "year<1";
-    else if (m <= 0)
+    else if (m == 0)
         Bad = "month<1";
     else if (m > 12)
         Bad = "month>12";
@@ -483,13 +480,14 @@ auto date_ns::check_date(long y, size_t m, size_t d) -> bool {
             Bad = "inexistant day";
     }
     if (Bad.empty()) return true;
-    local_buf = "Date error: ";
+    Buffer B;
+    B = "Date error: ";
     if (Bad[0] == '.')
-        local_buf.format("day>{}", ml);
+        B.format("day>{}", ml);
     else
-        local_buf += Bad;
-    local_buf.format(" {}/{}/{}", y, m, d);
-    the_parser.parse_error(the_parser.err_tok, local_buf);
+        B += Bad;
+    B.format(" {}/{}/{}", y, m, d);
+    the_parser.parse_error(the_parser.err_tok, B);
     return false;
 }
 

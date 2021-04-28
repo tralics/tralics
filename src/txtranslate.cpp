@@ -1111,7 +1111,7 @@ void Parser::T_color(subtypes c) {
         std::string model = sT_arg_nopar();
         std::string value = sT_arg_nopar();
         tpa_buffer        = "\\color@" + name;
-        Token   C         = hash_table.locate(tpa_buffer);
+        Token C           = hash_table.locate(tpa_buffer);
         if (!Hashtab::the_eqtb()[C.eqtb_loc()].val.is_undef()) log_and_tty << "Redefining color " << name << "\n";
         if (model == "named") {
             // case \definecolor{myred}{named}{red}
@@ -1936,8 +1936,8 @@ void Parser::T_dashline(subtypes c) {
     if (c == dashline_code) x0 = "dashline";
     if (c == drawline_code) x0 = "drawline";
     if (c == dottedline_code) x0 = "dottedline";
-    if (c == circle_code) x0 = "circle";
     if (c == circle_code) { // circle
+        x0                    = "circle";
         bool        has_star  = remove_initial_star();
         TokenList   L         = read_arg();
         std::string aa        = token_list_to_att(L, T, false);

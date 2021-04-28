@@ -66,9 +66,8 @@ namespace {
     bool                                        scan_glue_opt = false;    // true if optional glue as found
     std::array<std::vector<long>, 4>            penalties;
     std::vector<ScaledInt>                      parshape_vector;
-    bool                                        every_eof = false;  // true if every_eof can been inserted for the current file
-    Buffer                                      local_buf;          // a local buffer
-    bool                                        require_eof = true; // eof is an outer token
+    bool                                        every_eof   = false; // true if every_eof can been inserted for the current file
+    bool                                        require_eof = true;  // eof is an outer token
 
     auto find_no_path(const std::string &s)
         -> std::optional<std::filesystem::path> { // \todo is that just std::filesystem::exists, or is the side-effect necessary?
@@ -120,15 +119,14 @@ namespace io_ns {
 // There are 3 pseudo output channels 16, 17, 18, always closed
 // and no file attached to them
 
-// This gets the object to \write in local_buf.
+// This gets the object to \write
 // A new line is added, except if chan is 18 or 19
 // Since version 2.15.4, \message print a newline
 // In the case of \write18, the string is printed on the log file
 auto Parser::string_to_write(long chan) -> std::string {
     TokenList L = scan_general_text();
     read_toks_edef(L);
-    Buffer &B = local_buf;
-    B.clear();
+    Buffer B;
     B << L;
     if (chan < write18_slot) B += "\n";
     auto res = B.convert_to_log_encoding();

@@ -515,8 +515,6 @@ namespace {
         }
     }
 
-    // Assume local_buf contains the name of T without the extension
-    // reads local_buf not const
     void internal_define_key_default(const std::string &s, Token T, TokenList &L) {
         L.brace_me();
         L.push_front(T);
