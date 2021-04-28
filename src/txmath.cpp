@@ -592,8 +592,6 @@ void Math::push_back(CmdChr X, subtypes c, std::string s) { push_back(MathElt(X,
 
 void Math::push_back_list(subtypes X, math_list_type c) { push_back(MathElt(CmdChr(math_list_cmd, X), subtypes(c))); }
 
-void Math::push_back_font(subtypes X, subtypes c) { push_back(MathElt(CmdChr(math_font_cmd, X), c)); }
-
 // Adds a token to the list at position k
 void MathDataP::push_back(size_t k, CmdChr X, subtypes c) { get_list(k).push_back(MathElt(X, c)); }
 
@@ -1997,24 +1995,6 @@ auto Math::trivial_math(long action) -> Xml * {
     return nullptr;
 }
 
-// Inserts the current font in the list
-void Math::add_cur_font() {
-    auto c = eqtb_int_table[math_font_pos].val;
-    push_back_font(subtypes(c), zero_code);
-}
-
-// Insert the font in the list and saves the font.
-void Parser::TM_math_fonts(Math &x) const {
-    subtypes cur_chr = cur_cmd_chr.chr;
-    the_parser.word_define(math_font_pos, cur_chr, false);
-    x.push_back_font(cur_chr, zero_code);
-}
-
-auto Parser::is_not_a_math_env(String s) -> bool {
-    find_env_token(s, false);
-    return cur_cmd_chr.is_user();
-}
-
 // This removes the spaces.
 void Math::remove_spaces() {
     remove_if([](const MathElt &v) { return v.is_space(); });
@@ -2025,19 +2005,6 @@ auto Math::has_over() const -> bool {
     auto ovr = std::count_if(begin(), end(), [](const MathElt &m) { return m.cmd == over_cmd; });
     if (ovr > 1) the_parser.parse_error("Too many commands of type \\over");
     return ovr > 0;
-}
-
-// Case of \mathop{\rm sin}. The this in the procedure is what follows the
-// \mathop.
-auto MathElt::try_math_op() const -> Xml * {
-    if (!is_list()) return nullptr;
-    Math &X = get_list();
-    if (X.empty()) return nullptr;
-    if (!(X.front().cmd == mathfont_cmd && X.front().chr == math_f_upright)) return nullptr;
-    if (!X.chars_to_mb2(math_buffer)) return nullptr;
-    Xml *s = new Xml(the_names["mo"], new Xml(std::string(math_buffer)));
-    s->add_att(the_names["form"], the_names["prefix"]);
-    return s;
 }
 
 // This converts a character into a MathML object
@@ -2915,22 +2882,3 @@ auto Math::handle_cmd_Big_aux(math_style cms) -> bool {
 }
 
 auto Math::convert_math(math_style k) -> Xml * { return M_cv(k, 1).value; }
-
-// Removes an an initial group that is the consequence of \refstepcounter
-void Math::remove_initial_group() {
-    bool initial_relax = false;
-    auto B             = begin();
-    auto E             = end();
-    if (B == E) return;
-    if (B->cmd == relax_cmd) {
-        initial_relax = true;
-        ++B;
-    }
-    if (B == E) return;
-    if (B->cmd != math_list_cmd) return;
-    if (B->get_lcmd() != math_open_cd) return;
-    Math &X = B->get_list();
-    if (!X.empty()) return;
-    if (initial_relax) pop_front();
-    pop_front();
-}

@@ -57,7 +57,6 @@ private:
     void               define_a_macro(String name, String value);
     auto               find_a_macro(Buffer &name, bool insert, String xname, String val) -> std::optional<size_t>;
     auto               find_lower_case(const CitationKey &s, int &n) -> BibEntry *;
-    auto               find_similar(const CitationKey &s, int &n) -> BibEntry *;
     void               forward_pass();
     auto               get_class(char32_t c) -> id_type { return id_class[c]; }
     void               handle_multiple_entries(BibEntry *Y);

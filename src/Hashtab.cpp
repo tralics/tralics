@@ -108,11 +108,3 @@ auto Hashtab::eval_let(const std::string &a, const std::string &b) -> Token {
     the_parser.eq_define(A, the_eqtb()[Bval].val, true);
     return Av;
 }
-
-// \let\firststring = \secondstring
-// Both strings must be permanent strings
-void Hashtab::eval_let_local(const std::string &a, const std::string &b) {
-    auto A    = locate(a).eqtb_loc();
-    auto Bval = locate(b).eqtb_loc();
-    the_parser.eq_define(A, the_eqtb()[Bval].val, false);
-}

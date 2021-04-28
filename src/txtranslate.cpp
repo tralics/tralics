@@ -185,11 +185,6 @@ void Parser::leave_h_mode() {
     }
 }
 
-inline auto xml_to_string(Xml *X) -> std::string {
-    std::string s = X->convert_to_string();
-    return s;
-}
-
 // translates {foo}
 void Parser::T_arg() {
     TokenList L = read_arg();
@@ -2143,8 +2138,4 @@ void Parser::need_bib_mode() {
     if (the_stack.in_bib_mode()) return;
     Tbuf = fmt::format("Command {} should occur in bibliographic mode only", err_tok);
     parse_error(err_tok, Tbuf);
-}
-void Parser::need_array_mode() {
-    if (the_stack.in_array_mode()) return;
-    parse_error("Current command should occur in tables only");
 }

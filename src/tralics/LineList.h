@@ -19,7 +19,6 @@ struct LineList : public std::list<Line> { // \todo use a vector instead
     auto find_documentclass() -> std::string;
     void find_top_atts();
     auto find_top_val(const std::string &s, bool c) -> std::string;
-    auto get_next_raw(Buffer &b) -> int;
     auto get_next_cv(Buffer &b, size_t w) -> int;
     auto get_next(Buffer &b) -> std::optional<int>;
     auto get_next(std::string &b, bool &cv) -> int;
@@ -31,7 +30,6 @@ struct LineList : public std::list<Line> { // \todo use a vector instead
     auto parse_and_extract(String s) const -> LineList;
     void print(std::ostream &outfile);
     void read(const std::string &x, int spec);
-    auto read_from_tty(Buffer &b) -> int;
     void register_file();
     void reset(std::string x);
     auto skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const;

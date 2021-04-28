@@ -31,28 +31,9 @@ namespace {
 } // namespace
 
 namespace io_ns {
-    void print_ascii(std::ostream &fp, char c);
     void set_enc_param(long enc, long pos, long v);
     auto get_enc_param(long enc, long pos) -> long;
 } // namespace io_ns
-
-// ---------------------------------------------------------
-// Output methods for characters
-
-// This prints a character in the form \230 if not ascii
-// Can be used in case where encoding is strange
-
-void io_ns::print_ascii(std::ostream &fp, char c) {
-    if (32 <= c && c < 127)
-        fp << c;
-    else {
-        auto     C = static_cast<uchar>(c);
-        unsigned z = C & 7;
-        unsigned y = (C >> 3) & 7;
-        unsigned x = (C >> 6) & 7;
-        fp << "\\" << uchar(x + '0') << uchar(y + '0') << uchar(z + '0');
-    }
-}
 
 // ------------------------------------------------------------------------
 // Functions that extract utf8 characters from streams and buffers

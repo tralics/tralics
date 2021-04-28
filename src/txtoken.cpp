@@ -161,36 +161,6 @@ void token_ns::remove_initial_spaces(TokenList &L) {
     }
 }
 
-// If the token list is `{foo}bar{gee}'
-// returns foo, leaves `bar{gee}' in the list
-auto token_ns::get_block(TokenList &L) -> TokenList {
-    int       bl = 0;
-    TokenList res;
-    remove_initial_spaces(L);
-    while (!L.empty()) {
-        Token t = L.front();
-        L.pop_front();
-        res.push_back(t);
-        if (check_brace(t, bl)) {
-            // Here we have {foo} in res
-            remove_ext_braces(res);
-            return res;
-        }
-    }
-    return TokenList();
-}
-
-// Like getblock, returns nothing
-void token_ns::remove_block(TokenList &L) {
-    int bl = 0;
-    remove_initial_spaces(L);
-    while (!L.empty()) {
-        Token t = L.front();
-        L.pop_front();
-        if (check_brace(t, bl)) return;
-    }
-}
-
 // Converts the string in the buffer into a token list.
 // Everything is of \catcode 12, except space.
 // If the switch is true, \n is converted to space, otherwise newline

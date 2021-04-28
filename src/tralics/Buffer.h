@@ -126,7 +126,6 @@ public:
     void skip_letter_dig();
     void skip_letter();
     void skip_over_brace();
-    void skip_sp_tab_comma();
     void skip_sp_tab_nl();
     void skip_sp_tab(); // \todo skip(const std::string&)
     void special_title(std::string s);

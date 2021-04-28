@@ -6,3 +6,6 @@
 /xml
 /docs/_build
 CppProperties.json
+GPATH
+GRTAGS
+GTAGS

@@ -50,7 +50,6 @@ public:
     void               cv_noML_list() const;
     auto               cv1(math_style cms, bool ph) -> MathElt;
     void               change_type(int t);
-    [[nodiscard]] auto try_math_op() const -> Xml *;
     [[nodiscard]] auto is_e_grave() const -> bool;
     [[nodiscard]] auto special3() const -> Xml *;
     void               print() const;

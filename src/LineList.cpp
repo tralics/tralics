@@ -89,26 +89,6 @@ void LineList::change_encoding(long wc) {
     }
 }
 
-// interface with the line editor.
-auto LineList::read_from_tty(Buffer &B) -> int {
-    static bool                   prev_line = false; // was previous line non-blank ?
-    static std::array<char, 4096> m_ligne;
-    readline(m_ligne.data(), 78);
-    if (std::string(m_ligne.data()) == "\\stop") return -1;
-    cur_line++;
-    B = m_ligne.data();
-    B.append("\n");
-    if (B.size() == 1) {
-        if (!prev_line) std::cout << "Say \\stop when finished, <ESC>-? for help.\n";
-        prev_line = false;
-    } else
-        prev_line = true;
-    if (B[0] == '%') { // debug
-        if (auto k = find_encoding(B)) encoding = *k;
-    }
-    return cur_line;
-}
-
 // inserts a copy of aux
 void LineList::insert(const LineList &aux) {
     encoding = 0;
@@ -213,15 +193,6 @@ auto LineList::get_next_cv(Buffer &b, size_t w) -> int {
         cur_file_name = file_name;
         b.convert_line(n, w);
     }
-    return n;
-}
-
-// same as get_next, without conversion
-auto LineList::get_next_raw(Buffer &b) -> int {
-    if (empty()) return -1;
-    b.append(front());
-    auto n = front().number;
-    pop_front();
     return n;
 }
 

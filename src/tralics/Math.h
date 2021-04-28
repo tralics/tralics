@@ -48,11 +48,9 @@ public:
     void                      print() const;
     void                      push_back(CmdChr X, subtypes c, std::string s = "");
     void                      push_back_list(subtypes X, math_list_type c);
-    void                      push_back_font(subtypes X, subtypes c);
     void                      push_back(CmdChr X);
     void                      push_back(Xml *A, long b, math_types c);
     void                      push_front(CmdChr X, subtypes c);
-    void                      remove_initial_group();
     void                      remove_spaces();
     void                      set_display_type() { type = math_ddollar_cd; }
     void                      set_env_name(int);
@@ -64,7 +62,6 @@ public:
 
 private:
     void               add_cur_cont();
-    void               add_cur_font();
     auto               add_fence(bool final, MathF &M) -> bool;
     void               concat(Xml *res);
     void               concat_space(Xml *res);
@@ -76,8 +73,6 @@ private:
     auto               finish_translate1(bool vb) -> bool;
     auto               finish_translate2() -> bool;
     void               handle_mbox(Math &res);
-    void               handle_mbox_no();
-    void               handle_mbox_not();
     [[nodiscard]] auto has_over() const -> bool;
     auto               is_font_cmd1() -> bool;
     auto               large1(MathElt &cl, math_style cms) -> Xml *;
@@ -99,5 +94,4 @@ private:
     auto               split_as_array(std::vector<AttList> &table, math_style W, bool numbered) -> Xml *;
     void               remove_opt_arg(bool star);
     auto               remove_req_arg() -> std::string;
-    [[nodiscard]] auto remove_req_arg_noerr() const -> std::string;
 };

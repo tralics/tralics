@@ -100,14 +100,12 @@ namespace math_ns {
 } // namespace math_ns
 
 namespace token_ns {
-    auto get_block(TokenList &L) -> TokenList;
     auto get_unique(TokenList &L) -> Token;
     void get_unique(TokenList &L, Token &t1, Token &t2);
     auto has_a_single_token(const TokenList &L) -> bool;
     auto has_a_single_token(const TokenList &L, Token t) -> bool;
     auto posint_to_list(long n) -> TokenList;
     void push_back_i(TokenList &L, long n);
-    void remove_block(TokenList &L);
     void remove_ext_braces(TokenList &L);
     void remove_initial_spaces(TokenList &L);
     void remove_first_last_space(TokenList &L);

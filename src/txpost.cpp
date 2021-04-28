@@ -119,5 +119,3 @@ void tralics_ns::find_index_labels(std::vector<std::string> &W) {
         W[E] = scbuf;
     }
 }
-
-inline auto dig_char(char c) -> bool { return c == '-' || (std::isdigit(c) != 0); }

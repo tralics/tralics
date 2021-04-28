@@ -238,7 +238,6 @@ struct Parser {
     auto               internal_makebox() -> Xml *;
     auto               is_delimiter(const TokenList &L) -> bool;
     auto               is_input_open() -> bool;
-    auto               is_not_a_math_env(String s) -> bool;
     auto               is_verbatim_end() -> bool;
     auto               kvo_getfam() -> std::string;
     auto               latex_input(subtypes q) -> std::string;
@@ -576,7 +575,6 @@ struct Parser {
     void               more_bootstrap();
     void               multiple_label(const std::string &name, int L, const std::string &f);
     void               multiply_dim(RealNumber val, long v);
-    void               need_array_mode();
     void               need_bib_mode();
     void               new_constant(String name, size_t max_val, subtypes alloc_pos, symcodes c);
     void               new_constant(subtypes c);
@@ -851,7 +849,6 @@ struct Parser {
     void               T_xmlenv_end(subtypes c);
     void               T_xmlenv(subtypes c);
     void               TM_fonts();
-    void               TM_math_fonts(Math &x) const;
     void               TM_tabular_arg(Xid id);
     void               token_for_show(bool lg, const CmdChr &val, Buffer &B);
     void               token_from_list(Token t);
@@ -869,7 +866,6 @@ struct Parser {
     void               undefined_env(const std::string &s);
     void               undefined_mac();
     void               unexpected_close_brace();
-    void               unskip_group(String s);
     void               upn_eval(TokenList &l);
     void               use_a_package(const std::string &name, bool type, const std::string &date, bool builtin);
     void               user_XML_fetch();

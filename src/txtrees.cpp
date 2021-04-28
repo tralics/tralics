@@ -367,28 +367,6 @@ void Parser::T_gloss(bool c) {
 void Parser::T_etex() { parse_error(cur_tok, "Unimplemented e-TeX extension ", cur_tok, "", "unimp"); }
 
 // --------------------------------------------------------------------
-// GB4e
-
-auto mk_ensure(const std::string &a, const std::string &b) -> std::string { return a + "{\\ensuremath{" + b + "}}"; }
-
-// We should perhaps do something with this list ??
-void gb4eboot() {
-    LineList    L;
-    std::string matha1       = "{\\mathrm{#1}}";
-    std::string open_bra     = "{[}";
-    std::string close_bra    = "{]}";
-    std::string simple_index = "\\sb" + matha1 + "\\;";
-    std::string double_index = "\\sb{" + matha1 + "\\sb{#2}}";
-    L.insert("%% Begin bootstrap commands for gb4e", true);
-    L.insert(R"(\def\lb#1{\@ifnextchar [{\@glarph{#1}}{\@bl{#1}}})", true);
-    L.insert(mk_ensure("\\def\\@glarph#1[#2]", open_bra + double_index), true);
-    L.insert(mk_ensure("\\def\\@bl#1", open_bra + simple_index), true);
-    L.insert(R"(\def\rb#1{\@ifnextchar [{\@grarph{#1}}{\@br{#1}}})", true);
-    L.insert(mk_ensure("\\def\\@grarph#1[#2]", close_bra + double_index), true);
-    L.insert(mk_ensure("\\def\\@br#1", close_bra + simple_index), true);
-}
-
-// --------------------------------------------------------------------
 // DATES
 
 // Dispatcher function

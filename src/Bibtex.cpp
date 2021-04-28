@@ -174,38 +174,6 @@ auto Bibtex::find_lower_case(const CitationKey &s, int &n) -> BibEntry * {
     return res;
 }
 
-// This command is used in the case of apics_all.
-// Assume that the citation is Knuth
-// Returns -2 if we have \cite{Knuth}, \footcite{Knuth}
-// Returns -2 if we have \cite{knuth}, \footcite{knuth}
-// Returns 2  if we have \cite{KNUTH}, \footcite{knuth} or other mismatch
-// Returns 0 if nothing was found.
-auto Bibtex::find_similar(const CitationKey &s, int &n) -> BibEntry * {
-    n = 0;
-    BibEntry *res{nullptr};
-    for (auto &all_entrie : all_entries)
-        if (all_entrie->cite_key.is_similar(s)) {
-            res = all_entrie;
-            n++;
-        }
-    if (res != nullptr) {
-        n = -n;
-        return res;
-    }
-    bool bad = false;
-    for (auto &all_entrie : all_entries)
-        if (all_entrie->cite_key.is_similar_lower(s)) {
-            n++;
-            if (res == nullptr) {
-                res = all_entrie;
-                continue;
-            }
-            if (!all_entrie->cite_key.is_similar(res->cite_key)) bad = true;
-        }
-    if (!bad) n = -n;
-    return res;
-}
-
 // This makes a new entry.
 auto Bibtex::make_new_entry(const CitationKey &a, bib_creator b) -> BibEntry * { return make_entry(a, b, the_bibliography.unique_bid()); }
 

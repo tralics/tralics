@@ -740,93 +740,6 @@ void MathElt::cv_noMLt_list() const {
     }
 }
 
-void Math::handle_mbox_no() {
-    while (!empty()) {
-        subtypes font = math_f_normal; // ignore font changes
-        int      ok   = M_mbox1(aux_buffer, font);
-        if (ok == 0) {
-            mathml_buffer.append("bad hbox");
-            return;
-        }
-        if (!aux_buffer.empty()) { mathml_buffer += "\\text{" + aux_buffer + "}"; }
-        if (ok == 1) return;
-        if (ok == 2) continue;
-        if (ok == 4) {
-            Math w = front().get_list();
-            pop_front();
-            std::string label = w.convert_opname();
-            mathml_buffer.append("\\ref{");
-            mathml_buffer.append(label);
-            mathml_buffer.append("}");
-        } else if (ok == 3)
-            mathml_buffer.append(" ");
-        else if (ok == 5)
-            mathml_buffer.append("\\quad ");
-        else if (ok == 6)
-            mathml_buffer.append("\\qquad ");
-        else if (ok == 7)
-            mathml_buffer.append("\\!");
-        else if (ok == 8)
-            mathml_buffer.append("\\,");
-        else if (ok == 9)
-            mathml_buffer.append("\\:");
-        else if (ok == 10)
-            mathml_buffer.append("\\;");
-        else if (ok == 10)
-            mathml_buffer.append("\\;");
-        else if (ok == 10)
-            mathml_buffer.append("\\;");
-        else if (ok == 10)
-            mathml_buffer.append("\\hspace{0pt}");
-        else {
-            Math u = get_list(to_unsigned(-ok)); // was math_table[-ok];
-            u.convert_math_noML0();
-        }
-    }
-}
-
-// Tag version of the previous
-void Math::handle_mbox_not() {
-    while (!empty()) {
-        subtypes font = math_f_normal; // ignore font changes
-        int      ok   = M_mbox1(aux_buffer, font);
-        if (ok == 0) {
-            mathml_buffer.append("<error>bad hbox</error>");
-            return;
-        }
-        if (!aux_buffer.empty()) { mathml_buffer += "<text>" + aux_buffer + "</text>"; }
-        if (ok == 1) return;
-        if (ok == 2) continue;
-        if (ok == 4) {
-            Math w = front().get_list();
-            pop_front();
-            std::string label = w.convert_opname();
-            mathml_buffer.append("<ref>");
-            mathml_buffer.append(label);
-            mathml_buffer.append("</ref>");
-        } else if (ok == 3)
-            mathml_buffer.append(" ");
-        else if (ok == 5)
-            mathml_buffer.append("<quad/>");
-        else if (ok == 6)
-            mathml_buffer.append("<qquad/>");
-        else if (ok == 7)
-            mathml_buffer.append("<mspace cmd='!'/>");
-        else if (ok == 8)
-            mathml_buffer.append("<mspace cmd=','/>");
-        else if (ok == 9)
-            mathml_buffer.append("<mspace cmd=':'/>");
-        else if (ok == 10)
-            mathml_buffer.append("<mspace cmd=';'/>");
-        else if (ok == 11)
-            mathml_buffer.append("<mspace cmd='hspace'/>");
-        else {
-            Math u = get_list(to_unsigned(-ok)); // was math_table[-ok];
-            u.convert_math_noML0();
-        }
-    }
-}
-
 // Define these two macros, because of similar code
 #define SELF_INSERT_CASES                                                                                                                  \
     case space_catcode:                                                                                                                    \
@@ -1231,18 +1144,6 @@ auto Math::remove_req_arg() -> std::string {
     Math &L = front().get_list(); // the sublist containing the argument
     pop_front();
     return L.convert_this_to_string(aux_buffer);
-}
-
-auto Math::remove_req_arg_noerr() const -> std::string {
-    auto C = begin();
-    auto E = end();
-    while (C != E && C->is_space()) ++C;
-    if (C == E) return "empty";
-    if (!C->is_list()) return "not-list";
-    Math &L = C->get_list(); // the sublist containing the argument
-    aux_buffer.clear();
-    if (!L.chars_to_mb(aux_buffer, true)) return "bad";
-    return aux_buffer;
 }
 
 // --------------------------------------------------

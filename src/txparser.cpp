@@ -1062,12 +1062,6 @@ auto Parser::group_to_string() -> std::string {
     }
 }
 
-// Backinput \end{argument} (without the \end token).
-void Parser::unskip_group(String s) {
-    TokenList L = token_ns::string_to_list(s, true);
-    back_input(L);
-}
-
 auto Parser::sE_arg() -> std::string {
     TokenList L = read_arg();
     return to_stringE(L);

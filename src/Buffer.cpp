@@ -580,9 +580,6 @@ void Buffer::skip_sp_tab() {
 void Buffer::skip_sp_tab_nl() {
     while (std::isspace(head()) != 0) ptrs.b++;
 }
-void Buffer::skip_sp_tab_comma() {
-    while (head() == ' ' || head() == '\t' || head() == ',') ptrs.b++;
-}
 
 void Buffer::skip_letter_dig() {
     while ((std::isalpha(head()) != 0) || (std::isdigit(head()) != 0)) ptrs.b++;

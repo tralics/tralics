@@ -24,7 +24,6 @@ struct Hashtab : public std::vector<std::string> {
     auto primitive_and_action_plain(const std::string &s, const std::function<void(subtypes)> &f, symcodes c, subtypes v) -> Token;
     auto nohash_primitive(const std::string &a, CmdChr b) -> Token;
     auto eval_let(const std::string &a, const std::string &b) -> Token;
-    void eval_let_local(const std::string &a, const std::string &b);
     auto is_defined(const std::string &b) -> bool;
 
     void boot_fancyhdr();
