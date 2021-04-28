@@ -30,7 +30,7 @@ namespace {
     auto find_type(const std::string &s) -> entry_type {
         if (s.empty()) return type_comment; // in case of error.
 
-        std::vector<std::string> &Bib2 = the_main.bibtex_extensions_s;
+        const std::vector<std::string> &Bib2 = the_main.bibtex_extensions_s;
         for (auto &i : Bib2)
             if (i == s) return type_comment;
         if (s == the_names["article"]) return type_article;
@@ -61,9 +61,8 @@ namespace {
 
     // Return an integer associated to a field position.
     auto find_field_pos(const std::string &s) -> field_pos {
-        auto S = std::string(s);
         // Check is this has to be ignored
-        std::vector<std::string> &Bib_s = the_main.bibtex_fields_s;
+        const std::vector<std::string> &Bib_s = the_main.bibtex_fields_s;
         for (auto &b : Bib_s)
             if (b == s) return fp_unknown;
 

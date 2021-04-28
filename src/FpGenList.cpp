@@ -84,12 +84,12 @@ void FpGenList::fp_gen_app() {
     int   n = 0;
     Token x = find_str(n);
     if (!x.is_space_token()) return;
-    auto &S = tkbuf;
-    if ((S == "add") || (S == "sub") || (S == "mul") || (S == "div") || (S == "abs") || (S == "neg") || (S == "sgn") || (S == "min") ||
-        (S == "max") || (S == "round") || (S == "trunc") || (S == "clip") || (S == "exp") || (S == "ln") || (S == "pow") || (S == "root") ||
-        (S == "seed") || (S == "random") || (S == "sin") || (S == "cos") || (S == "sincos") || (S == "tan") || (S == "cot") ||
-        (S == "tancot") || (S == "arcsin") || (S == "arccos") || (S == "arcsincos") || (S == "arctan") || (S == "arccot") ||
-        (S == "arctancot") || (S == "pop") || (S == "swap") || (S == "copy")) {
+    if ((tkbuf == "add") || (tkbuf == "sub") || (tkbuf == "mul") || (tkbuf == "div") || (tkbuf == "abs") || (tkbuf == "neg") ||
+        (tkbuf == "sgn") || (tkbuf == "min") || (tkbuf == "max") || (tkbuf == "round") || (tkbuf == "trunc") || (tkbuf == "clip") ||
+        (tkbuf == "exp") || (tkbuf == "ln") || (tkbuf == "pow") || (tkbuf == "root") || (tkbuf == "seed") || (tkbuf == "random") ||
+        (tkbuf == "sin") || (tkbuf == "cos") || (tkbuf == "sincos") || (tkbuf == "tan") || (tkbuf == "cot") || (tkbuf == "tancot") ||
+        (tkbuf == "arcsin") || (tkbuf == "arccos") || (tkbuf == "arcsincos") || (tkbuf == "arctan") || (tkbuf == "arccot") ||
+        (tkbuf == "arctancot") || (tkbuf == "pop") || (tkbuf == "swap") || (tkbuf == "copy")) {
         push_back(hash_table.space_token);
         TokenList z;
         split_after(n, z);

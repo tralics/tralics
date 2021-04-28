@@ -1066,7 +1066,6 @@ auto Parser::scan_color(const std::string &opt, const std::string &name) -> std:
 
 // Implements color and variants (code = color_cmd)
 void Parser::T_color(subtypes c) {
-    Buffer &B = tpa_buffer;
     flush_buffer();
     if (c == normalcolor_code) {
         cur_font.set_color(std::string());
@@ -1111,15 +1110,14 @@ void Parser::T_color(subtypes c) {
         std::string name  = sT_arg_nopar();
         std::string model = sT_arg_nopar();
         std::string value = sT_arg_nopar();
-        B                 = "\\color@" + name;
-        Token C           = hash_table.locate(B);
+        tpa_buffer        = "\\color@" + name;
+        Token   C         = hash_table.locate(tpa_buffer);
         if (!Hashtab::the_eqtb()[C.eqtb_loc()].val.is_undef()) log_and_tty << "Redefining color " << name << "\n";
         if (model == "named") {
             // case \definecolor{myred}{named}{red}
             // is \global\let\color@myred = \color@red
-            Buffer &BB = tpa_buffer;
-            BB         = "\\color@" + value;
-            Token T    = hash_table.locate(BB);
+            tpa_buffer = "\\color@" + value;
+            Token T    = hash_table.locate(tpa_buffer);
             M_let_fast(C, T, true);
             return;
         }
@@ -1652,7 +1650,6 @@ void Parser::T_case_shift(subtypes c) {
             bl--;
         if (extended && bl == 0 && a == hash_table.nocase_e_token) {
             int b = 0;
-            if (a != hash_table.nocase_e_token) res.push_back(a);
             for (;;) {
                 if (P == E) break;
                 a = *P;

@@ -23,7 +23,7 @@ void KeyAndVal::use(TokenList &A) const {
 // If X is false, val is unused, we insert code in L
 // Otherwise, we insert key=val
 // We mark this as used.
-void KeyAndVal::use_and_kill(TokenList &L, KeyAndVal &U, bool X) {
+void KeyAndVal::use_and_kill(TokenList &L, const KeyAndVal &U, bool X) {
     used = true;
     if (!X) {
         L.splice(L.end(), val); // insert action code

@@ -287,7 +287,7 @@ void LineList::find_all_types(std::vector<std::string> &res) {
     for (auto C = cbegin(); C != cend(); C = skip_env(C, B)) {
         init_file_pos = C->number;
         B             = *C;
-        find_one_type(B, res);
+        find_one_type(*C, res);
     }
 }
 
@@ -306,9 +306,9 @@ auto LineList::find_top_val(const std::string &s, bool c) -> std::string {
 void LineList::parse_and_extract_clean(const std::string &s) {
     LineList res;
     int      b    = 0;
-    Buffer & B    = local_buf;
     bool     keep = true;
     for (auto &C : *this) {
+        Buffer &B = local_buf;
         B         = C;
         auto n    = C.number;
         auto cv   = C.converted;

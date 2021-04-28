@@ -38,7 +38,6 @@ auto operator<<(std::ostream &X, const Image &Y) -> std::ostream & {
     else {
         bool first = true;
         if ((k & 1) != 0) {
-            if (!first) X << "+";
             X << 1;
             first = false;
         }

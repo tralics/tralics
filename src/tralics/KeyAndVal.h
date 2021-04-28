@@ -19,7 +19,7 @@ struct KeyAndVal {
     [[nodiscard]] auto to_list() const -> TokenList;
 
     void use(TokenList &A) const;
-    void use_and_kill(TokenList &L, KeyAndVal &U, bool X);
+    void use_and_kill(TokenList &L, const KeyAndVal &U, bool X);
 };
 
 inline auto operator<<(std::ostream &os, const KeyAndVal &kv) -> std::ostream & { return os << kv.full_name; }

@@ -1,0 +1,911 @@
+Checking build/CMakeFiles/3.19.6/CompilerIdCXX/CMakeCXXCompilerId.cpp ...
+build/CMakeFiles/3.19.6/CompilerIdCXX/CMakeCXXCompilerId.cpp:0:0: information: Too many #ifdef configurations - cppcheck only checks 12 of 115 configurations. Use --force to check all configurations. [toomanyconfigs]
+
+^
+Checking build/CMakeFiles/3.19.6/CompilerIdCXX/CMakeCXXCompilerId.cpp: INT_178B;__INTEGRITY...
+Checking build/CMakeFiles/3.19.6/CompilerIdCXX/CMakeCXXCompilerId.cpp: MPRAS;_MPRAS...
+Checking build/CMakeFiles/3.19.6/CompilerIdCXX/CMakeCXXCompilerId.cpp: SCO_SV;_SCO_SV;sco_sv...
+Checking build/CMakeFiles/3.19.6/CompilerIdCXX/CMakeCXXCompilerId.cpp: SIMULATE_VERSION_TWEAK...
+Checking build/CMakeFiles/3.19.6/CompilerIdCXX/CMakeCXXCompilerId.cpp: WIN32;_WIN32;__WIN32__...
+Checking build/CMakeFiles/3.19.6/CompilerIdCXX/CMakeCXXCompilerId.cpp: XENIX;_XENIX;__XENIX__...
+Checking build/CMakeFiles/3.19.6/CompilerIdCXX/CMakeCXXCompilerId.cpp: _AIX;__AIX;__AIX__;__aix;__aix__...
+Checking build/CMakeFiles/3.19.6/CompilerIdCXX/CMakeCXXCompilerId.cpp: _BEOS;__BEOS__;__BeOS...
+Checking build/CMakeFiles/3.19.6/CompilerIdCXX/CMakeCXXCompilerId.cpp: _CRAYC...
+Checking build/CMakeFiles/3.19.6/CompilerIdCXX/CMakeCXXCompilerId.cpp: _CRAYC;__cray__...
+build/CMakeFiles/3.19.6/CompilerIdCXX/CMakeCXXCompilerId.cpp:576:0: information: Skipping configuration '_MSC_BUILD;_MSC_VER' since the value of '_MSC_VER' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+  COMPILER_VERSION_MAJOR,
+^
+build/CMakeFiles/3.19.6/CompilerIdCXX/CMakeCXXCompilerId.cpp:578:0: information: Skipping configuration '_MSC_BUILD;_MSC_VER' since the value of '_MSC_VER' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+  '.', COMPILER_VERSION_MINOR,
+^
+Checking build/CMakeFiles/3.19.6/CompilerIdCXX/CMakeCXXCompilerId.cpp: _MSC_BUILD;_MSC_VER...
+1/89 files checked 1% done
+Checking build/CMakeFiles/3.20.1/CompilerIdCXX/CMakeCXXCompilerId.cpp ...
+build/CMakeFiles/3.20.1/CompilerIdCXX/CMakeCXXCompilerId.cpp:0:0: information: Too many #ifdef configurations - cppcheck only checks 12 of 125 configurations. Use --force to check all configurations. [toomanyconfigs]
+
+^
+Checking build/CMakeFiles/3.20.1/CompilerIdCXX/CMakeCXXCompilerId.cpp: INT_178B;__INTEGRITY...
+Checking build/CMakeFiles/3.20.1/CompilerIdCXX/CMakeCXXCompilerId.cpp: MPRAS;_MPRAS...
+Checking build/CMakeFiles/3.20.1/CompilerIdCXX/CMakeCXXCompilerId.cpp: SCO_SV;_SCO_SV;sco_sv...
+Checking build/CMakeFiles/3.20.1/CompilerIdCXX/CMakeCXXCompilerId.cpp: SIMULATE_VERSION_TWEAK...
+Checking build/CMakeFiles/3.20.1/CompilerIdCXX/CMakeCXXCompilerId.cpp: WIN32;_WIN32;__WIN32__...
+Checking build/CMakeFiles/3.20.1/CompilerIdCXX/CMakeCXXCompilerId.cpp: XENIX;_XENIX;__XENIX__...
+Checking build/CMakeFiles/3.20.1/CompilerIdCXX/CMakeCXXCompilerId.cpp: _AIX;__AIX;__AIX__;__aix;__aix__...
+Checking build/CMakeFiles/3.20.1/CompilerIdCXX/CMakeCXXCompilerId.cpp: _BEOS;__BEOS__;__BeOS...
+Checking build/CMakeFiles/3.20.1/CompilerIdCXX/CMakeCXXCompilerId.cpp: _CRAYC...
+build/CMakeFiles/3.20.1/CompilerIdCXX/CMakeCXXCompilerId.cpp:628:0: information: Skipping configuration '_MSC_BUILD;_MSC_VER' since the value of '_MSC_VER' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+  COMPILER_VERSION_MAJOR,
+^
+build/CMakeFiles/3.20.1/CompilerIdCXX/CMakeCXXCompilerId.cpp:630:0: information: Skipping configuration '_MSC_BUILD;_MSC_VER' since the value of '_MSC_VER' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+  '.', COMPILER_VERSION_MINOR,
+^
+Checking build/CMakeFiles/3.20.1/CompilerIdCXX/CMakeCXXCompilerId.cpp: _MSC_BUILD;_MSC_VER...
+build/CMakeFiles/3.20.1/CompilerIdCXX/CMakeCXXCompilerId.cpp:632:0: information: Skipping configuration '_MSC_FULL_VER;_MSC_VER' since the value of '_MSC_FULL_VER' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   '.', COMPILER_VERSION_PATCH,
+^
+build/CMakeFiles/3.20.1/CompilerIdCXX/CMakeCXXCompilerId.cpp:628:0: information: Skipping configuration '_MSC_FULL_VER;_MSC_VER' since the value of '_MSC_VER' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+  COMPILER_VERSION_MAJOR,
+^
+build/CMakeFiles/3.20.1/CompilerIdCXX/CMakeCXXCompilerId.cpp:630:0: information: Skipping configuration '_MSC_FULL_VER;_MSC_VER' since the value of '_MSC_VER' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+  '.', COMPILER_VERSION_MINOR,
+^
+Checking build/CMakeFiles/3.20.1/CompilerIdCXX/CMakeCXXCompilerId.cpp: _MSC_FULL_VER;_MSC_VER...
+2/89 files checked 2% done
+Checking src/AllIndex.cpp ...
+src/tralics/Buffer.h:29:5: warning: Class 'Buffer' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+    Buffer(const std::string &s) : std::string(s) {}
+    ^
+src/tralics/Line.h:9:5: warning: Struct 'Line' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+    Line(int n, std::string c = "", bool C = true) : std::string(std::move(c)), number(n), converted(C) {}
+    ^
+src/tralics/ArrayInfo.h:15:5: warning: Class 'ArrayInfo' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+    ArrayInfo(Xid a1) : id(a1) {}
+    ^
+src/tralics/Xml.h:14:5: warning: Class 'Xml' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+    Xml(const std::string &n) : name(std::string(n)) {}
+    ^
+src/tralics/Xml.h:26:66: warning: Checking if unsigned expression 'id.value' is less than zero. [unsignedLessThanZero]
+    [[nodiscard]] auto is_xmlc() const -> bool { return id.value <= 0; }
+                                                                 ^
+3/89 files checked 2% done
+Checking src/ArrayInfo.cpp ...
+4/89 files checked 2% done
+Checking src/AttList.cpp ...
+5/89 files checked 2% done
+Checking src/Bbl.cpp ...
+6/89 files checked 2% done
+Checking src/Bchar.cpp ...
+src/tralics/CitationKey.h:16:5: warning: Struct 'CitationKey' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+    CitationKey(const std::string &b);
+    ^
+src/tralics/BibMacro.h:9:5: warning: Struct 'BibMacro' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+    BibMacro(std::string s1) : name(std::move(s1)) {}
+    ^
+7/89 files checked 2% done
+Checking src/BibEntry.cpp ...
+src/BibEntry.cpp:30:9: warning: Class 'NameSplitter' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+        NameSplitter(bchar_type *T) : table(T) {}
+        ^
+src/BibEntry.cpp:202:30: warning: Consider using std::copy_if algorithm instead of a raw loop. [useStlAlgorithm]
+            if (c != ' ') res.push_back(c);
+                             ^
+8/89 files checked 3% done
+Checking src/Bibliography.cpp ...
+9/89 files checked 4% done
+Checking src/Bibtex.cpp ...
+src/tralics/ScaledInt.h:10:5: warning: Struct 'ScaledInt' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+    ScaledInt(subtypes v) : value(int(v)) {} // \todo This is a bit hackish, but it works (going through `long` fails).
+    ^
+src/tralics/Macro.h:15:5: warning: Class 'Macro' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+    Macro(TokenList L) : body(std::move(L)) { correct_type(); }
+    ^
+src/tralics/SthInternal.h:45:28: performance: Function parameter 'x' should be passed by const reference. [passedByValue]
+    void set_glue_val(Glue x) { glue_val = x; }
+                           ^
+src/tralics/SthInternal.h:75:24: performance: Function parameter 'a' should be passed by const reference. [passedByValue]
+    void set_glue(Glue a) {
+                       ^
+src/tralics/SthInternal.h:80:22: performance: Function parameter 'a' should be passed by const reference. [passedByValue]
+    void set_mu(Glue a) {
+                     ^
+src/Bibtex.cpp:33:35: warning: Variable 'Bib2' can be declared with const [constVariable]
+        std::vector<std::string> &Bib2 = the_main.bibtex_extensions_s;
+                                  ^
+src/Bibtex.cpp:66:35: warning: Variable 'Bib_s' can be declared with const [constVariable]
+        std::vector<std::string> &Bib_s = the_main.bibtex_fields_s;
+                                  ^
+src/Bibtex.cpp:35:0: warning: Consider using std::any_of algorithm instead of a raw loop. [useStlAlgorithm]
+            if (i == s) return type_comment;
+^
+src/Bibtex.cpp:68:0: warning: Consider using std::any_of algorithm instead of a raw loop. [useStlAlgorithm]
+            if (b == s) return fp_unknown;
+^
+src/Bibtex.cpp:160:0: warning: Consider using std::find_if algorithm instead of a raw loop. [useStlAlgorithm]
+        if (e->cite_key.is_same(s)) return e;
+^
+src/Bibtex.cpp:515:34: warning: Consider using std::any_of algorithm instead of a raw loop. [useStlAlgorithm]
+        if (i == cur_entry_name) {
+                                 ^
+src/Bibtex.cpp:647:44: warning: Consider using std::fill or std::generate algorithm instead of a raw loop. [useStlAlgorithm]
+    for (auto &id_clas : id_class) id_clas = legal_id_char;
+                                           ^
+src/Bibtex.cpp:64:16: warning: Variable 'S' is assigned a value that is never used. [unreadVariable]
+        auto S = std::string(s);
+               ^
+10/89 files checked 5% done
+Checking src/Buffer.cpp ...
+11/89 files checked 7% done
+Checking src/CitationItem.cpp ...
+12/89 files checked 7% done
+Checking src/CitationKey.cpp ...
+13/89 files checked 7% done
+Checking src/CmdChr_name.cpp ...
+src/tralics/Symcode.h:8:5: warning: Class 'Symcode' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+    Symcode(symcodes v) : val(v) {}
+    ^
+14/89 files checked 8% done
+Checking src/ColSpec.cpp ...
+src/ColSpec.cpp:7:5: warning: Struct 'ColSpec' does not have a copy constructor which is recommended since it has dynamic memory/resource allocation(s). [noCopyConstructor]
+    xval = new Xml(the_names["color"], nullptr);
+    ^
+src/ColSpec.cpp:7:5: warning: Struct 'ColSpec' does not have a operator= which is recommended since it has dynamic memory/resource allocation(s). [noOperatorEq]
+    xval = new Xml(the_names["color"], nullptr);
+    ^
+15/89 files checked 8% done
+Checking src/Condition.cpp ...
+16/89 files checked 8% done
+Checking src/ConfigData.cpp ...
+src/ConfigData.cpp:13:37: warning: Consider using std::accumulate algorithm instead of a raw loop. [useStlAlgorithm]
+    for (const auto &i : X) err_buf += " " + i.first;
+                                    ^
+17/89 files checked 8% done
+Checking src/Cv3Helper.cpp ...
+src/tralics/Cv3Helper.h:17:5: warning: Class 'Cv3Helper' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+    Cv3Helper(Math X) : Math(std::move(X)) {}
+    ^
+18/89 files checked 9% done
+Checking src/Dispatcher.cpp ...
+19/89 files checked 11% done
+Checking src/FontInfo.cpp ...
+20/89 files checked 11% done
+Checking src/FpGenList.cpp ...
+src/tralics/FpGenList.h:7:5: warning: Class 'FpGenList' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+    FpGenList(const TokenList &o) : TokenList(o) {}
+    ^
+src/FpGenList.cpp:87:11: warning: Variable 'S' can be declared with const [constVariable]
+    auto &S = tkbuf;
+          ^
+21/89 files checked 11% done
+Checking src/FpStack.cpp ...
+22/89 files checked 12% done
+Checking src/Glue.cpp ...
+23/89 files checked 12% done
+Checking src/Hashtab.cpp ...
+24/89 files checked 12% done
+Checking src/Hashtab_boot.cpp ...
+25/89 files checked 20% done
+Checking src/Image.cpp ...
+src/Image.cpp:41:17: warning: Condition '!first' is always false [knownConditionTrueFalse]
+            if (!first) X << "+";
+                ^
+src/Image.cpp:39:22: note: Assignment 'first=true', assigned value is 1
+        bool first = true;
+                     ^
+src/Image.cpp:41:17: note: Condition '!first' is always false
+            if (!first) X << "+";
+                ^
+26/89 files checked 20% done
+Checking src/KeyAndVal.cpp ...
+src/KeyAndVal.cpp:26:55: warning: Parameter 'U' can be declared with const [constParameter]
+void KeyAndVal::use_and_kill(TokenList &L, KeyAndVal &U, bool X) {
+                                                      ^
+27/89 files checked 20% done
+Checking src/LabelInfo.cpp ...
+28/89 files checked 20% done
+Checking src/LineList.cpp ...
+src/LineList.cpp:309:14: warning: The scope of the variable 'B' can be reduced. [variableScope]
+    Buffer & B    = local_buf;
+             ^
+src/LineList.cpp:346:14: warning: The scope of the variable 'B' can be reduced. [variableScope]
+    Buffer & B    = local_buf;
+             ^
+src/LineList.cpp:346:19: warning: Variable 'B' is assigned a value that is never used. [unreadVariable]
+    Buffer & B    = local_buf;
+                  ^
+29/89 files checked 21% done
+Checking src/Logger.cpp ...
+30/89 files checked 21% done
+Checking src/Macro.cpp ...
+31/89 files checked 21% done
+Checking src/Mactab.cpp ...
+32/89 files checked 21% done
+Checking src/MainClass.cpp ...
+src/tralics/TitlePageAux.h:16:5: warning: Struct 'TitlePageAux' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+    TitlePageAux(TitlePageFullLine &X);
+    ^
+src/MainClass.cpp:159:40: warning: Consider using std::copy algorithm instead of a raw loop. [useStlAlgorithm]
+        for (const auto &p : paths) ps.emplace_back(p);
+                                       ^
+src/MainClass.cpp:162:41: warning: Consider using std::find_if algorithm instead of a raw loop. [useStlAlgorithm]
+            if (exists(S / "book.clt")) {
+                                        ^
+src/MainClass.cpp:311:29: warning: Consider using std::replace_if algorithm instead of a raw loop. [useStlAlgorithm]
+            if (c == '.') c = 0;
+                            ^
+src/MainClass.cpp:369:46: warning: Consider using std::transform algorithm instead of a raw loop. [useStlAlgorithm]
+        for (const auto &s : input_path) tmp.push_back(s.string());
+                                             ^
+Checking src/MainClass.cpp: _MSC_VER...
+src/MainClass.cpp:307:13: warning: Condition 'res!=0' is always true [knownConditionTrueFalse]
+    if (res != 0)
+            ^
+src/MainClass.cpp:303:16: note: Assignment 'res=1', assigned value is 1
+    auto res = 1;
+               ^
+src/MainClass.cpp:307:13: note: Condition 'res!=0' is always true
+    if (res != 0)
+            ^
+Checking src/MainClass.cpp: _MSC_VER;_WIN32...
+Checking src/MainClass.cpp: _WIN32...
+Checking src/MainClass.cpp: __APPLE__...
+Checking src/MainClass.cpp: __CYGWIN__...
+Checking src/MainClass.cpp: __alpha...
+Checking src/MainClass.cpp: __hpux...
+Checking src/MainClass.cpp: __linux...
+Checking src/MainClass.cpp: __sgi...
+Checking src/MainClass.cpp: __sunsolaris...
+33/89 files checked 23% done
+Checking src/MathElt.cpp ...
+34/89 files checked 23% done
+Checking src/MathF.cpp ...
+35/89 files checked 23% done
+Checking src/MathHelper.cpp ...
+src/MathHelper.cpp:183:17: warning: The scope of the variable 'i' can be reduced. [variableScope]
+    size_t      i = 0;
+                ^
+src/MathHelper.cpp:183:19: warning: Variable 'i' is assigned a value that is never used. [unreadVariable]
+    size_t      i = 0;
+                  ^
+36/89 files checked 23% done
+Checking src/MathP.cpp ...
+37/89 files checked 24% done
+Checking src/MathPAux.cpp ...
+38/89 files checked 24% done
+Checking src/NameMapper.cpp ...
+39/89 files checked 25% done
+Checking src/NewArray.cpp ...
+40/89 files checked 25% done
+Checking src/ParamDataList.cpp ...
+41/89 files checked 25% done
+Checking src/Parser.cpp ...
+src/Parser.cpp:131:54: warning: Parameter 'A' can be declared with const [constParameter]
+            std::sort(CI.begin(), CI.end(), [](auto &A, auto &B) { return A.key < B.key; });
+                                                     ^
+src/Parser.cpp:131:63: warning: Parameter 'B' can be declared with const [constParameter]
+            std::sort(CI.begin(), CI.end(), [](auto &A, auto &B) { return A.key < B.key; });
+                                                              ^
+src/Parser.cpp:2303:12: warning: Variable 'X' can be declared with const [constVariable]
+    Macro &X = mac_table.get_macro(cur_cmd_chr.chr);
+           ^
+src/Parser.cpp:947:9: warning: Instance of 'Token' object is destroyed immediately. [unusedScopedObject]
+        Token(other_t_offset, '1');
+        ^
+src/Parser.cpp:988:29: warning: Consider using std::count_if algorithm instead of a raw loop. [useStlAlgorithm]
+            if (color.used) k++;
+                            ^
+src/Parser.cpp:1023:27: warning: Consider using std::find_if algorithm instead of a raw loop. [useStlAlgorithm]
+        if (X.name == nm) {
+                          ^
+src/Parser.cpp:1079:37: warning: Consider using std::fill algorithm instead of a raw loop. [useStlAlgorithm]
+    for (bool &i : ok_for_xspace) i = false;
+                                    ^
+src/Parser.cpp:2615:17: warning: Variable 'guard' is assigned a value that is never used. [unreadVariable]
+    auto guard  = SaveErrTok(cur_tok);
+                ^
+42/89 files checked 31% done
+Checking src/RealNumber.cpp ...
+43/89 files checked 31% done
+Checking src/SaveAux.cpp ...
+src/tralics/SaveAux.h:110:17: warning: The class 'SaveAuxEnv' defines member variable with name 'line' also defined in its parent class 'SaveAuxBase'. [duplInheritedMember]
+    int         line;
+                ^
+src/tralics/SaveAux.h:12:15: note: Parent variable 'SaveAuxBase::line'
+    int       line; // current line number at start
+              ^
+src/tralics/SaveAux.h:110:17: note: Derived variable 'SaveAuxEnv::line'
+    int         line;
+                ^
+src/tralics/SaveAux.h:27:5: warning: Class 'SaveAuxBoundary' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+    SaveAuxBoundary(boundary_type v) : SaveAuxBase(st_boundary, 0), val(v) {}
+    ^
+src/tralics/SaveAux.h:132:5: warning: Class 'SaveAuxAftergroup' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+    SaveAuxAftergroup(Token v) : SaveAuxBase(st_save, 0), val(v) {}
+    ^
+src/tralics/SaveAux.h:92:40: performance: Function parameter 'g' should be passed by const reference. [passedByValue]
+    SaveAuxGlue(long l, size_t p, Glue g) : SaveAuxBase(st_glue, l), pos(p), val(g) {}
+                                       ^
+44/89 files checked 31% done
+Checking src/ScaledInt.cpp ...
+45/89 files checked 32% done
+Checking src/ScanSlot.cpp ...
+46/89 files checked 32% done
+Checking src/Stack.cpp ...
+47/89 files checked 33% done
+Checking src/Symcode.cpp ...
+48/89 files checked 33% done
+Checking src/TexFonts.cpp ...
+49/89 files checked 33% done
+Checking src/TexOutStream.cpp ...
+50/89 files checked 33% done
+Checking src/TexRule.cpp ...
+51/89 files checked 33% done
+Checking src/TitlePageAux.cpp ...
+src/TitlePageAux.cpp:10:5: performance: Variable 'T1' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+    T1     = X.item1.value;
+    ^
+src/TitlePageAux.cpp:11:5: performance: Variable 'T2' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+    T2     = X.item2.value;
+    ^
+src/TitlePageAux.cpp:12:5: performance: Variable 'T3' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+    T3     = X.item3.value;
+    ^
+src/TitlePageAux.cpp:13:5: performance: Variable 'T4' is assigned in constructor body. Consider performing initialization in initialization list. [useInitializationList]
+    T4     = X.item4.value;
+    ^
+src/TitlePageAux.cpp:9:47: warning: Parameter 'X' can be declared with const [constParameter]
+TitlePageAux::TitlePageAux(TitlePageFullLine &X) {
+                                              ^
+52/89 files checked 34% done
+Checking src/TitlePageFullLine.cpp ...
+53/89 files checked 34% done
+Checking src/Token.cpp ...
+54/89 files checked 34% done
+Checking src/TokenList.cpp ...
+src/TokenList.cpp:44:67: warning: Parameter 'body' can be declared with const [constParameter]
+auto TokenList::expand_nct(size_t n, uchar c, int &MX, TokenList &body) -> bool {
+                                                                  ^
+src/TokenList.cpp:230:23: warning: Consider using std::replace_if algorithm instead of a raw loop. [useStlAlgorithm]
+        if (a == u) a = v;
+                      ^
+55/89 files checked 34% done
+Checking src/TpiOneItem.cpp ...
+56/89 files checked 34% done
+Checking src/Xid.cpp ...
+src/Xid.cpp:73:14: warning: Variable 'L' can be declared with const [constVariable]
+    AttList &L = b.get_att();
+             ^
+src/Xid.cpp:81:14: warning: Variable 'L' can be declared with const [constVariable]
+    AttList &L = b.get_att();
+             ^
+57/89 files checked 35% done
+Checking src/Xml.cpp ...
+src/Xml.cpp:540:17: error: Cyclic reverse analysis. [cppcheckError]
+    Xml **ptr = new Xml *(this);
+                ^
+58/89 files checked 36% done
+Checking src/XmlIO.cpp ...
+src/XmlIO.cpp:76:28: warning: Consider using std::fill or std::generate algorithm instead of a raw loop. [useStlAlgorithm]
+    for (auto &i : Type) i = xt_invalid;
+                           ^
+59/89 files checked 37% done
+Checking src/boot_math.cpp ...
+60/89 files checked 38% done
+Checking src/globals.cpp ...
+61/89 files checked 38% done
+Checking src/packages/tipa.cpp ...
+62/89 files checked 39% done
+Checking src/packages/xkeyval.cpp ...
+src/packages/xkeyval.cpp:191:33: warning: Condition 'found' is always true [knownConditionTrueFalse]
+                if (!set_all && found) break;
+                                ^
+src/packages/xkeyval.cpp:189:27: note: Assignment 'found=true', assigned value is 1
+                found   = true;
+                          ^
+src/packages/xkeyval.cpp:191:33: note: Condition 'found' is always true
+                if (!set_all && found) break;
+                                ^
+src/packages/xkeyval.cpp:124:19: warning: Local variable 't' shadows outer variable [shadowVariable]
+            Token t = L.front();
+                  ^
+src/packages/xkeyval.cpp:1014:10: note: Shadowed declaration
+    bool t = (xkeyval(), true);
+         ^
+src/packages/xkeyval.cpp:124:19: note: Shadow variable
+            Token t = L.front();
+                  ^
+src/packages/xkeyval.cpp:317:14: warning: Local variable 't' shadows outer variable [shadowVariable]
+        bool t = the_parser.list_to_string(*opt, xkv_local_buf);
+             ^
+src/packages/xkeyval.cpp:1014:10: note: Shadowed declaration
+    bool t = (xkeyval(), true);
+         ^
+src/packages/xkeyval.cpp:317:14: note: Shadow variable
+        bool t = the_parser.list_to_string(*opt, xkv_local_buf);
+             ^
+src/packages/xkeyval.cpp:259:45: warning: Parameter 'cur' can be declared with const [constParameter]
+    void XkvSetkeys::check_action(XkvToken &cur) {
+                                            ^
+63/89 files checked 41% done
+Checking src/readline.cpp ...
+src/readline.cpp:137:22: warning: Class 'Slined' does not have a copy constructor which is recommended since it has dynamic memory/resource allocation(s). [noCopyConstructor]
+        if (sz != 0) m_inbuf = new char[sz]; // NOLINT
+                     ^
+src/readline.cpp:137:22: warning: Class 'Slined' does not have a operator= which is recommended since it has dynamic memory/resource allocation(s). [noOperatorEq]
+        if (sz != 0) m_inbuf = new char[sz]; // NOLINT
+                     ^
+src/readline.cpp:137:22: warning: Class 'Slined' does not have a destructor which is recommended since it has dynamic memory/resource allocation(s). [noDestructor]
+        if (sz != 0) m_inbuf = new char[sz]; // NOLINT
+                     ^
+src/readline.cpp:136:36: warning: Consider using std::fill algorithm instead of a raw loop. [useStlAlgorithm]
+        for (char &i : m_buffer) i = ' ';
+                                   ^
+Checking src/readline.cpp: _WIN32...
+Checking src/readline.cpp: __ppc__...
+64/89 files checked 43% done
+Checking src/tralics.cpp ...
+65/89 files checked 43% done
+Checking src/txaccent.cpp ...
+66/89 files checked 43% done
+Checking src/txaux.cpp ...
+67/89 files checked 43% done
+Checking src/txclasses.cpp ...
+src/tralics/LatexPackage.h:21:5: warning: Class 'LatexPackage' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+    LatexPackage(std::string A) : name(std::move(A)) {}
+    ^
+src/txclasses.cpp:129:0: warning: Consider using std::any_of algorithm instead of a raw loop. [useStlAlgorithm]
+        if (i.name == s) return true;
+^
+src/txclasses.cpp:726:104: warning: Variable 'doc_att.get_att()[the_names["language"]]' is assigned a value that is never used. [unreadVariable]
+    if ((b != "cst_empty") && !the_names["language"].empty()) doc_att.get_att()[the_names["language"]] = the_names[b];
+                                                                                                       ^
+68/89 files checked 46% done
+Checking src/txcommands.cpp ...
+69/89 files checked 47% done
+Checking src/txconfig.cpp ...
+70/89 files checked 47% done
+Checking src/txerr.cpp ...
+src/txerr.cpp:120:68: warning: Parameter 'L' can be declared with const [constParameter]
+void Parser::parse_error(Token T, const std::string &s, TokenList &L) {
+                                                                   ^
+71/89 files checked 48% done
+Checking src/txfp.cpp ...
+src/txfp.cpp:1018:11: warning: Condition 'i!=fp_sin_code' is always true [knownConditionTrueFalse]
+    if (i != fp_sin_code) { res2.cos1(oct); }
+          ^
+src/txfp.cpp:1017:11: note: Assuming that condition 'i!=fp_cos_code' is not redundant
+    if (i != fp_cos_code) { res1.sin1(oct); }
+          ^
+src/txfp.cpp:1018:11: note: Condition 'i!=fp_sin_code' is always true
+    if (i != fp_sin_code) { res2.cos1(oct); }
+          ^
+src/txfp.cpp:1733:11: warning: The scope of the variable 'cst_m' can be reduced. [variableScope]
+    Digit cst_m = 2147483647;
+          ^
+src/txfp.cpp:97:22: performance: Function parameter 'X' should be passed by const reference. [passedByValue]
+auto operator-(FpNum X) -> FpNum {
+                     ^
+src/txfp.cpp:127:22: performance: Function parameter 'X' should be passed by const reference. [passedByValue]
+auto operator+(FpNum X, FpNum Y) -> FpNum {
+                     ^
+src/txfp.cpp:134:22: performance: Function parameter 'X' should be passed by const reference. [passedByValue]
+auto operator/(FpNum X, int n) -> FpNum {
+                     ^
+src/txfp.cpp:176:23: performance: Function parameter 'X' should be passed by const reference. [passedByValue]
+void FpNum::div(FpNum X) { div(*this, X); }
+                      ^
+src/txfp.cpp:654:23: performance: Function parameter 'X' should be passed by const reference. [passedByValue]
+void FpNum::sub(FpNum X, FpNum Y) {
+                      ^
+src/txfp.cpp:661:23: performance: Function parameter 'X' should be passed by const reference. [passedByValue]
+void FpNum::add(FpNum X, FpNum Y) {
+                      ^
+src/txfp.cpp:661:32: performance: Function parameter 'Y' should be passed by const reference. [passedByValue]
+void FpNum::add(FpNum X, FpNum Y) {
+                               ^
+src/txfp.cpp:797:23: performance: Function parameter 'X' should be passed by const reference. [passedByValue]
+void FpNum::pow(FpNum X, FpNum Y, subtypes i) {
+                      ^
+src/txfp.cpp:797:32: performance: Function parameter 'Y' should be passed by const reference. [passedByValue]
+void FpNum::pow(FpNum X, FpNum Y, subtypes i) {
+                               ^
+src/txfp.cpp:1349:54: performance: Function parameter 'C' should be passed by const reference. [passedByValue]
+auto fp::qsolve(FpNum &r1, FpNum &r2, FpNum B, FpNum C) -> int {
+                                                     ^
+src/txfp.cpp:1361:45: performance: Function parameter 'A' should be passed by const reference. [passedByValue]
+auto fp::qsolve(FpNum &r1, FpNum &r2, FpNum A, FpNum B, FpNum C) -> int { return qsolve(r1, r2, B / A, C / A); }
+                                            ^
+src/txfp.cpp:1361:54: performance: Function parameter 'B' should be passed by const reference. [passedByValue]
+auto fp::qsolve(FpNum &r1, FpNum &r2, FpNum A, FpNum B, FpNum C) -> int { return qsolve(r1, r2, B / A, C / A); }
+                                                     ^
+src/txfp.cpp:1361:63: performance: Function parameter 'C' should be passed by const reference. [passedByValue]
+auto fp::qsolve(FpNum &r1, FpNum &r2, FpNum A, FpNum B, FpNum C) -> int { return qsolve(r1, r2, B / A, C / A); }
+                                                              ^
+src/txfp.cpp:1364:46: performance: Function parameter 'A' should be passed by const reference. [passedByValue]
+void fp::x_solve(FpNum &r1, FpNum &r2, FpNum A, FpNum B, FpNum C) {
+                                             ^
+src/txfp.cpp:1364:55: performance: Function parameter 'B' should be passed by const reference. [passedByValue]
+void fp::x_solve(FpNum &r1, FpNum &r2, FpNum A, FpNum B, FpNum C) {
+                                                      ^
+src/txfp.cpp:1364:64: performance: Function parameter 'C' should be passed by const reference. [passedByValue]
+void fp::x_solve(FpNum &r1, FpNum &r2, FpNum A, FpNum B, FpNum C) {
+                                                               ^
+src/txfp.cpp:1376:27: performance: Function parameter 'A' should be passed by const reference. [passedByValue]
+void fp::csolve_aux(FpNum A, FpNum B, FpNum C, FpNum D, FpNum &p, FpNum &q, FpNum &T) {
+                          ^
+src/txfp.cpp:1376:36: performance: Function parameter 'B' should be passed by const reference. [passedByValue]
+void fp::csolve_aux(FpNum A, FpNum B, FpNum C, FpNum D, FpNum &p, FpNum &q, FpNum &T) {
+                                   ^
+src/txfp.cpp:1376:45: performance: Function parameter 'C' should be passed by const reference. [passedByValue]
+void fp::csolve_aux(FpNum A, FpNum B, FpNum C, FpNum D, FpNum &p, FpNum &q, FpNum &T) {
+                                            ^
+src/txfp.cpp:1384:57: performance: Function parameter 'A' should be passed by const reference. [passedByValue]
+auto fp::x_solve(FpNum &r1, FpNum &r2, FpNum &r3, FpNum A, FpNum B, FpNum C, FpNum D) -> int {
+                                                        ^
+src/txfp.cpp:1384:66: performance: Function parameter 'B' should be passed by const reference. [passedByValue]
+auto fp::x_solve(FpNum &r1, FpNum &r2, FpNum &r3, FpNum A, FpNum B, FpNum C, FpNum D) -> int {
+                                                                 ^
+src/txfp.cpp:1384:75: performance: Function parameter 'C' should be passed by const reference. [passedByValue]
+auto fp::x_solve(FpNum &r1, FpNum &r2, FpNum &r3, FpNum A, FpNum B, FpNum C, FpNum D) -> int {
+                                                                          ^
+src/txfp.cpp:1384:84: performance: Function parameter 'D' should be passed by const reference. [passedByValue]
+auto fp::x_solve(FpNum &r1, FpNum &r2, FpNum &r3, FpNum A, FpNum B, FpNum C, FpNum D) -> int {
+                                                                                   ^
+src/txfp.cpp:1429:25: performance: Function parameter 'r' should be passed by const reference. [passedByValue]
+auto fp::quad_aux(FpNum r, FpNum w, FpNum &y, FpNum &Ay) -> bool {
+                        ^
+src/txfp.cpp:1429:34: performance: Function parameter 'w' should be passed by const reference. [passedByValue]
+auto fp::quad_aux(FpNum r, FpNum w, FpNum &y, FpNum &Ay) -> bool {
+                                 ^
+src/txfp.cpp:1623:30: performance: Function parameter 'X' should be passed by const reference. [passedByValue]
+void Parser::fp_finish(FpNum X) {
+                             ^
+src/txfp.cpp:1826:34: warning: Parameter 'l' can be declared with const [constParameter]
+void Parser::upn_eval(TokenList &l) {
+                                 ^
+src/txfp.cpp:275:25: warning: Consider using std::fill algorithm instead of a raw loop. [useStlAlgorithm]
+    for (auto &i : z) i = 0;
+                        ^
+src/txfp.cpp:295:25: warning: Consider using std::fill algorithm instead of a raw loop. [useStlAlgorithm]
+    for (auto &i : z) i = 0;
+                        ^
+72/89 files checked 53% done
+Checking src/txio.cpp ...
+src/txio.cpp:205:20: warning: Variable 'guard' is assigned a value that is never used. [unreadVariable]
+        auto guard = InLoadHandler();
+                   ^
+73/89 files checked 53% done
+Checking src/txl3.cpp ...
+src/txl3.cpp:1209:9: warning: Consecutive return, break, continue, goto or throw statements are unnecessary. [duplicateBreak]
+        break;
+        ^
+src/txl3.cpp:255:48: warning: Parameter 'arg_spec' can be declared with const [constParameter]
+void Parser::L3_new_conditional_aux(TokenList &arg_spec, subtypes s) {
+                                               ^
+74/89 files checked 56% done
+Checking src/txmath.cpp ...
+src/txmath.cpp:2213:19: warning: The if condition is the same as the previous if condition [duplicateCondition]
+            if (c == hphantom_code) A->add_att(the_names["depth"], the_names["0pt"]);
+                  ^
+src/txmath.cpp:2212:19: note: First condition
+            if (c == hphantom_code) A->add_att(the_names["height"], the_names["0pt"]);
+                  ^
+src/txmath.cpp:2213:19: note: Second condition
+            if (c == hphantom_code) A->add_att(the_names["depth"], the_names["0pt"]);
+                  ^
+src/txmath.cpp:260:14: warning: The scope of the variable 'skip_next' can be reduced. [variableScope]
+    bool     skip_next = false;
+             ^
+src/txmath.cpp:260:24: warning: Variable 'skip_next' is assigned a value that is never used. [unreadVariable]
+    bool     skip_next = false;
+                       ^
+75/89 files checked 62% done
+Checking src/txmath1.cpp ...
+src/txmath1.cpp:1144:11: warning: Variable 'L' can be declared with const [constVariable]
+    Math &L = front().get_list(); // the sublist containing the argument
+          ^
+76/89 files checked 65% done
+Checking src/txmathboot.cpp ...
+src/txmathboot.cpp:36:36: warning: Consider using std::fill or std::generate algorithm instead of a raw loop. [useStlAlgorithm]
+    for (auto &c : single_chars) c = nullptr;
+                                   ^
+src/txmathboot.cpp:211:37: warning: Consider using std::fill or std::generate algorithm instead of a raw loop. [useStlAlgorithm]
+        for (auto &j : math_char) j = "";
+                                    ^
+src/txmathboot.cpp:1395:38: warning: Consider using std::fill or std::generate algorithm instead of a raw loop. [useStlAlgorithm]
+    for (auto &i : built_in_table) i = nullptr;     // \todo useless?
+                                     ^
+src/txmathboot.cpp:1396:42: warning: Consider using std::fill or std::generate algorithm instead of a raw loop. [useStlAlgorithm]
+    for (auto &i : built_in_table_alt) i = nullptr; // \todo useless?
+                                         ^
+77/89 files checked 71% done
+Checking src/txparser.cpp ...
+src/txparser.cpp:23:9: warning: Struct 'SpecialHash' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+        SpecialHash(const std::string &str) {
+        ^
+src/txparser.cpp:1319:11: warning: The if condition is the same as the previous if condition [duplicateCondition]
+    if (c == 0) {
+          ^
+src/txparser.cpp:1313:11: note: First condition
+    if (c == 0) {
+          ^
+src/txparser.cpp:1319:11: note: Second condition
+    if (c == 0) {
+          ^
+src/txparser.cpp:4126:11: warning: Condition 'c==useboxB_code' is always false [knownConditionTrueFalse]
+    if (c == useboxB_code) {
+          ^
+src/txparser.cpp:4117:32: note: Assuming that condition 'c==useboxB_code' is not redundant
+    if (c == useboxA_code || c == useboxB_code) {
+                               ^
+src/txparser.cpp:4126:11: note: Condition 'c==useboxB_code' is always false
+    if (c == useboxB_code) {
+          ^
+src/txparser.cpp:791:17: warning: Same expression used in consecutive assignments of 't2' and 't3'. [duplicateAssignExpression]
+    Token       t2 = hash_table.relax_token;
+                ^
+src/txparser.cpp:792:17: note: Same expression used in consecutive assignments of 't2' and 't3'.
+    Token       t3 = hash_table.relax_token;
+                ^
+src/txparser.cpp:791:17: note: Same expression used in consecutive assignments of 't2' and 't3'.
+    Token       t2 = hash_table.relax_token;
+                ^
+src/txparser.cpp:792:17: warning: Same expression used in consecutive assignments of 't3' and 't4'. [duplicateAssignExpression]
+    Token       t3 = hash_table.relax_token;
+                ^
+src/txparser.cpp:793:17: note: Same expression used in consecutive assignments of 't3' and 't4'.
+    Token       t4 = hash_table.relax_token;
+                ^
+src/txparser.cpp:792:17: note: Same expression used in consecutive assignments of 't3' and 't4'.
+    Token       t3 = hash_table.relax_token;
+                ^
+src/txparser.cpp:3771:39: performance: Function parameter 'val' should be passed by const reference. [passedByValue]
+void Parser::calc_spec_mul(RealNumber val, SthInternal &res) {
+                                      ^
+src/txparser.cpp:592:50: warning: Parameter 'b' can be declared with const [constParameter]
+void Parser::add_buffer_to_document_hook(Buffer &b, const std::string &name) {
+                                                 ^
+src/txparser.cpp:1564:36: warning: Parameter 'b' can be declared with const [constParameter]
+void Parser::finish_csname(Buffer &b, const std::string &s) {
+                                   ^
+src/txparser.cpp:1841:36: warning: Parameter 'b' can be declared with const [constParameter]
+auto Parser::counter_check(Buffer &b, bool def) -> bool {
+                                   ^
+src/txparser.cpp:2291:14: warning: Variable 'M' can be declared with const [constVariable]
+    Macro &  M = mac_table.get_macro(c);
+             ^
+src/txparser.cpp:2398:40: warning: Parameter 'A' can be declared with const [constParameter]
+void Parser::E_scan_up_down(TokenList &A, TokenList &B, TokenList &C, TokenList &res) {
+                                       ^
+src/txparser.cpp:2398:54: warning: Parameter 'B' can be declared with const [constParameter]
+void Parser::E_scan_up_down(TokenList &A, TokenList &B, TokenList &C, TokenList &res) {
+                                                     ^
+src/txparser.cpp:450:16: warning: Variable 'guard' is assigned a value that is never used. [unreadVariable]
+    auto guard = SaveLongState(ls_normal); // \par forbidden
+               ^
+src/txparser.cpp:457:16: warning: Variable 'guard' is assigned a value that is never used. [unreadVariable]
+    auto guard = SaveLongState(ls_normal);
+               ^
+src/txparser.cpp:464:21: warning: Variable 'guard' is assigned a value that is never used. [unreadVariable]
+    auto      guard = SaveLongState(ls_normal);
+                    ^
+src/txparser.cpp:475:21: warning: Variable 'guard' is assigned a value that is never used. [unreadVariable]
+    auto      guard = SaveLongState(ls_long);
+                    ^
+src/txparser.cpp:485:21: warning: Variable 'guard' is assigned a value that is never used. [unreadVariable]
+    auto      guard = SaveLongState(ls_long);
+                    ^
+src/txparser.cpp:495:21: warning: Variable 'guard' is assigned a value that is never used. [unreadVariable]
+    auto      guard = SaveLongState(ls_normal);
+                    ^
+src/txparser.cpp:505:20: warning: Variable 'guard1' is assigned a value that is never used. [unreadVariable]
+    auto guard1    = SaveLongState(ls_long);
+                   ^
+src/txparser.cpp:506:20: warning: Variable 'guard2' is assigned a value that is never used. [unreadVariable]
+    auto guard2    = SaveErrTok(T);
+                   ^
+src/txparser.cpp:542:20: warning: Variable 'guard' is assigned a value that is never used. [unreadVariable]
+    auto guard     = SaveLongState(ls_normal);
+                   ^
+src/txparser.cpp:1095:17: warning: Variable 'guard1' is assigned a value that is never used. [unreadVariable]
+    auto guard1 = SaveLongState(ls_long); // allows \par
+                ^
+src/txparser.cpp:1096:17: warning: Variable 'guard2' is assigned a value that is never used. [unreadVariable]
+    auto guard2 = SaveScannerStatus(ss_absorbing);
+                ^
+src/txparser.cpp:1170:20: warning: Variable 'guard' is assigned a value that is never used. [unreadVariable]
+        auto guard = SaveErrTok(name);
+                   ^
+src/txparser.cpp:2537:17: warning: Variable 'guard1' is assigned a value that is never used. [unreadVariable]
+    auto guard1 = SaveScannerStatus(ss_macro);
+                ^
+src/txparser.cpp:2538:17: warning: Variable 'guard2' is assigned a value that is never used. [unreadVariable]
+    auto guard2 = SaveLongState(ls_normal);
+                ^
+src/txparser.cpp:2759:21: warning: Variable 'guard2' is assigned a value that is never used. [unreadVariable]
+        auto guard2 = SaveScannerStatus(ss_normal);
+                    ^
+src/txparser.cpp:2802:16: warning: Variable 'guard' is assigned a value that is never used. [unreadVariable]
+    auto guard = SaveScannerStatus(ss_skipping);
+               ^
+src/txparser.cpp:2953:20: warning: Variable 'guard' is assigned a value that is never used. [unreadVariable]
+        auto guard = SaveScannerStatus(ss_normal);
+                   ^
+src/txparser.cpp:3188:20: warning: Variable 'guard' is assigned a value that is never used. [unreadVariable]
+        auto guard = SaveErrTok(name);
+                   ^
+src/txparser.cpp:3220:20: warning: Variable 'guard' is assigned a value that is never used. [unreadVariable]
+        auto guard = SaveErrTok(T);
+                   ^
+src/txparser.cpp:3227:20: warning: Variable 'guard' is assigned a value that is never used. [unreadVariable]
+        auto guard = SaveErrTok(T);
+                   ^
+src/txparser.cpp:4089:16: warning: Variable 'res' is assigned a value that is never used. [unreadVariable]
+    size_t res = 0;
+               ^
+78/89 files checked 79% done
+Checking src/txparser2.cpp ...
+src/txparser2.cpp:76:43: warning: Parameter 'L' can be declared with const [constParameter]
+void Parser::T_fancy(String s, TokenList &L) {
+                                          ^
+src/txparser2.cpp:1164:17: warning: Variable 'E' can be declared with const [constVariable]
+    EqtbCmdChr &E = Hashtab::the_eqtb()[T.eqtb_loc()];
+                ^
+src/txparser2.cpp:619:16: warning: Variable 'guard' is assigned a value that is never used. [unreadVariable]
+    auto guard = SaveErrTok(cmd);
+               ^
+79/89 files checked 82% done
+Checking src/txparser3.cpp ...
+src/txparser3.cpp:44:9: warning: Member variable 'Parser::state' is not initialized in the constructor. [uninitMemberVar]
+Parser::Parser() : cur_env_name("document") { // \todo move more to the header
+        ^
+src/txparser3.cpp:258:53: warning: Parameter 'c' can be declared with const [constParameter]
+void Parser::token_list_define(size_t p, TokenList &c, bool gbl) {
+                                                    ^
+80/89 files checked 83% done
+Checking src/txpost.cpp ...
+81/89 files checked 83% done
+Checking src/txra.cpp ...
+82/89 files checked 83% done
+Checking src/txscan.cpp ...
+src/txscan.cpp:854:35: warning: The scope of the variable 'tty_line_no' can be reduced. [variableScope]
+    static int                    tty_line_no = 0;
+                                  ^
+src/txscan.cpp:949:9: warning: The scope of the variable 'b' can be reduced. [variableScope]
+    int b = 0;
+        ^
+src/txscan.cpp:1572:14: warning: The scope of the variable 'c1' can be reduced. [variableScope]
+    char32_t c1 = 0, c2 = 0;
+             ^
+src/txscan.cpp:1572:22: warning: The scope of the variable 'c2' can be reduced. [variableScope]
+    char32_t c1 = 0, c2 = 0;
+                     ^
+src/txscan.cpp:331:38: warning: Parameter 'L' can be declared with const [constParameter]
+void Parser::T_scantokens(TokenList &L) {
+                                     ^
+src/txscan.cpp:1981:33: warning: Consider using std::fill or std::generate algorithm instead of a raw loop. [useStlAlgorithm]
+            for (long &j : V) j = scan_int(T); // \todo range for
+                                ^
+src/txscan.cpp:352:24: warning: Variable 'guard' is assigned a value that is never used. [unreadVariable]
+            auto guard = InLoadHandler();
+                       ^
+src/txscan.cpp:387:20: warning: Variable 'guard' is assigned a value that is never used. [unreadVariable]
+        auto guard = InLoadHandler();
+                   ^
+src/txscan.cpp:651:16: warning: Variable 'guard' is assigned a value that is never used. [unreadVariable]
+    auto guard = SaveScannerStatus(ss_normal);
+               ^
+src/txscan.cpp:1572:17: warning: Variable 'c1' is assigned a value that is never used. [unreadVariable]
+    char32_t c1 = 0, c2 = 0;
+                ^
+src/txscan.cpp:1572:25: warning: Variable 'c2' is assigned a value that is never used. [unreadVariable]
+    char32_t c1 = 0, c2 = 0;
+                        ^
+src/txscan.cpp:2048:25: warning: Variable 'guard' is assigned a value that is never used. [unreadVariable]
+        auto      guard = SaveScannerStatus(ss_absorbing);
+                        ^
+83/89 files checked 88% done
+Checking src/txtitlepage.cpp ...
+84/89 files checked 88% done
+Checking src/txtoken.cpp ...
+src/txtoken.cpp:409:17: warning: Statements following return, break, continue, goto or throw will never be executed. [unreachableCode]
+                ++sC;
+                ^
+85/89 files checked 89% done
+Checking src/txtoken1.cpp ...
+86/89 files checked 94% done
+Checking src/txtranslate.cpp ...
+src/txtranslate.cpp:79:15: warning: The if condition is the same as the previous if condition [duplicateCondition]
+        if (a != nullptr) { // chr
+              ^
+src/txtranslate.cpp:75:15: note: First condition
+        if (a != nullptr) { // print both values
+              ^
+src/txtranslate.cpp:79:15: note: Second condition
+        if (a != nullptr) { // chr
+              ^
+src/txtranslate.cpp:1940:11: warning: The if condition is the same as the previous if condition [duplicateCondition]
+    if (c == circle_code) { // circle
+          ^
+src/txtranslate.cpp:1939:11: note: First condition
+    if (c == circle_code) x0 = "circle";
+          ^
+src/txtranslate.cpp:1940:11: note: Second condition
+    if (c == circle_code) { // circle
+          ^
+src/txtranslate.cpp:1532:7: warning: Exception should be caught by reference. [catchExceptionByValue]
+    } catch (EndOfData tmp) {};
+      ^
+src/txtranslate.cpp:827:10: warning: The scope of the variable 'seen_end' can be reduced. [variableScope]
+    bool seen_end = false;
+         ^
+src/txtranslate.cpp:241:17: warning: Variable 'guard1' is assigned a value that is never used. [unreadVariable]
+    auto guard1 = SaveCatcode('~', other_catcode);
+                ^
+src/txtranslate.cpp:242:17: warning: Variable 'guard2' is assigned a value that is never used. [unreadVariable]
+    auto guard2 = SaveCatcode('#', active_catcode);
+                ^
+src/txtranslate.cpp:243:17: warning: Variable 'guard3' is assigned a value that is never used. [unreadVariable]
+    auto guard3 = InLoadHandler();
+                ^
+src/txtranslate.cpp:244:17: warning: Variable 'guard4' is assigned a value that is never used. [unreadVariable]
+    auto guard4 = InUrlHandler();
+                ^
+src/txtranslate.cpp:761:20: warning: Variable 'guard' is assigned a value that is never used. [unreadVariable]
+        auto guard = SaveCatcode('_', 13); // allow underscore in the file name (needed ?)
+                   ^
+src/txtranslate.cpp:827:19: warning: Variable 'seen_end' is assigned a value that is never used. [unreadVariable]
+    bool seen_end = false;
+                  ^
+src/txtranslate.cpp:988:20: warning: Variable 'guard' is assigned a value that is never used. [unreadVariable]
+        auto guard = InLoadHandler();
+                   ^
+src/txtranslate.cpp:1403:22: warning: Variable 'guard1' is assigned a value that is never used. [unreadVariable]
+    auto      guard1 = SaveCatcode('~', other_catcode);
+                     ^
+src/txtranslate.cpp:1404:22: warning: Variable 'guard2' is assigned a value that is never used. [unreadVariable]
+    auto      guard2 = SaveCatcode('&', active_catcode);
+                     ^
+src/txtranslate.cpp:1405:22: warning: Variable 'guard3' is assigned a value that is never used. [unreadVariable]
+    auto      guard3 = SaveCatcode('#', active_catcode);
+                     ^
+src/txtranslate.cpp:1406:22: warning: Variable 'guard4' is assigned a value that is never used. [unreadVariable]
+    auto      guard4 = InLoadHandler();
+                     ^
+src/txtranslate.cpp:1407:22: warning: Variable 'guard5' is assigned a value that is never used. [unreadVariable]
+    auto      guard5 = InUrlHandler();
+                     ^
+src/txtranslate.cpp:1444:17: warning: Variable 'guard' is assigned a value that is never used. [unreadVariable]
+    auto guard  = InUrlHandler();
+                ^
+src/txtranslate.cpp:1445:17: warning: Variable 'guard2' is assigned a value that is never used. [unreadVariable]
+    auto guard2 = InLoadHandler();
+                ^
+src/txtranslate.cpp:2018:18: warning: Variable 'guard' is assigned a value that is never used. [unreadVariable]
+    auto   guard = InLoadHandler();
+                 ^
+Checking src/txtranslate.cpp: _MSC_VER...
+87/89 files checked 98% done
+Checking src/txtrees.cpp ...
+src/txtrees.cpp:472:16: warning: Checking if unsigned expression 'm' is less than zero. [unsignedLessThanZero]
+    else if (m <= 0)
+               ^
+src/txtrees.cpp:118:26: warning: Consider using std::replace_if algorithm instead of a raw loop. [useStlAlgorithm]
+        if (c == '\n') c = ' ';
+                         ^
+88/89 files checked 99% done
+Checking src/util.cpp ...
+89/89 files checked 100% done
+src/Xid.cpp:72:0: warning: The function 'add_attribute_but_rend' is never used. [unusedFunction]
+
+^
+src/txmath1.cpp:1011:0: warning: The function 'chars_to_mb2' is never used. [unusedFunction]
+
+^
+src/Xid.cpp:47:0: warning: The function 'is_font_change' is never used. [unusedFunction]
+
+^
+src/util.cpp:12:0: warning: The function 'only_space' is never used. [unusedFunction]
+
+^
+nofile:0:0: information: Cppcheck cannot find all the include files (use --check-config for details) [missingIncludeSystem]
+
