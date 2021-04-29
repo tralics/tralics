@@ -1007,22 +1007,6 @@ auto Math::chars_to_mb1(Buffer &B) const -> bool {
     }
 }
 
-// Slightly modified procedure. First token is ignored
-auto Math::chars_to_mb2(Buffer &B) const -> bool {
-    B.clear();
-    auto L = begin();
-    auto E = end();
-    if (L == E) return false;
-    ++L;
-    if (L == E) return false;
-    for (;;) {
-        if (L == E) return true;
-        if (!L->is_char()) return false;
-        B.push_back(L->get_char());
-        ++L;
-    }
-}
-
 // Yet another procedure. Reads the dimension in a command like \above
 // Something like -1,2cm  is OK
 auto Math::chars_to_mb3() -> std::string {

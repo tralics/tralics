@@ -25,7 +25,6 @@ public:
     [[nodiscard]] auto        duplicate(bool nomath) const -> subtypes;
     auto                      chars_to_mb(Buffer &B, bool rec) const -> bool;
     auto                      chars_to_mb1(Buffer &B) const -> bool;
-    auto                      chars_to_mb2(Buffer &B) const -> bool;
     auto                      chars_to_mb3() -> std::string;
     auto                      convert_math(math_style k) -> Xml *;
     auto                      convert_math_noML(bool spec) -> Xml *;

@@ -578,25 +578,11 @@ void Xml::subst_env0(std::string match, Xml *vl) {
     recurse(X);
 }
 
-// Returns number of sons named <match>.
-auto Xml::how_many_env(std::string match) -> long {
-    XmlAction X(std::move(match), rc_how_many);
-    recurse(X);
-    return X.int_val;
-}
-
 // Removes and returns first element named N.
 auto Xml::get_first_env(const std::string &N) -> Xml * {
     XmlAction X(the_names[N], rc_return_first_and_kill);
     recurse0(X);
     return X.xml_val;
-}
-
-// Returns the element that is just before x.
-auto Xml::prev_sibling(Xml *x) -> Xml * {
-    for (size_t i = 1; i < size(); i++)
-        if (at(i) == x) return at(i - 1);
-    return nullptr;
 }
 
 // This returns true if it is possible to remove the p

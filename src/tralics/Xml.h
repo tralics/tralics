@@ -39,7 +39,6 @@ public:
     auto deep_copy() -> gsl::not_null<Xml *>;
     auto find_on_tree(Xml *check, Xml *&res) const -> bool;
     auto get_first_env(const std::string &name) -> Xml *;
-    auto how_many_env(std::string match) -> long;
 
     void add_att(const std::string &a, const std::string &b) const { id.add_attribute(a, b); }
     void add_first(Xml *x);
@@ -61,7 +60,6 @@ public:
     void one_fig_tab(bool is_fig);
     auto par_is_empty() -> bool;
     void postprocess_fig_table(bool is_fig);
-    auto prev_sibling(Xml *x) -> Xml *;
     auto put_at(long n, gsl::not_null<Xml *> x) -> bool;
     void put_in_buffer(Buffer &b);
     void push_back_unless_nullptr(Xml *x);
