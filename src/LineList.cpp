@@ -343,11 +343,10 @@ void LineList::parse_and_extract_clean(const std::string &s) {
 auto LineList::parse_and_extract(String s) const -> LineList {
     LineList res;
     int      b    = 0;
-    Buffer & B    = local_buf;
     bool     keep = false;
     for (const auto &C : *this) {
-        B        = C;
-        int open = B.see_config_env();
+        local_buf = C;
+        int open  = local_buf.see_config_env();
         b += open;
         if (open != 0) keep = false; // status changed
         if (b < 0) {
@@ -355,7 +354,7 @@ auto LineList::parse_and_extract(String s) const -> LineList {
             continue;
         }                          // ignore bogus lines
         if (b == 1 && open == 1) { // something new started
-            if (B.is_begin_something(s) == 4) keep = true;
+            if (local_buf.is_begin_something(s) == 4) keep = true;
             continue;
         }
         if (keep) res.push_back(C);

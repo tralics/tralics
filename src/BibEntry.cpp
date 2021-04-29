@@ -27,7 +27,7 @@ namespace {
         Bchar       main_data{};
 
     public:
-        NameSplitter(bchar_type *T) : table(T) {}
+        explicit NameSplitter(bchar_type *T) : table(T) {}
 
         void handle_the_names() {
             bool   is_first_name = true;
@@ -198,8 +198,7 @@ namespace {
 
     auto remove_space(const std::string &s) -> std::string {
         std::string res;
-        for (auto c : s)
-            if (c != ' ') res.push_back(c);
+        std::copy_if(s.begin(), s.end(), std::back_inserter(res), [](char c) { return c != ' '; });
         return res;
     }
 

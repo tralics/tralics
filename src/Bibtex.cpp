@@ -31,8 +31,7 @@ namespace {
         if (s.empty()) return type_comment; // in case of error.
 
         const std::vector<std::string> &Bib2 = the_main.bibtex_extensions_s;
-        for (auto &i : Bib2)
-            if (i == s) return type_comment;
+        if (std::any_of(Bib2.begin(), Bib2.end(), [&s](const auto &i) { return i == s; })) return type_comment;
         if (s == the_names["article"]) return type_article;
         if (s == the_names["book"]) return type_book;
         if (s == the_names["booklet"]) return type_booklet;
@@ -63,9 +62,7 @@ namespace {
     auto find_field_pos(const std::string &s) -> field_pos {
         // Check is this has to be ignored
         const std::vector<std::string> &Bib_s = the_main.bibtex_fields_s;
-        for (auto &b : Bib_s)
-            if (b == s) return fp_unknown;
-
+        if (std::any_of(Bib_s.begin(), Bib_s.end(), [&s](const auto &b) { return b == s; })) return fp_unknown;
         // Check is this is standard
         if (s == the_names["address"]) return fp_address;
         if (s == the_names["author"]) return fp_author;
@@ -155,9 +152,8 @@ void Bibtex::define_a_macro(String name, String value) {
 
 // This finds a citation that matches exactly S
 auto Bibtex::find_entry(const CitationKey &s) -> BibEntry * {
-    for (auto &e : all_entries)
-        if (e->cite_key.is_same(s)) return e;
-    return nullptr;
+    auto i = std::find_if(all_entries.begin(), all_entries.end(), [&s](const auto &e) { return e->cite_key.is_same(s); });
+    return i != all_entries.end() ? *i : nullptr;
 }
 
 // This finds a citation whose lowercase equivalent is S.
@@ -510,12 +506,11 @@ auto Bibtex::find_entry(const std::string &s, bool create, bib_creator bc) -> Bi
 // and is not empty. If OK, we start to fill the entry.
 
 auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
-    for (const auto &i : omitcite_list)
-        if (i == cur_entry_name) {
-            Logger::finish_seq();
-            the_log << "bib: Omitting " << cur_entry_name << "\n";
-            return nullptr;
-        }
+    if (std::any_of(omitcite_list.begin(), omitcite_list.end(), [&](const auto &i) { return i == cur_entry_name; })) {
+        Logger::finish_seq();
+        the_log << "bib: Omitting " << cur_entry_name << "\n";
+        return nullptr;
+    }
     BibEntry *X = find_entry(cur_entry_name, nocitestar, because_all);
     if (X == nullptr) return X;
     if (X->type_int != type_unknown) {
@@ -644,7 +639,7 @@ void Bibtex::boot(std::string S) {
     no_year      = std::move(S);
     want_numeric = false;
     for (auto &id_clas : id_class) id_clas = legal_id_char;
-    for (size_t i = 0; i < 32; i++) id_class[i] = illegal_id_char;
+    std::fill_n(id_class.begin(), 32, illegal_id_char);
     id_class[static_cast<unsigned char>(' ')]  = illegal_id_char;
     id_class[static_cast<unsigned char>('\t')] = illegal_id_char;
     id_class[static_cast<unsigned char>('"')]  = illegal_id_char;
