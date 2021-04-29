@@ -180,15 +180,14 @@ void MathHelper::ml_second_pass(Xml *row, bool vb) {
     std::string label;
     std::string tag;
     auto        n = multi_labels.size();
-    size_t      i = 0;
     static int  N = 0;
     if (last_ml_pos == 0) N = 0;
     N++;
     for (;;) {
         if (last_ml_pos >= n) break;
-        i = last_ml_pos;
+        auto i = last_ml_pos;
         last_ml_pos++;
-        int j = (multi_labels_type[i]);
+        int j = multi_labels_type[i];
         if (j == 0) break;
         if (j == 1) {
             slabel = true;

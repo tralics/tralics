@@ -523,23 +523,23 @@ void Xml::insert_at(size_t pos, Xml *x) { insert(begin() + to_signed(pos), gsl::
 void Xml::add_first(Xml *x) { insert(begin(), gsl::not_null{x}); }
 
 // This find an element with a single son, the son should be res.
-auto Xml::find_on_tree(Xml *check, Xml **res) const -> bool {
-    for (size_t i = 0; i < size(); i++) {
-        auto T = at(i);
+auto Xml::find_on_tree(Xml *check, Xml *&res) const -> bool {
+    for (auto T : *this) {
         if (!T->is_xmlc() && T->size() == 1 && T->at(0) == check) {
-            *res = T;
+            res = T;
             return true;
         }
     }
-    for (size_t i = 0; i < size(); i++)
-        if (!at(i)->is_xmlc() && at(i)->find_on_tree(check, res)) return true;
+    for (auto T : *this) {
+        if (!T->is_xmlc() && T->find_on_tree(check, res)) return true;
+    }
     return false;
 }
 
 void Xml::insert_bib(Xml *bib, Xml *match) {
-    Xml **ptr = new Xml *(this);
+    Xml *ptr = this;
     if (match != nullptr) find_on_tree(match, ptr);
-    ptr[0]->add_tmp(gsl::not_null{bib});
+    ptr->add_tmp(gsl::not_null{bib});
 }
 
 void Xml::print_on(std::ostream &o) const {
@@ -651,12 +651,6 @@ void Xml::swap_x(Xml *x) { std::vector<gsl::not_null<Xml *>>::swap(*x); }
 // Moves to res every son named match.
 void Xml::move(std::string match, Xml *res) {
     XmlAction X(std::move(match), rc_move, res);
-    recurse(X);
-}
-
-// Renames all elements called old_name to new_name
-void Xml::rename(std::string old_name, std::string new_name) {
-    XmlAction X(std::move(old_name), rc_rename, std::move(new_name));
     recurse(X);
 }
 

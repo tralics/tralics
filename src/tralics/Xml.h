@@ -37,7 +37,7 @@ public:
 
     auto convert_to_string() -> std::string;
     auto deep_copy() -> gsl::not_null<Xml *>;
-    auto find_on_tree(Xml *check, Xml **res) const -> bool;
+    auto find_on_tree(Xml *check, Xml *&res) const -> bool;
     auto get_first_env(const std::string &name) -> Xml *;
     auto how_many_env(std::string match) -> long;
 
@@ -74,7 +74,6 @@ public:
     void remove_last_empty_hi();
     void remove_last_space();
     void remove_par_bal_if_ok();
-    void rename(std::string old_name, std::string new_name);
     void subst_env0(std::string match, Xml *vl);
     void swap_x(Xml *x);
     void print_on(std::ostream &o) const;
