@@ -638,7 +638,7 @@ void Bibtex::work() {
 void Bibtex::boot(std::string S) {
     no_year      = std::move(S);
     want_numeric = false;
-    for (auto &id_clas : id_class) id_clas = legal_id_char;
+    std::fill(id_class.begin(), id_class.end(), legal_id_char);
     std::fill_n(id_class.begin(), 32, illegal_id_char);
     id_class[static_cast<unsigned char>(' ')]  = illegal_id_char;
     id_class[static_cast<unsigned char>('\t')] = illegal_id_char;

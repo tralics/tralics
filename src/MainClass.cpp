@@ -302,13 +302,12 @@ void MainClass::get_os() {
 #if defined(_MSC_VER) || defined(_WIN32)
     auto res = 1;
 #else
-    auto                  res = gethostname(tmp.data(), 199);
+    auto res = gethostname(tmp.data(), 199);
 #endif
     if (res != 0)
         machine = "unknown";
     else {
-        for (auto &c : tmp)
-            if (c == '.') c = 0;
+        std::replace(tmp.begin(), tmp.end(), '.', '\0');
         machine = tmp.data();
     }
 }
