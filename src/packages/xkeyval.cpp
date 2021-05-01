@@ -173,8 +173,8 @@ namespace {
                 if (!cur.value.empty()) the_parser.parse_error(the_parser.err_tok, "No key for a value");
                 continue;
             }
-            if (std::any_of(Na.begin(), Na.end(), [&](auto &i) { return cur.keyname == i; })) continue;
-            if (idx >= 0 && std::any_of(Keys.begin(), Keys.end(), [&](auto &i) { return cur.keyname == i; })) continue;
+            if (std::find(Na.begin(), Na.end(), cur.keyname) != Na.end()) continue;
+            if (idx >= 0 && std::find(Keys.begin(), Keys.end(), cur.keyname) != Keys.end()) continue;
             bool found = false;
             auto N     = Fams.size();
             // if idx>=0, execute the loop once

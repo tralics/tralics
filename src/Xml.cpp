@@ -368,7 +368,7 @@ auto Xml::remove_at(long n) -> bool {
 
 auto Xml::is_child(Xml *x) const -> bool {
     if (is_xmlc()) return false;
-    return std::any_of(begin(), end(), [x](Xml *y) { return x == y; });
+    return std::find(begin(), end(), x) != end();
 }
 
 auto Xml::deep_copy() -> gsl::not_null<Xml *> {

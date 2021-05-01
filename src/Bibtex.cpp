@@ -31,7 +31,7 @@ namespace {
         if (s.empty()) return type_comment; // in case of error.
 
         const std::vector<std::string> &Bib2 = the_main.bibtex_extensions_s;
-        if (std::any_of(Bib2.begin(), Bib2.end(), [&s](const auto &i) { return i == s; })) return type_comment;
+        if (std::find(Bib2.begin(), Bib2.end(), s) != Bib2.end()) return type_comment;
         if (s == the_names["article"]) return type_article;
         if (s == the_names["book"]) return type_book;
         if (s == the_names["booklet"]) return type_booklet;
@@ -62,7 +62,7 @@ namespace {
     auto find_field_pos(const std::string &s) -> field_pos {
         // Check is this has to be ignored
         const std::vector<std::string> &Bib_s = the_main.bibtex_fields_s;
-        if (std::any_of(Bib_s.begin(), Bib_s.end(), [&s](const auto &b) { return b == s; })) return fp_unknown;
+        if (std::find(Bib_s.begin(), Bib_s.end(), s) != Bib_s.end()) return fp_unknown;
         // Check is this is standard
         if (s == the_names["address"]) return fp_address;
         if (s == the_names["author"]) return fp_author;
@@ -506,7 +506,7 @@ auto Bibtex::find_entry(const std::string &s, bool create, bib_creator bc) -> Bi
 // and is not empty. If OK, we start to fill the entry.
 
 auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
-    if (std::any_of(omitcite_list.begin(), omitcite_list.end(), [&](const auto &i) { return i == cur_entry_name; })) {
+    if (std::find(omitcite_list.begin(), omitcite_list.end(), cur_entry_name) != omitcite_list.end()) {
         Logger::finish_seq();
         the_log << "bib: Omitting " << cur_entry_name << "\n";
         return nullptr;
