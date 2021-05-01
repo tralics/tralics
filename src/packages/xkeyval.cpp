@@ -47,7 +47,7 @@ namespace {
         void check_preset(String s);
         void special_fams();
         void fetch_keys(bool c);
-        void check_action(XkvToken &cur);
+        void check_action(const XkvToken &cur);
         void run_key(Token mac, XkvToken &cur, const std::string &fam);
         void run_default(const std::string &Key, Token mac, bool s);
         void more_action(TokenList &L) { action.splice(action.end(), L); }
@@ -121,18 +121,18 @@ namespace {
         int       n = 1000;
         for (;;) {
             if (L.empty()) break;
-            Token t = L.front();
-            if (t.is_a_left_brace()) {
+            Token tt = L.front();
+            if (tt.is_a_left_brace()) {
                 L.fast_get_block(res);
                 continue;
             }
             L.pop_front();
-            if (t != hash_table.locate("usevalue")) {
-                res.push_back(t);
+            if (tt != hash_table.locate("usevalue")) {
+                res.push_back(tt);
                 continue;
             }
-            if (!L.empty()) t = L.front();
-            if (!t.is_a_left_brace()) {
+            if (!L.empty()) tt = L.front();
+            if (!tt.is_a_left_brace()) {
                 the_parser.parse_error(the_parser.err_tok, "Invalid \\usevalue token", "invalid usevalue");
                 continue;
             }
@@ -188,7 +188,7 @@ namespace {
                 Token T = hash_table.last_tok;
                 found   = true;
                 run_key(T, cur, Fams[i]);
-                if (!set_all && found) break;
+                if (!set_all) break;
             }
             if (!found) check_action(cur);
         }
@@ -256,7 +256,7 @@ namespace {
     }
 
     // This considers the case when \ProcessOptionsX has seen cur_opt
-    void XkvSetkeys::check_action(XkvToken &cur) {
+    void XkvSetkeys::check_action(const XkvToken &cur) {
         TokenList cur_opt = cur.initial;
         if (in_pox) {
             classes_ns::unknown_optionX(cur_opt, action);

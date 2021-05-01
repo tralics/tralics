@@ -72,19 +72,8 @@ namespace {
     void print_cmd_chr(CmdChr X) {
         String a = X.special_name();
         auto   b = X.name();
-        if (a != nullptr) { // print both values
-            the_log << "\\" << b << " " << a;
-            return;
-        }
-        if (a != nullptr) { // chr
-            the_log << a;
-            char32_t y = X.chr;
-            Buffer & B = buffer_for_log;
-            B.clear();
-            B.out_log(y, the_main.log_encoding);
-            return;
-        }
         the_log << "\\" << b;
+        if (a != nullptr) the_log << " " << a;
     }
 } // namespace
 
@@ -824,10 +813,9 @@ void Parser::T_keywords() {
     the_stack.push1(the_names["keywords"]);
     the_stack.add_nl();
     the_stack.set_no_mode();
-    bool seen_end = false;
     for (;;) {
         TokenList v;
-        seen_end = grab_env_comma(v);
+        bool      seen_end = grab_env_comma(v);
         token_ns::remove_first_last_space(v);
         if (!v.empty() && v.back().is_dot()) v.pop_back();
         the_stack.push1(the_names["term"]);

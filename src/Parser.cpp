@@ -128,7 +128,7 @@ namespace {
                 Xml *A = CI.at(i).translation;
                 A->id.add_attribute(the_names["target"], std::string(labels[CI.at(i).iid]));
             }
-            std::sort(CI.begin(), CI.end(), [](auto &A, auto &B) { return A.key < B.key; });
+            std::sort(CI.begin(), CI.end(), [](const auto &A, const auto &B) { return A.key < B.key; });
             for (size_t i = 0; i < n; i++) {
                 Xml *A = CI.at(i).translation;
                 res->push_back_unless_nullptr(A);
@@ -939,12 +939,11 @@ namespace {
 
     // Creates some little constants.
     void make_constants() {
-        hash_table.OB_token     = make_char_token('{', 1);
-        hash_table.CB_token     = make_char_token('}', 2);
-        hash_table.dollar_token = make_char_token('$', 3);
-        hash_table.hat_token    = Token(hat_t_offset, '^');
-        hash_table.zero_token   = Token(other_t_offset, '0');
-        Token(other_t_offset, '1');
+        hash_table.OB_token      = make_char_token('{', 1);
+        hash_table.CB_token      = make_char_token('}', 2);
+        hash_table.dollar_token  = make_char_token('$', 3);
+        hash_table.hat_token     = Token(hat_t_offset, '^');
+        hash_table.zero_token    = Token(other_t_offset, '0');
         hash_table.comma_token   = Token(other_t_offset, ',');
         hash_table.equals_token  = Token(other_t_offset, '=');
         hash_table.dot_token     = Token(other_t_offset, '.');
@@ -983,10 +982,7 @@ namespace {
     }
 
     void finish_color() {
-        int k = 0;
-        for (auto &color : all_colors)
-            if (color.used) k++;
-        if (k == 0) return;
+        if (std::none_of(all_colors.begin(), all_colors.end(), [](const auto &c) { return c.used; })) return;
         Xml *res = new Xml(std::string("colorpool"), nullptr);
         for (auto &color : all_colors)
             if (color.used) {
@@ -2300,7 +2296,7 @@ void Parser::T_newcolumn_type() {
 auto Parser::nct_aux(Token T, TokenList &body) -> std::optional<size_t> {
     see_cs_token(T);
     if (!cur_cmd_chr.is_user()) return {}; // bad
-    Macro &X = mac_table.get_macro(cur_cmd_chr.chr);
+    const Macro &X = mac_table.get_macro(cur_cmd_chr.chr);
     if (!(X.type == dt_empty || X.type == dt_normal)) return {};
     body = X.body;
     return X.nbargs;
