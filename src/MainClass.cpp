@@ -156,14 +156,13 @@ found at http://www.cecill.info.)";
                                                                 "/usr/local/lib/tralics/confdir", "/sw/share/tralics/confdir",
                                                                 "../../confdir"};
         auto                                              ps = conf_path;
-        for (const auto &p : paths) ps.emplace_back(p);
+        std::copy(paths.begin(), paths.end(), std::back_inserter(ps));
 
-        for (const auto &S : ps) {
-            if (exists(S / "book.clt")) {
-                conf_path.emplace_back(S);
-                spdlog::info("Found configuration folder: {}", S);
-                return;
-            }
+        auto s = std::find_if(ps.begin(), ps.end(), [](const auto &S) { return exists(S / "book.clt"); });
+        if (s != ps.end()) {
+            conf_path.emplace_back(*s);
+            spdlog::info("Found configuration folder: {}", *s);
+            return;
         }
 
         spdlog::error("Configuration folder not found");
@@ -279,7 +278,7 @@ void MainClass::get_os() {
 #if defined(__alpha)
     cur_os = st_decalpha;
 #elif defined(__sunsolaris)
-    cur_os = st_solaris;
+    cur_os   = st_solaris;
 #elif defined(__linux)
     cur_os = st_linux;
 #elif defined(__sgi)
@@ -365,7 +364,8 @@ void MainClass::open_log() { // \todo spdlog etc
     if (!default_class.empty()) spdlog::trace("Default class is {}", default_class);
     if (input_path.size() > 1) {
         std::vector<std::string> tmp;
-        for (const auto &s : input_path) tmp.push_back(s.string());
+        tmp.reserve(input_path.size());
+        std::copy(input_path.begin(), input_path.end(), std::back_inserter(tmp));
         spdlog::trace("Input path: ({})", fmt::format("{}", fmt::join(tmp, ",")));
     }
 
