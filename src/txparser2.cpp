@@ -73,7 +73,7 @@ void Parser::T_xfancy() {
 }
 
 // Stuff for fancyheadings
-void Parser::T_fancy(String s, TokenList &L) {
+void Parser::T_fancy(String s, const TokenList &L) {
     flush_buffer();
     push_level(bt_brace);
     hash_table.eval_let("thepage", "inert@thepage");
@@ -1158,10 +1158,10 @@ void Parser::refstepcounter(TokenList &L, bool star) {
 // remembers locally the name.
 void Parser::T_use_counter(const std::string &s) {
     string_define(1, s, false);
-    Buffer &b     = txparser2_local_buf;
-    b             = "c@" + s;
-    Token       T = hash_table.locate(b);
-    EqtbCmdChr &E = Hashtab::the_eqtb()[T.eqtb_loc()];
+    Buffer &b           = txparser2_local_buf;
+    b                   = "c@" + s;
+    Token             T = hash_table.locate(b);
+    const EqtbCmdChr &E = Hashtab::the_eqtb()[T.eqtb_loc()];
     if (E.val.cmd != assign_int_cmd) return;
     word_define(E.val.chr, 0, true);
 }

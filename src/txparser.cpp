@@ -4123,11 +4123,6 @@ void Parser::begin_box(size_t src, subtypes c) {
         box_end(cur_box, src);
         return;
     }
-    if (c == useboxB_code) {
-        cur_box = the_stack.top_stack()->last_box();
-        box_end(cur_box, src);
-        return;
-    }
     if (c == vsplit_code) {
         scan_reg_num();
         scan_keyword("to");

@@ -326,9 +326,8 @@ void Parser::E_input(subtypes q) {
     T_input(q);
 }
 
-void Parser::T_scantokens(TokenList &L) {
-    static Buffer B;
-    B.clear();
+void Parser::T_scantokens(const TokenList &L) {
+    Buffer B;
     B << L;
     push_input_stack("(scantokens)", false, true);
     lines.split_string(B, 0);
@@ -849,14 +848,13 @@ void Parser::insert_endline_char() {
 auto Parser::new_line_for_read(bool spec) -> bool {
     state = state_N;
     static std::array<char, 4096> m_ligne;
-    static int                    tty_line_no = 0;
-    int                           n           = 0;
+    int                           n = 0;
     scratch.clear();
     input_line.clear();
     if (cur_in_chan == nb_input_channels) {
         readline(m_ligne.data(), 78); // \todo pass the array instead
-        tty_line_no++;
-        n = tty_line_no;
+        static int tty_line_no = 0;
+        n                      = ++tty_line_no;
         scratch.append(m_ligne.data()); // \todo push_back(std::array<char>)
     } else {
         auto nn = tex_input_files[cur_in_chan].lines.get_next(scratch);
@@ -944,7 +942,6 @@ auto Parser::read_from_file(long ch, bool rl_sw) -> TokenList { // \todo should 
     push_input_stack(fn, false, true);
     TokenList L;
     new_line_for_read(true);
-    int b = 0;
     if (rl_sw) { // case of readline, only one line is read
         for (;;) {
             if (at_eol()) break;
@@ -955,6 +952,7 @@ auto Parser::read_from_file(long ch, bool rl_sw) -> TokenList { // \todo should 
                 L.push_back(Token(other_t_offset, c));
         }
     } else {
+        int b = 0;
         for (;;) {
             if (at_eol()) {                     // can we stop here ?
                 if (b == 0) break;              // Ok, brace level is zero
@@ -1567,13 +1565,12 @@ void Parser::scan_double(RealNumber &res) {
 // it reads a unit, returns
 auto Parser::read_unit() -> int { // \todo std::optional<size_t>
     remove_initial_space();
-    char32_t c1 = 0, c2 = 0;
     if (cur_tok.is_a_char()) {
-        c1         = static_cast<char32_t>(std::tolower(static_cast<int>(cur_cmd_chr.char_val())));
-        Token save = cur_tok;
+        char32_t c1   = static_cast<char32_t>(std::tolower(static_cast<int>(cur_cmd_chr.char_val())));
+        Token    save = cur_tok;
         get_x_token();
         if (cur_tok.is_a_char()) {
-            c2 = static_cast<char32_t>(std::tolower(static_cast<int>(cur_cmd_chr.char_val())));
+            char32_t c2 = static_cast<char32_t>(std::tolower(static_cast<int>(cur_cmd_chr.char_val())));
             if (c1 == 'p' && c2 == 't') return unit_pt;
             if (c1 == 'i' && c2 == 'n') return unit_in;
             if (c1 == 'p' && c2 == 'c') return unit_pc;
@@ -1976,7 +1973,7 @@ void Parser::M_prefixed_aux(bool gbl) {
                 return;
             }
             V.resize(to_unsigned(q));
-            for (long &j : V) j = scan_int(T); // \todo range for
+            std::generate(V.begin(), V.end(), [&] { return scan_int(T); });
         }
     }
         return;

@@ -41,15 +41,7 @@ auto gbl_or_assign(bool gbl, bool re) -> String {
     return "changing ";
 }
 
-Parser::Parser() : cur_env_name("document") { // \todo move more to the header
-    sectionning_offset                 = section_code;
-    restricted                         = false;
-    cur_level                          = 1;
-    calc_loaded                        = false;
-    cur_in_chan                        = main_in_chan;
-    long_state                         = ls_long;
-    scanner_status                     = ss_normal;
-    list_files_p                       = false;
+Parser::Parser() : cur_env_name("document") {
     allocation_table[newcount_code]    = 20;
     allocation_table[newdimen_code]    = 10;
     allocation_table[newlength_code]   = 10;
@@ -255,7 +247,7 @@ void Parser::box_define(size_t a, Xml *c, bool gbl) {
 }
 
 // Same code for a token list.
-void Parser::token_list_define(size_t p, TokenList &c, bool gbl) {
+void Parser::token_list_define(size_t p, const TokenList &c, bool gbl) {
     EqtbToken &W        = toks_registers[p];
     bool       reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
@@ -288,7 +280,7 @@ void Parser::save_font() {
 }
 
 void Parser::dump_save_stack() const {
-    int  L = cur_level - 1;
+    int L = cur_level - 1;
     for (size_t i = the_save_stack.size(); i > 0; i--) {
         auto &p = the_save_stack[i - 1];
         if (!p) continue;

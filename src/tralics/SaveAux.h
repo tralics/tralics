@@ -13,7 +13,7 @@ public:
     long      level;
 
     SaveAuxBase(save_type t, long l) : type(t), line(the_parser.get_cur_line()), level(l) {}
-    virtual ~SaveAuxBase() {};
+    virtual ~SaveAuxBase(){};
 };
 
 inline std::vector<std::unique_ptr<SaveAuxBase>> the_save_stack;
@@ -89,7 +89,7 @@ class SaveAuxGlue : public SaveAuxBase {
     size_t pos; // the position in glue_table
     Glue   val; // the value to be restored
 public:
-    SaveAuxGlue(long l, size_t p, Glue g) : SaveAuxBase(st_glue, l), pos(p), val(g) {}
+    SaveAuxGlue(long l, size_t p, const Glue &g) : SaveAuxBase(st_glue, l), pos(p), val(g) {}
     ~SaveAuxGlue() override;
 };
 
@@ -107,13 +107,13 @@ class SaveAuxEnv : public SaveAuxBase {
 public:
     std::string oldname;
     std::string name;
-    int         line;
+    int         lline;
     Token       token;
     CmdChr      cc;
 
     SaveAuxEnv(std::string a, std::string aa, int ll, Token b, CmdChr c)
-        : SaveAuxBase(st_env, 0), oldname(std::move(a)), name(std::move(aa)), line(ll), token(b), cc(c) {}
-    ~SaveAuxEnv() override { the_parser.set_cur_env_name(oldname, line); };
+        : SaveAuxBase(st_env, 0), oldname(std::move(a)), name(std::move(aa)), lline(ll), token(b), cc(c) {}
+    ~SaveAuxEnv() override { the_parser.set_cur_env_name(oldname, lline); };
 };
 
 // data structure for a font change

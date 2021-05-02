@@ -1,8 +1,8 @@
 #pragma once
+#include "TitlePageFullLine.h"
 #include "enums.h"
 #include <string>
 
-struct TitlePageFullLine;
 class Xml;
 
 // data for a titlepage item
@@ -13,7 +13,9 @@ struct TitlePageAux {
     tpi_vals    type{tpi_zero}; // type of object
 
     TitlePageAux() = default;
-    explicit TitlePageAux(const TitlePageFullLine &X);
+
+    explicit TitlePageAux(const TitlePageFullLine &X)
+        : T1(X.item1.value), T2(X.item2.value), T3(X.item3.value), T4(X.item4.value), xflags(X.flags) {}
 
     [[nodiscard]] auto get_flags2() const -> size_t { return 32U * (xflags / 32U); }
     [[nodiscard]] auto has_u_flags() const -> bool { return (xflags & tp_u_flag) != 0; }

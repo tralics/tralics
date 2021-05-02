@@ -117,7 +117,7 @@ void Parser::parse_error(Token T, const std::string &s1, const std::string &s2) 
     signal_error(T, s2);
 }
 
-void Parser::parse_error(Token T, const std::string &s, TokenList &L) {
+void Parser::parse_error(Token T, const std::string &s, const TokenList &L) {
     err_buf = s;
     err_ns::convert_to_string(L);
     signal_error(T, s);

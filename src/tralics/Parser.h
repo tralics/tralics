@@ -41,27 +41,27 @@ struct Parser {
     Token                                     err_tok; // in case of error
 
     bool                  unexpected_seen_hi{false};             // check for wrongly placed font changes
-    bool                  calc_loaded;                           // did we see \usepackage{calc} ?
+    bool                  calc_loaded{false};                    // did we see \usepackage{calc} ?
     bool                  numbered_verbatim{};                   // has this verbatim line numbers ?
-    bool                  restricted;                            // are we in restricted mode ?
+    bool                  restricted{false};                     // are we in restricted mode ?
     bool                  force_eof{false};                      // did we see \endinput ?
     bool                  no_new_file{false};                    // can we pop the input stack ?
     bool                  file_ended{};                          //
     bool                  chapter_has_star{false};               // true in frontmatter, backmatter
-    bool                  list_files_p;                          // Should we list the files at the end ?
+    bool                  list_files_p{false};                   // Should we list the files at the end ?
     bool                  tok_is_defined{};                      // use by \ifcsname
     int                   old_nberrs{};                          // previous number of errors
     int                   cur_line{};                            // current input line number
     int                   begin_env_line{0};                     // input line number of
     int                   default_language_num{0};               // default language
-    int                   cur_level;                             // current level on the execution stack
+    int                   cur_level{1};                          // current level on the execution stack
     size_t                equation_ctr_pos{};                    // position in the table of the counter equation
-    states                state;                                 // current state of the scanner
+    states                state{};                               // current state of the scanner
     Token                 after_assignment_token;                // token for \afterassignment
-    subtypes              sectionning_offset;                    // what is the main section, part, chapter ?
-    l_state               long_state;                            // Error recovery handling (\long)
-    scan_stat             scanner_status;                        // Error recovery handling (\outer)
-    size_t                cur_in_chan;                           // if get_token call get_a_new_line
+    subtypes              sectionning_offset{section_code};      // what is the main section, part, chapter ?
+    l_state               long_state{ls_long};                   // Error recovery handling (\long)
+    scan_stat             scanner_status{ss_normal};             // Error recovery handling (\outer)
+    size_t                cur_in_chan{main_in_chan};             // if get_token call get_a_new_line
     long                  cur_file_pos{0};                       // pos of file in the package list (0= none)
     std::string           cur_env_name;                          // name of current environment
     std::string           job_name;                              // the name, without extensions
@@ -161,7 +161,7 @@ struct Parser {
     auto nE_arg_nopar() -> std::string;
     auto nT_arg_nopar() -> std::string;
     auto nT_optarg_nopar() -> std::optional<std::string>;
-    void parse_error(Token T, const std::string &s, TokenList &L);
+    void parse_error(Token T, const std::string &s, const TokenList &L);
     void parse_error(Token T, const std::string &s);
     void parse_error(const std::string &s);
     void parse_error(Token T, const std::string &s1, const std::string &s2);
@@ -735,7 +735,7 @@ struct Parser {
     void               T_etex();
     void               T_execute_options();
     void               T_fancy();
-    void               T_fancy(String s, TokenList &L);
+    void               T_fancy(String s, const TokenList &L);
     void               T_fbox_dash_box();
     void               T_fbox_rotate_box();
     void               T_fbox(subtypes cc);
@@ -852,7 +852,7 @@ struct Parser {
     void               TM_tabular_arg(Xid id);
     void               token_for_show(bool lg, const CmdChr &val, Buffer &B);
     void               token_from_list(Token t);
-    void               token_list_define(size_t p, TokenList &c, bool gbl);
+    void               token_list_define(size_t p, const TokenList &c, bool gbl);
     void               token_show(int what, Buffer &B);
     void               trace_if(int k) const;
     void               translate_char(CmdChr X);
@@ -922,7 +922,7 @@ struct Parser {
     void l3_tl_set(subtypes c);
     void l3_token_check(subtypes c);
     void L3_user_split_next_name(bool base);
-    void T_scantokens(TokenList &L);
+    void T_scantokens(const TokenList &L);
     void tl_set_rescan(subtypes c);
     void Tl3_gen_from_ac(subtypes c);
 

@@ -5,15 +5,6 @@
 #include "tralics/TitlePage.h"
 #include "tralics/TitlePageFullLine.h"
 
-// Ctor from a TitlePageFullLine. It's just a copy.
-TitlePageAux::TitlePageAux(const TitlePageFullLine &X) {
-    T1     = X.item1.value;
-    T2     = X.item2.value;
-    T3     = X.item3.value;
-    T4     = X.item4.value;
-    xflags = X.flags;
-}
-
 // More classification. This allocates memory, and modifies state
 auto TitlePageAux::classify(tpi_vals w, int &state) -> bool {
     switch (w) {

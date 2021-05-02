@@ -42,7 +42,7 @@ struct SthInternal {
     void normalise();
     void quotient(long f);
     void scale(long n, long d);
-    void set_glue_val(Glue x) { glue_val = x; }
+    void set_glue_val(const Glue &x) { glue_val = x; }
 
     void kill() {
         int_val = 0;
@@ -72,12 +72,12 @@ struct SthInternal {
         type    = it_dimen;
     }
 
-    void set_glue(Glue a) {
+    void set_glue(const Glue &a) {
         glue_val = a;
         type     = it_glue;
     }
 
-    void set_mu(Glue a) {
+    void set_mu(const Glue &a) {
         glue_val = a;
         type     = it_mu;
     }

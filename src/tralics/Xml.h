@@ -23,7 +23,7 @@ public:
     [[nodiscard]] auto is_anchor() const -> bool { return !is_xmlc() && name == the_names["anchor"]; }
     [[nodiscard]] auto is_whitespace() const -> bool;
     [[nodiscard]] auto is_empty_p() const -> bool;
-    [[nodiscard]] auto is_xmlc() const -> bool { return id.value <= 0; }
+    [[nodiscard]] auto is_xmlc() const -> bool { return id.value == 0; }
     [[nodiscard]] auto last_addr() const -> Xml *;
     [[nodiscard]] auto last_is_string() const -> bool;
     [[nodiscard]] auto only_hi() const -> bool;
