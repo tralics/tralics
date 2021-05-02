@@ -6,7 +6,7 @@
 #include "tralics/TitlePageFullLine.h"
 
 // Ctor from a TitlePageFullLine. It's just a copy.
-TitlePageAux::TitlePageAux(TitlePageFullLine &X) {
+TitlePageAux::TitlePageAux(const TitlePageFullLine &X) {
     T1     = X.item1.value;
     T2     = X.item2.value;
     T3     = X.item3.value;

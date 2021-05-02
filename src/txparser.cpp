@@ -1513,7 +1513,7 @@ auto Parser::list_to_string_c(TokenList &x, String msg) -> std::string {
 // Converts the token list X into a string, adding s1 and s2
 // May signal an error, use bad instead
 auto Parser::list_to_string_c(TokenList &x, const std::string &s1, const std::string &s2, const std::string &msg) -> Buffer {
-    Buffer B = s1;
+    Buffer B{s1};
     if (list_to_string(x, B)) {
         parse_error(err_tok, msg, x);
         B = s1 + "bad";

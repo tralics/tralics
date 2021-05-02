@@ -12,7 +12,7 @@ public:
     Xid    id;         // the id of the table
     size_t cell_no{0}; // current cell number, first on row is zero
 
-    ArrayInfo(Xid a1) : id(a1) {}
+    explicit ArrayInfo(Xid a1) : id(a1) {}
 
     [[nodiscard]] auto get_cell_atts(size_t k) const -> AttList;
     [[nodiscard]] auto get_u_or_v(bool u_or_v, size_t pos) const -> TokenList;

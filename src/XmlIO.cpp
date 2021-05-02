@@ -404,7 +404,7 @@ void XmlIO::expect(String s) {
     for (size_t i = 0; i < n; i++) {
         cur_char = next_char();
         if (cur_char != uchar(s[i])) {
-            Buffer b = fmt::format("Expected {} got ", s[i]);
+            Buffer b{fmt::format("Expected {} got ", s[i])};
             b << cur_char; // \todo make codepoint formattable
             error(b);
         }

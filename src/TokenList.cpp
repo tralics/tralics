@@ -41,7 +41,7 @@ auto TokenList::block_size() const -> int {
 // Here we have to find the character c.
 // only top-level characters are considered. Active chars are allowed.
 // MX is decreased. Job aborted if it becomes negative.
-auto TokenList::expand_nct(size_t n, uchar c, int &MX, TokenList &body) -> bool {
+auto TokenList::expand_nct(size_t n, uchar c, int &MX, const TokenList &body) -> bool {
     TokenList                 res;
     bool                      result = false;
     std::array<TokenList, 10> Table; // arguments of the commands
@@ -223,12 +223,7 @@ void TokenList::brace_me() {
     push_back(hash_table.CB_token);
 }
 
-void TokenList::normalise() {
-    auto u = Token(space_t_offset + '\n');
-    auto v = Token(space_t_offset + ' ');
-    for (auto &a : *this)
-        if (a == u) a = v;
-}
+void TokenList::normalise() { std::replace(begin(), end(), Token(space_t_offset + '\n'), Token(space_t_offset + ' ')); }
 
 // Returns true if A is in B. If the switch is true, the value is removed
 // but the last token of B is not

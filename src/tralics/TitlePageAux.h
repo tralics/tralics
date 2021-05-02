@@ -13,7 +13,7 @@ struct TitlePageAux {
     tpi_vals    type{tpi_zero}; // type of object
 
     TitlePageAux() = default;
-    TitlePageAux(TitlePageFullLine &X);
+    explicit TitlePageAux(const TitlePageFullLine &X);
 
     [[nodiscard]] auto get_flags2() const -> size_t { return 32U * (xflags / 32U); }
     [[nodiscard]] auto has_u_flags() const -> bool { return (xflags & tp_u_flag) != 0; }

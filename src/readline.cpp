@@ -133,7 +133,7 @@ class Slined {
 
 public:
     Slined(size_t sz, String P) {
-        for (char &i : m_buffer) i = ' ';
+        std::fill(m_buffer.begin(), m_buffer.end(), ' ');
         if (sz != 0) m_inbuf = new char[sz]; // NOLINT
         if (P != nullptr) {
             m_history.emplace_back(P);

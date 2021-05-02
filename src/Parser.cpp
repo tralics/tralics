@@ -1015,11 +1015,10 @@ auto Parser::cur_line_to_istring() const -> std::string { return std::string(fmt
 
 // Enter a new image file, if ok is false, do not increase the occ count
 void Parser::enter_file_in_table(const std::string &nm, bool ok) {
-    for (auto &X : the_images) {
-        if (X.name == nm) {
-            if (ok) X.occ++;
-            return;
-        }
+    auto i = std::find_if(the_images.begin(), the_images.end(), [&nm](const auto &X) { return X.name == nm; });
+    if (i != the_images.end()) {
+        if (ok) i->occ++;
+        return;
     }
     the_images.emplace_back(nm, ok ? 1 : 0);
 }
@@ -1072,7 +1071,7 @@ void Parser::boot_verbatim() {
 // The list of characters for which \xspace should not add space.
 // Only 7bit characters are in the list
 void Parser::boot_xspace() {
-    for (bool &i : ok_for_xspace) i = false;
+    std::fill(ok_for_xspace.begin(), ok_for_xspace.end(), false);
     ok_for_xspace[uchar('.')]  = true;
     ok_for_xspace[uchar('!')]  = true;
     ok_for_xspace[uchar(',')]  = true;
@@ -1106,8 +1105,7 @@ void Parser::boot_time() {
     std::srand(to_unsigned(sec + 60 * (min + 60 * (hour + 24 * (day + 31 * month)))));
     auto      short_date   = fmt::format("{}/{:02d}/{:02d}", year, month, day);
     auto      long_date    = fmt::format("{} {:02d}:{:02d}:{:02d}", short_date, hour, min, sec);
-    Buffer    b            = long_date;
-    TokenList today_tokens = b.str_toks(nlt_space);
+    TokenList today_tokens = Buffer{long_date}.str_toks(nlt_space);
     new_prim("today", today_tokens);
     the_main.short_date = short_date;
 }

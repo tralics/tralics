@@ -208,8 +208,7 @@ auto Buffer::push_back(Token T) -> bool {
         return get_catcode(T.char_val()) == letter_catcode;
     }
     if (T.is_in_hash()) {
-        Buffer Tmp = hash_table[T.hash_loc()];
-        append(Tmp.convert_to_log_encoding());
+        append(Buffer{hash_table[T.hash_loc()]}.convert_to_log_encoding());
         return true;
     }
     append(null_cs_name());
@@ -902,7 +901,7 @@ auto Buffer::find_and(const bchar_type *table) -> bool { // \todo regexp "\s*[aA
         char c = head();
         if (c == 0) return true;
         ptrs.b++;
-        if (table[ptrs.b-1] != bct_space) continue;
+        if (table[ptrs.b - 1] != bct_space) continue;
         c = (*this)[ptrs.b];
         if (c != 'a' && c != 'A') continue;
         c = (*this)[ptrs.b + 1];

@@ -314,8 +314,7 @@ namespace {
         }
         Buffer xkv_local_buf;
         token_ns::remove_first_last_space(*opt);
-        bool t = the_parser.list_to_string(*opt, xkv_local_buf);
-        if (t) {
+        if (the_parser.list_to_string(*opt, xkv_local_buf)) {
             the_parser.parse_error(the_parser.err_tok, "Bad command ", the_parser.cur_tok, " in XKV prefix (more errors may follow)",
                                    "bad kv prefix");
             xkv_local_buf.clear();
@@ -501,8 +500,7 @@ namespace {
         int       k      = 0;
         bool      found  = allowed.find(xinput, hash_table.comma_token, false, k);
         if (B2 != relax) {
-            Buffer    xkv_local_buf = fmt::format("{}", k);
-            TokenList u             = xkv_local_buf.str_toks(nlt_cr); // Should be irrelevant ?
+            TokenList u = Buffer{fmt::format("{}", k)}.str_toks(nlt_cr); // Should be irrelevant ?
             the_parser.new_macro(u, B2);
         }
         if (found)
@@ -534,8 +532,8 @@ namespace {
 
     void xkv_makehd(TokenList &L) {
         token_ns::remove_first_last_space(L);
-        Buffer xkv_local_buf = xkv_prefix;
-        auto   k             = xkv_local_buf.size();
+        Buffer xkv_local_buf{xkv_prefix};
+        auto   k = xkv_local_buf.size();
         if (the_parser.list_to_string(L, xkv_local_buf)) {
             the_parser.parse_error(the_parser.err_tok, "Bad command ", the_parser.cur_tok, " in XKV family (more errors may follow)",
                                    "bad kv family");
@@ -593,7 +591,7 @@ namespace {
         TokenList   keys = the_parser.read_arg();
         std::string Keys = the_parser.list_to_string_c(keys, "problem scanning keys");
         for (const auto &Key : split_commas(Keys)) {
-            Buffer xkv_local_buf = xkv_header + Key;
+            Buffer xkv_local_buf{xkv_header + Key};
             if (hash_table.is_defined(xkv_local_buf)) {
                 Token T = hash_table.last_tok;
                 xkv_local_buf.append("@default");
@@ -957,8 +955,8 @@ namespace {
         // We start constructing the three macros
         action.push_back(H.def_token);
         action.push_back(H.locate("XKV@tkey"));
-        Buffer    xkv_local_buf = keyname;
-        TokenList L             = xkv_local_buf.str_toks11(false);
+        Buffer    xkv_local_buf{keyname};
+        TokenList L = xkv_local_buf.str_toks11(false);
         L.brace_me();
         action.splice(action.end(), L);
         action.push_back(H.def_token);

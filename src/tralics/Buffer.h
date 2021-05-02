@@ -25,8 +25,7 @@ public:
 
     span ptrs;
 
-    Buffer() = default;
-    Buffer(const std::string &s) : std::string(s) {}
+    explicit Buffer(const std::string &s = "") : std::string(s) {}
 
     using std::string::string;
     using std::string::operator=;

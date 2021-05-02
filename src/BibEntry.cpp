@@ -133,7 +133,7 @@ namespace {
 
     // In the case of `Lo{\"i}c', returns  `Lo{\"i}'.
     auto first_three(const std::string &s) -> std::string {
-        Buffer B = s;
+        Buffer B{s};
         if (B.head() == '\\') return s;
         B.next_bibtex_char();
         if (B.head() == '\\') return s;

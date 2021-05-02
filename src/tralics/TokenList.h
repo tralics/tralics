@@ -20,7 +20,7 @@ struct TokenList : public std::list<Token> {
     void url_hack();
 
     auto contains(TokenList &A, bool remove, int &is_in_skipped) -> bool;
-    auto expand_nct(size_t n, uchar c, int &MX, TokenList &body) -> bool;
+    auto expand_nct(size_t n, uchar c, int &MX, const TokenList &body) -> bool;
     auto fast_get_block() -> TokenList;
     auto find(TokenList &A, Token t, bool sw, int &n) -> bool;
     auto get_a_param() -> TokenList;
