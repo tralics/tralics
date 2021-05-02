@@ -3938,7 +3938,7 @@ void Parser::ratio_evaluate(TokenList &A, TokenList &B, SthInternal &res) {
     num.initialise(it_int);
     den.initialise(it_int);
     if (A.empty())
-        num.int_val = 1 << 16; // Same as 1pt, but faster.
+        num.int_val = ScaledInt{1 << 16}; // Same as 1pt, but faster.
     else
         calc_main(it_dimen, num, A);
     calc_main(it_dimen, den, B);

@@ -39,8 +39,8 @@ auto TexFonts::get_int_param(long ft, subtypes pos) -> long {
 
 // Returns a dimension parameter for a font
 auto TexFonts::get_dimen_param(long ft, long pos) -> ScaledInt {
-    if (!is_valid(ft)) return 0;
-    if (pos < 0 || to_unsigned(pos) >= at(to_unsigned(ft)).size()) return 0;
+    if (!is_valid(ft)) return ScaledInt{0};
+    if (pos < 0 || to_unsigned(pos) >= at(to_unsigned(ft)).size()) return ScaledInt{0};
     return at(to_unsigned(ft))[to_unsigned(pos)];
 }
 

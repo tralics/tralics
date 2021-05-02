@@ -433,7 +433,7 @@ void Dispatcher::boot() {
     });
 
     register_action_plain(skip_cmd, [](subtypes c) {
-        the_parser.append_glue(the_parser.cur_tok, (c == smallskip_code ? 3 : c == medskip_code ? 6 : 12) << 16, true);
+        the_parser.append_glue(the_parser.cur_tok, ScaledInt{(c == smallskip_code ? 3 : c == medskip_code ? 6 : 12) << 16}, true);
     });
 
     register_action_plain(ltfont_cmd, [](subtypes c) {

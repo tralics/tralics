@@ -979,8 +979,8 @@ void Parser::T_epsfbox() {
     AttList &res = the_stack.add_newid0("figure");
     no_extension(res, y);
     res[the_names["rend"]] = the_names["inline"];
-    if (!(xdim == 0)) res[the_names["width"]] = std::string(xdim);
-    if (!(ydim == 0)) res[the_names["height"]] = std::string(ydim);
+    if (!(xdim == ScaledInt{0})) res[the_names["width"]] = std::string(xdim);
+    if (!(ydim == ScaledInt{0})) res[the_names["height"]] = std::string(ydim);
     dim_define(xdim_pos, ScaledInt(0), false); // reset to 0
     dim_define(ydim_pos, ScaledInt(0), false);
 }
@@ -990,7 +990,7 @@ void Parser::T_hspace(subtypes c) {
     Token t = cur_tok;
     remove_initial_star();
     scan_glue(it_glue, t, false);
-    append_glue(t, ScaledInt(cur_val.get_glue_width()), c == 1);
+    append_glue(t, cur_val.get_glue_width(), c == 1);
 }
 
 // Code of \vspace, or \vskip, after we have fetched the dimension.
@@ -1138,7 +1138,7 @@ void Parser::add_vspace(Token T, ScaledInt dimen, Xid x) {
     if (K != nullptr) {
         TokenList La = token_ns::string_to_list(*K, false);
         list_to_glue(it_glue, T, La);
-        dimen += ScaledInt(cur_val.get_glue_width());
+        dimen += cur_val.get_glue_width();
     }
     auto k = std::string(dimen);
     x.add_attribute(the_names["space_before"], k, true);

@@ -6,7 +6,7 @@ struct Line : public std::string {
     int  number;    // the number of the current line
     bool converted; // true if line is already converted
 
-    Line(int n, std::string c = "", bool C = true) : std::string(std::move(c)), number(n), converted(C) {}
+    explicit Line(int n, std::string c = "", bool C = true) : std::string(std::move(c)), number(n), converted(C) {}
 };
 
 using line_iterator_const = std::list<Line>::const_iterator;

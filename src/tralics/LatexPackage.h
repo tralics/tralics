@@ -18,7 +18,7 @@ public:
     bool        seen_process{false};  // have we seen a \ProcessOptions
     bool        checked{false};       // set by \usepakage (for re-use)
 
-    LatexPackage(std::string A) : name(std::move(A)) {}
+    explicit LatexPackage(std::string A) : name(std::move(A)) {}
 
     [[nodiscard]] auto is_class() const -> bool { return name[0] == 'C'; }
     [[nodiscard]] auto real_name() const -> std::string { return name.substr(1); }

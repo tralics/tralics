@@ -24,7 +24,7 @@ class SaveAuxBoundary : public SaveAuxBase {
 public:
     boundary_type val; // explains why we opened a new group
 
-    SaveAuxBoundary(boundary_type v) : SaveAuxBase(st_boundary, 0), val(v) {}
+    explicit SaveAuxBoundary(boundary_type v) : SaveAuxBase(st_boundary, 0), val(v) {}
     ~SaveAuxBoundary() override;
 
     void dump(int n);
@@ -129,7 +129,7 @@ public:
 class SaveAuxAftergroup : public SaveAuxBase {
     Token val; // the token to pop
 public:
-    SaveAuxAftergroup(Token v) : SaveAuxBase(st_save, 0), val(v) {}
+    explicit SaveAuxAftergroup(Token v) : SaveAuxBase(st_save, 0), val(v) {}
     ~SaveAuxAftergroup() override;
 };
 

@@ -11,7 +11,7 @@ public:
     Xid         id{0}; ///< id of the objet
     std::string name;  ///< name of the element
 
-    Xml(const std::string &n) : name(std::string(n)) {}
+    explicit Xml(const std::string &n) : name(std::string(n)) {}
     Xml(const std::string &s, Xid n) : id(n), name(the_names[s]) {}
     Xml(std::string N, Xml *z);
 

@@ -12,9 +12,9 @@ namespace {
 } // namespace
 
 void TexRule::reset() {
-    rule_h = default_rule_dimen;
-    rule_w = default_rule_dimen;
-    rule_d = default_rule_dimen;
+    rule_h = ScaledInt{default_rule_dimen};
+    rule_w = ScaledInt{default_rule_dimen};
+    rule_d = ScaledInt{default_rule_dimen};
 }
 
 void TexRule::convert(AttList &res) const {

@@ -1433,14 +1433,14 @@ void Parser::scan_eqno(math_list_type type) {
 // Case of a \kern, or something like that. We scan the value, convert it
 // in pt.
 auto Parser::scan_math_kern(symcodes T, subtypes &c) -> ScaledInt {
-    ScaledInt value = 0;
+    ScaledInt value{0};
     bool      is_mu = false;
     Token     ct    = cur_tok;
     if (T == kern_cmd) {
         is_mu = c == 1;
         c     = zero_code;
         scan_dimen(is_mu, ct);
-        value = cur_val.get_int_val();
+        value = cur_val.int_val;
     } else if (T == hspace_cmd) {
         if (remove_initial_star()) c = subtypes(c + 2);
         scan_glue(it_glue, ct, false);

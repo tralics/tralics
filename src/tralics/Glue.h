@@ -4,9 +4,9 @@
 
 // a glue like \hskip=2.3pt plus 4.5pt minus 6.7fill
 struct Glue {
-    ScaledInt width;                       // natural width (2.3)
-    ScaledInt shrink;                      // shrink (6.7)
-    ScaledInt stretch;                     // stretch (4.5)
+    ScaledInt width{};                     // natural width (2.3)
+    ScaledInt shrink{};                    // shrink (6.7)
+    ScaledInt stretch{};                   // stretch (4.5)
     glue_spec shrink_order{glue_spec_pt};  // fill, symbolically
     glue_spec stretch_order{glue_spec_pt}; // pt, symbolically
 
@@ -16,7 +16,6 @@ struct Glue {
     void add(const Glue &r);
     void multiply(long n);
     void divide(long n);
-    void incr_width(long x) { width += x; }
     void scale(long n, long d);
     void quotient(long f);
     void check_overflow();

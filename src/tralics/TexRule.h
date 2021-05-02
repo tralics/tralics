@@ -7,10 +7,10 @@ struct TexRule {
 
     void reset();
     void convert(AttList &res) const;
-    void init_vrule() { rule_w = 26214; }
+    void init_vrule() { rule_w = ScaledInt{26214}; }
     void init_hrule() {
-        rule_h = 26214;
-        rule_d = 0;
+        rule_h = ScaledInt{26214};
+        rule_d = ScaledInt{0};
     }
     void adjust() {
         rule_h += rule_d;

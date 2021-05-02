@@ -5,7 +5,7 @@
 #include <unordered_map>
 
 class Symcode {
-    Symcode(symcodes v) : val(v) {}
+    explicit Symcode(symcodes v) : val(v) {}
 
 public:
     symcodes val;

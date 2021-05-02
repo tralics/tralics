@@ -117,15 +117,15 @@ void SthInternal::normalise() {
 // Overflow is 4096pt
 // Inlined call to attach sign
 void SthInternal::attach_fraction(RealNumber x) {
-    int_val = x.ipart;
+    int_val = ScaledInt{x.ipart};
     long f  = x.fpart;
     if (int_val.value >= (1 << 14)) {
         start_err("2^{14}");
         err_buf.format("\nfor {}", int_val.value);
         end_err();
-        int_val = max_dimension;
+        int_val = ScaledInt{max_dimension};
     } else
-        int_val = (int_val.value << 16) + f;
+        int_val = ScaledInt{(int_val.value << 16) + f};
     if (x.negative) int_val = -int_val;
 }
 
@@ -139,7 +139,7 @@ void SthInternal::attach_sign(bool negative) {
 // Initialises to zero, with a given type.
 void SthInternal::initialise(internal_type t) {
     type    = t;
-    int_val = 0;
+    int_val = ScaledInt{0};
     glue_val.kill();
 }
 
@@ -187,17 +187,17 @@ void SthInternal::add(const SthInternal &r) {
     auto x = int_val.value, y = r.int_val.value;
     int  mx = type == it_int ? max_integer : max_dimension;
     if (x >= 0 && y <= mx - x) {
-        int_val = x + y;
+        int_val = ScaledInt{x + y};
         return;
     }
     if (x <= 0 && y >= -mx - x) {
-        int_val = x + y;
+        int_val = ScaledInt{x + y};
         return;
     }
     start_err(static_cast<String>(type == it_int ? "2^{31}" : "2^{30}"));
     err_buf.format("\nin {}+{}", x, y);
     end_err();
-    int_val = mx;
+    int_val = ScaledInt{mx};
 }
 
 void SthInternal::get_info(subtypes m) {

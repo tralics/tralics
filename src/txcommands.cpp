@@ -792,7 +792,7 @@ void Parser::T_scan_glue(subtypes c) {
     }
     scan_glue(it_glue, T);
     // not perfect...
-    append_glue(T, ScaledInt(cur_val.get_glue_width()), c == vskip_code);
+    append_glue(T, cur_val.get_glue_width(), c == vskip_code);
 }
 
 // Translates \bauthors{...} or \beditors{...}

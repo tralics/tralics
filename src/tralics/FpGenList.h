@@ -4,7 +4,7 @@
 // This is for fp
 class FpGenList : public TokenList {
 public:
-    FpGenList(const TokenList &o) : TokenList(o) {}
+    explicit FpGenList(const TokenList &o) : TokenList(o) {}
 
     void add_last_space(String S);
     void add_last_space(TokenList &W, String S);

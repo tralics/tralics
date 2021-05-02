@@ -14,7 +14,7 @@ public:
     int  state{};
     Math res;
 
-    Cv3Helper(Math X) : Math(std::move(X)) {}
+    explicit Cv3Helper(Math X) : Math(std::move(X)) {}
 
     void reinit();
     void non_script();

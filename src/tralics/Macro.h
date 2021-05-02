@@ -12,7 +12,7 @@ public:
     TokenList body;            // the body
 
     Macro() = default;
-    Macro(TokenList L) : body(std::move(L)) { correct_type(); }
+    explicit Macro(TokenList L) : body(std::move(L)) { correct_type(); }
 
     [[nodiscard]] auto is_same(const Macro &aux) const -> bool;
     [[nodiscard]] auto operator[](size_t n) const -> const TokenList & { return delimiters[n]; }

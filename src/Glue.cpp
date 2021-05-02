@@ -57,8 +57,8 @@ void Glue::negate() {
 }
 
 void Glue::normalise() {
-    if (stretch == 0) stretch_order = glue_spec_pt;
-    if (shrink == 0) shrink_order = glue_spec_pt;
+    if (stretch == ScaledInt{0}) stretch_order = glue_spec_pt;
+    if (shrink == ScaledInt{0}) shrink_order = glue_spec_pt;
 }
 
 // Add a glue to glue.
@@ -66,15 +66,15 @@ void Glue::add(const Glue &r) {
     width.add_dim(r.width);
     if (stretch_order == r.stretch_order) {
         stretch.add_dim(r.stretch);
-        if (stretch == 0) stretch_order = glue_spec_pt;
-    } else if (stretch_order < r.stretch_order && !(r.stretch == 0)) {
+        if (stretch == ScaledInt{0}) stretch_order = glue_spec_pt;
+    } else if (stretch_order < r.stretch_order && !(r.stretch == ScaledInt{0})) {
         stretch       = r.stretch;
         stretch_order = r.stretch_order;
     }
     if (shrink_order == r.shrink_order) {
         shrink.add_dim(r.shrink);
-        if (shrink == 0) shrink_order = glue_spec_pt;
-    } else if (shrink_order < r.shrink_order && !(r.shrink == 0)) {
+        if (shrink == ScaledInt{0}) shrink_order = glue_spec_pt;
+    } else if (shrink_order < r.shrink_order && !(r.shrink == ScaledInt{0})) {
         shrink       = r.shrink;
         shrink_order = r.shrink_order;
     }
@@ -82,9 +82,9 @@ void Glue::add(const Glue &r) {
 
 // Reset to zero.
 void Glue::kill() {
-    width         = 0;
-    shrink        = 0;
-    stretch       = 0;
+    width         = ScaledInt{0};
+    shrink        = ScaledInt{0};
+    stretch       = ScaledInt{0};
     shrink_order  = glue_spec_pt;
     stretch_order = glue_spec_pt;
 }

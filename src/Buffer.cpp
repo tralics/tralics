@@ -297,11 +297,11 @@ void Buffer::push_back(const ScaledInt &V, glue_spec unit) {
 // Adds glue likes 3pt plus 3 fill
 void Buffer::push_back(const Glue &x) {
     push_back(x.width, glue_spec_pt);
-    if (!(x.stretch == 0)) {
+    if (!(x.stretch == ScaledInt{0})) {
         append(" plus ");
         push_back(x.stretch, x.stretch_order);
     }
-    if (!(x.shrink == 0)) {
+    if (!(x.shrink == ScaledInt{0})) {
         append(" minus ");
         push_back(x.shrink, x.shrink_order);
     }

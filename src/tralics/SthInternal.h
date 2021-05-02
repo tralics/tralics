@@ -17,7 +17,7 @@ struct SthInternal {
     [[nodiscard]] auto is_glue() const -> bool { return type == it_glue; }
     [[nodiscard]] auto is_dimen() const -> bool { return type == it_dimen; }
     [[nodiscard]] auto get_dim_val() const -> ScaledInt { return int_val; }
-    [[nodiscard]] auto get_glue_width() const -> long { return glue_val.width.value; }
+    [[nodiscard]] auto get_glue_width() const -> ScaledInt { return glue_val.width; }
     [[nodiscard]] auto get_int_val() const -> long { return int_val.value; }
 
     void add_ovf(const SthInternal &r);
@@ -35,9 +35,9 @@ struct SthInternal {
     void get_info(subtypes m);
     void glue_divide(long v) { glue_val.divide(v); }
     void glue_multiply(long v) { glue_val.multiply(v); }
-    void incr_dim(ScaledInt x) { int_val += x.value; }
+    void incr_dim(ScaledInt x) { int_val += x; }
     void incr_glue(Glue x) { glue_val.add(x); }
-    void incr_int(long x) { int_val += x; }
+    void incr_int(long x) { int_val += ScaledInt{x}; }
     void initialise(internal_type t);
     void normalise();
     void quotient(long f);
@@ -45,7 +45,7 @@ struct SthInternal {
     void set_glue_val(const Glue &x) { glue_val = x; }
 
     void kill() {
-        int_val = 0;
+        int_val = ScaledInt{0};
         glue_val.kill();
         type = it_int;
     }
@@ -58,17 +58,17 @@ struct SthInternal {
     }
 
     void set_int(long a) {
-        int_val = a;
+        int_val = ScaledInt{a};
         type    = it_int;
     }
 
     void set_dim(long a) {
-        int_val = a;
+        int_val = ScaledInt{a};
         type    = it_dimen;
     }
 
     void set_dim(ScaledInt a) {
-        int_val = a.value;
+        int_val = a;
         type    = it_dimen;
     }
 

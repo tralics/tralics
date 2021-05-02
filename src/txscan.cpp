@@ -1072,7 +1072,7 @@ auto Parser::scan_int(Token t, int n, String s) -> size_t {
     if (N < 0 || N > n) {
         err_buf = fmt::format("Bad {} replaced by 0\n", s);
         signal_ovf(t, nullptr, N, n);
-        cur_val.int_val = 0;
+        cur_val.int_val = ScaledInt{0};
         return 0;
     }
     return to_unsigned(N);
@@ -1599,7 +1599,7 @@ void Parser::scan_unit(RealNumber R) {
     }
     auto k = to_unsigned(k0);
     if (k == unit_sp) {
-        cur_val.int_val = R.ipart;
+        cur_val.int_val = ScaledInt{R.ipart};
         cur_val.attach_sign(R.negative);
         return; // special ignore frac. part
     }
@@ -1734,7 +1734,7 @@ void Parser::multiply_dim(RealNumber val, long v) {
     long rem        = 0; // unused but modified
     auto A          = arith_ns::xn_over_d(v, val.fpart, 1 << 16, rem);
     auto B          = arith_ns::nx_plus_y(val.ipart, v, A);
-    cur_val.int_val = B;
+    cur_val.int_val = ScaledInt{B};
     cur_val.attach_sign(val.negative);
 }
 
@@ -1770,7 +1770,7 @@ void Parser::scan_glue(internal_type level) {
         default:
             // This should not happen
             parse_error(err_tok, "Unexpected error in ", err_tok, "", "bad");
-            cur_val.int_val = 0;
+            cur_val.int_val = ScaledInt{0};
             break;
         }
     } else {
@@ -1780,17 +1780,17 @@ void Parser::scan_glue(internal_type level) {
     }
     Glue q;
 
-    q.width = cur_val.get_int_val();
+    q.width = cur_val.int_val;
     if (scan_keyword("plus")) {
         co = glue_spec_pt;
         scan_dimen(mu, true, co, false);
-        q.stretch       = cur_val.get_int_val();
+        q.stretch       = cur_val.int_val;
         q.stretch_order = co;
     }
     if (scan_keyword("minus")) {
         co = glue_spec_pt;
         scan_dimen(mu, true, co, false);
-        q.shrink       = cur_val.get_int_val();
+        q.shrink       = cur_val.int_val;
         q.shrink_order = co;
     }
     cur_val.set_glue_val(q);
@@ -1821,7 +1821,7 @@ void Parser::scan_glue(internal_type level, Token t, bool opt) {
 auto Parser::get_opt_dim(Token t) -> std::string {
     scan_glue(it_glue, t, true);
     if (!scan_glue_opt) return std::string();
-    return std::string(ScaledInt(cur_val.get_glue_width()));
+    return std::string(cur_val.get_glue_width());
 }
 
 void Parser::list_to_glue(internal_type level, Token t, TokenList &L) {
@@ -1982,7 +1982,7 @@ void Parser::M_prefixed_aux(bool gbl) {
         auto b = scan_font_ident();
         scan_optional_equals();
         scan_dimen(false, T);
-        auto c = cur_val.get_int_val();
+        auto c = cur_val.int_val;
         tfonts.set_dimen_param(b, a, c);
         return;
     }
@@ -2359,7 +2359,7 @@ void Parser::scan_rule(subtypes c) {
     TexRule R;
     Token   T = cur_tok;
     if (c == rule_code) {
-        R.rule_d     = 0;
+        R.rule_d     = ScaledInt{0};
         auto      L1 = read_optarg();
         TokenList L2 = read_arg();
         TokenList L3 = read_arg();

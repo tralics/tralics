@@ -12,7 +12,7 @@ struct CitationKey {
     std::string full_key;       // something like footcite:Foo
 
     CitationKey() = default;
-    CitationKey(const std::string &b) : cite_key(b), lower_cite_key(Buffer{b}.lowercase()), full_key("cite:" + b) {}
+    explicit CitationKey(const std::string &b) : cite_key(b), lower_cite_key(Buffer{b}.lowercase()), full_key("cite:" + b) {}
 
     [[nodiscard]] auto is_similar(const CitationKey &w) const -> bool { return cite_key == w.cite_key; }
     [[nodiscard]] auto is_similar_lower(const CitationKey &w) const -> bool { return lower_cite_key == w.lower_cite_key; }
