@@ -116,8 +116,9 @@ void Buffer::append_with_xml_escaping(char32_t c) {
 }
 
 // Converts the entire Buffer to lower case
-void Buffer::lowercase() {
+Buffer &Buffer::lowercase() {
     std::transform(begin(), end(), begin(), [](uchar c) { return std::tolower(c); });
+    return *this;
 }
 
 // Returns the part of the buffer between ptrs.a (included) and ptrs.b (excluded).

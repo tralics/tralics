@@ -7,13 +7,12 @@
 // from the bibtex point of view. If used, a unique id (an integer will be
 // computed). For the moment being it has a cite key, and a prefix.
 struct CitationKey {
-    std::string cite_key;                       // cite key, say Foo
-    std::string lower_cite_key;                 // cite key, lower case, say foo
-    std::string full_key;                       // something like footcite:Foo
-    void        make_key(const std::string &s); // creates the key.
+    std::string cite_key;       // cite key, say Foo
+    std::string lower_cite_key; // cite key, lower case, say foo
+    std::string full_key;       // something like footcite:Foo
 
     CitationKey() = default;
-    CitationKey(const std::string &b);
+    CitationKey(const std::string &b) : cite_key(b), lower_cite_key(Buffer{b}.lowercase()), full_key("cite:" + b) {}
 
     [[nodiscard]] auto is_similar(const CitationKey &w) const -> bool { return cite_key == w.cite_key; }
     [[nodiscard]] auto is_similar_lower(const CitationKey &w) const -> bool { return lower_cite_key == w.lower_cite_key; }
