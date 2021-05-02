@@ -132,7 +132,7 @@ struct Parser {
 
     Parser();
 
-    void add_buffer_to_document_hook(Buffer &b, const std::string &name);
+    void add_buffer_to_document_hook(const Buffer &b, const std::string &name);
     void add_language_att() const;
     void after_main_text();
     void boot();
@@ -197,7 +197,7 @@ struct Parser {
     auto               check_builtin_pack(const std::string &pack) -> bool;
     auto               check_if_redef(const std::string &s) -> bool;
     auto               counter_aux(const std::string &name, String opt, Token T) -> bool;
-    auto               counter_check(Buffer &b, bool def) -> bool;
+    auto               counter_check(const Buffer &b, bool def) -> bool;
     auto               counter_read_opt(String s) -> int;
     auto               cs_from_input() -> Token;
     auto               delimiter_for_saveverb() -> char32_t;
@@ -381,7 +381,7 @@ struct Parser {
     void               calc_mul_aux(SthInternal &res);
     void               calc_primitive(SthInternal &A);
     void               calc_ratio_eval(long num, long den, SthInternal &res);
-    void               calc_spec_mul(RealNumber val, SthInternal &res);
+    void               calc_spec_mul(const RealNumber &val, SthInternal &res);
     void               call_define_key(TokenList &L, Token cmd, const std::string &arg, const std::string &fam);
     void               check_builtin_class();
     void               check_language();
@@ -432,7 +432,7 @@ struct Parser {
     void               E_parse_encoding(bool vb, subtypes what);
     void               E_random();
     void               E_scan_up_down();
-    void               E_scan_up_down(TokenList &A, TokenList &B, TokenList &c, TokenList &res);
+    void               E_scan_up_down(const TokenList &A, const TokenList &B, TokenList &c, TokenList &res);
     void               E_setlength(subtypes c);
     void               E_sideset();
     void               E_split();
@@ -468,7 +468,7 @@ struct Parser {
     void               fetch_name2();
     void               finish_a_cell(Token T, const std::string &a);
     void               finish_counter_cmd(Token first, TokenList &L);
-    void               finish_csname(Buffer &b, const std::string &s);
+    void               finish_csname(const Buffer &b, const std::string &s);
     void               finish_csname(const std::string &b);
     void               finish_iwhile(TokenList &A, Token D);
     void               finish_kvo_bool(Token T, const std::string &fam, const std::string &arg);

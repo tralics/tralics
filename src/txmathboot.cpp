@@ -22,7 +22,7 @@ using namespace math_ns;
 // mathml variants: normal, bold, italic, bold-italic, double-struck,
 // bold-fraktur, script, bold-script, fraktur, sans-serif, bold-sans-serif,
 // sans-serif-italic, sans-serif-bold-italic, monospace
-std::array<Xml *, 128> single_chars;
+std::array<Xml *, 128> single_chars{};
 
 #define LANGLE "&#x02329;"
 #define RANGLE "&#x0232A;"
@@ -33,7 +33,6 @@ auto math_ns::get_builtin_alt(size_t p) -> Xml * { return math_data.get_builtin_
 
 inline void eval_let(String a, String b) { hash_table.eval_let(a, b); }
 void        math_ns::fill_single_char() {
-    for (auto &c : single_chars) c = nullptr;
     for (uchar x = 'a'; x <= 'z'; x++) { single_chars[x] = new Xml(std::string(1, char(x))); }
     for (uchar x = 'A'; x <= 'Z'; x++) { single_chars[x] = new Xml(std::string(1, char(x))); }
 }
@@ -207,8 +206,7 @@ void math_ns::fill_math_char_slots_ent() {
 }
 
 void math_ns::fill_math_char_slots() {
-    for (auto &math_char : math_chars)
-        for (auto &j : math_char) j = "";
+    for (auto &math_char : math_chars) std::fill(math_char.begin(), math_char.end(), "");
     // Position 0 : normal
     math_chars[uchar('A')][math_f_normal] = "A";
     math_chars[uchar('B')][math_f_normal] = "B";
@@ -1392,8 +1390,6 @@ void MathDataP::boot2() {
 
 void MathDataP::boot() {
     no_ent_names = the_main.no_entnames;
-    for (auto &i : built_in_table) i = nullptr;     // \todo useless?
-    for (auto &i : built_in_table_alt) i = nullptr; // \todo useless?
     boot_table();
     fill_single_char();
     fill_math_char_slots();

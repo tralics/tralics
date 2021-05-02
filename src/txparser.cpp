@@ -20,7 +20,7 @@
 
 namespace {
     struct SpecialHash : public std::unordered_map<std::string, std::string> {
-        SpecialHash(const std::string &str) {
+        explicit SpecialHash(const std::string &str) {
             for (const auto &s : split_commas(str)) {
                 auto [a, b] = split_assign(s);
                 if (find(a) == end()) emplace(a, b);
@@ -589,7 +589,7 @@ void Parser::read_toks_edef(TokenList &L) {
 // --------------------------------------------------
 
 // Adds the content of the buffer to the document-hook token list.
-void Parser::add_buffer_to_document_hook(Buffer &b, const std::string &name) {
+void Parser::add_buffer_to_document_hook(const Buffer &b, const std::string &name) {
     TokenList L = tokenize_buffer(b, name);
     document_hook.splice(document_hook.end(), L);
 }
@@ -788,9 +788,7 @@ void Parser::T_verbatim() {
     }
     if (want_number && reg_number < 0) reg_number = 21; // hardcoded
     if (reset) word_define(to_unsigned(reg_number + to_signed(static_cast<size_t>(count_reg_offset))), n - 1, true);
-    Token       t2 = hash_table.relax_token;
-    Token       t3 = hash_table.relax_token;
-    Token       t4 = hash_table.relax_token;
+    Token       t2 = hash_table.relax_token, t3 = t2, t4 = t3;
     std::string w2 = S.get("style");
     std::string w3 = S.get("pre");
     if (!w2.empty()) t2 = hash_table.locate("FV@style@" + w2);
@@ -1315,8 +1313,7 @@ void Parser::T_start_theorem(subtypes c) {
         leave_v_mode();
         Xid id2 = the_stack.get_xid();
         if (!(id1 == id2) && the_names["np_theorem"].empty()) id2.add_attribute(id1);
-    }
-    if (c == 0) {
+
         if (!noref) name.push_back(hash_table.space_token);
         name.splice(name.end(), ctr);
         if (opt) {
@@ -1332,7 +1329,6 @@ void Parser::T_start_theorem(subtypes c) {
         name.push_back(hash_table.space_token);
         name.splice(name.end(), font2);
         back_input(name);
-
     } else {
         the_stack.set_arg_mode();
         the_stack.add_nl();
@@ -1561,7 +1557,7 @@ void Parser::finish_csname(const std::string &b) {
 }
 
 // Same as above, but the token is to be read again
-void Parser::finish_csname(Buffer &b, const std::string &s) {
+void Parser::finish_csname(const Buffer &b, const std::string &s) {
     finish_csname(b);
     if (tracing_commands()) {
         Logger::finish_seq();
@@ -1838,7 +1834,7 @@ void Parser::counter_boot(const std::string &s, String aux) {
 // if def is false, check that \c@foo=2 is OK
 // otherwise, checks that \c@foo is undefined or relax
 // Returns true if bad
-auto Parser::counter_check(Buffer &b, bool def) -> bool {
+auto Parser::counter_check(const Buffer &b, bool def) -> bool {
     cur_tok       = hash_table.locate(b);
     EqtbCmdChr &E = Hashtab::the_eqtb()[cur_tok.eqtb_loc()];
     if (def) {
@@ -2287,8 +2283,8 @@ auto Parser::get_mac_value(Token t) -> TokenList {
     if (t.not_a_cmd()) return res;
     see_cs_token(t);
     if (!cur_cmd_chr.is_user()) return res;
-    subtypes c = cur_cmd_chr.chr;
-    Macro &  M = mac_table.get_macro(c);
+    subtypes     c = cur_cmd_chr.chr;
+    const Macro &M = mac_table.get_macro(c);
     if (M.type != dt_normal) return res;
     if (M.nbargs != 0) return res;
     return M.body;
@@ -2395,7 +2391,7 @@ void Parser::E_scan_up_down() {
     back_input(cmd);
 }
 
-void Parser::E_scan_up_down(TokenList &A, TokenList &B, TokenList &C, TokenList &res) {
+void Parser::E_scan_up_down(const TokenList &A, const TokenList &B, TokenList &C, TokenList &res) {
     back_input(hash_table.relax_token); // end marker
     back_input(C);
     TokenList df_up   = A;
@@ -3768,7 +3764,7 @@ void Parser::T_whiledo() {
 // implementation of the calc package.
 
 // We want to multiply res by val.
-void Parser::calc_spec_mul(RealNumber val, SthInternal &res) {
+void Parser::calc_spec_mul(const RealNumber &val, SthInternal &res) {
     cur_val = res;
     cur_val.change_level(it_dimen);
     multiply_dim(val, cur_val.get_int_val());

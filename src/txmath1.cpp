@@ -1125,7 +1125,7 @@ auto Math::remove_req_arg() -> std::string {
         the_parser.signal_error("missing argument");
         return "error";
     }
-    Math &L = front().get_list(); // the sublist containing the argument
+    const Math &L = front().get_list(); // the sublist containing the argument
     pop_front();
     return L.convert_this_to_string(aux_buffer);
 }

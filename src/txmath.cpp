@@ -256,16 +256,13 @@ auto Math::duplicate(bool nomath) const -> subtypes {
     subtypes k  = math_data.find_math_location(type, sname, saved);
     Math &   cp = math_data.get_list(k);
     int      sp = 0, sm = 0;
-    bool     skipping  = false;
-    bool     skip_next = false;
-    auto     C         = begin();
-    auto     E         = end();
-    while (C != E) {
-        skip_next = skipping;
+    bool     skipping = false;
+    for (auto C = begin(); C != end(); ++C) {
+        auto skip_next = skipping;
         if (C->cmd == nomath_cmd) {
             auto s = C->chr;
             ++C;
-            if (C == E) break;
+            if (C == end()) break;
             if (s == 0)
                 skip_next = nomath;
             else if (s == 1)
@@ -298,7 +295,6 @@ auto Math::duplicate(bool nomath) const -> subtypes {
             cp.push_back(CmdChr(special_math_cmd, k1), C->get_font());
         } else
             cp.push_back(*C);
-        ++C;
     }
     return k;
 }
@@ -2209,8 +2205,10 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         if (c == hphantom_code || c == vphantom_code) {
             A = new Xml(the_names["mpadded"], A);
             if (c == vphantom_code) A->add_att(the_names["width"], the_names["0pt"]);
-            if (c == hphantom_code) A->add_att(the_names["height"], the_names["0pt"]);
-            if (c == hphantom_code) A->add_att(the_names["depth"], the_names["0pt"]);
+            if (c == hphantom_code) {
+                A->add_att(the_names["height"], the_names["0pt"]);
+                A->add_att(the_names["depth"], the_names["0pt"]);
+            }
         }
         Xml *R = new Xml(the_names["mphantom"], A);
         return MathElt(R, mt_flag_small);
