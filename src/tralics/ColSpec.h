@@ -1,4 +1,5 @@
 #pragma once
+#include "Xml.h"
 #include <string>
 #include <vector>
 
@@ -9,7 +10,7 @@ struct ColSpec {
     std::string model;
     std::string value;
     std::string id;
-    Xml *       xval;
+    Xml         xval;
     bool        used{false};
 
     ColSpec(std::string a, std::string b, std::string c);

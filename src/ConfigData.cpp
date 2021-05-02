@@ -10,7 +10,7 @@ auto ConfigData::find_one_key(const std::string &name, const std::string &key) c
     const auto &X = it->second;
     if (auto it2 = X.find(key); it2 != X.end()) return it2->second;
     err_buf = fmt::format("Illegal value '{}' for {}, use one of:", key, name);
-    for (const auto &i : X) err_buf += " " + i.first;
+    err_buf = std::accumulate(X.begin(), X.end(), err_buf, [](const auto &c, const auto &i) { return c + " " + i.first; });
     the_parser.signal_error(the_parser.err_tok, "illegal data");
     return {};
 }

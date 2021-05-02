@@ -78,7 +78,7 @@ namespace fp {
     auto quad_aux(FpNum r, FpNum w, FpNum &y, FpNum &Ay) -> bool;
     void set_nb_sols(int n);
     void x_solve(FpNum &r1, FpNum A, FpNum B);
-    auto qsolve(FpNum &r1, FpNum &r2, FpNum B, FpNum C) -> int;
+    auto qsolve(FpNum &r1, FpNum &r2, FpNum B, const FpNum &C) -> int;
     auto qsolve(FpNum &r1, FpNum &r2, FpNum A, FpNum B, FpNum C) -> int;
     void x_solve(FpNum &r1, FpNum &r2, FpNum A, FpNum B, FpNum C);
     void csolve_aux(FpNum A, FpNum B, FpNum C, FpNum D, FpNum &p, FpNum &q, FpNum &T);
@@ -94,7 +94,7 @@ auto operator<<(std::ostream &fp, const FpNum &X) -> std::ostream & {
 }
 
 // Returns the opposite of X
-auto operator-(FpNum X) -> FpNum {
+auto operator-(const FpNum &X) -> FpNum {
     FpNum res;
     res      = X;
     res.sign = !res.sign;
@@ -124,14 +124,14 @@ auto operator*(int Y, FpNum X) -> FpNum {
 }
 
 // Returns the sum of X and Y
-auto operator+(FpNum X, FpNum Y) -> FpNum {
+auto operator+(const FpNum &X, FpNum Y) -> FpNum {
     FpNum res = X;
     res.add(Y);
     return res;
 }
 
 // Returns the quotient of X and n. Assumes abs(n)<1000,  n!=0
-auto operator/(FpNum X, int n) -> FpNum {
+auto operator/(const FpNum &X, int n) -> FpNum {
     FpNum res = X;
     res.div(n);
     return res;
@@ -173,7 +173,7 @@ auto operator/=(FpNum &X, int Y) -> FpNum & {
 
 void FpNum::mul(FpNum X) { mul(*this, X); }
 
-void FpNum::div(FpNum X) { div(*this, X); }
+void FpNum::div(const FpNum &X) { div(*this, X); }
 
 // Returns true if zero
 auto FpNum::is_zero() const -> bool { return data[0] == 0 && data[1] == 0 && data[2] == 0 && data[3] == 0; }
@@ -272,7 +272,7 @@ void FpNum::mul(FpNum X, FpNum Y) {
     bool                  xs = X.sign == Y.sign;
     std::array<Digit, 12> x{}, y{};
     std::array<Digit, 24> z{};
-    for (auto &i : z) i = 0;
+    std::fill(z.begin(), z.end(), 0);
     X.mul_split(x);
     Y.mul_split(y);
     auto [xmin, xmax] = set_xmax(x);
@@ -1346,7 +1346,7 @@ void fp::x_solve(FpNum &r1, FpNum A, FpNum B) {
 }
 
 // Solves x^2+Bx+C=0; result in r1 and r2, returns number of solutions
-auto fp::qsolve(FpNum &r1, FpNum &r2, FpNum B, FpNum C) -> int {
+auto fp::qsolve(FpNum &r1, FpNum &r2, FpNum B, const FpNum &C) -> int {
     B /= 2;
     FpNum delta = B * B - C;
     if (!delta.sign) return 0; // no solutions

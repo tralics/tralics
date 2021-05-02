@@ -109,7 +109,7 @@ namespace readline_ns {
 
 using namespace readline_ns;
 
-class Slined {
+class Slined { // \todo this should vanish at some point in refactoring
     char *                     m_inbuf{nullptr};
     std::array<char, buf_size> m_buffer{};
     std::string                m_killbuf;
@@ -140,6 +140,10 @@ public:
             m_history_size = 1; // first line is a comment
         }
     }
+
+    Slined(const Slined &) = delete;
+    ~Slined() {} // \todo should delete m_inbuf but it breaks comp_pi
+    auto operator=(const Slined &) -> Slined & = delete;
 
     auto newpos(size_t x, size_t n) -> long;
     auto copystring(String string, size_t s, size_t inpos, bool sw) -> unsigned;

@@ -39,7 +39,7 @@ struct FpNum {
     void croot();
     void div_by_10();
     void div(FpNum X, FpNum Y);
-    void div(FpNum X);
+    void div(const FpNum &X);
     void div(int n);
     void divide2();
     void exec_exp();

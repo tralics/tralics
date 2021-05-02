@@ -125,9 +125,7 @@ void LatexPackage::add_options(const OptionList &L) {
 
 // Returns true if S is in the option list (for check_builtin_class)
 auto classes_ns::is_raw_option(const OptionList &V, String s) -> bool {
-    for (const auto &i : V)
-        if (i.name == s) return true;
-    return false;
+    return std::any_of(V.begin(), V.end(), [&s](const auto &i) { return i.name == s; });
 }
 
 // Returns true if slot is in the vector V with the same value

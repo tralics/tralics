@@ -986,7 +986,7 @@ namespace {
         Xml *res = new Xml(std::string("colorpool"), nullptr);
         for (auto &color : all_colors)
             if (color.used) {
-                res->push_back_unless_nullptr(color.xval);
+                res->push_back_unless_nullptr(&color.xval);
                 res->add_nl();
             }
         the_stack.document_element()->replace_first(res);
