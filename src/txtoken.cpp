@@ -393,23 +393,10 @@ void token_ns::sanitize_one(TokenList &L) {
 // For all characters c in s, at level at most n
 // use a category code 12 char instead
 void token_ns::sanitize_one(TokenList &L, TokenList &s, long n) {
-    auto C  = L.begin();
-    auto E  = L.end();
-    int  bl = 0;
-    while (C != E) {
-        Token x = *C;
+    int bl = 0;
+    for (auto &x : L) {
         check_brace(x, bl);
-        if (bl <= n && x.is_a_char()) {
-            char32_t c  = x.char_val();
-            auto     sC = s.begin();
-            auto     sE = s.end();
-            while (sC != sE) {
-                if (sC->char_val() == c) *C = *sC;
-                break;
-                ++sC;
-            }
-        }
-        ++C;
+        if (bl <= n && x.is_a_char() && !s.empty() && s.begin()->char_val() == x.char_val()) x = *s.begin();
     }
 }
 

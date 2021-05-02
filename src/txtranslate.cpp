@@ -1517,7 +1517,7 @@ auto Parser::special_tpa_arg(const std::string &name, const std::string &y, bool
     }
     try {
         translate_all();
-    } catch (EndOfData tmp) {};
+    } catch (EndOfData &) {};
     flush_buffer();
     if (special_case) {
         if (tracing_stack()) {

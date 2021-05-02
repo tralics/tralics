@@ -197,12 +197,6 @@ namespace {
         }
     }
 
-    // This removes X from the list of all heads.
-    void remove_me_from_heads(Xml *X) {
-        for (auto &all_head : the_parser.all_heads)
-            if (all_head == X) all_head = nullptr;
-    }
-
     // Post processor table.
     void postprocess_table(Xml *to, Xml *from) {
         XmlAction X1(the_names["table"], rc_how_many);
@@ -442,7 +436,7 @@ void Xml::recurse(XmlAction &X) {
                     Xml *W = T->at(j);
                     if (W == nullptr) continue;
                     if (!W->is_xmlc() && W->has_name_of("head")) {
-                        remove_me_from_heads(W);
+                        std::replace(the_parser.all_heads.begin(), the_parser.all_heads.end(), W, (Xml *)nullptr);
                         continue;
                     }
                     insert_at(k + 1, W);
