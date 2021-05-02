@@ -497,7 +497,7 @@ struct Parser {
     void               fp_e_upn();
     void               fp_eval_lt(subtypes w);
     void               fp_eval_unarytest(subtypes w);
-    void               fp_finish(FpNum X);
+    void               fp_finish(const FpNum &X);
     void               fp_parse_error(Token a, Token b);
     void               fp_prepare();
     void               fp_print();
@@ -866,7 +866,7 @@ struct Parser {
     void               undefined_env(const std::string &s);
     void               undefined_mac();
     void               unexpected_close_brace();
-    void               upn_eval(TokenList &l);
+    void               upn_eval(const TokenList &l);
     void               use_a_package(const std::string &name, bool type, const std::string &date, bool builtin);
     void               user_XML_fetch();
     void               user_XML_modify(subtypes c);
@@ -910,7 +910,7 @@ struct Parser {
     void l3_generate_variant(String orig, String var);
     void L3_getid();
     void L3_logid();
-    void L3_new_conditional_aux(TokenList &arg_spec, subtypes s);
+    void L3_new_conditional_aux(const TokenList &arg_spec, subtypes s);
     void L3_new_conditional_parm(subtypes s);
     void L3_new_conditional(subtypes s);
     void l3_new_token_list(subtypes c);

@@ -75,14 +75,14 @@ namespace fp {
     auto round_n(Digit x, size_t n) -> Digit;
     void sincos(FpNum &res1, FpNum &res2, FpNum x, subtypes i);
     void arcsincos(FpNum &res1, FpNum &res2, FpNum x, subtypes i);
-    auto quad_aux(FpNum r, FpNum w, FpNum &y, FpNum &Ay) -> bool;
+    auto quad_aux(const FpNum &r, const FpNum &w, FpNum &y, FpNum &Ay) -> bool;
     void set_nb_sols(int n);
     void x_solve(FpNum &r1, FpNum A, FpNum B);
     auto qsolve(FpNum &r1, FpNum &r2, FpNum B, const FpNum &C) -> int;
-    auto qsolve(FpNum &r1, FpNum &r2, FpNum A, FpNum B, FpNum C) -> int;
-    void x_solve(FpNum &r1, FpNum &r2, FpNum A, FpNum B, FpNum C);
-    void csolve_aux(FpNum A, FpNum B, FpNum C, FpNum D, FpNum &p, FpNum &q, FpNum &T);
-    auto x_solve(FpNum &r1, FpNum &r2, FpNum &r3, FpNum A, FpNum B, FpNum C, FpNum D) -> int;
+    auto qsolve(FpNum &r1, FpNum &r2, const FpNum &A, const FpNum &B, const FpNum &C) -> int;
+    void x_solve(FpNum &r1, FpNum &r2, const FpNum &A, const FpNum &B, const FpNum &C);
+    void csolve_aux(const FpNum &A, const FpNum &B, const FpNum &C, FpNum D, FpNum &p, FpNum &q, FpNum &T);
+    auto x_solve(FpNum &r1, FpNum &r2, FpNum &r3, const FpNum &A, const FpNum &B, const FpNum &C, const FpNum &D) -> int;
     void x_solve(FpNum &r1, FpNum &r2, FpNum &r3, FpNum &r4, FpNum A, FpNum B, FpNum C, FpNum D, FpNum E);
 
 } // namespace fp
@@ -271,8 +271,7 @@ void FpNum::unsplit_mul4(const Digit *z) {
 void FpNum::mul(FpNum X, FpNum Y) {
     bool                  xs = X.sign == Y.sign;
     std::array<Digit, 12> x{}, y{};
-    std::array<Digit, 24> z{};
-    std::fill(z.begin(), z.end(), 0);
+    std::array<Digit, 24> z{}; // 0-filled
     X.mul_split(x);
     Y.mul_split(y);
     auto [xmin, xmax] = set_xmax(x);
@@ -286,13 +285,12 @@ void FpNum::mul(FpNum X, FpNum Y) {
 // Multiplies by an integer, assumed to be less than 1000 and positive
 void FpNum::mul(FpNum X, int y) {
     std::array<Digit, 12> x{};
-    std::array<Digit, 24> z{};
+    std::array<Digit, 24> z{}; // 0-filled
     bool                  xs = X.sign;
     if (y < 0) {
         y  = -y;
         xs = !xs;
     }
-    for (auto &i : z) i = 0;
     X.mul_split(x);
     for (size_t i = 0; i < 12; i++) z[i + 6] = x[i] * to_unsigned(y);
     prop_carry(z);
@@ -651,14 +649,14 @@ void FpNum::add(FpNum Y) {
 }
 
 // Replaces *this by X-Y
-void FpNum::sub(FpNum X, FpNum Y) {
+void FpNum::sub(const FpNum &X, FpNum Y) {
     *this = X;
     Y.neg();
     add(Y);
 }
 
 // Replaces *this by X+Y
-void FpNum::add(FpNum X, FpNum Y) {
+void FpNum::add(const FpNum &X, const FpNum &Y) {
     *this = X;
     add(Y);
 }
@@ -794,7 +792,7 @@ void FpNum::exec_exp() {
 
 // Computes pow(X,Y) using exponential and log
 // computes also pow(X,1/Y)
-void FpNum::pow(FpNum X, FpNum Y, subtypes i) {
+void FpNum::pow(const FpNum &X, const FpNum &Y, subtypes i) {
     *this = X;
     if (!sign) {
         the_parser.parse_error("First argument negative");
@@ -1358,10 +1356,10 @@ auto fp::qsolve(FpNum &r1, FpNum &r2, FpNum B, const FpNum &C) -> int {
 }
 
 // solves Ax^2+Bx+C=0; result in r1 and r2, returns number of solutions
-auto fp::qsolve(FpNum &r1, FpNum &r2, FpNum A, FpNum B, FpNum C) -> int { return qsolve(r1, r2, B / A, C / A); }
+auto fp::qsolve(FpNum &r1, FpNum &r2, const FpNum &A, const FpNum &B, const FpNum &C) -> int { return qsolve(r1, r2, B / A, C / A); }
 
 // Solve ax^2+bx+c =0;
-void fp::x_solve(FpNum &r1, FpNum &r2, FpNum A, FpNum B, FpNum C) {
+void fp::x_solve(FpNum &r1, FpNum &r2, const FpNum &A, const FpNum &B, const FpNum &C) {
     r1.reset();
     r2.reset();
     if (A.is_zero()) {
@@ -1373,7 +1371,7 @@ void fp::x_solve(FpNum &r1, FpNum &r2, FpNum A, FpNum B, FpNum C) {
 }
 
 // Computes p, q and T for solving a cubic
-void fp::csolve_aux(FpNum A, FpNum B, FpNum C, FpNum D, FpNum &p, FpNum &q, FpNum &T) {
+void fp::csolve_aux(const FpNum &A, const FpNum &B, const FpNum &C, FpNum D, FpNum &p, FpNum &q, FpNum &T) {
     D = D / A / 2;
     T = -B / (3 * A);
     p = C / (3 * A) - (T * T);
@@ -1381,7 +1379,7 @@ void fp::csolve_aux(FpNum A, FpNum B, FpNum C, FpNum D, FpNum &p, FpNum &q, FpNu
 }
 
 // solve ax^3+bx^2+cx+d =0;
-auto fp::x_solve(FpNum &r1, FpNum &r2, FpNum &r3, FpNum A, FpNum B, FpNum C, FpNum D) -> int {
+auto fp::x_solve(FpNum &r1, FpNum &r2, FpNum &r3, const FpNum &A, const FpNum &B, const FpNum &C, const FpNum &D) -> int {
     r1.reset();
     r2.reset();
     r3.reset();
@@ -1426,7 +1424,7 @@ auto fp::x_solve(FpNum &r1, FpNum &r2, FpNum &r3, FpNum A, FpNum B, FpNum C, FpN
     return 3;
 }
 
-auto fp::quad_aux(FpNum r, FpNum w, FpNum &y, FpNum &Ay) -> bool {
+auto fp::quad_aux(const FpNum &r, const FpNum &w, FpNum &y, FpNum &Ay) -> bool {
     y  = r;
     Ay = 8 * y + w;
     return Ay.sign && !Ay.is_zero();
@@ -1620,7 +1618,7 @@ auto Parser::fp_read_value() -> FpNum {
 void Parser::fp_prepare() { fp_res = get_r_token(); }
 
 // This puts X, converted in a token list, into fp_res.
-void Parser::fp_finish(FpNum X) {
+void Parser::fp_finish(const FpNum &X) {
     TokenList res = X.to_list();
     new_macro(res, fp_res);
 }
@@ -1730,12 +1728,11 @@ void Parser::fp_setseed() {
 // algo of Lewis, Goodman Miller 1969
 void FpNum::random() {
     Digit cst_q = 127773;
-    Digit cst_m = 2147483647;
     auto  S     = static_cast<Digit>(eqtb_int_table[fpseed_code].val);
     Digit xia   = S / cst_q;
     Digit xib   = S % cst_q;
     auto  w     = to_signed(xib * 16807) - to_signed(xia * 2836);
-    if (w <= 0) w += to_signed(cst_m);
+    if (w <= 0) w += 2147483647L;
     eqtb_int_table[fpseed_code].val = w;
     fp_rand2.data[1]                = to_unsigned(w);
     div(fp_rand2, fp_rand1);
@@ -1823,7 +1820,7 @@ void Parser::fp_e_qqsolve() {
 }
 
 // upn evaluator. Is a rather big function.
-void Parser::upn_eval(TokenList &l) {
+void Parser::upn_eval(const TokenList &l) {
     FpStack & S = upn_stack;
     FpGenList L(l);
     L.remove_spaces();

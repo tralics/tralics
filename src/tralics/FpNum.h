@@ -28,7 +28,7 @@ struct FpNum {
     void add_abs(FpNum Y);
     void add_digit(size_t y);
     void add_int(FpNum Y);
-    void add(FpNum X, FpNum Y);
+    void add(const FpNum &X, const FpNum &Y);
     void add(FpNum Y);
     void arctan();
     void arctan1();
@@ -56,7 +56,7 @@ struct FpNum {
     void mul(FpNum X);
     void neg_sub_abs(FpNum Y);
     void neg();
-    void pow(FpNum X, FpNum Y, subtypes i);
+    void pow(const FpNum &X, const FpNum &Y, subtypes i);
     void random();
     void round(long n);
     void round0();
@@ -66,7 +66,7 @@ struct FpNum {
     void sincos_loop(int n, FpNum x, FpNum p);
     void sqrt();
     void sub_abs(FpNum Y);
-    void sub(FpNum X, FpNum Y);
+    void sub(const FpNum &X, FpNum Y);
     void trigo_inv();
     void trigo_sqrt();
     void trigo_xy(int x);

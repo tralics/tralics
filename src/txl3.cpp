@@ -252,7 +252,7 @@ auto l3_ns::conditional_aux(const std::string &p) -> subtypes {
 }
 
 // read variant and body, loops over variants
-void Parser::L3_new_conditional_aux(TokenList &arg_spec, subtypes s) {
+void Parser::L3_new_conditional_aux(const TokenList &arg_spec, subtypes s) {
     std::string spec = sE_arg_nopar();
     TokenList   body = read_arg();
     for (const auto &p : split_commas(spec)) {
@@ -1205,7 +1205,6 @@ void Parser::E_l3noexpand(subtypes c) {
     case l3expo_code: l3_expand_o(L3); break;
     case l3expf_code:
         l3_expand_f(L3);
-        break;
         break;
         //  case l3expN_code: this is \noexpand
         //  case l3expp_code: no need to noexpand something  like #1#2
