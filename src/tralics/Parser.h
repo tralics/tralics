@@ -617,7 +617,7 @@ struct Parser {
     void               push_level(boundary_type v);
     void               push_module();
     void               push_module(const std::string &aux);
-    void               push_tpa();
+    void               push_tpa() const;
     void               ratio_evaluate(TokenList &A, TokenList &B, SthInternal &res);
     void               read_into(TokenList &X);
     void               read_mac_body(TokenList &L, bool exp, size_t N);

@@ -116,7 +116,7 @@ void Buffer::append_with_xml_escaping(char32_t c) {
 }
 
 // Converts the entire Buffer to lower case
-Buffer &Buffer::lowercase() {
+auto Buffer::lowercase() -> Buffer & {
     std::transform(begin(), end(), begin(), [](uchar c) { return std::tolower(c); });
     return *this;
 }

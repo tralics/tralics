@@ -72,7 +72,7 @@ void Parser::push_level(boundary_type v) {
     }
 }
 
-void Parser::push_tpa() {
+void Parser::push_tpa() const {
     push_save_stack(new SaveAuxBoundary(bt_tpa));
     if (tracing_stack()) {
         Logger::finish_seq();

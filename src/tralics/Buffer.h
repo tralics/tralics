@@ -46,7 +46,7 @@ public:
 
     // Mutating methods, affecting the data but not ptrs
     void    dump_prefix(bool err, bool gbl, symcodes K); ///< Insert def qualifiers (`\global` etc.)
-    Buffer &lowercase();
+    auto    lowercase() -> Buffer &;
     void    remove_last(size_t n); ///< Drop `n` chars, provided size is large enough
 
     // Mutating methods, affecting ptrs but not the data, as intended

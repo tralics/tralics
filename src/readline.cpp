@@ -142,7 +142,7 @@ public:
     }
 
     Slined(const Slined &) = delete;
-    ~Slined() {} // \todo should delete m_inbuf but it breaks comp_pi
+    ~Slined() {} // NOLINT \todo should delete m_inbuf but it breaks comp_pi
     auto operator=(const Slined &) -> Slined & = delete;
 
     auto newpos(size_t x, size_t n) -> long;
