@@ -438,6 +438,7 @@ Translation
       <subelt2 sb2-att='value1'>
       texte2
       </subelt2>
+      </foo>
 
 If you try to specify twice the value of the same attribute, there are
 two cases: if the command is followed by a star, the old value is
@@ -528,7 +529,7 @@ XML tree <#manipulate>`__ for examples.
 \\XML@get, \\XML@set, \\XML@delete, \\XML@insert (Tralics command)
 ------------------------------------------------------------------
 
-These for command read an integer, say *N*. The first command puts in
+These four commands read an integer, say *N*. The first command puts in
 xmlB the child of index *N* of xmlA. The second command replaces the
 child of index *N* of xmlA by xmlB, the third command erases it; the
 last inserts xmlB before the child of index *N* of xmlA. These command
@@ -856,7 +857,7 @@ Manipulation of the XML tree
 the XML tree it constructs. In order to make sure that the result
 remains a tree, a complete copy of some objects has to be made; the
 copies may be avoided by using one of the two pointers xmlA and xmlB.
-One can get the name of a an element; however ``\XMLname \hbox{...}`` is
+One can get the name of an element; however ``\XMLname \hbox{...}`` is
 difficult to implement and a bit strange: this creates a box, gets its
 name, then discards the box (but the box is never destroyed). For this
 reason, you can fetch only the name of a box register or one of xmlA or
