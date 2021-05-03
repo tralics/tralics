@@ -49,8 +49,9 @@ namespace {
 // For \addatttoindex[foo]{bar}{gee}, returns the idx of foo,
 // then we can say \XMLaddatt{idx}{bar}{gee}
 auto Parser::get_index_value() -> size_t {
-    std::string s = sT_optarg_nopar();
-    return the_index.find_index(s).AL;
+    std::string s         = sT_optarg_nopar();
+    auto &      the_index = AllIndex::the_index();
+    return the_index.find(s).AL;
 }
 
 // Case of \index{key@value|encap}
@@ -117,23 +118,25 @@ auto Parser::index_aux(TokenList &L, std::optional<size_t> father, OneIndex &g) 
     Xml *x   = new Xml(the_names["index"], res);
     if (!encap.empty()) x->id.add_attribute(the_names["encap"], std::string(encap));
     x->id.add_attribute(the_names["level"], the_names[std::to_string(level)]);
-    auto iid = the_index.last_iid++;
+    auto &the_index = AllIndex::the_index();
+    auto  iid       = the_index.last_iid++;
     IR.push_back({B, aux, x, level, iid});
     return n;
 }
 
 // \index, \makeindex, \printindex, + glossary, and \newindex
 void Parser::T_index(subtypes c) {
+    auto &the_index = AllIndex::the_index();
     if (c == makeindex_code || c == makeglossary_code) return;
     flush_buffer();
     if (c == index_code) remove_initial_star();
     if (c == newindex_code) {
         std::string s     = sT_arg_nopar();
         std::string title = sT_arg_nopar();
-        the_index.new_index(s, title);
+        the_index.insert(s, title);
         return;
     }
-    auto &g = (c == printindex_code || c == index_code) ? the_index.find_index(sT_optarg_nopar()) : the_index[0];
+    auto &g = (c == printindex_code || c == index_code) ? the_index.find(sT_optarg_nopar()) : the_index[0];
     if (c == printindex_code || c == printglossary_code) {
         mark_print(g);
         return;

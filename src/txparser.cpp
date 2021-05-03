@@ -4081,9 +4081,8 @@ void Parser::box_end(Xml *res, size_t pos) {
 // Otherwise we push a continuation on the stack.
 
 void Parser::begin_box(size_t src, subtypes c) {
-    Token  T   = cur_tok;
-    size_t res = 0;
-    Xml *  cur_box{nullptr};
+    Token T = cur_tok;
+    Xml * cur_box{nullptr};
     if (c == usebox_code) { // a variant of \copy with an argument
         leave_v_mode();
         TokenList L = read_arg();
@@ -4092,15 +4091,15 @@ void Parser::begin_box(size_t src, subtypes c) {
         c = copy_code;
     }
     if (c == box_code) {
-        res                = scan_reg_num();
+        auto res           = scan_reg_num();
         cur_box            = box_table[res].val;
         box_table[res].val = nullptr;
         box_end(cur_box, src);
         return;
     }
     if (c == copy_code) {
-        res     = scan_reg_num();
-        cur_box = box_table[res].val;
+        auto res = scan_reg_num();
+        cur_box  = box_table[res].val;
         box_end(cur_box, src);
         return;
     }

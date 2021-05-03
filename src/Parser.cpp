@@ -103,7 +103,8 @@ namespace {
     }
 
     void finish_index() {
-        auto labels = std::vector<std::string>(the_index.last_iid, "");
+        auto &the_index = AllIndex::the_index();
+        auto  labels    = std::vector<std::string>(the_index.last_iid, "");
         tralics_ns::find_index_labels(labels);
         size_t idx_size = 0, idx_nb = 0;
         auto   q = the_index.size();
