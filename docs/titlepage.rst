@@ -613,7 +613,7 @@ CE
    the attributes of ``<elt>``. In the example, we would get:
    ``<sURsop fr='dans le sud'/>``.
 CEE
-   The syntax is ``\cmdg ?+ <elt> <eltx>``. Same as above, but the
+   The syntax is ``\cmdg ? <elt> <eltx>``. Same as above, but the
    element created is ``<eltx>`` instead of one named ``cmdf`` with the
    attributes of ``<elt>``. Example
    ``\sParis ?<sUR> <Rocq en='nearparis'>`` gives
