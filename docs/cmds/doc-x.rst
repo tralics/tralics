@@ -863,7 +863,7 @@ name, then discards the box (but the box is never destroyed). For this
 reason, you can fetch only the name of a box register or one of xmlA or
 xmlB.
 
-You can say ``\XML@moveAB``, ``\XML@moveBA`` and ``XML@swapAB``. The
+You can say ``\XML@moveAB``, ``\XML@moveBA`` and ``\XML@swapAB``. The
 effect is to copy xmlA into xmlB, or xmlB into xmlA or to swap these two
 quantities. You can say ``\XML@copyA`` or ``\XML@copyB``. What you get
 is a complete copy of xmlA or xmlB; you can put it in a register as
@@ -879,7 +879,7 @@ xmlA is not an element.
 You can say ``\XML@fetch``; this reads an integer N and puts in xmlA the
 XML element whose *ID* is N. If no element is found, a void element is
 used (you can use ``\XML@A@id`` to check the result). You can say
-``XML@parent``. This puts in xmlB an element whose child is xmlA, if
+``\XML@parent``. This puts in xmlB an element whose child is xmlA, if
 such an object exists; an empty box otherwise. You can say
 ``\XML@insert``, ``\XML@delete``, ``\XML@set`` or ``\XML@get``. These
 commands read an integer N. In the case of "get", the N-th child of xmlA
