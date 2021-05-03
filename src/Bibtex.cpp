@@ -10,8 +10,6 @@
 #include <spdlog/spdlog.h>
 
 namespace {
-    int similar_entries;
-
     bool start_comma = true; // should we scan for an initial comma ?
 
     const std::array<String, 9> scan_msgs{
@@ -461,23 +459,13 @@ auto Bibtex::parse_one_item() -> bool {
         if (!skip_space()) return false;
         cur_entry_name = A;
         BibEntry *X    = see_new_entry(cn, last_ok_line);
-        int       m    = similar_entries;
         while (cur_char() != ')' && cur_char() != '}')
             if (!parse_one_field(X)) return false;
-        if (m > 1) handle_multiple_entries(X);
     }
     char32_t c = cur_char();
     if (c == ')' || c == '}') advance();
     if (c != char32_t(right_outer_delim)) err_in_file("bad end delimiter", true);
     return true;
-}
-
-void Bibtex::handle_multiple_entries(BibEntry *Y) {
-    CitationKey s = Y->cite_key;
-    for (auto *entry : all_entries)
-        if (entry->cite_key.is_similar(s)) {
-            if (entry != Y) entry->copy_from(Y);
-        }
 }
 
 // This finds entry named s, or case-equivalent. If create is true,
@@ -489,9 +477,8 @@ void Bibtex::handle_multiple_entries(BibEntry *Y) {
 
 auto Bibtex::find_entry(const std::string &s, bool create, bib_creator bc) -> BibEntry * {
     CitationKey key(s);
-    similar_entries = 1;
-    int       n     = 0;
-    BibEntry *X     = find_entry(key);
+    int         n = 0;
+    BibEntry *  X = find_entry(key);
     if (X != nullptr) return X;
     X = find_lower_case(key, n);
     if (n > 1) err_in_file("more than one lower case key equivalent", true);

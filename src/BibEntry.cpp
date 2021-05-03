@@ -125,11 +125,11 @@ namespace {
         };
     };
 
-    std::array<std::string, 30> bib_xml_name{"bcrossref", "bkey",     "baddress",      "bauthors",     "bbooktitle",   "bchapter",
-                                             "bedition",  "beditors", "bhowpublished", "binstitution", "bjournal",     "bmonth",
-                                             "bnote",     "bnumber",  "borganization", "bpages",       "bpublisher",   "bschool",
-                                             "bseries",   "btitle",   "btype",         "burl",         "bvolume",      "byear",
-                                             "bdoi",      "bsubtype", "bunite",        "bequipe",      "bidentifiant", "bunknown"};
+    const std::array<std::string, 30> bib_xml_name{"bcrossref", "bkey",     "baddress",      "bauthors",     "bbooktitle",   "bchapter",
+                                                   "bedition",  "beditors", "bhowpublished", "binstitution", "bjournal",     "bmonth",
+                                                   "bnote",     "bnumber",  "borganization", "bpages",       "bpublisher",   "bschool",
+                                                   "bseries",   "btitle",   "btype",         "burl",         "bvolume",      "byear",
+                                                   "bdoi",      "bsubtype", "bunite",        "bequipe",      "bidentifiant", "bunknown"};
 
     // In the case of `Lo{\"i}c', returns  `Lo{\"i}'.
     auto first_three(const std::string &s) -> std::string {
