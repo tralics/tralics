@@ -7,7 +7,7 @@ struct AllIndex : public std::vector<OneIndex> { // \todo unordered_map perhaps
 
     AllIndex();
 
-    static AllIndex &the_index();
+    static auto the_index() -> AllIndex &;
 
     auto find(const std::string &s) -> OneIndex &;
     void insert(const std::string &s, const std::string &title);

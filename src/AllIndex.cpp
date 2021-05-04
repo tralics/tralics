@@ -8,7 +8,7 @@ AllIndex::AllIndex() {
     emplace_back("default", "Index", 5);
 }
 
-AllIndex &AllIndex::the_index() {
+auto AllIndex::the_index() -> AllIndex & {
     static AllIndex I;
     return I;
 }
