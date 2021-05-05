@@ -21,7 +21,7 @@ public:
     [[nodiscard]] auto has_name(const std::string &s) const -> bool { return name == s; }
     [[nodiscard]] auto has_name_of(const std::string &s) const -> bool { return name == the_names[s]; }
     [[nodiscard]] auto is_anchor() const -> bool { return is_element() && name == the_names["anchor"]; }
-    [[nodiscard]] auto is_element() const -> bool { return id.value > 0; }
+    [[nodiscard]] auto is_element() const -> bool { return to_signed(id.value) > 0; }
     [[nodiscard]] auto is_whitespace() const -> bool;
     [[nodiscard]] auto is_empty_p() const -> bool;
     [[nodiscard]] auto last_addr() const -> Xml *;
