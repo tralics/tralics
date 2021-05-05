@@ -20,10 +20,10 @@ public:
     [[nodiscard]] auto get_cell_span() const -> long;
     [[nodiscard]] auto has_name(const std::string &s) const -> bool { return name == s; }
     [[nodiscard]] auto has_name_of(const std::string &s) const -> bool { return name == the_names[s]; }
-    [[nodiscard]] auto is_anchor() const -> bool { return !is_xmlc() && name == the_names["anchor"]; }
+    [[nodiscard]] auto is_anchor() const -> bool { return is_element() && name == the_names["anchor"]; }
+    [[nodiscard]] auto is_element() const -> bool { return id.value > 0; }
     [[nodiscard]] auto is_whitespace() const -> bool;
     [[nodiscard]] auto is_empty_p() const -> bool;
-    [[nodiscard]] auto is_xmlc() const -> bool { return id.value == 0 || id.value >= size_t(-3); } // \todo rename to is_comment()?
     [[nodiscard]] auto last_addr() const -> Xml *;
     [[nodiscard]] auto last_is_string() const -> bool;
     [[nodiscard]] auto only_hi() const -> bool;
@@ -34,6 +34,8 @@ public:
     [[nodiscard]] auto single_son() const -> Xml *;
     [[nodiscard]] auto tail_is_anchor() const -> bool;
     [[nodiscard]] auto spec_copy() const -> Xml *;
+
+    [[nodiscard, deprecated]] auto is_xmlc() const -> bool { return !is_element(); }
 
     auto convert_to_string() -> std::string;
     auto deep_copy() -> gsl::not_null<Xml *>;
