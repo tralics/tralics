@@ -28,14 +28,11 @@ public:
     [[nodiscard]] auto last_is_string() const -> bool;
     [[nodiscard]] auto only_hi() const -> bool;
     [[nodiscard]] auto only_recur_hi() const -> bool;
-    [[nodiscard]] auto all_xmlc() const -> bool;
     [[nodiscard]] auto real_size() const -> long;
     [[nodiscard]] auto single_non_empty() const -> Xml *;
     [[nodiscard]] auto single_son() const -> Xml *;
     [[nodiscard]] auto tail_is_anchor() const -> bool;
     [[nodiscard]] auto spec_copy() const -> Xml *;
-
-    [[nodiscard, deprecated]] auto is_xmlc() const -> bool { return !is_element(); }
 
     auto convert_to_string() -> std::string;
     auto deep_copy() -> gsl::not_null<Xml *>;
@@ -47,7 +44,7 @@ public:
     void add_ref(std::string s);
     void add_tmp(gsl::not_null<Xml *> x);
     void add_last_nl(Xml *x);
-    void add_last_string(const Buffer &B);
+    void add_last_string(const std::string &B);
     void add_nl();
     void add_non_empty_to(Xml *res);
     void change_name(const std::string &s) { name = the_names[s]; }
