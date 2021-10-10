@@ -1395,7 +1395,7 @@ auto Math::convert_char_seq(const MathElt &W) -> MathElt {
     res = new Xml(std::string(B));
     res = new Xml(the_names["mi"], res);
     if (f > 1 && spec) res->add_att(the_names["mathvariant"], the_names.cstf(f));
-    return MathElt(res, mt_flag_small);
+    return {res, mt_flag_small};
 }
 
 // Converts a character sequence; first char W already removed from
@@ -1418,5 +1418,5 @@ auto Math::convert_char_iseq(const MathElt &W, bool multiple) -> MathElt {
     Xml *res = new Xml(std::string(B));
     res      = new Xml(the_names["mn"], res);
     if (f > 1) res->add_att(the_names["mathvariant"], the_names.cstf(f));
-    return MathElt(res, mt_flag_small);
+    return {res, mt_flag_small};
 }

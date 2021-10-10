@@ -1820,7 +1820,7 @@ void Parser::scan_glue(internal_type level, Token t, bool opt) {
 // Calls scan_glue; returns 0 if no argument given.
 auto Parser::get_opt_dim(Token t) -> std::string {
     scan_glue(it_glue, t, true);
-    if (!scan_glue_opt) return std::string();
+    if (!scan_glue_opt) return {};
     return std::string(cur_val.get_glue_width());
 }
 

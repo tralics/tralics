@@ -11,11 +11,11 @@ void ArrayInfo::add_uv(TokenList &u, TokenList &v, const AttList &At) {
 
 // This gets u-part or v-part
 auto ArrayInfo::get_u_or_v(bool u_or_v, size_t pos) const -> TokenList {
-    if (pos >= attribs.size()) return TokenList();
+    if (pos >= attribs.size()) return {};
     return u_or_v ? u_table[pos] : v_table[pos];
 }
 
 auto ArrayInfo::get_cell_atts(size_t k) const -> AttList {
-    if (k >= attribs.size()) return AttList();
+    if (k >= attribs.size()) return {};
     return attribs[k];
 }

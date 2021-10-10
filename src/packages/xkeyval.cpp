@@ -64,13 +64,13 @@ namespace {
         the_parser.new_macro(L, T, xkv_is_global);
     }
 
-    [[nodiscard]] std::string xkv_find_aux(int c) {
+    [[nodiscard]] auto xkv_find_aux(int c) -> std::string {
         std::string res = "XKV@" + xkv_header;
         res += (c == 0 ? "save" : (c == 1 ? "preseth" : "presett"));
         return res;
     }
 
-    [[nodiscard]] std::string xkv_makehd_s(const std::string &fam) {
+    [[nodiscard]] auto xkv_makehd_s(const std::string &fam) -> std::string {
         std::string res = xkv_prefix + fam;
         if (!fam.empty()) res.push_back('@');
         xkv_header = res;

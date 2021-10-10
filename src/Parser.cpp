@@ -315,7 +315,7 @@ namespace {
     void mk_letter(Token *T, uchar k) { T[k] = Token(letter_t_offset, k); }
 
     // Simple case of \^a that gives \342.
-    auto mk_acc(unsigned s) -> Token { return Token(other_t_offset, char32_t(s)); }
+    auto mk_acc(unsigned s) -> Token { return {other_t_offset, char32_t(s)}; }
 
     // Creates the table for accents.
     void boot_accents() {
@@ -935,7 +935,7 @@ namespace {
         if (acc == '.' && chr == '*') return special_double[17];
         if (acc == '.' && chr == '\'') return special_double[18];
         if (acc == 't' && chr == '*') return special_double[19];
-        return Token();
+        return {};
     }
 
     // Creates some little constants.

@@ -467,14 +467,14 @@ auto Parser::T_item_label(unsigned c) -> std::string {
         if (!cur_cmd_chr.is_relax())
             L.push_back(t);
         else
-            return std::string();
+            return {};
     }
     L.brace_me(); // \item[\bf x] puts only x in \bf
     the_stack.push1(the_names["labelitem"]);
     the_stack.set_arg_mode();
     T_translate(L);
     the_stack.pop(the_names["labelitem"]);
-    if (!((c != 0) || get_cur_env_name() == "enumerate")) return std::string();
+    if (!((c != 0) || get_cur_env_name() == "enumerate")) return {};
     Xml *res      = the_stack.remove_last();
     res->name     = std::string("");
     std::string w = res->convert_to_string();
@@ -1047,7 +1047,7 @@ auto Parser::scan_color(const std::string &opt, const std::string &name) -> std:
             if (k < all_colors.size()) return all_colors[k].get_id();
         }
         parse_error(err_tok, "Undefined color ", name, "undefined color");
-        return std::string();
+        return {};
     }
     return translate_ns::find_color(opt, name);
 }

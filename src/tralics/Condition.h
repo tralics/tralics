@@ -13,9 +13,9 @@ struct CondAux {
 
 // This is used to implement \if, \else, \fi
 struct Condition : public std::vector<CondAux> {
-    int if_serial;
+    int if_serial{0};
 
-    Condition() { if_serial = 0; }
+    Condition() {}
 
     [[nodiscard]] auto top_serial() const -> int { return empty() ? -1 : back().serial; }
     [[nodiscard]] auto top_branch() const -> int;
