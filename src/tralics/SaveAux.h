@@ -14,7 +14,6 @@ public:
 
     SaveAuxBase(save_type t, long l) : type(t), line(the_parser.get_cur_line()), level(l) {}
     virtual ~SaveAuxBase() = default;
-    ;
 };
 
 inline std::vector<std::unique_ptr<SaveAuxBase>> the_save_stack;
