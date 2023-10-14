@@ -2009,20 +2009,20 @@ auto MathElt::cv_char() const -> MathElt {
     unsigned a  = 0;
     auto     mt = mt_flag_small;
     auto     F  = get_font();
-    if (c >= nb_mathchars) return MathElt(math_ns::mk_mi(char32_t(c)), mt_flag_small);
+    if (c >= nb_mathchars) return {math_ns::mk_mi(char32_t(c)), mt_flag_small};
     if (std::isdigit(static_cast<char>(c)) != 0)
         a = c - uchar('0') + math_dig_loc;
     else if ((std::isalpha(static_cast<char>(c)) != 0) && F < 2) {
         a = math_char_normal_loc + F * nb_mathchars + c;
     } else if (std::isalpha(static_cast<char>(c)) != 0) {
         auto w = eqtb_int_table[mathprop_ctr_code].val;
-        if ((w & (1 << F)) != 0) return MathElt(math_ns::mk_mi(static_cast<uchar>(c), F), mt);
-        return MathElt(math_ns::make_math_char(static_cast<uchar>(c), F), mt);
+        if ((w & (1 << F)) != 0) return {math_ns::mk_mi(static_cast<uchar>(c), F), mt};
+        return {math_ns::make_math_char(static_cast<uchar>(c), F), mt};
     } else {
         a  = c + math_c_loc;
         mt = math_data.get_math_char_type(c);
     }
-    return MathElt(subtypes(a), mt);
+    return {subtypes(a), mt};
 }
 
 // This converts a constant.
@@ -2030,7 +2030,7 @@ auto MathElt::cv_cst() const -> MathElt {
     subtypes   c  = chr;
     Xml *      s  = math_constants(c);
     math_types mt = math_space_code(c) ? mt_flag_space : mt_flag_small;
-    return MathElt(s, mt);
+    return {s, mt};
 }
 
 // This converts a list
@@ -2038,7 +2038,7 @@ auto MathElt::cv_list(math_style cms, bool ph) -> MathElt {
     Math &X = get_list();
     if (get_lcmd() == math_open_cd) { // case of {x+y}
         XmlAndType res = X.M_cv(cms, ph ? 2 : 1);
-        return MathElt(res.value, res.type);
+        return {res.value, res.type};
     }
     if (get_lcmd() == math_LR_cd) { // case \left(x+y\right)
         auto a = X.front().chr;
@@ -2047,12 +2047,12 @@ auto MathElt::cv_list(math_style cms, bool ph) -> MathElt {
         X.pop_back();
         XmlAndType res  = X.M_cv(cms, 0);
         Xml *      res2 = math_data.make_mfenced(a, b, gsl::not_null{res.value});
-        return MathElt(res2, mt_flag_big);
+        return {res2, mt_flag_big};
     }
     if (get_lcmd() == math_env_cd) // case \begin{array}...
-        return MathElt(X.M_array(false, cms), mt_flag_big);
+        return {X.M_array(false, cms), mt_flag_big};
     cv1_err();
-    return MathElt(CmdChr(error_cmd, zero_code), zero_code);
+    return {CmdChr(error_cmd, zero_code), zero_code};
 }
 
 // Return 1 if the list is left aligned, 2 if right aligned, 0 if centered
@@ -2109,7 +2109,7 @@ auto MathElt::cv_mi(math_style cms) const -> MathElt {
         }
         res->add_att(std::string(s1), std::string(s2));
     }
-    return MathElt(res, mt_flag_small);
+    return {res, mt_flag_small};
 }
 
 //  This converts commands.
@@ -2136,7 +2136,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
             L.pop_front();
         }
         Math w = table[cms];
-        return MathElt(w.convert_math(cms), mt_flag_small); // flag ok ?
+        return {w.convert_math(cms), mt_flag_small}; // flag ok ?
     }
     case operatorname_code:
     case operatornamestar_code: {
@@ -2144,7 +2144,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         Xml *       xs  = new Xml(std::string(s));
         Xml *       res = new Xml(the_names["mo"], xs);
         res->add_att(the_names["form"], the_names["prefix"]);
-        return MathElt(res, c == operatornamestar_code ? mt_flag_opD : mt_flag_opN);
+        return {res, c == operatornamestar_code ? mt_flag_opD : mt_flag_opN};
     }
     case qopname_code: {
         // arg 1 is currently ignored
@@ -2153,7 +2153,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         Xml *       xs  = new Xml(std::string(s));
         Xml *       res = new Xml(the_names["mo"], xs);
         res->add_att(the_names["form"], the_names["prefix"]);
-        return MathElt(res, (o == "o") ? mt_flag_opN : mt_flag_opD);
+        return {res, (o == "o") ? mt_flag_opN : mt_flag_opD};
     }
     case mathmi_code:
     case mathmo_code:
@@ -2178,7 +2178,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
             the_stack.add_att_to_last(A, B, true);
         else
             cmi.add_attribute(A, B, c);
-        return MathElt(CmdChr(error_cmd, zero_code), zero_code);
+        return {CmdChr(error_cmd, zero_code), zero_code};
     }
     case mathlabel_code: {
         std::string s1  = L.get_arg1().convert_this_to_string(math_buffer);
@@ -2188,7 +2188,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         Xid         xid = x->id;
         the_stack.create_new_anchor(xid, id, std::string(s1));
         the_parser.create_label(s2, id);
-        return MathElt(x, mt_flag_small);
+        return {x, mt_flag_small};
     }
     case boxed_code: {
         Xml *x = L.get_arg1().M_cv(cms, 0).value;
@@ -2196,7 +2196,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         x      = new Xml(the_names["mtr"], x);
         x      = new Xml(the_names["mtable"], x);
         x->add_att(std::string("frame"), std::string("solid"));
-        return MathElt(x, mt_flag_small);
+        return {x, mt_flag_small};
     }
     case phantom_code:
     case hphantom_code:
@@ -2211,7 +2211,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
             }
         }
         Xml *R = new Xml(the_names["mphantom"], A);
-        return MathElt(R, mt_flag_small);
+        return {R, mt_flag_small};
     }
     case smash_code: {
         Xml *A = L.get_arg2().M_cv(cms, 0).value;
@@ -2222,7 +2222,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         if (w == 'b' || w == 'c') R->add_att(the_names["depth"], the_names["0pt"]);
         if (w == 't' || w == 'c') R->add_att(the_names["height"], the_names["0pt"]);
         if (w == 'w') R->add_att(the_names["width"], the_names["0pt"]);
-        return MathElt(R, mt_flag_small);
+        return {R, mt_flag_small};
     }
     default: return cv_special1(cms);
     }
@@ -2287,7 +2287,7 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
     int  k   = tmp.check_align();
     if (numalign == 0) numalign = k;
     Xml *A1 = tmp.convert_math(cms);
-    if (c == sqrt_code) return MathElt(new Xml(the_names["msqrt"], A1), mt_flag_big);
+    if (c == sqrt_code) return {new Xml(the_names["msqrt"], A1), mt_flag_big};
     Xml *       A2{nullptr};
     auto        ns          = cv_special_string(c);
     std::string s           = the_names[ns];
@@ -2313,7 +2313,7 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
             tmp2->add_tmp(gsl::not_null{A1});
             tmp2->push_back_unless_nullptr(new Xml(std::string(" ")));
             tmp2->add_tmp(gsl::not_null{A2});
-            return MathElt(tmp2, mt_flag_big);
+            return {tmp2, mt_flag_big};
         }
     } else if (c >= first_maccent_code && c <= last_maccent_code) {
         A2  = get_builtin(c);
@@ -2353,7 +2353,7 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
         }
     }
     Xml *res = finish_cv_special(is_fraction, s, pos, A1, A2, sz, numalign, denalign, style, open, close);
-    return MathElt(res, is_mathop ? mt_flag_opD : mt_flag_big);
+    return {res, is_mathop ? mt_flag_opD : mt_flag_big};
 }
 
 // First pass: convert characters.
@@ -2371,21 +2371,21 @@ auto MathElt::cv1(math_style cms, bool ph) -> MathElt {
     case left_cmd:
     case right_cmd: return *this;
     case cst1_cmd: return cv_cst();
-    case mathbin_cmd: return MathElt(c, mt_flag_bin);
-    case mathrel_cmd: return MathElt(c, mt_flag_rel);
-    case mathordb_cmd: return MathElt(subtypes(long(c) - long(alpha_code) + long(alpha_bcode)), mt_flag_small);
+    case mathbin_cmd: return {c, mt_flag_bin};
+    case mathrel_cmd: return {c, mt_flag_rel};
+    case mathordb_cmd: return {subtypes(long(c) - long(alpha_code) + long(alpha_bcode)), mt_flag_small};
     case mathord_cmd:
-    case mathinner_cmd: return MathElt(c, mt_flag_small);
-    case mathbetween_cmd: return MathElt(c, mt_flag_small_m);
-    case mathopen_cmd: return MathElt(c, mt_flag_small_l);
-    case mathclose_cmd: return MathElt(c, mt_flag_small_r);
-    case mathop_cmd: return MathElt(c, mt_flag_opD);
-    case mathopn_cmd: return MathElt(c, mt_flag_opN);
+    case mathinner_cmd: return {c, mt_flag_small};
+    case mathbetween_cmd: return {c, mt_flag_small_m};
+    case mathopen_cmd: return {c, mt_flag_small_l};
+    case mathclose_cmd: return {c, mt_flag_small_r};
+    case mathop_cmd: return {c, mt_flag_opD};
+    case mathopn_cmd: return {c, mt_flag_opN};
     case special_math_cmd: return cv_special(cms);
     case math_list_cmd: return cv_list(cms, ph);
-    case mathspace_cmd: return MathElt(c, mt_flag_space);
-    case relax_cmd: return MathElt(CmdChr(error_cmd, zero_code), zero_code);
-    default: cv1_err(); return MathElt(CmdChr(error_cmd, zero_code), zero_code);
+    case mathspace_cmd: return {c, mt_flag_space};
+    case relax_cmd: return {CmdChr(error_cmd, zero_code), zero_code};
+    default: cv1_err(); return {CmdChr(error_cmd, zero_code), zero_code};
     }
 }
 

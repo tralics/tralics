@@ -39,7 +39,7 @@ auto Xid::get_att() const -> AttList & { return the_stack.get_att_list(value); }
 auto Xid::has_attribute(const std::string &n) const -> std::string {
     AttList &X = get_att();
     if (auto *i = X.lookup(n)) return *i;
-    return std::string();
+    return {};
 }
 
 // Return true if this id has special attribute pair.

@@ -188,7 +188,7 @@ auto Bibtex::exec_bibitem(const std::string &b) -> std::string {
     BibEntry *X = find_entry(b, because_all);
     if (X->type_int != type_unknown) {
         the_parser.parse_error("Duplicate bibliography entry ignored");
-        return std::string();
+        return {};
     }
     X->type_int = type_article;
     X->set_explicit_cit();

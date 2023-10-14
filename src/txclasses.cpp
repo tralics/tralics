@@ -88,7 +88,7 @@ auto classes_ns::make_keyval(TokenList &key_val) -> KeyAndVal {
         B << key_val; // \todo make TokenList formattable
         key_full = B;
     }
-    return KeyAndVal(key_name, key_val, key_full);
+    return {key_name, key_val, key_full};
 }
 
 // Constructs an option list from a comma separated string.

@@ -52,7 +52,7 @@ auto MathP::find_big(int &k) -> MathP {
         res.push_back(N);
     }
     the_parser.signal_error("internal bug in find big");
-    return MathP();
+    return {};
 }
 
 auto MathP::is_lbr(int &seen_d1, int &seen_d2) const -> bool {
