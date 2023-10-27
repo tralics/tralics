@@ -406,7 +406,7 @@ auto FpNum::to_list() const -> TokenList {
     size_t    i = 0;
     if (buf2[0] == '+') i++;
     while (buf2[i] != 0) {
-        res.push_back(Token(other_t_offset + to_unsigned(buf2[i])));
+        res.push_back(Token(other_t_offset + buf2[i]));
         i++;
     }
     return res;
