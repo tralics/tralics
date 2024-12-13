@@ -190,6 +190,7 @@ namespace {
         case type_misc: return "misc";
         case type_phdthesis: return "phdthesis";
         case type_proceedings: return "proceedings";
+        case type_report: return "report";
         case type_techreport: return "techreport";
         case type_unpublished: return "unpublished";
         default: return "cstb_unknown";
@@ -458,7 +459,7 @@ void BibEntry::call_type_all() {
         out_something(fp_type, 3);
     else if (type_int == type_phdthesis)
         out_something(fp_type, 1);
-    else if (type_int == type_techreport)
+    else if (type_int == type_techreport || type_int == type_report)
         out_something(fp_type, 2);
     else
         out_something(fp_type);
@@ -529,6 +530,7 @@ void BibEntry::call_type_special() {
         out_something(fp_organization);
         format_series_etc(true);
         break;
+    case type_report:
     case type_techreport:
         out_something(fp_type, 2);
         out_something(fp_number);

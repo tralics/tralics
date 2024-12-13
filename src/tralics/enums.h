@@ -2046,6 +2046,7 @@ enum entry_type : unsigned {
     type_phdthesis,
     type_coursenotes,
     type_proceedings,
+    type_report,
     type_techreport,
     type_unpublished,
     type_unknown,
