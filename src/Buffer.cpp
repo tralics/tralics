@@ -593,7 +593,7 @@ auto Buffer::look_at_space(const std::string &s) -> bool {
     append(s);
     bool has_space = false;
     ptrs.b         = 0;
-    for (int i = 0;; i++) {
+    while (true) {
         if (head() == 0) break;
         if (std::isspace(head()) != 0) {
             has_space  = true;

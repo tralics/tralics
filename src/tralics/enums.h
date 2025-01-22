@@ -2048,6 +2048,7 @@ enum entry_type : unsigned {
     type_proceedings,
     type_report,
     type_techreport,
+    type_patent,
     type_unpublished,
     type_unknown,
     type_comment,

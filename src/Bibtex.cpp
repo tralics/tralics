@@ -48,6 +48,7 @@ namespace {
         if (s == the_names["preamble"]) return type_preamble;
         if (s == the_names["report"]) return type_report;
         if (s == the_names["techreport"]) return type_techreport;
+        if (s == the_names["patent"]) return type_patent;
         if (s == the_names["string"]) return type_string;
         if (s == the_names["unpublished"]) return type_unpublished;
 
