@@ -533,8 +533,13 @@ void BibEntry::call_type_special() {
         break;
     case type_report:
     case type_techreport:
-    case type_patent:
         out_something(fp_type, 2);
+        out_something(fp_number);
+        out_something(fp_institution);
+        out_something(fp_address);
+        break;
+    case type_patent:
+        out_something(fp_type);
         out_something(fp_number);
         out_something(fp_institution);
         out_something(fp_address);
