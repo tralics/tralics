@@ -460,7 +460,7 @@ void BibEntry::call_type_all() {
         out_something(fp_type, 3);
     else if (type_int == type_phdthesis)
         out_something(fp_type, 1);
-    else if (type_int == type_techreport || type_int == type_report || type_int == type_patent)
+    else if (type_int == type_techreport || type_int == type_report)
         out_something(fp_type, 2);
     else
         out_something(fp_type);
