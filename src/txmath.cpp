@@ -2514,12 +2514,10 @@ auto math_ns::finish_cv_special(bool isfrac, std::string s, const std::string &p
 auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
     if (has_over()) return M_cv0(cms); // there was an over somewhere
     Math res;
-    int  i           = 0;
     bool prev_is_hat = false; //  must increment cms if true
     bool cur_is_hat  = false;
     bool seen_style  = false;
     while (!empty()) {
-        i++;
         MathElt cur = front();
         pop_front();
         if (cur.is_space()) continue; // ignore this

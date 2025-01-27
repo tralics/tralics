@@ -10,11 +10,11 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    
-    strategy:    
+
+    strategy:
       matrix:
-        cxx: [g++-9, clang++]
-    
+        cxx: [g++, clang++]
+
     steps:
     - uses: actions/checkout@v2
 
@@ -28,8 +28,8 @@ jobs:
 
     - name: configure
       env:
-        CXX: ${{ matrix.cxx }}      
+        CXX: ${{ matrix.cxx }}
       run: cmake -B build
-      
+
     - name: make
       run: cmake --build build

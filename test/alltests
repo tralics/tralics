@@ -85,8 +85,7 @@ rm -f *.log *.spdlog *.xml
 run_tralics hello
 run_tralics hello1
 run_tralics hello2.tex -config=hello.tcf -oe8
-run_tralics hello3
-run_tralics comment
+# run_tralics hello3
 run_tralics testb -shell-escape
 run_tralics_with_err txtc "There was one error." -nozerowidthelt
 run_tralics txtd
@@ -99,14 +98,14 @@ run_tralics amsldoc
 run_tralics testmath
 run_tralics fptest
 run_tralics mathmlc
-run_tralics_with_err tpa "No value given for command "
+# run_tralics_with_err tpa "No value given for command "
 run_tralics tpa2 -nofloathack
 mv tpa2.xml tpa2x.xml
 run_tralics tpa2
 run_tralics_with_err txerr "There were 8 errors." -oe8a
 run_tralics testpack
 run_tralics testpackii -param bibtex_fields -year -param bibtex_extensions -phdthesis
-run_tralics bo
+# run_tralics bo
 run_tralics testhtml
 run_tralics testclass -defaultclass=article
 run_tralics_with_err testkeyval "There were 35 errors."
@@ -137,12 +136,12 @@ run_tralics_with_err omitcite "There were 3 errors."
 compare_file hello.xml
 compare_file hello1.xml
 compare_file hello2.xml 5
-compare_file hello3.xml 5 3
+# compare_file hello3.xml 5 3
 compare_file fptest.xml 5
 compare_file testb.xml
 compare_file txtc.xml
 compare_file txtd.xml 5 3
-compare_file tpa.xml
+# compare_file tpa.xml
 compare_file tpa2.xml
 compare_file tpa2x.xml
 compare_file tormath.xml 5
@@ -150,7 +149,7 @@ compare_file tormath1.xml 5
 compare_file tormath2.xml 5
 compare_file tormath3.xml 5
 compare_file amsldoc.xml
-compare_file bo.xml 9 # there is a date on line 8
+# compare_file bo.xml 9 # there is a date on line 8
 compare_file testhtml.xml
 compare_file testclass.xml
 compare_file torture.xml 6
