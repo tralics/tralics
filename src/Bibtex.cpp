@@ -50,6 +50,7 @@ namespace {
         if (s == the_names["techreport"]) return type_techreport;
         if (s == the_names["patent"]) return type_patent;
         if (s == the_names["string"]) return type_string;
+        if (s == the_names["software"]) return type_software;
         if (s == the_names["unpublished"]) return type_unpublished;
 
         std::vector<std::string> &Bib = the_main.bibtex_extensions;

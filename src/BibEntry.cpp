@@ -194,6 +194,7 @@ namespace {
         case type_techreport: return "techreport";
         case type_patent: return "patent";
         case type_unpublished: return "unpublished";
+        case type_software: return "software";
         default: return "cstb_unknown";
         }
     }
@@ -505,6 +506,7 @@ void BibEntry::call_type_special() {
         out_something(fp_address);
         break;
     case type_manual:
+    case type_software:
         out_something(fp_organization);
         out_something(fp_edition);
         out_something(fp_address);

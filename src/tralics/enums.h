@@ -2055,6 +2055,7 @@ enum entry_type : unsigned {
     type_preamble,
     type_string,
     type_extension,
+    type_software,
 };
 
 enum c_primaire { cp_art, cp_aut, cp_bre, cp_col, cp_cov, cp_ouv, cp_rap, cp_tru, cp_last };
