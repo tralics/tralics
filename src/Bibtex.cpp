@@ -51,6 +51,12 @@ namespace {
         if (s == the_names["patent"]) return type_patent;
         if (s == the_names["string"]) return type_string;
         if (s == the_names["software"]) return type_software;
+        if (s == the_names["online"]) return type_online;
+        if (s == the_names["video"]) return type_video;
+        if (s == the_names["audio"]) return type_audio;
+        if (s == the_names["map"]) return type_map;
+        if (s == the_names["artwork"]) return type_artwork;
+        if (s == the_names["data"]) return type_data;
         if (s == the_names["unpublished"]) return type_unpublished;
 
         std::vector<std::string> &Bib = the_main.bibtex_extensions;

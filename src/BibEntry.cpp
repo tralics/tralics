@@ -195,6 +195,12 @@ namespace {
         case type_patent: return "patent";
         case type_unpublished: return "unpublished";
         case type_software: return "software";
+        case type_online: return "online";
+        case type_video: return "video";
+        case type_audio: return "audio";
+        case type_map: return "map";
+        case type_artwork: return "artwork";
+        case type_data: return "data";
         default: return "cstb_unknown";
         }
     }
@@ -523,6 +529,12 @@ void BibEntry::call_type_special() {
         out_something(fp_school);
         out_something(fp_address);
         break;
+    case type_online:
+    case type_video:
+    case type_audio:
+    case type_map:
+    case type_artwork:
+    case type_data:
     case type_misc:
         out_something(fp_howpublished);
         format_author(false);
