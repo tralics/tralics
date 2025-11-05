@@ -2054,7 +2054,6 @@ enum entry_type : unsigned {
     type_comment,
     type_preamble,
     type_string,
-    type_extension,
     type_software,
     type_online,
     type_video,
@@ -2062,6 +2061,7 @@ enum entry_type : unsigned {
     type_map,
     type_artwork,
     type_data,
+    type_extension, // Must be last in the list because it is used to index extra types
 };
 
 enum c_primaire { cp_art, cp_aut, cp_bre, cp_col, cp_cov, cp_ouv, cp_rap, cp_tru, cp_last };
