@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE ramain SYSTEM 'raweb.dtd'>
-<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2026/01/12 -->
 <ramain creator='Tralics version 2.15.4'>
 <biblio>
 <citation from='year' id='bid35' key='A+' type='misc' userid='cite:tor41'>
@@ -214,6 +214,7 @@
 <bediteur><bpers nom='Ediror' prenom='F.' prenomcomplet='First'/><bpers nom='Editor' prenom='S.' prenomcomplet='Second'/></bediteur>
 <btitle>A beautiful title</btitle>
 <bedition>Second</bedition>
+<bbooktitle>Title of the book</bbooktitle>
 <bseries>15</bseries>
 <bnumber>16</bnumber>
 <bvolume>17</bvolume>
@@ -239,6 +240,7 @@
 <bediteur><bpers nom='Ediror' prenom='F.' prenomcomplet='First'/><bpers nom='Editor' prenom='S.' prenomcomplet='Second'/></bediteur>
 <btitle>A beautiful title</btitle>
 <bedition>Second</bedition>
+<bbooktitle>Title of the book</bbooktitle>
 <bseries>15</bseries>
 <bnumber>16</bnumber>
 <bvolume>17</bvolume>
