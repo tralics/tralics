@@ -491,6 +491,7 @@ void BibEntry::call_type_special() {
     case type_book:
     case type_inbook:
         out_something(fp_edition);
+        out_something(fp_booktitle);
         format_series_etc(true);
         break;
     case type_booklet:
