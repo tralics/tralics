@@ -464,34 +464,33 @@ auto Buffer::int_val() const -> std::optional<size_t> {
 auto Buffer::find_equals() -> bool {
     skip_sp_tab_nl();
     ptrs.a = ptrs.b;
-    while ((head() != 0) && head() != '=') advance();
-    return head() == '=';
+    while (ptrs.b < size() && head() != '=') advance();
+    return ptrs.b < size() && head() == '=';
 }
 
 // Ignores character at ptrs.b, and following ones.
 // removes the spaces just before.
-// puts a null char there.
+// leaves ptrs.b on the last non-space.
 // returns false in case of trouble (only spaces).
 auto Buffer::backup_space() -> bool {
     size_t j = ptrs.b;
     while (j > ptrs.a && is_spaceh(j - 1)) j--;
     if (j == ptrs.a) return false;
-    at(j) = 0; // \todo Not replaceable by reset(j) ? Because the string after ptrs.b is still there
+    ptrs.b = j;
     return true;
 }
 
 // If there is 'foobar' at ptrs.b, then puts ptrs.a to the char after
-// the quote, replaces the second quote by a null.
-// returns false in  case of trouble.
+// the quote and ptrs.b on the closing quote.
+// returns false in case of trouble.
 auto Buffer::string_delims() -> bool {
     skip_sp_tab_nl();
     char c = head();
     if (c == 0) return false;
     advance();
     ptrs.a = ptrs.b;
-    while ((head() != 0) && head() != c) advance();
-    if (head() == 0) return false;
-    at(ptrs.b) = 0; // \todo Not replaceable by reset(j) ?
+    while (ptrs.b < size() && (head() != 0) && head() != c) advance();
+    if (head() == 0 || head() != c) return false;
     return true;
 }
 
@@ -579,7 +578,7 @@ void Buffer::skip_sp_tab() {
     while (ptrs.b < size() && (head() == ' ' || head() == '\t')) ptrs.b++;
 }
 void Buffer::skip_sp_tab_nl() {
-    while (std::isspace(head()) != 0) ptrs.b++;
+    while (ptrs.b < size() && (std::isspace(uchar(head())) != 0)) ptrs.b++;
 }
 
 void Buffer::skip_letter_dig() {
@@ -588,23 +587,18 @@ void Buffer::skip_letter_dig() {
 
 auto Buffer::is_special_end() const -> bool { return head() == '\n' || head() == '#' || head() == '%'; }
 
-// Returns true if there is a space. Kills at the space. Advance
+// Returns true if there is a space. Leaves ptrs.b on the first space.
 auto Buffer::look_at_space(const std::string &s) -> bool {
     clear();
     append(s);
-    bool has_space = false;
-    ptrs.b         = 0;
-    while (true) {
+    ptrs.a = 0;
+    ptrs.b = 0;
+    while (ptrs.b < size()) {
         if (head() == 0) break;
-        if (std::isspace(head()) != 0) {
-            has_space  = true;
-            at(ptrs.b) = 0;
-            advance();
-            break;
-        }
+        if (std::isspace(uchar(head())) != 0) return true;
         advance();
     }
-    return has_space;
+    return false;
 }
 
 // What follows is used for handling the configuration file.
@@ -615,7 +609,7 @@ auto Buffer::look_at_space(const std::string &s) -> bool {
 auto Buffer::xml_and_attrib(const std::string &s) -> Xml {
     bool has_spaces = look_at_space(s);
     if (!has_spaces) return {s, nullptr};
-    Xml res{*this, nullptr};
+    Xml res{substr(0, ptrs.b), nullptr};
     push_back_special_att(res.id);
     return res;
 }
@@ -624,12 +618,14 @@ auto Buffer::xml_and_attrib(const std::string &s) -> Xml {
 void Buffer::push_back_special_att(const Xid &id) {
     for (;;) {
         if (!find_equals()) return;
-        auto J = ptrs.a;
-        if (!backup_space()) return;
+        auto name_start = ptrs.a;
+        auto name_end   = ptrs.b;
+        while (name_end > name_start && is_spaceh(name_end - 1)) name_end--;
+        if (name_end == name_start) return;
         advance();
         if (!string_delims()) return;
-        std::string a = substr(J).c_str(); // NOLINT \todo this cuts at first null char, fix
-        std::string b = substr(ptrs.a);
+        std::string a = substr(name_start, name_end - name_start);
+        std::string b = substr(ptrs.a, ptrs.b - ptrs.a);
         id.add_attribute(a, b);
         advance();
     }

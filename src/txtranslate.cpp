@@ -1473,7 +1473,7 @@ auto Parser::special_tpa_arg(const std::string &name, const std::string &y, bool
     if (!has_atts)
         Y = y;
     else
-        Y = tpa_buffer;
+        Y = tpa_buffer.substr(0, tpa_buffer.ptrs.b);
     if (par) the_stack.set_v_mode();
     the_stack.push(Y, new Xml(Y, nullptr));
     if (has_q) the_stack.mark_omit_cell();

@@ -187,10 +187,13 @@ found at http://www.cecill.info.)";
     auto param_hack(const std::string &a) -> bool {
         Buffer B(a);
         if (!B.find_equals()) return false;
-        if (!B.backup_space()) return false;
+        auto name_start = B.ptrs.a;
+        auto name_end   = B.ptrs.b;
+        while (name_end > name_start && B.is_spaceh(name_end - 1)) name_end--;
+        if (name_end == name_start) return false;
         B.advance();
         B.skip_sp_tab();
-        other_options.push_back(B.substr(B.ptrs.a));
+        other_options.push_back(B.substr(name_start, name_end - name_start));
         other_options.push_back(B.substr(B.ptrs.b));
         return true;
     }
