@@ -28,7 +28,7 @@ namespace tpage_ns {
 } // namespace tpage_ns
 
 // This is called in case of trouble.
-void tpage_ns::init_error() { log_and_tty << "Syntax error in init file (line " << global_state.init_file_pos << ")\n"; }
+void tpage_ns::init_error() { log_and_tty << "Syntax error in init file (line " << the_main.init_file_pos << ")\n"; }
 
 // return tl_end if seen End, tl_empty if empty (or comment),
 // tl_normal otherwise
@@ -241,12 +241,12 @@ void Buffer::find_top_atts() {
         auto as = std::string(a);
         clear();
         append("Tralics version ");
-        append(global_state.tralics_version);
+        append(the_main.tralics_version);
         std::string bs = std::string(*this);
         Xid(1).add_attribute(as, bs);
     } else {
         docspecial = fmt::format("\\addattributestodocument{{{}}}{{{}}}", a, data() + ptrs.b);
-        the_main.add_to_from_config(global_state.init_file_pos, docspecial);
+        the_main.add_to_from_config(the_main.init_file_pos, docspecial);
     }
 }
 

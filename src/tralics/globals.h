@@ -8,53 +8,7 @@
 #include <string>
 #include <vector>
 
-// \todo move most of this to where it belongs
-
-struct WordList;
-class LabelInfo;
 class SaveAuxEnv;
-
-struct GlobalState {
-    bool bad_minus{false};
-    bool bib_allow_break{true};
-    bool compatibility{false};
-    bool nofloat_hack{false};
-    bool raw_bib{false};
-    bool global_in_load{false};
-    bool global_in_url{false};
-    bool in_hlinee{false};
-    bool have_above{false};
-    bool have_below{false};
-    bool no_xml_error{false};
-    bool use_quotes{false};
-    char32_t leftquote_val{'`'};
-    char32_t rightquote_val{'\''};
-    int      bad_chars{0};
-    int      first_boundary_loc{0};
-    int      cur_entry_line{0}; // position of entry in source file
-    int      init_file_pos{0};  // position in init file
-    long     cline_first{0};
-    long     cline_last{0};
-
-    std::array<std::array<char32_t, lmaxchar>, max_encoding - 2> custom_table{};
-    std::array<std::array<std::string, 15>, 128>                 math_chars{};
-    std::array<String, 3>                                        my_constant_table{};
-    std::optional<size_t> pool_position{}; // \todo this is a static variable that should disappear
-    std::string          cur_entry_name;   // name of entry under construction.
-    std::string          everyjob_string;
-    std::string          hlinee_above;
-    std::string          hlinee_width;
-    std::string          hlinee_below;
-    std::string          tralics_version{"2.15.4"};
-    std::string          the_tag;
-
-    std::vector<std::pair<size_t, std::string>>     ref_list;       // list of all \ref
-    std::vector<std::pair<std::string, LabelInfo *>> defined_labels; // list of all \label
-    std::vector<std::pair<String, std::string>>     removed_labels;  // list of all \label removed
-    std::vector<std::string>                        omitcite_list;
-};
-
-inline GlobalState global_state;
 
 // \todo next are global functions, should we do something with them?
 

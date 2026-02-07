@@ -80,7 +80,7 @@ void Parser::signal_error() {
 
 void Parser::signal_error(Token T, const std::string &s) {
     signal_error();
-    if (global_state.no_xml_error) return;
+    if (the_main.no_xml_error) return;
     if (T.is_null()) return;
     the_stack.add_newid0("error");
     the_stack.add_att_to_last(the_names["c"], s);

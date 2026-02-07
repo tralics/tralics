@@ -2,6 +2,9 @@
 #include "BibEntry.h"
 #include "BibMacro.h"
 #include "LineList.h"
+#include <array>
+#include <string>
+#include <vector>
 
 // Main idea. The TeX file has commands like \cite , \nocite, which produce
 // a CitationItem (new or old). There are stored in citation_table. They have
@@ -39,6 +42,12 @@ private:
 
 public:
     bool nocitestar{false};
+    bool raw_bib{false};
+    bool bib_allow_break{true};
+    int  cur_entry_line{-1};
+    std::array<String, 3> my_constant_table{};
+    std::string           cur_entry_name;
+    std::vector<std::string> omitcite_list;
 
     auto find_entry(const CitationKey &s) -> BibEntry *;
     auto find_entry(const std::string &s, bib_creator bc) -> BibEntry *;

@@ -226,7 +226,7 @@ void MathHelper::ml_last_pass(bool vb) {
         }
     }
     if (slabel) label_val = label;
-    global_state.the_tag = tag;
+    cmi.tag = tag;
     if (vb) {
         the_log << "Check labels \n";
         dump_labels();

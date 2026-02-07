@@ -13,11 +13,13 @@
 #include "tralics/InputStack.h"
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"
+#include "tralics/MathDataP.h"
 #include "tralics/Saver.h"
 #include "tralics/ScanSlot.h"
 #include "tralics/TexFonts.h"
 #include "tralics/TexOutStream.h"
 #include "tralics/TexRule.h"
+#include "tralics/globals.h"
 #include "tralics/util.h"
 #include <fmt/format.h>
 #include <fmt/ostream.h>
@@ -1362,7 +1364,7 @@ void Parser::scan_something_internal(internal_type level) {
             bad_number();
             return;
         }
-        std::string s = global_state.math_chars[uchar(vv)][k];
+        std::string s = math_data.math_chars[uchar(vv)][k];
         cur_val.set_toks(token_ns::string_to_list(s, false));
         return;
     }
@@ -1908,7 +1910,7 @@ void Parser::M_prefixed_aux(bool gbl) {
         auto v = scan_int(T, 127, "mathchar");
         scan_optional_equals();
         flush_buffer();
-        global_state.math_chars[static_cast<uchar>(v)][k] = sT_arg_nopar();
+        math_data.math_chars[static_cast<uchar>(v)][k] = sT_arg_nopar();
         return;
     }
     case register_cmd:
@@ -2208,7 +2210,7 @@ void Parser::E_convert() {
     }
     case jobname_code: B.append(get_job_name()); break;
     case attributeval_code: B.append(get_attval()); break;
-    case tralicsversion_code: B.append(global_state.tralics_version); break;
+    case tralicsversion_code: B.append(the_main.tralics_version); break;
     case etexrevision_code: B.append(".0"); break;
     default:;
     }

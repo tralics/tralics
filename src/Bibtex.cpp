@@ -210,15 +210,15 @@ void Bibtex::err_in_file(String s, bool last) const {
     the_parser.nb_errs++;
     Logger::finish_seq();
     log_and_tty << "Error detected at line " << cur_bib_line << " of bibliography file " << in_lines.file_name << "\n";
-    if (!global_state.cur_entry_name.empty()) log_and_tty << "in entry " << global_state.cur_entry_name << " started at line " << last_ok_line << "\n";
+    if (!cur_entry_name.empty()) log_and_tty << "in entry " << cur_entry_name << " started at line " << last_ok_line << "\n";
     log_and_tty << s;
     if (last) log_and_tty << ".\n";
 }
 
 void Bibtex::err_in_entry(String a) {
     the_parser.nb_errs++;
-    log_and_tty << "Error signaled while handling entry " << global_state.cur_entry_name;
-    if (global_state.cur_entry_line >= 0) log_and_tty << " (line " << global_state.cur_entry_line << ")";
+    log_and_tty << "Error signaled while handling entry " << the_bibtex.cur_entry_name;
+    if (the_bibtex.cur_entry_line >= 0) log_and_tty << " (line " << the_bibtex.cur_entry_line << ")";
     log_and_tty << "\n" << a;
 }
 
@@ -431,8 +431,8 @@ auto Bibtex::check_val_end() -> int {
 
 // This parses an @something.
 auto Bibtex::parse_one_item() -> bool {
-    global_state.cur_entry_name = "";
-    global_state.cur_entry_line = -1;
+    cur_entry_name.clear();
+    cur_entry_line = -1;
     if (!scan_for_at()) return false;
     last_ok_line = cur_bib_line;
     if (!skip_space()) return false;
@@ -455,7 +455,7 @@ auto Bibtex::parse_one_item() -> bool {
         if (!read_field(true)) return false;
         mac_set_val(X, field_buf.special_convert(false));
     } else {
-        global_state.cur_entry_line = cur_bib_line;
+        cur_entry_line = cur_bib_line;
         Buffer A;
         if (!skip_space()) return false;
         for (;;) {
@@ -466,7 +466,7 @@ auto Bibtex::parse_one_item() -> bool {
             next_char();
         }
         if (!skip_space()) return false;
-        global_state.cur_entry_name = A;
+        cur_entry_name = A;
         BibEntry *X    = see_new_entry(cn, last_ok_line);
         while (cur_char() != ')' && cur_char() != '}')
             if (!parse_one_field(X)) return false;
@@ -496,18 +496,18 @@ auto Bibtex::find_entry(const std::string &s, bool create, bib_creator bc) -> Bi
 }
 
 // This command is called when we have see @foo{bar,... on line lineno
-// The type of FOO is in cn, the value BAR in global_state.cur_entry_name.
+// The type of FOO is in cn, the value BAR in cur_entry_name.
 // the entry is ignored if teh name is in the omit list (with the same case)
 // This does not create a new entry, complains if the entry exists
 // and is not empty. If OK, we start to fill the entry.
 
 auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
-    if (std::find(global_state.omitcite_list.begin(), global_state.omitcite_list.end(), global_state.cur_entry_name) != global_state.omitcite_list.end()) {
+    if (std::find(omitcite_list.begin(), omitcite_list.end(), cur_entry_name) != omitcite_list.end()) {
         Logger::finish_seq();
-        the_log << "bib: Omitting " << global_state.cur_entry_name << "\n";
+        the_log << "bib: Omitting " << cur_entry_name << "\n";
         return nullptr;
     }
-    BibEntry *X = find_entry(global_state.cur_entry_name, nocitestar, because_all);
+    BibEntry *X = find_entry(cur_entry_name, nocitestar, because_all);
     if (X == nullptr) return X;
     if (X->type_int != type_unknown) {
         err_in_file("duplicate entry ignored", true);
@@ -665,9 +665,9 @@ void Bibtex::bootagain() {
         define_a_macro("oct", "octobre");
         define_a_macro("nov", "novembre");
         define_a_macro("dec", "d\\'ecembre");
-        global_state.my_constant_table[0] = "th\\`ese de doctorat";
-        global_state.my_constant_table[1] = "rapport technique";
-        global_state.my_constant_table[2] = "m\\'emoire";
+        my_constant_table[0] = "th\\`ese de doctorat";
+        my_constant_table[1] = "rapport technique";
+        my_constant_table[2] = "m\\'emoire";
     } else if (cur_lang_german()) { //	      german
         define_a_macro("jan", "Januar");
         define_a_macro("feb", "Februar");
@@ -681,9 +681,9 @@ void Bibtex::bootagain() {
         define_a_macro("oct", "Oktober");
         define_a_macro("nov", "November");
         define_a_macro("dec", "Dezember");
-        global_state.my_constant_table[0] = "Ph. D. Thesis";
-        global_state.my_constant_table[1] = "Technical report";
-        global_state.my_constant_table[2] = "Masters thesis";
+        my_constant_table[0] = "Ph. D. Thesis";
+        my_constant_table[1] = "Technical report";
+        my_constant_table[2] = "Masters thesis";
     } else { // non french, assume english
         define_a_macro("jan", "January");
         define_a_macro("feb", "February");
@@ -697,8 +697,8 @@ void Bibtex::bootagain() {
         define_a_macro("oct", "October");
         define_a_macro("nov", "November");
         define_a_macro("dec", "December");
-        global_state.my_constant_table[0] = "Ph. D. Thesis";
-        global_state.my_constant_table[1] = "Technical report";
-        global_state.my_constant_table[2] = "Masters thesis";
+        my_constant_table[0] = "Ph. D. Thesis";
+        my_constant_table[1] = "Technical report";
+        my_constant_table[2] = "Masters thesis";
     }
 }

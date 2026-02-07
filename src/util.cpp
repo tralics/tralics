@@ -123,7 +123,7 @@ auto convert_to_utf8(const std::string &s, size_t wc) -> std::string {
     std::string res;
     for (auto ch : s) {
         auto C = static_cast<uchar>(ch);
-        auto c = wc == 1 ? char32_t(C) : global_state.custom_table[wc - 2][C];
+        auto c = wc == 1 ? char32_t(C) : the_main.custom_table[wc - 2][C];
         if (c != 0) utf8::append(c, std::back_inserter(res));
     }
     return res;

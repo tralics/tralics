@@ -14,6 +14,7 @@
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/Saver.h"
+#include "tralics/globals.h"
 #include "tralics/util.h"
 #include <fmt/format.h>
 #include <fmt/ostream.h>
@@ -46,7 +47,7 @@ auto Buffer::next_utf8_char() -> char32_t {
     try {
         cp = it == end() ? char32_t(0U) : char32_t(utf8::next(it, end())); // \todo just if
     } catch (utf8::invalid_utf8 &) {
-        global_state.bad_chars++;
+        the_main.bad_chars++;
         spdlog::warn("{}:{}:{}: UTF-8 parsing error, ignoring char", the_parser.cur_file_name, the_parser.cur_file_line, ptrs.b + 1);
         ++ptrs.b;
         return char32_t();
@@ -55,7 +56,7 @@ auto Buffer::next_utf8_char() -> char32_t {
     ptrs.b += nn;
     if (cp > 0x1FFFF) {
         spdlog::error("UTF-8 parsing overflow (char U+{:04X}, line {}, file {})", size_t(cp), the_parser.cur_file_line, the_parser.cur_file_name);
-        global_state.bad_chars++;
+        the_main.bad_chars++;
         return char32_t(); // \todo nullopt
     }
     return cp;
@@ -80,16 +81,16 @@ void io_ns::set_enc_param(long enc, long pos, long v) {
         return;
     }
     if (0 < v && v < int(nb_characters))
-        global_state.custom_table[to_unsigned(enc)][to_unsigned(pos)] = char32_t(to_unsigned(v));
+        the_main.custom_table[to_unsigned(enc)][to_unsigned(pos)] = char32_t(to_unsigned(v));
     else
-        global_state.custom_table[to_unsigned(enc)][to_unsigned(pos)] = char32_t(to_unsigned(pos));
+        the_main.custom_table[to_unsigned(enc)][to_unsigned(pos)] = char32_t(to_unsigned(pos));
 }
 
 auto io_ns::get_enc_param(long enc, long pos) -> long {
     if (!(enc >= 2 && enc < to_signed(max_encoding))) return pos;
     enc -= 2;
     if (!(pos >= 0 && pos < lmaxchar)) return pos;
-    return to_signed(global_state.custom_table[to_unsigned(enc)][to_unsigned(pos)]);
+    return to_signed(the_main.custom_table[to_unsigned(enc)][to_unsigned(pos)]);
 }
 
 // This puts x into the buffer in utf8 form
@@ -267,8 +268,8 @@ auto main_ns::search_in_confdir(const std::string &s) -> std::optional<std::file
 }
 
 auto find_in_confdir(const std::string &s) -> std::optional<std::filesystem::path> {
-    global_state.pool_position = search_in_pool(s);
-    if (global_state.pool_position) return s;
+    LineList::pool_position = search_in_pool(s);
+    if (LineList::pool_position) return s;
     if (std::filesystem::exists(s)) return s;
     if (s.empty() || s[0] == '.' || s[0] == '/') return {};
     return main_ns::search_in_confdir(s);
@@ -276,8 +277,8 @@ auto find_in_confdir(const std::string &s) -> std::optional<std::filesystem::pat
 
 auto find_in_path(const std::string &s) -> std::optional<std::filesystem::path> {
     if (s.empty()) return {};
-    global_state.pool_position = search_in_pool(s);
-    if (global_state.pool_position) return s;
+    LineList::pool_position = search_in_pool(s);
+    if (LineList::pool_position) return s;
     if (s[0] == '.' || s[0] == '/') {
         if (std::filesystem::exists(s)) return s;
         return {};

@@ -20,6 +20,7 @@ public:
     int         math_env_ctr{}; // two counters for environments
     std::string pos_att;        // position attribute, inline or display
     std::string label_val;      // name of the label
+    std::string tag;            // tag value for the current formula
 
 private:
     bool                     current_mode{}; // display or not, needed for \label

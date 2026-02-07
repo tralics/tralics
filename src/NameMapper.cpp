@@ -222,7 +222,7 @@ void NameMapper::assign(const std::string &sa, const std::string &sb) {
             hash_table.eval_let("item", "@item");
     }
     if (sa == "url_font") { the_main.add_to_from_config(1, "\\def\\urlfont{" + sb + "}"); }
-    if (sa == "everyjob") { global_state.everyjob_string = fmt::format("\\everyjob={{{}}}", sb); }
+    if (sa == "everyjob") { the_parser.everyjob_string = fmt::format("\\everyjob={{{}}}", sb); }
     if (sa == "no_footnote_hack") {
         if (sb == "true") the_main.footnote_hack = false;
         if (sb == "false") the_main.footnote_hack = true;

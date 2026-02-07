@@ -126,7 +126,7 @@ found at http://www.cecill.info.)";
 
     /// Initialises encoding tables
     void check_for_encoding() {
-        for (auto &i : global_state.custom_table)
+        for (auto &i : the_main.custom_table)
             for (unsigned j = 0; j < lmaxchar; ++j) i[j] = char32_t(j);
     }
 
@@ -251,7 +251,7 @@ found at http://www.cecill.info.)";
             tp_main_buf.clear();
             auto line = lines.get_next(tp_main_buf);
             if (!line) return;
-            global_state.init_file_pos = *line;
+            the_main.init_file_pos = *line;
             tpa_line k    = tp_main_buf.tp_fetch_something();
             if (k == tl_empty) continue;
             if (k == tl_end) break;
@@ -353,13 +353,13 @@ void MainClass::open_log() { // \todo spdlog etc
     spdlog::default_logger()->sinks().push_back(sink);
     spdlog::default_logger()->sinks()[0]->set_level(spdlog::level::info); // \todo Link this with verbose (later in startup)
 
-    spdlog::trace("Transcript file of tralics {} for file {}", global_state.tralics_version, infile);
+    spdlog::trace("Transcript file of tralics {} for file {}", the_main.tralics_version, infile);
     spdlog::trace("Copyright INRIA/MIAOU/APICS/MARELLE 2002-2015, Jos\\'e Grimm");
     spdlog::trace("Tralics is licensed under the CeCILL Free Software Licensing Agreement");
     spdlog::trace("OS: {} running on {}", print_os(cur_os), machine);
     spdlog::trace("Output encoding: {}", print_enc(output_encoding));
     spdlog::trace("Transcript encoding: {}", print_enc(log_encoding));
-    spdlog::trace("Left quote is '{}', right quote is '{}'", to_utf8(char32_t(global_state.leftquote_val)), to_utf8(char32_t(global_state.rightquote_val)));
+    spdlog::trace("Left quote is '{}', right quote is '{}'", to_utf8(char32_t(the_main.leftquote_val)), to_utf8(char32_t(the_main.rightquote_val)));
     if (trivial_math != 0) spdlog::trace("\\notrivialmath={}", trivial_math);
     if (!default_class.empty()) spdlog::trace("Default class is {}", default_class);
     if (the_main.input_path.size() > 1) {
@@ -392,8 +392,8 @@ void MainClass::parse_args(int argc, char **argv) {
         spdlog::critical("Fatal: no source file given");
         end_with_help(1);
     }
-    if (global_state.leftquote_val == 0 || global_state.leftquote_val >= (1 << 16)) global_state.leftquote_val = '`';
-    if (global_state.rightquote_val == 0 || global_state.rightquote_val >= (1 << 16)) global_state.rightquote_val = '\'';
+    if (the_main.leftquote_val == 0 || the_main.leftquote_val >= (1 << 16)) the_main.leftquote_val = '`';
+    if (the_main.rightquote_val == 0 || the_main.rightquote_val >= (1 << 16)) the_main.rightquote_val = '\'';
 }
 
 enum param_args {
@@ -463,8 +463,8 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
             return;
         case pa_externalprog: obsolete(s); return;
         case pa_trivialmath: trivial_math = stoi(a); return;
-        case pa_leftquote: global_state.leftquote_val = static_cast<char32_t>(std::stoul(a, nullptr, 16)); return;
-        case pa_rightquote: global_state.rightquote_val = static_cast<char32_t>(std::stoul(a, nullptr, 16)); return;
+        case pa_leftquote: the_main.leftquote_val = static_cast<char32_t>(std::stoul(a, nullptr, 16)); return;
+        case pa_rightquote: the_main.rightquote_val = static_cast<char32_t>(std::stoul(a, nullptr, 16)); return;
         case pa_defaultclass: default_class = a; return;
         case pa_inputfile: see_name(a); return;
         case pa_outputfile: out_name = a; return;
@@ -500,7 +500,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
     }
     if (s == "version") { exit(0); }
     if (s == "rawbib") {
-        global_state.raw_bib = true;
+        the_bibtex.raw_bib = true;
         return;
     }
     if (s == "utf8") {
@@ -560,7 +560,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         return;
     }
     if (s == "nofloathack") {
-        global_state.nofloat_hack = true;
+        the_main.nofloat_hack = true;
         return;
     }
     if (s == "noprimehack") {
@@ -596,11 +596,11 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         return;
     }
     if (s == "allowbreak") {
-        global_state.bib_allow_break = true;
+        the_bibtex.bib_allow_break = true;
         return;
     }
     if (s == "noallowbreak") {
-        global_state.bib_allow_break = false;
+        the_bibtex.bib_allow_break = false;
         return;
     }
     if (s == "etex") {
@@ -612,7 +612,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         return;
     }
     if (s == "noxmlerror") {
-        global_state.no_xml_error = true;
+        the_main.no_xml_error = true;
         return;
     }
     if (s == "l3") {
@@ -628,19 +628,19 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         return;
     }
     if (s == "global_state.compatibility") {
-        global_state.compatibility = true;
+        the_main.compatibility = true;
         return;
     }
     if (s == "badminus") {
-        global_state.bad_minus = true;
+        the_main.bad_minus = true;
         return;
     }
     if (s == "nostraightquotes") {
-        global_state.rightquote_val = 0xB4;
+        the_main.rightquote_val = 0xB4;
         return;
     }
     if (s == "usequotes") {
-        global_state.use_quotes = true;
+        the_main.use_quotes = true;
         return;
     }
     if (s == "mathvariant") {
@@ -937,7 +937,7 @@ void MainClass::run(int argc, char **argv) {
             log_and_tty << the_main.file_list;
             log_and_tty << " ***********\n";
         }
-        if (global_state.bad_chars != 0) spdlog::warn("Input conversion errors: {} char{}.", global_state.bad_chars, global_state.bad_chars > 1 ? "s" : "");
+        if (the_main.bad_chars != 0) spdlog::warn("Input conversion errors: {} char{}.", the_main.bad_chars, the_main.bad_chars > 1 ? "s" : "");
         the_parser.finish_images();
         out_xml();
         Logger::log_finish();
@@ -954,7 +954,7 @@ void MainClass::out_xml() {
     if (auto sl = the_names["stylesheet"]; !sl.empty())
         fmt::print(fp, "<?xml-stylesheet href=\"{}\" type=\"{}\"?>\n", sl, the_names["stylesheettype"]);
     fmt::print(fp, "<!DOCTYPE {} SYSTEM '{}'>\n", dtd, dtd_uri);
-    fmt::print(fp, "<!-- Translated from LaTeX by tralics {}, date: {} -->\n", global_state.tralics_version, short_date);
+    fmt::print(fp, "<!-- Translated from LaTeX by tralics {}, date: {} -->\n", the_main.tralics_version, short_date);
     fp << the_stack.document_element() << "\n";
 
     spdlog::info("Output written on {} ({} bytes).", p, fp.tellp());

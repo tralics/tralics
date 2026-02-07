@@ -1,6 +1,7 @@
 #pragma once
 #include "Math.h"
 #include <array>
+#include <string>
 
 // This is a global object for math handling
 class MathDataP : public std::vector<Math> {
@@ -17,6 +18,7 @@ class MathDataP : public std::vector<Math> {
     Token                                                 nomathsw0; // says next token is for nomathml only
     Token                                                 nomathsw1; // says next token is for normal mode only
 public:
+    std::array<std::array<std::string, 15>, 128> math_chars{};
     std::array<Xml *, last_math_loc> built_in_table_alt{}; // the static math table
 private:
     void boot_table();

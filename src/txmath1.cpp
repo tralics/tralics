@@ -12,6 +12,7 @@
 
 #include "tralics/Logger.h"
 #include "tralics/Math.h"
+#include "tralics/MathDataP.h"
 #include "tralics/MathF.h"
 #include "tralics/MathP.h"
 #include "tralics/Parser.h"
@@ -1380,7 +1381,7 @@ auto Math::convert_char_seq(const MathElt &W) -> MathElt {
     if (spec)
         B.push_back(char(uchar(c)));
     else
-        B.append(global_state.math_chars[uchar(c)][f]);
+        B.append(math_data.math_chars[uchar(c)][f]);
     for (;;) {
         if (empty()) break;
         if (!front().maybe_seq(f)) break;
@@ -1388,7 +1389,7 @@ auto Math::convert_char_seq(const MathElt &W) -> MathElt {
         if (spec)
             B.push_back(char(uchar(c)));
         else
-            B.append(global_state.math_chars[uchar(c)][f]);
+            B.append(math_data.math_chars[uchar(c)][f]);
         pop_front();
     }
     if (f == 1) B.push_back(' ');

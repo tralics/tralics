@@ -2,24 +2,25 @@
 #include "tralics/Buffer.h"
 #include "tralics/MainClass.h"
 #include "tralics/NameMapper.h"
+#include "tralics/Parser.h"
 #include "tralics/Stack.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
 
 void Xid::add_top_rule() const {
     add_attribute(the_names["cell_topborder"], the_names["true"]);
-    if (global_state.in_hlinee) {
-        add_attribute(the_names["border_top_width"], global_state.hlinee_width);
-        if (global_state.have_above) add_attribute(the_names["top_rule_space_above"], global_state.hlinee_above);
-        if (global_state.have_below) add_attribute(the_names["top_rule_space_below"], global_state.hlinee_below);
+    if (the_parser.in_hlinee) {
+        add_attribute(the_names["border_top_width"], the_parser.hlinee_width);
+        if (the_parser.have_above) add_attribute(the_names["top_rule_space_above"], the_parser.hlinee_above);
+        if (the_parser.have_below) add_attribute(the_names["top_rule_space_below"], the_parser.hlinee_below);
     }
 }
 void Xid::add_bottom_rule() const {
     add_attribute(the_names["cell_bottomborder"], the_names["true"]);
-    if (global_state.in_hlinee) {
-        add_attribute(the_names["border_bottom_width"], global_state.hlinee_width);
-        if (global_state.have_above) add_attribute(the_names["bottom_rule_space_above"], global_state.hlinee_above);
-        if (global_state.have_below) add_attribute(the_names["bottom_rule_space_below"], global_state.hlinee_below);
+    if (the_parser.in_hlinee) {
+        add_attribute(the_names["border_bottom_width"], the_parser.hlinee_width);
+        if (the_parser.have_above) add_attribute(the_names["bottom_rule_space_above"], the_parser.hlinee_above);
+        if (the_parser.have_below) add_attribute(the_names["bottom_rule_space_below"], the_parser.hlinee_below);
     }
 }
 
@@ -79,7 +80,7 @@ void Xid::add_attribute_but_rend(Xid b) const {
 void Xid::add_attribute(Xid b) const { add_attribute(b.get_att(), true); }
 
 // Implementation of \ref{foo}. We enter foo in the hashtab.
-// and create/update the LabelInfo. We remember the ref in the global_state.ref_list.
+// and create/update the LabelInfo. We remember the ref in the_parser.ref_list.
 void Xid::add_ref(const std::string &s) const { tralics_ns::add_ref(to_signed(value), s, false); }
 
 // Thew string S, a sequence of a='b', is converted to attributes of this.

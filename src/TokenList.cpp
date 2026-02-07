@@ -1,4 +1,5 @@
 #include "tralics/TokenList.h"
+#include "tralics/Bibtex.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 
@@ -152,7 +153,7 @@ void TokenList::url_hack() {
         R.push_back(T);
         if (empty()) continue;                                        // no break needed at end.
         if (T.is_slash_token() && front().is_slash_token()) continue; // no break at the start of http://
-        if ((T.is_slash_token() || T.val == other_t_offset + '.') && global_state.bib_allow_break) R.push_back(hash_table.allowbreak_token);
+        if ((T.is_slash_token() || T.val == other_t_offset + '.') && the_bibtex.bib_allow_break) R.push_back(hash_table.allowbreak_token);
     }
     swap(R);
 }

@@ -26,7 +26,7 @@
 // This is the main function. It does the following: boot the parser and the
 // math part, and execute the main prog.
 auto main(int argc, char **argv) -> int {
-    spdlog::info("This is tralics {}, a LaTeX to XML translator", global_state.tralics_version);
+    spdlog::info("This is tralics {}, a LaTeX to XML translator", the_main.tralics_version);
     spdlog::info("Copyright INRIA/MIAOU/APICS/MARELLE 2002-2015, Jos\\'e Grimm");
     spdlog::info("Licensed under the CeCILL Free Software Licensing Agreement");
     the_parser.boot(); // create the hash table and all that

@@ -214,7 +214,7 @@ namespace {
     auto insert_break(const std::string &x) -> std::string {
         std::string res = "{\\url{";
         for (auto c : x) {
-            if (c == ' ' && global_state.bib_allow_break) res.append("\\allowbreak");
+            if (c == ' ' && the_bibtex.bib_allow_break) res.append("\\allowbreak");
             res.push_back(c);
         }
         res.append("}}");
@@ -311,8 +311,8 @@ void BibEntry::copy_from(BibEntry *Y, size_t k) {
 // Some entries are discarded, others are pushed in all_entries_table.
 // For these we call normalise and presort
 void BibEntry::work(long serial) {
-    global_state.cur_entry_line = -1;
-    global_state.cur_entry_name = cite_key.full_key;
+    the_bibtex.cur_entry_line = -1;
+    the_bibtex.cur_entry_name = cite_key.full_key;
     if (type_int == type_unknown) {
         Bibtex::err_in_entry("undefined reference.\n");
         if (crossref_from != nullptr) log_and_tty << "This entry was crossref'd from " << crossref_from->cite_key.full_key << "\n";
@@ -321,7 +321,7 @@ void BibEntry::work(long serial) {
     if (explicit_cit) return;
     if (why_me == because_crossref) return;
     the_bibtex.enter_in_table(this);
-    global_state.cur_entry_line = first_line;
+    the_bibtex.cur_entry_line = first_line;
     normalise();
     presort(serial);
 }
@@ -377,7 +377,7 @@ void BibEntry::numeric_label(size_t i) {
 // If no value, and w>0, a default value will be used.
 void BibEntry::out_something(field_pos p, size_t w) {
     std::string s = all_fields[p];
-    if (s.empty()) s = global_state.my_constant_table[w - 1];
+    if (s.empty()) s = the_bibtex.my_constant_table[w - 1];
     out_something_s(p, s);
 }
 
@@ -422,7 +422,7 @@ void BibEntry::call_type() {
     bbl.format("{{{}}}", my_name);
     bbl.append(aux_label);
     bbl.flush();
-    if (type_int == type_extension || global_state.raw_bib)
+    if (type_int == type_extension || the_bibtex.raw_bib)
         call_type_all();
     else
         call_type_special();

@@ -1,5 +1,6 @@
 #pragma once
 #include "LineList.h"
+#include <array>
 #include <filesystem>
 #include <optional>
 
@@ -52,6 +53,10 @@ public:
     std::string                        file_name; // Job name, without directory
     std::string                        file_list; // \todo vector of std::fs::path
 
+    std::array<std::array<char32_t, lmaxchar>, max_encoding - 2> custom_table{};
+
+    std::string tralics_version{"2.15.4"};
+
     std::string default_class; ///< The default class
     std::string short_date;    ///< Date of start of run (short format)
 
@@ -67,6 +72,8 @@ public:
     line_iterator doc_class_pos;
 
     int tpa_mode{3};
+    int init_file_pos{0}; // position in init file
+    int bad_chars{0};
 
     bool double_quote_att{false}; ///< double quote as attribute value delimitor
     bool dverbose{false};         ///< Are we verbose at begin document ?
@@ -82,6 +89,13 @@ public:
     bool shell_escape_allowed{false};
     bool use_all_sizes{false};
     bool use_font_elt{false};
+    bool bad_minus{false};
+    bool compatibility{false};
+    bool nofloat_hack{false};
+    bool no_xml_error{false};
+    bool use_quotes{false};
+    char32_t leftquote_val{'`'};
+    char32_t rightquote_val{'\''};
 
     auto check_for_tcf(const std::string &s) -> bool; ///< Look for a `.tcf` file, and if found set `tcf_file` and `use_tcf`
 

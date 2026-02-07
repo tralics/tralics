@@ -52,11 +52,17 @@ struct Parser {
     bool                  tok_is_defined{};                      // use by \ifcsname
     bool                  seen_document{false};                  // did we see \begin{document} ?
     bool                  seen_enddocument{false};
+    bool                  global_in_load{false};
+    bool                  global_in_url{false};
+    bool                  in_hlinee{false};
+    bool                  have_above{false};
+    bool                  have_below{false};
     int                   old_nberrs{};                          // previous number of errors
     int                   nb_errs{};                             // current number of errors
     int                   cur_line{};                            // current input line number
     int                   cur_file_line{};                       // current line number (file read helpers)
     int                   begin_env_line{0};                     // input line number of
+    int                   first_boundary_loc{0};
     int                   default_language_num{0};               // default language
     int                   cur_level{1};                          // current level on the execution stack
     size_t                equation_ctr_pos{};                    // position in the table of the counter equation
@@ -67,9 +73,15 @@ struct Parser {
     scan_stat             scanner_status{ss_normal};             // Error recovery handling (\outer)
     size_t                cur_in_chan{main_in_chan};             // if get_token call get_a_new_line
     long                  cur_file_pos{0};                       // pos of file in the package list (0= none)
+    long                  cline_first{0};
+    long                  cline_last{0};
     std::string           cur_env_name;                          // name of current environment
     std::string           job_name;                              // the name, without extensions
     std::string           cur_file_name{"tty"};
+    std::string           everyjob_string;
+    std::string           hlinee_above;
+    std::string           hlinee_width;
+    std::string           hlinee_below;
     Buffer                input_buffer;                          // input buffer
     Buffer                mac_buffer;                            // buffer the current macro
     Buffer                group_buffer;                          // buffer for arg of \begin{...} \end(...)
@@ -85,6 +97,9 @@ struct Parser {
     std::vector<char32_t> input_line;                            // input line converted to chars
     size_t                input_line_pos{0};                     // position in input_line
     Xml *                 the_xmlA{nullptr}, *the_xmlB{nullptr}; // for XML tree manipulations
+    std::vector<std::pair<size_t, std::string>>     ref_list;       // list of all \ref
+    std::vector<std::pair<std::string, LabelInfo *>> defined_labels; // list of all \label
+    std::vector<std::pair<String, std::string>>     removed_labels;  // list of all \label removed
 
     [[nodiscard]] auto at_eol() const -> bool { return input_line_pos >= input_line.size(); }
     auto               get_next_char() -> char32_t { return input_line[input_line_pos++]; }

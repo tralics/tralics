@@ -89,7 +89,7 @@ void Parser::create_label(const std::string &X, const std::string &S) {
         V->id       = S;
         V->lineno   = get_cur_line();
         V->filename = get_cur_filename();
-        global_state.defined_labels.emplace_back(S, V);
+        the_parser.defined_labels.emplace_back(S, V);
     }
 }
 
@@ -98,7 +98,7 @@ void tralics_ns::add_ref(long v, const std::string &s, bool idx) {
     if (idx)
         refindex_list.emplace_back(v, B);
     else
-        global_state.ref_list.emplace_back(v, B);
+        the_parser.ref_list.emplace_back(v, B);
     auto *V = labinfo(B);
     if (V->lineno == 0) V->lineno = the_parser.get_cur_line();
     if (V->filename.empty()) V->filename = the_parser.get_cur_filename();

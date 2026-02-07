@@ -15,6 +15,7 @@
 #include "tralics/MainClass.h"
 #include "tralics/SaveAux.h"
 #include "tralics/Saver.h"
+#include "tralics/globals.h"
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 
@@ -841,7 +842,7 @@ void Parser::no_extension(AttList &AL, const std::string &s) {
             continue;
         }
         if (Tbuf[i] == '.' && Tbuf[i + 1] == '/') {
-            if (ii == 0) ii = 2; // global_state.compatibility
+            if (ii == 0) ii = 2; // the_main.compatibility
             i += 2;
             continue;
         }

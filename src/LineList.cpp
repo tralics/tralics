@@ -286,7 +286,7 @@ void LineList::find_top_atts() {
 void LineList::find_all_types(std::vector<std::string> &res) {
     Buffer &B = local_buf;
     for (auto C = cbegin(); C != cend(); C = skip_env(C, B)) {
-        global_state.init_file_pos = C->number;
+        the_main.init_file_pos = C->number;
         B             = *C;
         find_one_type(*C, res);
     }
@@ -369,7 +369,7 @@ void LineList::parse_conf_toplevel() const {
     Buffer B;
     for (const auto &C : *this) {
         B             = C;
-        global_state.init_file_pos = C.number;
+        the_main.init_file_pos = C.number;
         b += B.see_config_env();
         if (b == 0) see_main_a(B, local_buf);
     }
@@ -417,9 +417,9 @@ auto LineList::find_aliases(const std::vector<std::string> &SL, std::string &res
 // If 4, its is the main file, log not yet open.
 void LineList::read(const std::string &x, int spec) { // \todo take a std::filesystem::path
     reset(x);
-    if (global_state.pool_position) {
-        insert(file_pool[*global_state.pool_position]);
-        global_state.pool_position.reset();
+    if (LineList::pool_position) {
+        insert(file_pool[*LineList::pool_position]);
+        LineList::pool_position.reset();
         return;
     }
 

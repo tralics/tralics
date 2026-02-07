@@ -534,16 +534,16 @@ void math_ns::add_attribute_spec(const std::string &a, const std::string &b) { c
 void Parser::add_math_label(Xml *res) {
     if (cmi.eqnum_status == 1) {
         cmi.ml_last_pass(tracing_math());
-        if (global_state.the_tag.empty()) return;
+        if (cmi.tag.empty()) return;
     }
     std::string my_id = next_label_id();
-    if (global_state.the_tag.empty()) {
+    if (cmi.tag.empty()) {
         static int mid = 0;
         mid++;
         math_buffer = fmt::format("mid{}", mid);
-        global_state.the_tag     = math_buffer;
+        cmi.tag     = math_buffer;
     }
-    the_stack.create_new_anchor(res->id, my_id, std::string(global_state.the_tag));
+    the_stack.create_new_anchor(res->id, my_id, std::string(cmi.tag));
     const std::string &label = cmi.label_val;
     if (!label.empty()) create_label(label, my_id);
 }
@@ -1051,7 +1051,7 @@ auto Parser::scan_math(size_t res, math_list_type type) -> bool {
                     u.push_back_list(r2, math_argument_cd);
                     math_data.push_back(res, W, subtypes(u.get_type()));
                 } else {
-                    global_state.the_tag = s;
+                    cmi.tag = s;
                     cmi.new_label(a, true);
                 }
                 continue; // case anchorlabel ??
@@ -1289,7 +1289,7 @@ auto Parser::scan_math_env(size_t res, math_list_type type) -> bool {
     }
     if (type == math_env_cd && et == math_data.get_list(res).sname) {
         if (res == 0) { // end of main formula
-            if (cmi.eqnum_status > 1) global_state.the_tag = the_parser.eqtb_string_table[0].val;
+            if (cmi.eqnum_status > 1) cmi.tag = the_parser.eqtb_string_table[0].val;
         }
         return true;
     }

@@ -34,7 +34,7 @@ namespace {
     // This is now cline
     void T_cline() {
         Xml *R       = the_stack.top_stack()->last_addr();
-        auto cl_span = (global_state.cline_last - global_state.cline_first) + 1;
+        auto cl_span = (the_parser.cline_last - the_parser.cline_first) + 1;
         if (R != nullptr) {
             if (R->try_cline(false)) {
                 R->try_cline(true);
@@ -42,7 +42,7 @@ namespace {
             }
             long tot_span = 0;
             if (R->total_span(tot_span)) {
-                tot_span = global_state.cline_first - 1 - tot_span;
+                tot_span = the_parser.cline_first - 1 - tot_span;
                 if (0 <= tot_span) {
                     if (tot_span != 0) {
                         Xml *x = new Xml(the_names["cell"], nullptr);
@@ -60,13 +60,13 @@ namespace {
                 if (R->try_cline_again(false)) {
                     R->try_cline_again(true);
                     R->name = std::string();
-                    the_stack.add_border(global_state.cline_first, cl_span);
+                    the_stack.add_border(the_parser.cline_first, cl_span);
                     the_log << "\\cline killed a cell \n";
                     return;
                 }
             }
         }
-        the_stack.add_border(global_state.cline_first, cl_span);
+        the_stack.add_border(the_parser.cline_first, cl_span);
     }
 
     // This is for lower-case upper-case conversions.
@@ -956,12 +956,12 @@ namespace {
         hash_table.newline_token = Token(newline_token_val);
     }
 
-    // In global_state.ref_list, we have  (e,v), (e,v), (e,v) etc
+    // In the_parser.ref_list, we have  (e,v), (e,v), (e,v) etc
     // where E is the xid of a <ref> element, and V is an entry in the
     // hash table of the label. After the translation is complete,
     // we know the value of the label, and can add the attribute target=...
     void check_all_ids() {
-        for (auto &i : global_state.ref_list) {
+        for (auto &i : the_parser.ref_list) {
             auto        E = i.first;
             std::string V = i.second;
             auto *      L = labinfo(V);
@@ -971,7 +971,7 @@ namespace {
                             << "undefined label `" << V << "' (first use at line " << L->lineno << " in file " << L->filename << ")";
                 Xid(E).add_attribute(the_names["target"], V);
                 std::string B = L->id;
-                for (auto &removed_label : global_state.removed_labels) {
+                for (auto &removed_label : the_parser.removed_labels) {
                     if (removed_label.second == B) log_and_tty << "\n(Label was removed with `" << removed_label.first << "')";
                     break;
                 }
@@ -1574,7 +1574,7 @@ void Parser::load_latex() {
     L.insert(R"(\def\incr@eqnum{\refstepcounter{equation}})");
     L.insert(R"(\def\@@theequation{\theparentequation\alph{equation}})");
 
-    if (!global_state.everyjob_string.empty()) L.insert(global_state.everyjob_string, true); // is this converted ?
+    if (!the_parser.everyjob_string.empty()) L.insert(the_parser.everyjob_string, true); // is this converted ?
     L.insert("%% End bootstrap commands for latex");
     init(L);
     translate0();
@@ -1760,7 +1760,7 @@ void Parser::E_accent() {
         the_log << "{accent " << cur_tok << "}\n";
     }
     unsigned acc_code = cur_cmd_chr.chr;
-    if (global_state.global_in_url && acc_code == '~') {
+    if (the_parser.global_in_url && acc_code == '~') {
         if (tracing_macros()) {
             Logger::finish_seq();
             the_log << "{\\~ gives ~ }\n";
@@ -2045,9 +2045,9 @@ void Parser::T_cititem() {
 void Parser::T_omitcite() {
     flush_buffer();
     std::string s = sT_arg_nopar();
-    global_state.omitcite_list.push_back(s);
+    the_bibtex.omitcite_list.push_back(s);
     Logger::finish_seq();
-    the_log << "{\\omitcite(" << int(global_state.omitcite_list.size());
+    the_log << "{\\omitcite(" << int(the_bibtex.omitcite_list.size());
     the_log << ") = " << s << "}\n";
 }
 
@@ -2456,13 +2456,13 @@ void Parser::T_start_tabular(subtypes c) {
 
 // implements \hline, \cline{p} or \hlinee[p]{w}{w}{w}
 // p is a sequence of two integers, separated by a dash
-// sets global_state.cline_first and global_state.cline_last;
+// sets the_parser.cline_first and the_parser.cline_last;
 // fills errbuf and returns a code in case of error
 
 auto Parser::scan_pair_ints(Token T, TokenList &L) -> bool {
     back_input(hash_table.relax_token);
     back_input(L);
-    global_state.cline_first = scan_int(T);
+    the_parser.cline_first = scan_int(T);
     if (get_token()) {
         errbuf = fmt::format("Error in {} after first integer", T);
         return true;
@@ -2471,19 +2471,19 @@ auto Parser::scan_pair_ints(Token T, TokenList &L) -> bool {
         errbuf = fmt::format("Error in {} after first integer", T);
         return true;
     }
-    global_state.cline_last = scan_int(T);
+    the_parser.cline_last = scan_int(T);
     read_until(hash_table.relax_token);
-    if (1 <= global_state.cline_first && global_state.cline_first <= global_state.cline_last) return false;
-    errbuf = fmt::format("Bad range in {}: {}-{}", T, global_state.cline_first, global_state.cline_last);
+    if (1 <= the_parser.cline_first && the_parser.cline_first <= the_parser.cline_last) return false;
+    errbuf = fmt::format("Bad range in {}: {}-{}", T, the_parser.cline_first, the_parser.cline_last);
     return true;
 }
 
 // Now a function that parses the arguments, and returns a status
 // 0:none, 1: hline, 2: cline,
-// may set global_state.in_hlinee and global_state.hlinee_width
+// may set the_parser.in_hlinee and the_parser.hlinee_width
 
 auto Parser::T_hline_parse(subtypes c) -> int {
-    global_state.in_hlinee = false;
+    the_parser.in_hlinee = false;
     Token T   = cur_tok;
     if (c == one_code) { // cline
         TokenList arg = read_arg();
@@ -2506,28 +2506,28 @@ auto Parser::T_hline_parse(subtypes c) -> int {
             return 0; // read the mandatory arguments before returning
         }
     }
-    global_state.have_above  = false;
-    global_state.have_below  = false;
+    the_parser.have_above  = false;
+    the_parser.have_below  = false;
     TokenList L = read_arg();
     if (!L.empty()) {
         ScaledInt tab_width = dimen_from_list(T, L);
         if (!(tab_width == ScaledInt{0})) {
-            global_state.have_above   = true;
-            global_state.hlinee_above = std::string(tab_width);
+            the_parser.have_above   = true;
+            the_parser.hlinee_above = std::string(tab_width);
         }
     }
     L = read_arg();
     if (!L.empty()) {
         ScaledInt tab_width = dimen_from_list(T, L);
         if (!(tab_width == ScaledInt{0})) {
-            global_state.have_below   = true;
-            global_state.hlinee_below = std::string(tab_width);
+            the_parser.have_below   = true;
+            the_parser.hlinee_below = std::string(tab_width);
         }
     }
     L                   = read_arg();
     ScaledInt tab_width = dimen_from_list(T, L);
-    global_state.in_hlinee           = true;
-    global_state.hlinee_width        = std::string(tab_width);
+    the_parser.in_hlinee           = true;
+    the_parser.hlinee_width        = std::string(tab_width);
     return rt;
 }
 
@@ -2611,7 +2611,7 @@ void Parser::E_multispan() {
     auto guard  = SaveErrTok(cur_tok);
     auto [x, c] = cur_cmd_chr;
 
-    if (x == underscore_catcode && global_state.global_in_load) return translate_char(cur_cmd_chr), true;
+    if (x == underscore_catcode && the_parser.global_in_load) return translate_char(cur_cmd_chr), true;
     if (auto res = Symcode::get(x).call(c)) return *res;
 
     undefined_mac();
