@@ -1,6 +1,7 @@
 #include "tralics/NewArray.h"
-#include "tralics/Logger.h"
 #include "tralics/Parser.h"
+#include <spdlog/spdlog.h>
+#include <sstream>
 #include "tralics/globals.h"
 
 namespace {
@@ -172,12 +173,13 @@ void NewArray::run(Xid ID, bool main_fct) {
     first_bar     = true;
     bool seen     = false;
     cur_h_pos     = "cell_center";
-    if (tracing_commands()) the_log << "array preamble parse: ";
+    std::ostringstream trace_stream;
+    if (tracing_commands()) trace_stream << "array preamble parse: ";
     for (;;) {
         if (preamble.empty()) break;
         if (ac_next()) continue;
         test_pach();
-        if (tracing_commands()) the_log << dump_slot();
+        if (tracing_commands()) trace_stream << dump_slot();
         switch (ch_class) {
         case chc_cell:
             if (main_fct)
@@ -246,7 +248,7 @@ void NewArray::run(Xid ID, bool main_fct) {
         P->parse_error(errbuf);
     }
     }
-    if (tracing_commands()) the_log << "\n";
+    if (tracing_commands()) spdlog::trace("{}", trace_stream.str());
     if (main_fct) {
         ac_maybe_finish();
         return;

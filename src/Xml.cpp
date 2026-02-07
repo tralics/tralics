@@ -1,7 +1,6 @@
 #include "tralics/Xml.h"
 #include "tralics/AttList.h"
 #include "tralics/LabelInfo.h"
-#include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/MathDataP.h"
 #include "tralics/Parser.h"
@@ -10,6 +9,7 @@
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include <fmt/ostream.h>
+#include <fstream>
 #include <spdlog/spdlog.h>
 
 namespace {
@@ -182,8 +182,7 @@ namespace {
             auto *      li = labinfo(V);
             if (li->id != n) continue;
             if (!li->used) continue;
-            log_and_tty << "Error signaled by postprocessor\n"
-                        << "Removing `" << s << "' made the following label disappear: " << V << "\n";
+            spdlog::error("Error signaled by postprocessor\nRemoving `{}` made the following label disappear: {}", s, V);
             the_parser.nb_errs++;
         }
         for (auto &defined_label : the_parser.defined_labels) {
@@ -676,14 +675,14 @@ void Xml::postprocess_fig_table(bool is_fig) {
     T->remove_empty_par();
     T->remove_par_bal_if_ok();
     if (T->is_whitespace()) return;
-    Logger::finish_seq();
-    log_and_tty << "Warning: junk in " << (is_fig ? "figure" : "table") << "\n";
+    spdlog::warn("Warning: junk in {}", (is_fig ? "figure" : "table"));
     {
         int         n = the_parser.get_cur_line();
         std::string f = the_parser.get_cur_filename();
-        log_and_tty << "detected on line " << n;
-        if (!f.empty()) log_and_tty << " of file " << f;
-        log_and_tty << ".\n";
+        if (!f.empty())
+            spdlog::warn("detected on line {} of file {}.", n, f);
+        else
+            spdlog::warn("detected on line {}.", n);
     }
     Xml *U = new Xml(std::string("unexpected"), nullptr);
     push_back_unless_nullptr(U);

@@ -1,8 +1,9 @@
 #include "../tralics/Dispatcher.h"
-#include "../tralics/Logger.h"
 #include "../tralics/Symcode.h"
 #include "../tralics/globals.h"
 #include "../tralics/util.h"
+#include <fmt/ostream.h>
+#include <spdlog/spdlog.h>
 
 // Auto-registering package, see tipa.cpp for details
 
@@ -221,8 +222,7 @@ namespace {
         the_parser.new_macro(na, hash_table.locate("XKV@na"));
         if (!delayed.empty()) delayed.pop_back(); // remove trailing comma
         if (tracing_commands()) {
-            Logger::finish_seq();
-            the_log << "setkeys <- " << action << "\n";
+            spdlog::trace("setkeys <- {}", fmt::streamed(action));
         }
         the_parser.new_macro(delayed, hash_table.locate("XKV@rm"));
         the_parser.back_input(action);
@@ -509,7 +509,7 @@ namespace {
             the_parser.back_input(bad_code);
         else {
             the_parser.parse_error(the_parser.err_tok, "XKV: value is not allowed");
-            log_and_tty << " " << input << "\n";
+            spdlog::error(" {}", fmt::streamed(input));
         }
     }
 
@@ -916,15 +916,13 @@ namespace {
         else
             keyvals = the_parser.read_arg();
         if (tracing_commands()) {
-            Logger::finish_seq();
-            the_log << "setkeys -> " << keyvals << "\n";
+            spdlog::trace("setkeys -> {}", fmt::streamed(keyvals));
         }
         extract_keys(keyvals, Keys);
     }
 
     void XkvSetkeys::dump_keys() {
-        Logger::finish_seq();
-        the_log << "{Options to execute->" << keyvals << "}\n";
+        spdlog::trace("{{Options to execute->{}}}", fmt::streamed(keyvals));
     }
 
     void XkvSetkeys::run(bool c) {

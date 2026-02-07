@@ -2,11 +2,11 @@
 #include "tralics/Bbl.h"
 #include "tralics/Bchar.h"
 #include "tralics/Bibtex.h"
-#include "tralics/Logger.h"
 #include "tralics/NameMapper.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include <fmt/ostream.h>
+#include <spdlog/spdlog.h>
 
 namespace {
     Buffer biblio_buf1, biblio_buf2, biblio_buf3, biblio_buf4;
@@ -62,7 +62,7 @@ namespace {
                 first_name.init(lc + 1, L);
                 if (hm > 2) {
                     Bibtex::err_in_entry("");
-                    log_and_tty << "too many commas (namely " << hm << ") in name\n" << name_buffer << ".\n";
+                    spdlog::warn("too many commas (namely {}) in name\n{}.", hm, fmt::streamed(name_buffer));
                 }
             } else if (hm == 1) {
                 first_name.init(fc + 1, L);
@@ -88,7 +88,7 @@ namespace {
             jr_name.remove_junk();
             if (first_name.empty() && last_name.empty() && jr_name.empty()) {
                 Bibtex::err_in_entry("empty name in\n");
-                log_and_tty << name_buffer << ".\n";
+                spdlog::error("{}.", fmt::streamed(name_buffer));
                 return;
             }
             bool handle_key = want_handle_key(serial, iln);
@@ -288,7 +288,7 @@ void BibEntry::copy_from(BibEntry *Y) {
         the_bibtex.err_in_file("duplicate entry ignored", true);
         return;
     }
-    the_log << "Copy Entry " << Y->cite_key.full_key << " into " << cite_key.full_key << "\n";
+    spdlog::trace("Copy Entry {} into {}", Y->cite_key.full_key, cite_key.full_key);
     is_extension = Y->is_extension;
     type_int     = Y->type_int;
     first_line   = Y->first_line;
@@ -297,7 +297,7 @@ void BibEntry::copy_from(BibEntry *Y) {
 
 void BibEntry::copy_from(BibEntry *Y, size_t k) {
     if (Y->type_int == type_unknown) {
-        log_and_tty << "Unknown reference in crossref " << Y->cite_key.full_key << "\n";
+        spdlog::warn("Unknown reference in crossref {}", Y->cite_key.full_key);
         return; // Should signal an error
     }
     for (size_t i = k; i < all_fields.size(); i++) {
@@ -315,7 +315,7 @@ void BibEntry::work(long serial) {
     the_bibtex.cur_entry_name = cite_key.full_key;
     if (type_int == type_unknown) {
         Bibtex::err_in_entry("undefined reference.\n");
-        if (crossref_from != nullptr) log_and_tty << "This entry was crossref'd from " << crossref_from->cite_key.full_key << "\n";
+        if (crossref_from != nullptr) spdlog::info("This entry was crossref'd from {}", crossref_from->cite_key.full_key);
         return;
     }
     if (explicit_cit) return;

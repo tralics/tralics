@@ -11,13 +11,13 @@
 // This file contains a big part of the Tralics translator
 
 #include "tralics/ColSpec.h"
-#include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/SaveAux.h"
 #include "tralics/Saver.h"
 #include "tralics/globals.h"
 #include <fmt/format.h>
 #include <fmt/ostream.h>
+#include <spdlog/spdlog.h>
 
 #ifdef _MSC_VER
 #include <windows.h>
@@ -70,11 +70,11 @@ namespace {
     // Used when tracing a command (catcode not 11 nor 12)
     // used in the case {\let\x\y}, after the closing brace.
     // It it's not a char, it's a command, with a plain ASCII name.
-    void print_cmd_chr(CmdChr X) {
+    auto print_cmd_chr(CmdChr X) -> std::string {
         String a = X.special_name();
         auto   b = X.name();
-        the_log << "\\" << b;
-        if (a != nullptr) the_log << " " << a;
+        if (a != nullptr) return fmt::format("\\{} {}", b, a);
+        return fmt::format("\\{}", b);
     }
 } // namespace
 
@@ -115,22 +115,18 @@ void Parser::T_translate(TokenList &X) {
 // Letters are printed elsewhere
 void Parser::translate02() const {
     if (cur_cmd_chr.is_space()) {
-        if (!the_stack.in_v_mode()) Logger::out_single_char(char32_t(' '));
+        if (!the_stack.in_v_mode()) spdlog::trace(" ");
         return;
     }
     if (cur_cmd_chr.is_letter_other()) return;
-    Logger::finish_seq();
-    the_log << "{";
-    print_cmd_chr(cur_cmd_chr);
-    the_log << "}\n";
+    spdlog::trace("{{{}}}", print_cmd_chr(cur_cmd_chr));
 }
 
 // Flushes the buffer, creating a new xml element that will be added
 // to the main tree.
 void Parser::flush_buffer1() {
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{Text:" << unprocessed_xml.convert_to_log_encoding() << "}\n";
+        spdlog::trace("{{Text:{}}}", unprocessed_xml.convert_to_log_encoding());
     }
     the_stack.add_last_string(unprocessed_xml);
     unprocessed_xml.clear();
@@ -534,8 +530,7 @@ void Parser::start_paras(int y, const std::string &Y, bool star) {
         first_print_level = y;
         spdlog::info("Translating section command {}: {}.", Y, YY);
     }
-    Logger::finish_seq();
-    the_log << "Translating " << Y << ": " << YY << ".\n";
+    spdlog::trace("Translating {}: {}.", Y, YY);
 }
 
 // An error is signaled if the title of the module is empty
@@ -1101,7 +1096,7 @@ void Parser::T_color(subtypes c) {
         std::string value = sT_arg_nopar();
         tpa_buffer        = "\\color@" + name;
         Token C           = hash_table.locate(tpa_buffer);
-        if (!Hashtab::the_eqtb()[C.eqtb_loc()].val.is_undef()) log_and_tty << "Redefining color " << name << "\n";
+        if (!Hashtab::the_eqtb()[C.eqtb_loc()].val.is_undef()) spdlog::warn("Redefining color {}", name);
         if (model == "named") {
             // case \definecolor{myred}{named}{red}
             // is \global\let\color@myred = \color@red
@@ -1117,8 +1112,7 @@ void Parser::T_color(subtypes c) {
         CmdChr v(color_cmd, subtypes(n + color_offset));
         eq_define(C.eqtb_loc(), v, true);
         if (tracing_assigns()) {
-            Logger::finish_seq();
-            the_log << "{Globally changing " << C << " into color number " << n << "}\n";
+            spdlog::trace("{{Globally changing {} into color number {}}}", fmt::streamed(C), n);
         }
         return;
     }
@@ -1458,8 +1452,7 @@ void Parser::T_hanl(subtypes c) {
     std::string b      = B->convert_to_string();
     bool        failed = e != the_parser.nb_errs;
     if (unexpected_seen_hi && failed)
-        log_and_tty << "you should perhaps use \\Href{\\url{x}}{y}\n"
-                    << "  instead of \\Href{y}{\\url{x}}\n";
+        spdlog::warn("you should perhaps use \\Href{{\\url{{x}}}}{{y}}\n  instead of \\Href{{y}}{{\\url{{x}}}}");
     new_xref(val, b, !failed);
 }
 
@@ -1512,8 +1505,7 @@ auto Parser::special_tpa_arg(const std::string &name, const std::string &y, bool
     if (special_case) {
         cur_level++;
         if (tracing_stack()) {
-            Logger::finish_seq();
-            the_log << "+stack: level + " << cur_level << " (spec)\n";
+            spdlog::trace("+stack: level + {} (spec)", cur_level);
         }
     }
     try {
@@ -1522,8 +1514,7 @@ auto Parser::special_tpa_arg(const std::string &name, const std::string &y, bool
     flush_buffer();
     if (special_case) {
         if (tracing_stack()) {
-            Logger::finish_seq();
-            the_log << "+stack: level - " << cur_level << " (spec)\n";
+            spdlog::trace("+stack: level - {} (spec)", cur_level);
         }
         cur_level--;
     }
@@ -1585,8 +1576,7 @@ void Parser::T_reevaluate() {
     L1.reevaluate0(in_env);
     L2.reevaluate0(in_env);
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{Reeval: " << Tbuf << "}\n";
+        spdlog::trace("{{Reeval: {}}}", fmt::streamed(Tbuf));
     }
     push_input_stack("(reevaluate)", false, false);
     lines.push_front(Line(-1));
@@ -1623,8 +1613,7 @@ void Parser::T_case_shift(subtypes c) {
         pop_level(bt_brace);
     }
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{" << T << "(a)->" << L << "}\n";
+        spdlog::trace("{{{}(a)->{}}}", fmt::streamed(T), fmt::streamed(L));
     }
     auto      P = L.begin();
     auto      E = L.end();
@@ -1674,8 +1663,7 @@ void Parser::T_case_shift(subtypes c) {
         res.push_back(a);
     }
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{" << T << "->" << res << "}\n";
+        spdlog::trace("{{{}->{} }}", fmt::streamed(T), fmt::streamed(res));
     }
     back_input(res);
 }
@@ -1964,15 +1952,13 @@ void Parser::LC() {
     if (the_stack.in_no_mode() || the_stack.in_bib_mode()) {
         signal_error("Text found in a mode where no text is allowed");
         if (the_stack.first_frame() == the_names["gloss_type"]) {
-            log_and_tty << "Maybe \\glo is missing?\nHope for the best\n";
+            spdlog::warn("Maybe \\glo is missing?\nHope for the best");
             the_stack.set_arg_mode();
             return;
         }
         if (the_stack.in_bib_mode()) return;
         the_stack.set_mode(mode_argument);
-        the_log << "Bad mode:XML stack is: ";
-        the_stack.trace_stack();
-        the_log << "\n";
+        spdlog::trace("Bad mode:XML stack is: {}", the_stack.trace_stack());
     }
 }
 
@@ -2075,7 +2061,7 @@ void Parser::T_specimp(subtypes c) {
         return;
     }
     case atatend_code:
-        log_and_tty << "Terminated with " << cur_tok << " at line  " << get_cur_line() << "\n";
+        spdlog::error("Terminated with {} at line {}", fmt::streamed(cur_tok), get_cur_line());
         close_all();
         return;
     case message_code: std::cout << string_to_write(0); return;

@@ -1,9 +1,12 @@
 #include "tralics/TitlePageAux.h"
-#include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/Parser.h"
 #include "tralics/TitlePage.h"
 #include "tralics/TitlePageFullLine.h"
+#include "tralics/fmt_compat.h"
+#include <fmt/ostream.h>
+#include <spdlog/spdlog.h>
+#include <sstream>
 
 // More classification. This allocates memory, and modifies state
 auto TitlePageAux::classify(tpi_vals w, int &state) -> bool {
@@ -143,8 +146,7 @@ void TitlePageAux::exec_post() const {
 // This is executed when the user asks for a titlepage command.
 void TitlePageAux::exec(size_t v, bool vb) {
     if (vb) {
-        Logger::finish_seq();
-        the_log << "{\\titlepage " << v << "=\\" << T1 << "}\n";
+        spdlog::trace("{{\\titlepage {}=\\{}}}", v, fmt::streamed(T1));
     }
     if (type == tpi_rt_tp) {
         the_parser.T_titlepage_finish(v);
@@ -208,62 +210,66 @@ auto TitlePage::find_cmd(const std::string &s) const -> size_t {
 }
 
 // This prints the flags, in a symbolic way.
-void TitlePageAux::decode_flags() const {
+auto TitlePageAux::decode_flags() const -> std::string {
     auto f2 = xflags / 16;
     auto f1 = xflags % 16;
     f1      = f1 / 2;
-    if (f1 == 0 && f2 == 0) return;
-    the_log << " (flags";
-    if (f1 == 1) the_log << " +par";
-    if (f1 == 2) the_log << " +env";
-    if (f1 == 3) the_log << " +par +env";
-    if (f1 == 4) the_log << " -par";
-    if (f2 == 1) the_log << " +list";
-    if (f2 == 2) the_log << " +A";
-    if (f2 == 4) the_log << " +B";
-    if (f2 == 6) the_log << " +C";
-    the_log << ")";
+    if (f1 == 0 && f2 == 0) return {};
+    std::string flags = " (flags";
+    if (f1 == 1) flags += " +par";
+    if (f1 == 2) flags += " +env";
+    if (f1 == 3) flags += " +par +env";
+    if (f1 == 4) flags += " -par";
+    if (f2 == 1) flags += " +list";
+    if (f2 == 2) flags += " +A";
+    if (f2 == 4) flags += " +B";
+    if (f2 == 6) flags += " +C";
+    flags += ")";
+    return flags;
 }
 
 // This prints a slot.
 void TitlePageAux::dump(size_t k) const {
     tpi_vals t = type;
     if (t == tpi_rt_alias) {
-        Logger::finish_seq();
-        the_log << "Defining \\" << T1 << " as alias to \\" << T2 << "\n";
+        std::ostringstream oss;
+        oss << "Defining \\" << T1 << " as alias to \\" << T2;
+        spdlog::trace("{}", oss.str());
         return;
     }
     if (t == tpi_rt_constant) {
-        Logger::finish_seq();
-        the_log << "Inserting the string " << T1 << "\n";
+        std::ostringstream oss;
+        oss << "Inserting the string " << T1;
+        spdlog::trace("{}", oss.str());
         return;
     }
     if (t == tpi_rt_exec) {
-        Logger::finish_seq();
-        the_log << "Inserting the command \\" << T2 << "\n";
+        std::ostringstream oss;
+        oss << "Inserting the command \\" << T2;
+        spdlog::trace("{}", oss.str());
         return;
     }
-    Logger::finish_seq();
-    the_log << "Defining \\" << T1 << " as \\TitlePageCmd " << k << "\n";
+    std::ostringstream oss;
+    oss << "Defining \\" << T1 << " as \\TitlePageCmd " << k;
     if (t == tpi_rt_normal)
-        the_log << "   usual <" << T3 << "/>";
+        oss << "   usual <" << T3 << "/>";
     else if (t == tpi_rt_normal_def)
-        the_log << "   usual? <" << T2 << "/>"
-                << " " << T3;
+        oss << "   usual? <" << T2 << "/>"
+            << " " << T3;
     else if (t == tpi_rt_list)
-        the_log << "   list <" << T2 << "/> and <" << T3 << "/>";
+        oss << "   list <" << T2 << "/> and <" << T3 << "/>";
     else if (t == tpi_rt_list_def)
-        the_log << "   list? <" << T2 << "/> and <" << T3 << "/>";
+        oss << "   list? <" << T2 << "/> and <" << T3 << "/>";
     else if (t == tpi_rt_urlist)
-        the_log << "   ur_list <" << T2 << "/>";
+        oss << "   ur_list <" << T2 << "/>";
     else if (t == tpi_rt_ur)
-        the_log << "   ur <" << T2 << "/>";
+        oss << "   ur <" << T2 << "/>";
     else if (t == tpi_rt_tp)
-        the_log << "   main <" << T2 << " " << T3 << " -- " << T4 << "/>"; //   id??
+        oss << "   main <" << T2 << " " << T3 << " -- " << T4 << "/>"; //   id??
     else
-        the_log << "   random";
-    if (t != tpi_rt_normal_def && t != tpi_rt_list_def) decode_flags(); // otherwise flags are meaningless
-    the_log << "\n";
+        oss << "   random";
+    if (t != tpi_rt_normal_def && t != tpi_rt_list_def) oss << decode_flags(); // otherwise flags are meaningless
+    spdlog::trace("{}", oss.str());
 }
 
 // Converts one of the strings into an empty XML element

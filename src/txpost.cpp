@@ -10,7 +10,6 @@
 
 // Post processing for tralics
 
-#include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/WordList.h"
 #include "tralics/globals.h"

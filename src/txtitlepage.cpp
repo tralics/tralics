@@ -9,7 +9,6 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics/Bibliography.h"
-#include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/Parser.h"
 #include "tralics/TitlePage.h"
@@ -17,6 +16,8 @@
 #include "tralics/TpiOneItem.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
+#include <fmt/ostream.h>
+#include <spdlog/spdlog.h>
 
 namespace {
     Buffer docspecial; // Buffer for document special things
@@ -28,7 +29,7 @@ namespace tpage_ns {
 } // namespace tpage_ns
 
 // This is called in case of trouble.
-void tpage_ns::init_error() { log_and_tty << "Syntax error in init file (line " << the_main.init_file_pos << ")\n"; }
+void tpage_ns::init_error() { spdlog::error("Syntax error in init file (line {})", the_main.init_file_pos); }
 
 // return tl_end if seen End, tl_empty if empty (or comment),
 // tl_normal otherwise
@@ -39,8 +40,7 @@ auto Buffer::tp_fetch_something() -> tpa_line {
     if (is_special_end()) return tl_empty;
     if (ptrs.b == 0) {
         tpage_ns::init_error();
-        log_and_tty << data();
-        log_and_tty << "Wanted End, or line starting with space\n";
+        spdlog::error("{}Wanted End, or line starting with space", fmt::streamed(data()));
         return tl_empty;
     }
     return tl_normal;
@@ -81,7 +81,7 @@ auto tpage_ns::scan_item(Buffer &in, Buffer &out, char del) -> bool {
     while (in.head() != del) {
         if (in.head() == 0) {
             tpage_ns::init_error();
-            log_and_tty << "could not find end delimiter\n";
+            spdlog::error("could not find end delimiter");
             out = "notfound";
             return false;
         }
@@ -126,18 +126,17 @@ void Parser::T_titlepage_finish(size_t v) {
         if (the_bibliography.number_of_data_bases() == 0) { the_bibliography.push_back_src(the_main.file_name); }
     }
     if (finished) {
-        log_and_tty << "Translation terminated after title page\n";
+        spdlog::info("Translation terminated after title page");
         E_input(end_all_input_code);
     }
 }
 
 void Parser::T_titlepage(size_t v) {
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{\\titlepage " << v << "}\n";
+        spdlog::trace("{{\\titlepage {}}}", v);
     }
     if (!Titlepage.is_valid()) {
-        log_and_tty << "No title page info, bug?\n";
+        spdlog::warn("No title page info, bug?");
         return; // why ?
     }
     if (v >= Titlepage.bigtable.size()) {
@@ -278,16 +277,16 @@ auto Buffer::find_alias(const std::vector<std::string> &SL, std::string &res) ->
         std::string a  = substring();
         bool        ok = a == res;
         if (ok) {
-            the_log << "Potential type " << res << " aliased to " << pot_res << "\n";
+            spdlog::trace("Potential type {} aliased to {}", res, pot_res);
             if (!local_potres) local_potres = the_main.check_for_tcf(pot_res);
             if (local_potres) {
                 res = pot_res;
                 return true;
             }
-            the_log << "Alias " << pot_res << " undefined\n";
+            spdlog::trace("Alias {} undefined", pot_res);
             return false;
         }
     }
-    the_log << "Alias " << pot_res << " does not match " << res << "\n";
+    spdlog::trace("Alias {} does not match {}", pot_res, res);
     return false;
 }

@@ -12,13 +12,14 @@
 
 #include "tralics/Bibtex.h"
 #include "tralics/Glue.h"
-#include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/Xml.h"
 #include "tralics/util.h"
 #include <cctype>
 #include <ctre.hpp>
 #include <fmt/format.h>
+#include <fmt/ostream.h>
+#include <spdlog/spdlog.h>
 #include <utf8.h>
 
 namespace {
@@ -65,8 +66,8 @@ namespace {
 
     void err_in_name(String a, long i) {
         Bibtex::err_in_entry(a);
-        log_and_tty << "\nbad syntax in author or editor name\n";
-        log_and_tty << "error occurred at character position " << i << " in the string\n" << name_buffer << ".\n";
+        spdlog::error("\nbad syntax in author or editor name\n");
+        spdlog::error("error occurred at character position {} in the string\n{}.", i, fmt::streamed(name_buffer));
     }
 } // namespace
 
@@ -872,8 +873,7 @@ void Buffer::fill_table(std::vector<bchar_type> &table) {
             at(ptrs.b + 1) = c;
             at(ptrs.b)     = '\\';
             at(ptrs.b - 1) = '{';
-            Logger::finish_seq();
-            the_log << "+bibchanged " << data() << "\n";
+            spdlog::trace("+bibchanged {}", fmt::streamed(data()));
         }
         int  bl  = 1;
         auto j   = i;

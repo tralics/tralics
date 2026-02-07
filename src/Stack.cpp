@@ -1,10 +1,12 @@
 #include "tralics/Stack.h"
-#include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/NameMapper.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
+#include <fmt/ostream.h>
+#include <spdlog/spdlog.h>
+#include <sstream>
 
 namespace {
     // For debug. Returns symbolic name of mode
@@ -25,14 +27,20 @@ namespace {
 } // namespace
 
 // Dumps a stack slot
-void StackSlot::fulldump(size_t i) const {
-    the_log << "level " << i << " entered at line " << line << ", type " << (frame == " " ? "()" : std::string(frame)) << ", mode"
-            << mode_to_string(md) << ":\n";
-    if (obj != nullptr) the_log << obj << "\n";
+auto StackSlot::fulldump(size_t i) const -> std::string {
+    std::ostringstream oss;
+    oss << "level " << i << " entered at line " << line << ", type " << (frame == " " ? "()" : std::string(frame)) << ", mode"
+        << mode_to_string(md) << ":\n";
+    if (obj != nullptr) oss << obj << "\n";
+    return oss.str();
 }
 
 // This prints a simplified version of the stack.
-void StackSlot::dump() const { the_log << " " << (frame == " " ? "()" : std::string(frame)) << mode_to_string(md); }
+auto StackSlot::dump() const -> std::string {
+    std::ostringstream oss;
+    oss << " " << (frame == " " ? "()" : std::string(frame)) << mode_to_string(md);
+    return oss.str();
+}
 
 void Stack::implement_cit(const std::string &b1, const std::string &b2, const std::string &a, const std::string &c) {
     add_att_to_last(the_names["userid"], std::string(b1));
@@ -237,8 +245,7 @@ void Stack::push_trace() {
         auto        ptr = size() - 1;
         std::string fr  = at(ptr).frame;
         if (fr != " ") {
-            Logger::finish_seq();
-            the_log << "{Push " << fr << " " << ptr << "}\n";
+            spdlog::trace("{{Push {} {}}}", fr, ptr);
         }
     }
 }
@@ -288,25 +295,26 @@ void Stack::init_all(const std::string &a) {
 // Tracing of stack when popping
 void Stack::trace_pop(bool sw) {
     if (tracing_stack()) {
-        Logger::finish_seq();
-        the_log << "{Pop ";
-        if (sw) the_log << "(module) ";
-        the_log << int(size() - 1) << ":";
-        trace_stack();
-        the_log << "}\n";
+        auto stack_state = trace_stack();
+        if (sw)
+            spdlog::trace("{{Pop (module) {}:{}}}", int(size() - 1), stack_state);
+        else
+            spdlog::trace("{{Pop {}:{}}}", int(size() - 1), stack_state);
     }
 }
 
 // This prints the whole stack.
 void Stack::dump() {
     auto l = size();
-    for (size_t i = 0; i < l; i++) at(i).fulldump(i);
+    for (size_t i = 0; i < l; i++) spdlog::trace("{}", at(i).fulldump(i));
 }
 
 // Like Stack::dump, less verbose.
-void Stack::trace_stack() {
+auto Stack::trace_stack() const -> std::string {
     auto l = size();
-    for (size_t i = 0; i < l; i++) at(i).dump();
+    std::string res;
+    for (size_t i = 0; i < l; i++) res += at(i).dump();
+    return res;
 }
 
 // This pops an element, top-stack should be a.

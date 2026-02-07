@@ -208,7 +208,8 @@ struct Parser {
     void word_define(size_t a, long c, bool gbl);
     void mu_error(String s, int i);
     void expand_nct(TokenList &L);
-    void token_for_show(const CmdChr &val);
+    void               token_for_show(const CmdChr &val);
+    [[nodiscard]] auto token_for_show_str(const CmdChr &val) -> std::string;
     void create_label(const std::string &X, const std::string &S);
     void LC();
 

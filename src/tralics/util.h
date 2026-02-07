@@ -1,5 +1,6 @@
 #pragma once
 #include "enums.h"
+#include "fmt_compat.h"
 #include <filesystem>
 #include <optional>
 #include <string>

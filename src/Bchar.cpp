@@ -1,7 +1,8 @@
 #include "tralics/Bchar.h"
 #include "tralics/Bibtex.h"
-#include "tralics/Logger.h"
 #include "tralics/util.h"
+#include <fmt/ostream.h>
+#include <spdlog/spdlog.h>
 
 auto operator<<(std::ostream &X, const Bchar &Y) -> std::ostream & {
     for (auto k = Y.first; k < Y.last; ++k)
@@ -46,7 +47,7 @@ auto Bchar::is_junk(size_t i) const -> bool {
     bchar_type b = table[i];
     if (b == bct_comma) {
         Bibtex::err_in_entry("misplaced comma in bibtex name\n");
-        log_and_tty << "you should say \"{},{},foo\", instead of  \",,foo\" in \n" << name_buffer << ".\n";
+        spdlog::warn("you should say \"{},{},foo\", instead of  \",,foo\" in \n{}.", fmt::streamed(name_buffer));
     }
     if (b == bct_space || b == bct_tilde || b == bct_dash || b == bct_comma) return true;
     if (b == bct_bad || b == bct_continuation) return true;

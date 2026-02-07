@@ -1,25 +1,26 @@
 #include "tralics/Condition.h"
-#include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
+#include <spdlog/spdlog.h>
+#include <sstream>
 
 void Condition::dump() const {
     for (size_t i = size(); i > 0; i--) at(i - 1).dump(to_signed(i - 1));
 }
 
 void CondAux::dump(long i) const {
-    Logger::finish_seq();
-    the_log << "### level " << i << " serial " << serial << ": ";
+    std::ostringstream oss;
+    oss << "### level " << i << " serial " << serial << ": ";
     auto T = cur_if;
     if (T >= unless_code) {
         T -= unless_code;
-        the_log << "\\unless";
+        oss << "\\unless";
     }
     CmdChr tmp(if_test_cmd, subtypes(T));
-    the_log << "\\" << tmp.name();
-    if (if_limit == fi_code) the_log << "\\else";
-    the_log << " entered on line " << if_line;
-    the_log << "\n";
+    oss << "\\" << tmp.name();
+    if (if_limit == fi_code) oss << "\\else";
+    oss << " entered on line " << if_line;
+    spdlog::trace("{}", oss.str());
 }
 
 // for \currentifbranch

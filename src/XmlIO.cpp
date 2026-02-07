@@ -1,9 +1,9 @@
 #include "tralics/XmlIO.h"
-#include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include <fmt/ostream.h>
+#include <spdlog/spdlog.h>
 
 namespace {
     inline auto is_spacer(char32_t c) -> bool { return c == ' ' || c == '\t' || c == '\n' || c == '\r'; }
@@ -585,7 +585,7 @@ void XmlIO::parse_dec_element() {
         is_first      = false;
         prev_is_space = false;
     }
-    if (!ok) the_log << "Possible problem in XML scan on line " << the_parser.get_cur_line() << "\n";
+    if (!ok) spdlog::trace("Possible problem in XML scan on line {}", the_parser.get_cur_line());
     if (prev_is_space) aux.pop_back();
     tmp += " " + elt_name;
     if (aux == "EMPTY") {
@@ -633,7 +633,7 @@ void XmlIO::parse_dec_attlist() {
         is_first      = false;
         prev_is_space = false;
     }
-    if (!ok) the_log << "Possible problem in XML scan on line " << the_parser.get_cur_line() << "\n";
+    if (!ok) spdlog::trace("Possible problem in XML scan on line {}", the_parser.get_cur_line());
     if (prev_is_space) aux.pop_back();
     tmp += " " + elt_name;
     // Syntax Attdef*
@@ -743,5 +743,5 @@ auto XmlIO::expand_PEReference() -> bool {
 
 void XmlIO::error(const std::string &s) const {
     the_parser.nb_errs++;
-    log_and_tty << "Error while parsing XML (line " << cur_line << ")\n" << s << ".\n";
+    spdlog::error("Error while parsing XML (line {})\n{}.", cur_line, s);
 }

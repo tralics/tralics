@@ -12,12 +12,13 @@
 
 #include "tralics/KeyAndVal.h"
 #include "tralics/LatexPackage.h"
-#include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include <fmt/format.h>
+#include <fmt/ostream.h>
+#include <spdlog/spdlog.h>
 #include <fmt/ostream.h>
 #include <spdlog/spdlog.h>
 
@@ -244,12 +245,12 @@ void Parser::insert_hook(long n) {
     if (n <= 0 || n >= to_signed(k)) return;
     LatexPackage *C = the_class_data.packages[to_unsigned(n)];
     if (!C->seen_process && !C->Uoptions.empty())
-        log_and_tty << "Warning: " << C->pack_or_class() << C->real_name() << " has no \\ProcessOptions\n";
+        spdlog::warn("Warning: {}{} has no \\ProcessOptions", C->pack_or_class(), C->real_name());
     back_input(C->hook);
     if (parse_version(C->date) < parse_version(C->req_date)) {
-        log_and_tty << "Warning: You have requested, on line " << get_cur_line() << ", version\n`" << C->req_date << "' of "
-                    << C->pack_or_class() << C->real_name() << ",\n"
-                    << "but only version\n`" << C->date << "' is available\n";
+        spdlog::warn("Warning: You have requested, on line {}, version\n`{}' of {}{},\n"
+                     "but only version\n`{}' is available",
+                     get_cur_line(), C->req_date, C->pack_or_class(), C->real_name(), C->date);
     }
 }
 
@@ -270,23 +271,22 @@ void Parser::T_provides_package(bool c) // True for a file
     std::string name = sE_arg_nopar();
     std::string date = sE_optarg_nopar();
     add_to_filelist(get_cur_filename(), date);
-    Logger::finish_seq();
     if (c) {
-        the_log << "File: " << name << " " << date << "\n";
+        spdlog::trace("File: {} {}", name, date);
         return;
     }
     LatexPackage *cur = the_class_data.cur_pack();
     if (!date.empty()) cur->date = date;
     auto S = cur->real_name();
     if (name != S && !the_class_data.using_default_class) {
-        log_and_tty << "Warning: " << cur->pack_or_class() << S << " claims to be " << name << ".\n";
+        spdlog::warn("Warning: {}{} claims to be {}.", cur->pack_or_class(), S, name);
     }
     Buffer &b = txclasses_local_buf;
     b         = fmt::format(cur->is_class() ? "Document class: {} {}\n" : "Package: {} {}\n", name, date);
     if (cur->is_class())
-        log_and_tty << b;
+        spdlog::info("{}", fmt::streamed(b));
     else
-        the_log << b;
+        spdlog::trace("{}", fmt::streamed(b));
 }
 
 // This implements \PassOptionsToPackage, \PassOptionsToClass
@@ -410,7 +410,7 @@ void classes_ns::unknown_option(KeyAndVal &cur, TokenList &res, TokenList &spec,
     if (!C->has_a_default) {
         if (C->is_class()) {
         } else
-            log_and_tty << "Unknown option `" << name << "' for package `" << C->real_name() << "'\n";
+            spdlog::warn("Unknown option `{}` for package `{}`", name, C->real_name());
     } else {
         TokenList u = cur.to_list();
         if (X == 1) {
@@ -513,11 +513,9 @@ void Parser::T_execute_options() {
 
 // Common code;
 void Parser::T_process_options_aux(TokenList &action) {
-    Logger::finish_seq();
-    the_log << "{Options to execute->" << txclasses_local_buf << "}\n";
+    spdlog::trace("{{Options to execute->{}}}", fmt::streamed(txclasses_local_buf));
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{Options code to execute->" << action << "}\n";
+        spdlog::trace("{{Options code to execute->{}}}", fmt::streamed(action));
     }
     back_input(action);
 }
@@ -536,8 +534,7 @@ auto classes_ns::cur_options(bool star, TokenList &spec, bool normal) -> TokenLi
     } else
         C->check_local_options(action, true);
     C->check_all_options(action, spec, normal ? 1 : 2);
-    Logger::finish_seq();
-    the_log << "{Options to execute->" << txclasses_local_buf << "}\n";
+    spdlog::trace("{{Options to execute->{}}}", fmt::streamed(txclasses_local_buf));
     return action;
 }
 
@@ -600,7 +597,7 @@ void Parser::T_usepackage() {
 void LatexPackage::reload() const {
     if (compare_options(Uoptions, cur_opt_list)) // true if A contains opt
         return;
-    log_and_tty << "Option clash in \\usepackage " << real_name() << "\n";
+    spdlog::warn("Option clash in \\usepackage {}", real_name());
     dump_options(Uoptions, "Old options: ");
     dump_options(cur_opt_list, "New options: ");
 }
@@ -625,15 +622,14 @@ void Parser::use_a_package(const std::string &name, bool type, const std::string
         if (type && !D.empty()) {
             res = find_in_confdir(D + ".clt");
             if (res) {
-                log_and_tty << "Using default class " << D << "\n";
+                spdlog::info("Using default class {}", D);
                 the_class_data.using_default_class = true;
             }
         }
     }
     if (!res) {
         if (builtin) cur->date = "2006/01/01";
-        Logger::finish_seq();
-        the_log << T << " " << name << (builtin ? " builtin"s : " unknown"s) << "\n";
+        spdlog::trace("{} {}{}", fmt::streamed(T), name, (builtin ? " builtin" : " unknown"));
         return;
     }
     cur->date = "0000/00/00";
@@ -685,28 +681,29 @@ void Parser::check_builtin_class() {
 
 // Handles the language option in \usepackage[xx]{babel}
 void Parser::check_language() {
-    int  lang = -1;
-    auto n    = cur_opt_list.size();
+    int         lang = -1;
+    std::string log_line;
+    auto        n = cur_opt_list.size();
     for (size_t i = 0; i < n; i++) {
         const std::string &s = cur_opt_list[i].name;
         if (s == "french" || s == "francais" || s == "frenchb" || s == "acadian" || s == "canadien") {
-            if (lang == -1) the_log << "babel options: ";
+            if (lang == -1) log_line = "babel options: ";
             lang = 1;
-            the_log << "french ";
+            log_line += "french ";
         }
         if (s == "english" || s == "american" || s == "british" || s == "canadian" || s == "UKenglish" || s == "USenglish") {
-            if (lang == -1) the_log << "babel options: ";
+            if (lang == -1) log_line = "babel options: ";
             lang = 0;
-            the_log << "english ";
+            log_line += "english ";
         }
         if (s == "austrian" || s == "german" || s == "germanb" || s == "naustrian" || s == "ngerman") {
-            if (lang == -1) the_log << "babel options: ";
+            if (lang == -1) log_line = "babel options: ";
             lang = 2;
-            the_log << "german ";
+            log_line += "german ";
         }
     }
     if (lang == -1) return;
-    the_log << "\n";
+    spdlog::trace("{}", log_line);
     set_default_language(lang);
 }
 
@@ -752,7 +749,7 @@ void ClassesData::show_unused() {
         B += i.full_name;
     }
     if (k == 0) return;
-    log_and_tty << "Tralics Warning: Unused global option" << (k == 1 ? "" : "s") << "\n   " << B << ".\n";
+    spdlog::warn("Tralics Warning: Unused global option{}\n   {}.", (k == 1 ? "" : "s"), fmt::streamed(B));
 }
 
 // Implements \AtEndOfPackage \AtEndOfClass
@@ -928,10 +925,9 @@ void Parser::out_warning(Buffer &B, msg_type what) {
     if (what == mt_error)
         parse_error(err_tok, res, "uerror");
     else if (what == mt_warning) {
-        Logger::finish_seq();
-        log_and_tty << res;
+        spdlog::warn("{}", res);
     } else
-        the_log << res;
+        spdlog::trace("{}", res);
 }
 
 void Parser::T_change_element_name() {
@@ -984,8 +980,7 @@ void Parser::call_define_key(TokenList &L, Token cmd, const std::string &arg, co
     L.splice(L.begin(), aux);
     L.push_front(hash_table.locate("define@key"));
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << cmd << "->" << L << "\n";
+        spdlog::trace("{}->{}", fmt::streamed(cmd), fmt::streamed(L));
     }
     back_input(L);
 }
@@ -1021,7 +1016,7 @@ void Parser::kvo_bool_key() {
         Buffer &B = txclasses_local_buf;
         B         = fmt::format("Illegal boolean value {} ignored", d);
         parse_error(err_tok, B, "bad bool");
-        log_and_tty << "Value  should be true or false in " << (A[0] == 'P' ? "package " : "class ") << A.substr(1) << ".\n";
+        spdlog::warn("Value  should be true or false in {}{}.", (A[0] == 'P' ? "package " : "class "), A.substr(1));
         return;
     }
     txclasses_local_buf = C + '@' + D + d;
@@ -1118,7 +1113,7 @@ void Parser::kvo_bool_opt() {
     std::string df  = sE_optarg_nopar();
     std::string arg = sE_arg_nopar();
     // Optional argument must be true or false
-    if (!(df.empty() || df == "false" || df == "true")) { log_and_tty << "Bad option " << df << " of " << arg << " replaced by false\n"; }
+    if (!(df.empty() || df == "false" || df == "true")) { spdlog::warn("Bad option {} of {} replaced by false", df, arg); }
     subtypes    v   = df == "true" ? if_true_code : if_false_code;
     std::string fam = kvo_getfam();
     std::string s   = fam + '@' + arg;

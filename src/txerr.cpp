@@ -9,12 +9,12 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include <fmt/format.h>
 #include <fmt/ostream.h>
+#include <spdlog/spdlog.h>
 
 using namespace std::string_literals;
 
@@ -63,14 +63,18 @@ void Parser::signal_error() {
     std::string file = get_cur_filename();
     the_parser.nb_errs++;
     flush_buffer();
-    Logger::finish_seq();
     if (file.empty())
         spdlog::error("on line {}: {}", line, err_buf);
     else
         spdlog::error("{}:{} {}", file, line, err_buf);
     if (the_parser.nb_errs >= 5000) {
         spdlog::critical("Translation aborted: Too many errors, aborting.");
-        Logger::log_finish();
+        if (the_parser.nb_errs == 0)
+            spdlog::info("No error found.");
+        else if (the_parser.nb_errs == 1)
+            spdlog::warn("There was one error.");
+        else
+            spdlog::warn("There were {} errors.", the_parser.nb_errs);
         exit(1);
     }
 }

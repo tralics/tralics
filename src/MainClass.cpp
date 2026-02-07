@@ -3,7 +3,6 @@
 #include "tralics/Dispatcher.h"
 #include "tralics/Line.h"
 #include "tralics/LineList.h"
-#include "tralics/Logger.h"
 #include "tralics/MathDataP.h"
 #include "tralics/NameMapper.h"
 #include "tralics/Parser.h"
@@ -336,22 +335,26 @@ void MainClass::check_for_input() {
     }
 
     auto wc = input_content.encoding;
-    Logger::finish_seq();
     const std::string &wa = (wc == 0 ? "UTF-8" : wc == 1 ? "ISO-8859-1" : "custom");
     spdlog::trace("++ Input encoding: {} ({}) for the main file", wc, wa);
 }
 
 void MainClass::open_log() { // \todo spdlog etc
-    auto f   = std::filesystem::path(out_dir) / (log_name + ".log");
-    log_file = open_file(f.string(), true);
+    auto base = std::filesystem::path(out_dir) / log_name;
+    auto f    = base;
+    f.replace_extension("spdlog");
     if (output_encoding == en_boot) output_encoding = en_utf8;
     if (log_encoding == en_boot) log_encoding = output_encoding;
 
-    spdlog::info("Transcript written to {}", f);
     spdlog::set_level(spdlog::level::trace);
-    auto sink = std::make_shared<spdlog::sinks::basic_file_sink_st>(f.replace_extension("spdlog").string(), true);
-    spdlog::default_logger()->sinks().push_back(sink);
-    spdlog::default_logger()->sinks()[0]->set_level(spdlog::level::info); // \todo Link this with verbose (later in startup)
+    auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_st>(f.string(), true);
+    file_sink->set_level(spdlog::level::trace);
+    file_sink->set_pattern("%v");
+    spdlog::default_logger()->sinks().push_back(file_sink);
+    if (!spdlog::default_logger()->sinks().empty()) {
+        spdlog::default_logger()->sinks()[0]->set_level(spdlog::level::info); // \todo Link this with verbose (later in startup)
+    }
+    spdlog::info("Transcript written to {}", f);
 
     spdlog::trace("Transcript file of tralics {} for file {}", the_main.tralics_version, infile);
     spdlog::trace("Copyright INRIA/MIAOU/APICS/MARELLE 2002-2015, Jos\\'e Grimm");
@@ -695,7 +698,7 @@ auto MainClass::check_for_tcf(const std::string &s) -> bool {
 auto MainClass::find_config_file() -> std::optional<std::filesystem::path> {
     if (noconfig) return {};
     if (!user_config_file.empty()) {
-        the_log << "Trying config file from user specs: " << user_config_file << "\n";
+        spdlog::trace("Trying config file from user specs: {}", user_config_file);
         if (user_config_file[0] == '.' || user_config_file[0] == '/') {
             if (std::filesystem::exists(user_config_file)) return user_config_file;
             return {};
@@ -705,7 +708,7 @@ auto MainClass::find_config_file() -> std::optional<std::filesystem::path> {
     }
     std::string xclass = input_content.find_configuration();
     if (!xclass.empty()) {
-        the_log << "Trying config file from source file `" << xclass << "'\n";
+        spdlog::trace("Trying config file from source file `{}`", xclass);
         if (xclass.find('.') == std::string::npos) xclass = xclass + ".tcf";
         if (auto of = find_in_confdir(xclass); of) return of;
     }
@@ -768,7 +771,7 @@ void MainClass::get_doc_type() {
 auto MainClass::check_for_alias_type(bool vb) -> bool {
     if (dtype.empty()) return false;
     if (!check_for_tcf(dtype)) {
-        if (vb) the_log << "Trying type " << dtype << "\n";
+        if (vb) spdlog::trace("Trying type {}", dtype);
         if (std::find(all_config_types.begin(), all_config_types.end(), dtype) != all_config_types.end()) return true;
         if (!config_file.find_aliases(all_config_types, dtype)) return false;
     }
@@ -790,7 +793,7 @@ auto MainClass::find_document_type() -> bool {
     if (check_for_alias_type(true)) return true;
     if (!all_config_types.empty()) {
         dtype = all_config_types.front();
-        the_log << "Chosing first defined type " << dtype << "\n";
+        spdlog::trace("Chosing first defined type {}", dtype);
         return true;
     }
     dtype = "";
@@ -933,14 +936,17 @@ void MainClass::run(int argc, char **argv) {
     the_parser.final_checks();
     if (!no_xml) {
         if (the_parser.get_list_files()) {
-            log_and_tty << " *File List*\n";
-            log_and_tty << the_main.file_list;
-            log_and_tty << " ***********\n";
+            spdlog::info(" *File List*\n{} ***********", the_main.file_list);
         }
         if (the_main.bad_chars != 0) spdlog::warn("Input conversion errors: {} char{}.", the_main.bad_chars, the_main.bad_chars > 1 ? "s" : "");
         the_parser.finish_images();
         out_xml();
-        Logger::log_finish();
+        if (the_parser.nb_errs == 0)
+            spdlog::info("No error found.");
+        else if (the_parser.nb_errs == 1)
+            spdlog::warn("There was one error.");
+        else
+            spdlog::warn("There were {} errors.", the_parser.nb_errs);
     } else
         spdlog::warn("Nothing written to {}.xml.", out_name);
 }
@@ -963,7 +969,6 @@ void MainClass::out_xml() {
 void MainClass::set_input_encoding(size_t wc) {
     if (wc < max_encoding) {
         input_encoding = wc;
-        Logger::finish_seq();
-        the_log << "++ Default input encoding changed to " << wc << "\n";
+        spdlog::trace("++ Default input encoding changed to {}", wc);
     }
 }

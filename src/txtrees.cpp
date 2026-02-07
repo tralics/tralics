@@ -12,12 +12,13 @@
 // It contains also some eTeX extensions.
 
 #include "tralics/AllIndex.h"
-#include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/OneIndex.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include <fmt/format.h>
+#include <fmt/ostream.h>
+#include <spdlog/spdlog.h>
 
 namespace trees_ns {
     void normalise_space(TokenList &L);
@@ -355,8 +356,7 @@ void Parser::T_gloss(bool c) {
     res.splice(res.end(), third_line);
     res.add_env("tabular");
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{Gloss: " << res << "}\n";
+        spdlog::trace("{{Gloss: {}}}", fmt::streamed(res));
     }
     back_input(res);
 }
@@ -603,9 +603,7 @@ void Parser::month_day(subtypes c) {
     Token T  = cur_tok;
     auto  n0 = scan_braced_int(cur_tok);
     if (n0 <= 0 || n0 > ((int(c) & 1) != 0 ? 7 : 12)) {
-        if (tracing_macros())
-            the_log << T << "<-"
-                    << "\n";
+        if (tracing_macros()) spdlog::trace("{}<-", fmt::streamed(T));
         return;
     }
     auto                               n  = to_unsigned(n0);
@@ -636,6 +634,6 @@ void Parser::month_day(subtypes c) {
     default: break;
     }
     TokenList L = tokenize_buffer(s, "(month and day)");
-    if (tracing_macros()) the_log << T << "<-" << L << "\n";
+    if (tracing_macros()) spdlog::trace("{}<-{}", fmt::streamed(T), fmt::streamed(L));
     back_input(L);
 }

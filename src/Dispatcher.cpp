@@ -1,10 +1,10 @@
 #include "tralics/Dispatcher.h"
-#include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/NameMapper.h"
 #include "tralics/Parser.h"
 #include "tralics/Symcode.h"
 #include "tralics/globals.h"
+#include <fmt/ostream.h>
 #include <spdlog/spdlog.h>
 
 void Dispatcher::register_action(symcodes x, const std::function<bool(subtypes)> &f) { Symcode::get(x).action = f; }
@@ -463,8 +463,7 @@ void Dispatcher::boot() {
         the_parser.get_token();
         the_parser.set_after_ass_tok(the_parser.cur_tok);
         if (tracing_commands()) {
-            Logger::finish_seq();
-            the_log << "{\\afterassignment: " << the_parser.cur_tok << "}\n";
+            spdlog::trace("{{\\afterassignment: {}}}", fmt::streamed(the_parser.cur_tok));
         }
     });
 

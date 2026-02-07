@@ -14,8 +14,8 @@ struct StackSlot {
 
     StackSlot(Xml *a, int b, std::string c, mode M, std::string u) : obj(a), line(b), frame(std::move(c)), md(M), uid(std::move(u)) {}
 
-    void dump() const;
-    void fulldump(size_t i) const;
+    [[nodiscard]] auto dump() const -> std::string;
+    [[nodiscard]] auto fulldump(size_t i) const -> std::string;
 };
 
 class Stack : public std::vector<StackSlot> {
@@ -114,7 +114,7 @@ public:
     auto temporary() -> Xml *;
     auto top_stack() -> Xml * { return back().obj; }
     void trace_pop(bool sw);
-    void trace_stack();
+    [[nodiscard]] auto trace_stack() const -> std::string;
     void unbox(Xml *x);
 };
 

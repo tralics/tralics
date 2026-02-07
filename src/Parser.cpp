@@ -6,7 +6,6 @@
 #include "tralics/ColSpec.h"
 #include "tralics/Dispatcher.h"
 #include "tralics/LineList.h"
-#include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/NameMapper.h"
 #include "tralics/NewArray.h"
@@ -61,7 +60,7 @@ namespace {
                     R->try_cline_again(true);
                     R->name = std::string();
                     the_stack.add_border(the_parser.cline_first, cl_span);
-                    the_log << "\\cline killed a cell \n";
+                    spdlog::trace("\\cline killed a cell");
                     return;
                 }
             }
@@ -139,9 +138,10 @@ namespace {
             the_stack.document_element()->insert_bib(res, CI.position);
         }
         if (idx_size == 0) return;
-        log_and_tty << "Index has " << idx_size << " entries";
-        if (idx_nb > 1) log_and_tty << " in " << idx_nb << " clusters";
-        log_and_tty << "\n";
+        if (idx_nb > 1)
+            spdlog::info("Index has {} entries in {} clusters", idx_size, idx_nb);
+        else
+            spdlog::info("Index has {} entries", idx_size);
     }
 
     // This creates the bbl file by running an external program.
@@ -966,16 +966,16 @@ namespace {
             std::string V = i.second;
             auto *      L = labinfo(V);
             if (!L->defined) {
-                Logger::finish_seq();
-                log_and_tty << "Error signaled in postprocessor\n"
-                            << "undefined label `" << V << "' (first use at line " << L->lineno << " in file " << L->filename << ")";
+                std::string msg = fmt::format("Error signaled in postprocessor\nundefined label `{}` (first use at line {} in file {})", V,
+                                              L->lineno, L->filename);
                 Xid(E).add_attribute(the_names["target"], V);
                 std::string B = L->id;
                 for (auto &removed_label : the_parser.removed_labels) {
-                    if (removed_label.second == B) log_and_tty << "\n(Label was removed with `" << removed_label.first << "')";
+                    if (removed_label.second == B)
+                        msg += fmt::format("\n(Label was removed with `{}`)", removed_label.first);
                     break;
                 }
-                log_and_tty << "\n";
+                spdlog::error("{}", msg);
                 the_parser.nb_errs++;
             }
             std::string B = L->id;
@@ -1729,8 +1729,7 @@ void Parser::boot() {
 // cur_tok is \a, in case of error
 void Parser::E_accent_a() {
     if (tracing_macros()) {
-        Logger::finish_seq();
-        the_log << "{" << cur_tok << "}\n";
+        spdlog::trace("{{{}}}", fmt::streamed(cur_tok));
     }
     TokenList y = read_arg();
     if (!token_ns::has_a_single_token(y)) {
@@ -1756,14 +1755,12 @@ void Parser::E_accent_a() {
 // cur_tok, cur_cmd_chr explain what to do.
 void Parser::E_accent() {
     if (tracing_macros()) {
-        Logger::finish_seq();
-        the_log << "{accent " << cur_tok << "}\n";
+        spdlog::trace("{{accent {}}}", fmt::streamed(cur_tok));
     }
     unsigned acc_code = cur_cmd_chr.chr;
     if (the_parser.global_in_url && acc_code == '~') {
         if (tracing_macros()) {
-            Logger::finish_seq();
-            the_log << "{\\~ gives ~ }\n";
+            spdlog::trace("{{\\~ gives ~ }}");
         }
         back_input(Token(other_t_offset, '~'));
         return;
@@ -1890,8 +1887,7 @@ void Parser::E_accent() {
     }
 
     if (tracing_macros()) {
-        Logger::finish_seq();
-        the_log << "{accent on " << uchar(achar) << " -> " << expansion << "}\n";
+        spdlog::trace("{{accent on {} -> {}}}", uchar(achar), expansion);
     }
     back_input(expansion);
 }
@@ -2046,9 +2042,7 @@ void Parser::T_omitcite() {
     flush_buffer();
     std::string s = sT_arg_nopar();
     the_bibtex.omitcite_list.push_back(s);
-    Logger::finish_seq();
-    the_log << "{\\omitcite(" << int(the_bibtex.omitcite_list.size());
-    the_log << ") = " << s << "}\n";
+    spdlog::trace("{{\\omitcite({}) = {}}}", int(the_bibtex.omitcite_list.size()), s);
 }
 
 // We start with a function that fetches optional arguments
@@ -2140,8 +2134,7 @@ void Parser::T_cite(subtypes sw) {
         res.push_back(hash_table.end_natcite_token);
     }
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << T << "->" << res << ".\n";
+        spdlog::trace("{}->{}.", fmt::streamed(T), res);
     }
     back_input(res);
 }
@@ -2205,7 +2198,7 @@ void Parser::T_bpers() {
     std::string b      = nT_arg_nopar();
     std::string c      = nT_arg_nopar();
     std::string d      = nT_arg_nopar();
-    if (unexpected_seen_hi && e != the_parser.nb_errs) log_and_tty << "maybe you confused Publisher with Editor\n";
+    if (unexpected_seen_hi && e != the_parser.nb_errs) spdlog::warn("maybe you confused Publisher with Editor");
     need_bib_mode();
     the_stack.add_newid0("bpers");
     if (A && !A->empty()) the_stack.add_att_to_last(the_names["full_first"], *A);
@@ -2259,8 +2252,7 @@ void Parser::insert_every_bib() {
     TokenList everybib = toks_registers[everybibitem_code].val;
     if (everybib.empty()) return;
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{<everybibitem> " << everybib << "}\n";
+        spdlog::trace("{{<everybibitem> {}}}", fmt::streamed(everybib));
     }
     back_input(everybib);
 }
@@ -2310,8 +2302,7 @@ auto Parser::nct_aux(Token T, TokenList &body) -> std::optional<size_t> {
 void Parser::expand_nct(TokenList &L) {
     bool action = true;
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "array preamble at start: " << L << "\n";
+        spdlog::trace("array preamble at start: {}", fmt::streamed(L));
     }
     if (!new_array_object.has_a_nct()) return;
     int max_iter = max_newcolumn_loops;
@@ -2334,7 +2325,7 @@ void Parser::expand_nct(TokenList &L) {
             }
             if (L.expand_nct(*n, c, max_iter, body)) {
                 action = true;
-                if (tracing_commands()) the_log << "array preamble after " << c << ": " << L << "\n";
+                if (tracing_commands()) spdlog::trace("array preamble after {}: {}", c, fmt::streamed(L));
             }
         }
     }
@@ -2401,8 +2392,7 @@ void Parser::start_a_cell(bool started) {
     } else {
         TokenList L = the_stack.get_u_or_v(true);
         if (tracing_commands() && !L.empty()) {
-            Logger::finish_seq();
-            the_log << "{template u-part " << L << "}\n";
+            spdlog::trace("{{template u-part {}}}", fmt::streamed(L));
         }
         back_input(L);
     }
@@ -2419,8 +2409,7 @@ void Parser::finish_a_cell(Token T, const std::string &a) {
     if (the_stack.is_omit_cell()) return;
     TokenList L = the_stack.get_u_or_v(false);
     if (tracing_commands() && !L.empty()) {
-        Logger::finish_seq();
-        the_log << "{template v-part " << L << "}\n";
+        spdlog::trace("{{template v-part {}}}", fmt::streamed(L));
     }
     back_input(L);
 }

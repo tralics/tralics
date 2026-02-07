@@ -9,12 +9,14 @@
 // (See the file COPYING in the main directory for details)
 
 #include "tralics/Bibtex.h"
-#include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/Parser.h"
 #include "tralics/SaveAux.h"
 #include "tralics/TitlePage.h"
 #include "tralics/globals.h"
+#include "tralics/util.h"
+#include <fmt/ostream.h>
+#include <spdlog/spdlog.h>
 
 using namespace std::string_literals;
 
@@ -157,7 +159,7 @@ void Parser::translate_char(CmdChr X) {
     if (!the_stack.in_h_mode()) LC();
     char32_t c = X.char_val();
     if (c == 0) return; // we do not want null chars in trace or Xml
-    if (tracing_commands()) Logger::out_single_char(c);
+    if (tracing_commands()) spdlog::trace("{}", to_utf8(c));
     if (c >= 256) {
         process_char(c);
         return;
@@ -719,7 +721,7 @@ void Parser::T_enddocument(subtypes c) {
         hash_table.eval_let("AtEndDocument", "@firstofone");
         back_input(hash_table.real_end_token);
         back_input(end_document_hook);
-        if (tracing_commands()) the_log << "atenddocumenthook: " << TL << "\n";
+        if (tracing_commands()) spdlog::trace("atenddocumenthook: {}", fmt::streamed(TL));
     } else {
         flush_buffer();
         the_stack.end_module();
@@ -741,8 +743,7 @@ void Parser::T_begindocument() {
     cur_level = 1; // this is the outer level...
     if (the_main.dverbose) M_tracingall();
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "+stack: level set to 1\n";
+        spdlog::trace("+stack: level set to 1");
     }
     the_bibtex.bootagain();
     hash_table.eval_let("AtBeginDocument", "@firstofone");
@@ -753,7 +754,7 @@ void Parser::T_begindocument() {
     back_input(onlypreamble);
     back_input(document_hook);
     show_unused_options();
-    if (tracing_commands()) the_log << "atbegindocumenthook= " << TL << "\n";
+    if (tracing_commands()) spdlog::trace("atbegindocumenthook= {}", fmt::streamed(TL));
 }
 
 // case \begin \end
@@ -762,8 +763,7 @@ void Parser::T_begindocument() {
     bool begin = x == begin_cmd;
     auto S     = fetch_name0();
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{\\" << (begin ? "begin " : "end ") << S << "}\n";
+        spdlog::trace("{{\\{} {}}}", (begin ? "begin" : "end"), S);
     }
     return begin ? T_begin(S) : T_end(S);
 }

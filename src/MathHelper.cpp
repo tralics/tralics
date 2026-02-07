@@ -1,10 +1,11 @@
 #include "tralics/MathHelper.h"
-#include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/MathDataP.h"
 #include "tralics/Parser.h"
 #include "tralics/Stack.h"
 #include "tralics/globals.h"
+#include <fmt/format.h>
+#include <spdlog/spdlog.h>
 
 namespace tralics_ns {
     auto math_env_props(subtypes c) -> int; // \todo elsewhere
@@ -89,27 +90,29 @@ void MathHelper::handle_tags() {
 // debug
 void MathHelper::dump_labels() {
     auto n = multi_labels.size();
+    std::string msg;
     for (size_t i = 0; i < n; i++) {
         int v = multi_labels_type[i];
         if (v == 0)
-            the_log << "\n";
+            msg += "\n";
         else if (v == 4)
-            the_log << "notag,";
+            msg += "notag,";
         else if (v == 1)
-            the_log << "label " << multi_labels[i] << ",";
+            msg += fmt::format("label {},", multi_labels[i]);
         else if (v == -1)
-            the_log << "bad label " << multi_labels[i] << ",";
+            msg += fmt::format("bad label {},", multi_labels[i]);
         else if (v == 2)
-            the_log << "tag " << multi_labels[i] << ",";
+            msg += fmt::format("tag {},", multi_labels[i]);
         else if (v == 3)
-            the_log << "tag* " << multi_labels[i] << ",";
+            msg += fmt::format("tag* {},", multi_labels[i]);
         else if (v == -2)
-            the_log << "bad tag " << multi_labels[i] << ",";
+            msg += fmt::format("bad tag {},", multi_labels[i]);
         else if (v == -3)
-            the_log << "bad tag* " << multi_labels[i] << ",";
+            msg += fmt::format("bad tag* {},", multi_labels[i]);
         else if (v == 5)
-            the_log << "eqno " << multi_labels[i] << ",";
+            msg += fmt::format("eqno {},", multi_labels[i]);
     }
+    if (!msg.empty()) spdlog::trace("{}", msg);
 }
 
 //
@@ -198,8 +201,8 @@ void MathHelper::ml_second_pass(Xml *row, bool vb) {
         }
     }
     if (vb) {
-        if (slabel) the_log << "label on row " << N << " " << label << ".\n";
-        if (stag) the_log << "tag on row " << N << " " << tag << ".\n";
+        if (slabel) spdlog::trace("label on row {} {}.", N, label);
+        if (stag) spdlog::trace("tag on row {} {}.", N, tag);
     }
     if (stag) {
         std::string id = next_label_id();
@@ -228,10 +231,10 @@ void MathHelper::ml_last_pass(bool vb) {
     if (slabel) label_val = label;
     cmi.tag = tag;
     if (vb) {
-        the_log << "Check labels \n";
+    spdlog::trace("Check labels");
         dump_labels();
-        if (slabel) the_log << "label for formula " << label << ".\n";
-        if (stag) the_log << "tag for formula " << tag << ".\n";
+        if (slabel) spdlog::trace("label for formula {}.", label);
+        if (stag) spdlog::trace("tag for formula {}.", tag);
     }
 }
 

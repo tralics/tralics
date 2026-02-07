@@ -35,7 +35,7 @@ struct TitlePageAux {
     void exec_post() const;
     void exec(size_t v, bool vb);
     auto increment_flag() -> bool;
-    void decode_flags() const;
+    [[nodiscard]] auto decode_flags() const -> std::string;
 
     void move_T1T2(std::string x) {
         T1 = T2;

@@ -11,7 +11,6 @@
 // Tralics, math part I
 
 #include "tralics/Cv3Helper.h"
-#include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/MathDataP.h"
 #include "tralics/MathHelper.h"
@@ -21,6 +20,8 @@
 #include "tralics/util.h"
 #include <algorithm>
 #include <fmt/format.h>
+#include <fmt/ostream.h>
+#include <spdlog/spdlog.h>
 #include <fmt/ostream.h>
 
 namespace {
@@ -563,7 +564,7 @@ auto math_ns::xml2sons(std::string elt, gsl::not_null<Xml *> first_arg, gsl::not
 void MathDataP::realloc_list() {
     auto k = 2 * size();
     resize(k);
-    the_log << "Realloc math table to " << k << "\n";
+    spdlog::trace("Realloc math table to {}", k);
 }
 
 // Makes sure there is enough place for two copies \todo useless?
@@ -799,8 +800,7 @@ void Parser::finish_no_mathml(bool is_inline, size_t vp) {
 // Always inline
 void Parser::finish_trivial_math(Xml *res) {
     if (tracing_math()) {
-        Logger::finish_seq();
-        the_log << "formula was math\n";
+        spdlog::trace("formula was math");
     }
     leave_v_mode();
     math_data.finish_math_mem();
@@ -823,8 +823,7 @@ auto Parser::T_math(subtypes type) -> bool {
         TokenList everymath = toks_registers[position].val;
         if (!everymath.empty()) {
             if (tracing_commands()) {
-                Logger::finish_seq();
-                the_log << "{" << (is_inline ? "<everymath> " : "<everydisplay> ") << everymath << "}\n";
+                spdlog::trace("{{{}{} }}", (is_inline ? "<everymath> " : "<everydisplay> "), fmt::streamed(everymath));
             }
             back_input(everymath);
         }
@@ -832,12 +831,10 @@ auto Parser::T_math(subtypes type) -> bool {
     select_math_font();
     if (!scan_math3(0, math_data.get_list(0).get_type(), 0)) return false;
     if (tracing_math()) {
-        Logger::finish_seq();
-        the_log << "Math: " << Trace << "\n";
+        spdlog::trace("Math: {}", fmt::streamed(Trace));
         Trace.clear();
         math_data.get_list(0).print();
-        Logger::finish_seq();
-        the_log << Trace;
+        spdlog::trace("{}", fmt::streamed(Trace));
     }
     // Test for the no-mathml mode
     math_data.realloc_list0();
@@ -1192,8 +1189,7 @@ auto Parser::scan_math_endcell(Token t) -> bool {
         TokenList L = the_stack.get_u_or_v(false);
         if (!L.empty()) {
             if (tracing_commands()) {
-                Logger::finish_seq();
-                the_log << "{template v-part " << L << "}\n";
+                spdlog::trace("{{template v-part {}}}", fmt::streamed(L));
             }
             back_input(t);
             back_input(L);
@@ -1231,8 +1227,7 @@ auto Parser::scan_math_env(size_t res, math_list_type type) -> bool {
             TokenList L = the_stack.get_u_or_v(false);
             if (!L.empty()) {
                 if (tracing_commands()) {
-                    Logger::finish_seq();
-                    the_log << "{template v-part " << L << "}\n";
+                    spdlog::trace("{{template v-part {}}}", fmt::streamed(L));
                 }
                 back_input(cur_tok);
                 back_input(L);
@@ -1332,8 +1327,7 @@ auto Parser::scan_math_dollar(size_t res, math_list_type type) -> bool {
         TokenList everymath = toks_registers[everymath_code].val;
         if (!everymath.empty()) {
             if (tracing_commands()) {
-                Logger::finish_seq();
-                the_log << "{<everymath> " << everymath << "}\n";
+                spdlog::trace("{{<everymath> {}}}", fmt::streamed(everymath));
             }
             back_input(everymath);
         }
@@ -1486,8 +1480,7 @@ void Parser::scan_math_hbox(size_t res, subtypes c) {
         if (before_mac_arg()) back_input(hash_table.CB_token);
         ;
         if (tracing_commands()) {
-            Logger::finish_seq();
-            the_log << "{<everyhbox> " << L << "}\n";
+            spdlog::trace("{{<everyhbox> {}}}", fmt::streamed(L));
         }
         back_input(L);
         back_input(hash_table.OB_token);
@@ -2390,14 +2383,12 @@ auto MathElt::cv1(math_style cms, bool ph) -> MathElt {
 }
 
 void MathElt::dump_for_err() const {
-    Logger::finish_seq();
-    the_log << int(cmd) << " - " << int(chr) << " - " << int(get_font()) << "\n";
+    spdlog::trace("{} - {} - {}", int(cmd), int(chr), int(get_font()));
 }
 
 void MathElt::cv1_err() {
     dump_for_err();
-    Logger::finish_seq();
-    log_and_tty << "--- " << Token(get_font()) << "\n";
+    spdlog::error("--- {}", fmt::streamed(Token(get_font())));
     the_parser.signal_error("Bad math expression");
 }
 
@@ -2640,12 +2631,11 @@ auto Math::M_ref() -> Xml * {
 static ScaledInt cur_math_space;
 
 void math_ns::bad_math_warn(Buffer &B) {
-    Logger::finish_seq();
-    the_log << "Bad token in argument of \\text-like command\n";
+    spdlog::trace("Bad token in argument of \\text-like command");
     if (B.empty())
-        the_log << "Error occured at start of list.\n";
+        spdlog::trace("Error occured at start of list.");
     else
-        the_log << "Error occured after scanning " << B << ".\n";
+        spdlog::trace("Error occured after scanning {}.", fmt::streamed(B));
 }
 
 auto Math::M_mbox1(Buffer &B, subtypes &f) -> int {
@@ -2695,11 +2685,11 @@ auto Math::M_mbox1(Buffer &B, subtypes &f) -> int {
             math_ns::bad_math_warn(B);
             math_list_type y = old.get_list().type;
             CmdChr         x(special_math_cmd, math_to_sub(y));
-            the_log << "Offending command = \\" << x.name() << "\n";
+            spdlog::trace("Offending command = \\{}", x.name());
             return 0;
         } else if (cmd != math_list_cmd) {
             math_ns::bad_math_warn(B);
-            the_log << "Offending command = \\" << old.name() << "\n";
+            spdlog::trace("Offending command = \\{}", old.name());
             return 0;
         } else if (old.get_list().type == math_dollar_cd)
             return -int(chr);
@@ -2707,7 +2697,7 @@ auto Math::M_mbox1(Buffer &B, subtypes &f) -> int {
             push_front(old.get_list()); // insert the sublist here
         else {
             math_ns::bad_math_warn(B);
-            the_log << "Subformula is of type " << old.get_list().type << "\n";
+            spdlog::trace("Subformula is of type {}", old.get_list().type);
             return 0;
         }
     }
@@ -2768,7 +2758,7 @@ void Math::handle_mbox(Math &res) {
 auto MathElt::remove_prefix() const -> Xml * {
     if (cmd == math_xml_cmd) return get_xml_val();
     dump_for_err();
-    log_and_tty << "bad math token " << Token(get_font()) << int(right_cmd) << "\n";
+    spdlog::error("bad math token {}{}", fmt::streamed(Token(get_font())), int(right_cmd));
     return new Xml(std::string("BAD"));
 }
 

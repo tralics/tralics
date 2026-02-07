@@ -1,6 +1,7 @@
 #pragma once
 #include "Xml.h"
 #include "enums.h"
+#include "fmt_compat.h"
 #include <array>
 #include <filesystem>
 #include <gsl/gsl>

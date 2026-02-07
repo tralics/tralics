@@ -10,7 +10,6 @@
 
 // Tralics, math part II
 
-#include "tralics/Logger.h"
 #include "tralics/Math.h"
 #include "tralics/MathDataP.h"
 #include "tralics/MathF.h"
@@ -19,7 +18,10 @@
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include <algorithm>
+#include <sstream>
 #include <fmt/format.h>
+#include <fmt/ostream.h>
+#include <spdlog/spdlog.h>
 
 enum { pbm_empty, pbm_start, pbm_end, pbm_att, pbm_att_empty };
 static Buffer                 mathml_buffer;
@@ -204,9 +206,13 @@ auto Math::find_parens(MathQList &res, bool verbose) const -> bool {
     MathP aux;
     find_paren0(aux);
     if (aux.empty()) return true;
-    if (verbose) log_file << "MF: After find paren0 " << aux << "\n";
+    if (verbose) spdlog::trace("MF: After find paren0 {}", fmt::streamed(aux));
     if (aux.find_paren_rec(res)) {
-        if (verbose) log_file << "MF: rec " << res << "\n";
+        if (verbose) {
+            std::ostringstream oss;
+            oss << res;
+            spdlog::trace("MF: rec {}", oss.str());
+        }
         return false;
     }
     res.clear();
@@ -215,7 +221,7 @@ auto Math::find_parens(MathQList &res, bool verbose) const -> bool {
     while (!aux.empty()) {
         if (aux.find_paren_matched1()) {
             aux.find_paren_matched2(res);
-            if (verbose) the_log << "MF: matched " << aux_buffer << "\n";
+            if (verbose) spdlog::trace("MF: matched {}", fmt::streamed(aux_buffer));
             return true;
         }
         MathP content = aux.find_big(end);
@@ -223,13 +229,13 @@ auto Math::find_parens(MathQList &res, bool verbose) const -> bool {
         } else {
             content.remove_binrel();               // remove useless bin/rel in content
             content.push_back({end, mt_flag_rel}); // add end marker
-            if (verbose) log_file << "MF: sublist start=" << start << ' ' << content << "\n";
+            if (verbose) spdlog::trace("MF: sublist start={} {}", start, fmt::streamed(content));
             content.find_paren2(start, res, verbose);
         }
         start       = end;
         int seen_d1 = 0, seen_d2 = 0;
         if (aux.is_lbr(seen_d1, seen_d2)) {
-            if (verbose) log_file << "MF: LBR " << seen_d1 << ' ' << seen_d2 << "\n";
+            if (verbose) spdlog::trace("MF: LBR {} {}", seen_d1, seen_d2);
             res.push_back({seen_d1, seen_d2});
             return true;
         }
@@ -975,8 +981,7 @@ auto Math::chars_to_mb(Buffer &B, bool rec) const -> bool {
         else if (rec && w.cmd == math_list_cmd && L->get_font() == subtypes(math_open_cd)) {
             if (!L->get_list().chars_to_mb(B, true)) return false;
         } else {
-            Logger::finish_seq();
-            log_and_tty << "First invalid token in math-to-string cmd=" << w.cmd << " chr=" << w.chr << "\n";
+            spdlog::error("First invalid token in math-to-string cmd={} chr={}", w.cmd, w.chr);
             std::cout << "\n";
             return false;
         }
@@ -1072,9 +1077,9 @@ auto Math::chars_to_mb3() -> std::string {
 void Buffer::show_uncomplete(String m) {
     the_parser.signal_error(m);
     if (empty())
-        log_and_tty << "No character found\n";
+        spdlog::error("No character found");
     else
-        log_and_tty << "So far, got " << *this << "\n";
+        spdlog::error("So far, got {}", fmt::streamed(*this));
     clear();
     append("error");
 }

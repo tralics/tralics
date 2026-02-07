@@ -10,12 +10,13 @@
 
 // This file contains a part of the TeX parser of tralics
 
-#include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/SaveAux.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include <fmt/format.h>
+#include <fmt/ostream.h>
+#include <spdlog/spdlog.h>
 
 auto to_string(save_type v) -> String { // \todo std::string
     switch (v) {
@@ -67,16 +68,14 @@ void Parser::push_level(boundary_type v) {
     push_save_stack(new SaveAuxBoundary(v));
     cur_level++;
     if (tracing_stack()) {
-        Logger::finish_seq();
-        the_log << "+stack: level + " << cur_level << " for " << v << " entered on line " << get_cur_line() << "\n";
+        spdlog::trace("+stack: level + {} for {} entered on line {}", cur_level, fmt::streamed(v), get_cur_line());
     }
 }
 
 void Parser::push_tpa() const {
     push_save_stack(new SaveAuxBoundary(bt_tpa));
     if (tracing_stack()) {
-        Logger::finish_seq();
-        the_log << "+stack: level = " << cur_level << " for " << bt_tpa << "\n";
+        spdlog::trace("+stack: level = {} for {}", cur_level, fmt::streamed(bt_tpa));
     }
 }
 
@@ -102,12 +101,9 @@ void Parser::mac_define(Token a, Macro *b, bool gbl, rd_flag redef, symcodes wha
     if (ok_to_define(a, redef)) {
         auto nv = CmdChr(what, subtypes(mac_table.mc_new_macro(b)));
         if (tracing_assigns()) {
-            Logger::finish_seq();
-            the_log << "{" << gbl_or_assign(gbl, false) << a << "=";
-            token_for_show(Hashtab::the_eqtb()[a.eqtb_loc()].val);
-            the_log << "}\n{into " << a << "=";
-            token_for_show(nv);
-            the_log << "}\n";
+            spdlog::trace("{{{}{}={}}}", gbl_or_assign(gbl, false), fmt::streamed(a),
+                          token_for_show_str(Hashtab::the_eqtb()[a.eqtb_loc()].val));
+            spdlog::trace("{{into {}={}}}", fmt::streamed(a), token_for_show_str(nv));
         }
         eq_define(a.eqtb_loc(), nv, gbl);
     } else
@@ -141,10 +137,10 @@ void Parser::word_define(size_t a, long c, bool gbl) {
     bool     reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
         CmdChr tmp(assign_int_cmd, subtypes(a));
-        Logger::finish_seq();
-        the_log << "{" << gbl_or_assign(gbl, reassign) << "\\" << tmp.name() << "=" << W.val;
-        if (!reassign) the_log << " into \\" << tmp.name() << "=" << c;
-        the_log << "}\n";
+        std::string msg = fmt::format("{{{}\\{}={}", gbl_or_assign(gbl, reassign), tmp.name(), W.val);
+        if (!reassign) msg += fmt::format(" into \\{}={}", tmp.name(), c);
+        msg += "}";
+        spdlog::trace("{}", msg);
     }
     if (gbl)
         W = {c, 1};
@@ -160,10 +156,10 @@ void Parser::string_define(size_t a, const std::string &c, bool gbl) {
     EqtbString &W        = eqtb_string_table[a];
     bool        reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
-        Logger::finish_seq();
-        the_log << "{" << gbl_or_assign(gbl, reassign) << save_string_name(a) << "=" << W.val;
-        if (!reassign) the_log << " into " << save_string_name(a) << "=" << c;
-        the_log << "}\n";
+        std::string msg = fmt::format("{{{}{}={}", gbl_or_assign(gbl, reassign), save_string_name(a), W.val);
+        if (!reassign) msg += fmt::format(" into {}={}", save_string_name(a), c);
+        msg += "}";
+        spdlog::trace("{}", msg);
     }
     if (gbl)
         W = {c, 1};
@@ -181,10 +177,10 @@ void Parser::dim_define(size_t a, ScaledInt c, bool gbl) {
     bool     reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
         CmdChr tmp(assign_dimen_cmd, subtypes(a));
-        Logger::finish_seq();
-        the_log << "{" << gbl_or_assign(gbl, reassign) << "\\" << tmp.name() << "=" << W.val;
-        if (!reassign) the_log << " into \\" << tmp.name() << "=" << c;
-        the_log << "}\n";
+        std::string msg = fmt::format("{{{}\\{}={}", gbl_or_assign(gbl, reassign), tmp.name(), W.val);
+        if (!reassign) msg += fmt::format(" into \\{}={}", tmp.name(), c);
+        msg += "}";
+        spdlog::trace("{}", msg);
     }
     if (gbl)
         W = {c, 1};
@@ -210,15 +206,15 @@ void Parser::glue_define(size_t a, Glue c, bool gbl) {
         Thbuf1.clear();
         Thbuf1 << W.val; // \todo make Glue formattable
         if (a >= thinmuskip_code) Thbuf1.pt_to_mu();
-        Logger::finish_seq();
-        the_log << "{" << gbl_or_assign(gbl, reassign) << "\\" << tmp.name() << "=" << Thbuf1;
+        std::string msg = fmt::format("{{{}\\{}={}", gbl_or_assign(gbl, reassign), tmp.name(), fmt::streamed(Thbuf1));
         if (!reassign) {
             Thbuf1.clear();
             Thbuf1 << c;
             if (a >= thinmuskip_code) Thbuf1.pt_to_mu();
-            the_log << " into \\" << tmp.name() << "=" << Thbuf1;
+            msg += fmt::format(" into \\{}={}", tmp.name(), fmt::streamed(Thbuf1));
         }
-        the_log << "}\n";
+        msg += "}";
+        spdlog::trace("{}", msg);
     }
     if (gbl)
         W = {c, 1};
@@ -234,9 +230,8 @@ void Parser::glue_define(size_t a, Glue c, bool gbl) {
 void Parser::box_define(size_t a, Xml *c, bool gbl) {
     EqtbBox &W = box_table[a];
     if (tracing_assigns()) {
-        Logger::finish_seq();
-        the_log << "{" << gbl_or_assign(gbl, false) << "\\box" << a << "=" << W.val;
-        the_log << " into \\box" << a << "=" << c << "}\n";
+        spdlog::trace("{{{}\\box{}={} into \\box{}={}}}", gbl_or_assign(gbl, false), a, fmt::streamed(W.val), a,
+                      fmt::streamed(c));
     }
     if (gbl)
         W = {c, 1};
@@ -252,10 +247,10 @@ void Parser::token_list_define(size_t p, const TokenList &c, bool gbl) {
     bool       reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
         CmdChr tmp(assign_toks_cmd, subtypes(p));
-        Logger::finish_seq();
-        the_log << "{" << gbl_or_assign(gbl, reassign) << "\\" << tmp.name() << "=" << W.val;
-        if (!reassign) the_log << " into \\" << tmp.name() << "=" << c;
-        the_log << "}\n";
+        std::string msg = fmt::format("{{{}\\{}={}", gbl_or_assign(gbl, reassign), tmp.name(), fmt::streamed(W.val));
+        if (!reassign) msg += fmt::format(" into \\{}={}", tmp.name(), fmt::streamed(c));
+        msg += "}";
+        spdlog::trace("{}", msg);
     }
     if (gbl)
         W = {c, 1};
@@ -271,8 +266,7 @@ void Parser::token_list_define(size_t p, const TokenList &c, bool gbl) {
 // It pushes the value on the save stack if needed.
 void Parser::save_font() {
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{font change " << cur_font << "}\n";
+        spdlog::trace("{{font change {}}}", fmt::streamed(cur_font));
     }
     if (cur_font.level == cur_level) return;
     push_save_stack(new SaveAuxFont(cur_font.level, cur_font.old, cur_font.old_color));
@@ -288,7 +282,7 @@ void Parser::dump_save_stack() const {
         dynamic_cast<SaveAuxBoundary *>(p.get())->dump(L);
         --L;
     }
-    the_log << "### bottom level\n";
+    spdlog::trace("### bottom level");
 }
 
 // The function called when we see a closing brace or \endgroup.
@@ -396,7 +390,7 @@ void Parser::final_checks() {
         }
     }
     if (n == 0) return;
-    the_log << "Number of items on the save stack: " << n << "\n";
+    spdlog::trace("Number of items on the save stack: {}", n);
     Buffer &B = err_buf;
     B.clear();
     Buffer &A = Thbuf1;
@@ -409,10 +403,10 @@ void Parser::final_checks() {
         } else if (B.size() + A.size() < 78) {
             B += "; " + A;
         } else {
-            the_log << B << "\n";
+            spdlog::trace("{}", fmt::streamed(B));
             B.clear();
             B += "  " + A;
         }
     }
-    the_log << B << ".\n";
+    spdlog::trace("{}.", fmt::streamed(B));
 }

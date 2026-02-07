@@ -11,13 +11,13 @@
 // Functions on files and characters;
 // Handle also utf8 input output
 
-#include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/Saver.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include <fmt/format.h>
 #include <fmt/ostream.h>
+#include <fstream>
 #include <spdlog/spdlog.h>
 #include <sstream>
 #include <utf8.h>
@@ -216,13 +216,11 @@ void Parser::T_filecontents(subtypes spec) {
         res.register_file();
         if (spec == 3) is_encoded = false;
     } else if (auto of = find_in_path(filename); of) {
-        Logger::finish_seq();
         spdlog::warn("File {} already exists, not generating from source.", *of);
     } else {
         auto fn = get_out_dir(filename);
         outfile = open_file(fn.string(), false);
-        Logger::finish_seq();
-        log_and_tty << "Writing file `" << fn << "'\n";
+        spdlog::info("Writing file `{}`", fn.string());
         if (!outfile)
             parse_error("unable to open file for writing");
         else {

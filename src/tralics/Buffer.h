@@ -1,6 +1,7 @@
 #pragma once
 #include "TokenList.h"
 #include "enums.h"
+#include "fmt_compat.h"
 #include <cstring>
 #include <fmt/format.h>
 #include <iostream>
@@ -101,7 +102,7 @@ public:
     auto xml_and_attrib(const std::string &s) -> Xml;
 
     void insert_token(Token T, bool sw);
-    void interpret_aux(std::vector<std::string> &bib, std::vector<std::string> &bib2);
+    void interpret_aux(std::vector<std::string> &bib, std::vector<std::string> &bib2, std::string_view label = {});
     void l3_fabricate_cond(const std::string &base, const std::string &sig, subtypes w);
     void next_bibtex_char();
     void normalise_for_bibtex(String s);

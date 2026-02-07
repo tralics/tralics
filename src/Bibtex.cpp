@@ -1,7 +1,6 @@
 #include "tralics/Bibtex.h"
 #include "tralics/Bbl.h"
 #include "tralics/Bibliography.h"
-#include "tralics/Logger.h"
 #include "tralics/NameMapper.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
@@ -208,18 +207,19 @@ auto Bibtex::exec_bibitem(const std::string &b) -> std::string {
 // We do not use parse_error here
 void Bibtex::err_in_file(String s, bool last) const {
     the_parser.nb_errs++;
-    Logger::finish_seq();
-    log_and_tty << "Error detected at line " << cur_bib_line << " of bibliography file " << in_lines.file_name << "\n";
-    if (!cur_entry_name.empty()) log_and_tty << "in entry " << cur_entry_name << " started at line " << last_ok_line << "\n";
-    log_and_tty << s;
-    if (last) log_and_tty << ".\n";
+    if (!cur_entry_name.empty())
+        spdlog::error("Error detected at line {} of bibliography file {}\nin entry {} started at line {}\n{}{}",
+                      cur_bib_line, in_lines.file_name, cur_entry_name, last_ok_line, s, last ? "." : "");
+    else
+        spdlog::error("Error detected at line {} of bibliography file {}\n{}{}", cur_bib_line, in_lines.file_name, s, last ? "." : "");
 }
 
 void Bibtex::err_in_entry(String a) {
     the_parser.nb_errs++;
-    log_and_tty << "Error signaled while handling entry " << the_bibtex.cur_entry_name;
-    if (the_bibtex.cur_entry_line >= 0) log_and_tty << " (line " << the_bibtex.cur_entry_line << ")";
-    log_and_tty << "\n" << a;
+    if (the_bibtex.cur_entry_line >= 0)
+        spdlog::error("Error signaled while handling entry {} (line {})\n{}", the_bibtex.cur_entry_name, the_bibtex.cur_entry_line, a);
+    else
+        spdlog::error("Error signaled while handling entry {}\n{}", the_bibtex.cur_entry_name, a);
 }
 
 // Returns next line of the .bib file. Error if EOF and what.
@@ -276,7 +276,7 @@ auto Bibtex::scan_identifier(size_t what) -> std::optional<bool> {
     auto res = scan_identifier0(what);
     if (!res) return {};
     auto ret = *res;
-    if (ret != 0) log_and_tty << scan_msgs[to_unsigned(ret > 0 ? ret : -ret)];
+    if (ret != 0) spdlog::error("{}", scan_msgs[to_unsigned(ret > 0 ? ret : -ret)]);
     if (ret == 4 || ret == -4) {
         start_comma = false;
         reset_input();
@@ -317,10 +317,10 @@ auto Bibtex::scan_identifier0(size_t what) -> std::optional<int> {
 auto Bibtex::wrong_first_char(char32_t c, size_t what) const -> int {
     err_in_file(scan_msgs[what], false);
     if (std::isdigit(static_cast<int>(c)) != 0)
-        log_and_tty << "\nit cannot start with a digit";
+        spdlog::error("\nit cannot start with a digit");
     else
-        log_and_tty << fmt::format("\nit cannot start with `{}'", to_utf8(c));
-    if (c == '%') log_and_tty << "\n(A percent sign is not a comment character in bibtex)";
+        spdlog::error("\nit cannot start with `{}`", to_utf8(c));
+    if (c == '%') spdlog::error("\n(A percent sign is not a comment character in bibtex)");
     if (what == 1 || what == 2) return 5;
     if (what == 0) {
         if (c == '}') { // this brace might be the end of the entry
@@ -339,7 +339,7 @@ auto Bibtex::check_entry_end() -> std::optional<int> {
     char32_t c = cur_char();
     if (c == '(' || c == '{') return check_entry_end(0);
     err_in_file(scan_msgs[1], false);
-    log_and_tty << "\nexpected `('  or `{'";
+    spdlog::error("\nexpected `('  or `{'");
     for (;;) {
         c = cur_char();
         if (c == '(' || c == '{') return check_entry_end(-7);
@@ -367,7 +367,7 @@ auto Bibtex::check_field_end(size_t what) -> std::optional<int> {
         return 0;
     }
     err_in_file(scan_msgs[what], false);
-    log_and_tty << "\nexpected `=' sign";
+    spdlog::error("\nexpected `=' sign");
     for (;;) {
         if (at_eol()) return what == 2 ? 5 : -4;
         if (cur_char() == '=') {
@@ -388,7 +388,7 @@ auto Bibtex::check_val_end() -> int {
     char32_t c = cur_char();
     if ((std::isspace(static_cast<int>(c)) != 0) || c == '#' || c == ',' || c == char32_t(right_outer_delim)) return 0;
     err_in_file(scan_msgs[0], false);
-    log_and_tty << fmt::format("\nit cannot end with `{}'\n", to_utf8(c)) << "expecting `,', `#' or `" << right_outer_delim << "'";
+    spdlog::error("\nit cannot end with `{}'\nexpecting `,', `#' or `{}`", to_utf8(c), right_outer_delim);
     return 4;
 }
 
@@ -421,7 +421,7 @@ auto Bibtex::check_val_end() -> int {
     bool ok = X->store_field(where);
     if (!ok) {
         err_in_file("", false);
-        log_and_tty << "duplicate field `" << cur_field_name << "' ignored.\n";
+        spdlog::warn("duplicate field `{}` ignored.", cur_field_name);
         return true;
     }
     if (where != fp_crossref) return true;
@@ -503,8 +503,7 @@ auto Bibtex::find_entry(const std::string &s, bool create, bib_creator bc) -> Bi
 
 auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
     if (std::find(omitcite_list.begin(), omitcite_list.end(), cur_entry_name) != omitcite_list.end()) {
-        Logger::finish_seq();
-        the_log << "bib: Omitting " << cur_entry_name << "\n";
+        spdlog::trace("bib: Omitting {}", cur_entry_name);
         return nullptr;
     }
     BibEntry *X = find_entry(cur_entry_name, nocitestar, because_all);
@@ -588,7 +587,7 @@ auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
             auto macro = find_a_macro(token_buf, false, nullptr, nullptr);
             if (!macro) {
                 err_in_file("", false);
-                log_and_tty << "undefined macro " << token_buf << ".\n";
+                spdlog::error("undefined macro {}.", fmt::streamed(token_buf));
             } else
                 field_buf += all_macros[*macro].value;
         }

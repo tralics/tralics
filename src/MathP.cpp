@@ -1,6 +1,8 @@
 #include "tralics/MathP.h"
-#include "tralics/Logger.h"
 #include "tralics/Parser.h"
+#include "tralics/fmt_compat.h"
+#include <fmt/ostream.h>
+#include <spdlog/spdlog.h>
 
 auto MathP::has_small() const -> bool {
     return std::any_of(begin(), end(), [](const MathPAux &m) { return m.is_small(); });
@@ -155,7 +157,7 @@ void MathP::find_paren2(int start, MathQList &res, bool verbose) {
     while (!empty()) {
         int   k   = 0;
         MathP cur = find_relbin(k);
-        if (verbose) log_file << "MF: Find paren2 k=" << k << " " << cur << "\n";
+        if (verbose) spdlog::trace("MF: Find paren2 k={} {}", k, cur);
         if (cur.has_small()) cur.find_paren1(start + 1, k - 1, res, verbose);
         start = k;
     }
@@ -175,7 +177,7 @@ void MathP::find_paren1(int start1, int end1, MathQList &res, bool verbose) {
     bool      state     = false;
     bool      failed    = false;
     int       start_pos = -1;
-    if (verbose) log_file << "MF: Find paren1 (" << start1 << ", " << end1 << ") " << *this << "\n";
+    if (verbose) spdlog::trace("MF: Find paren1 ({}, {}) {}", start1, end1, fmt::streamed(*this));
     while (!empty()) {
         auto [i, k]   = front();
         bool is_small = front().is_small();
@@ -197,7 +199,7 @@ void MathP::find_paren1(int start1, int end1, MathQList &res, bool verbose) {
             if (k == mt_flag_small_r) {
                 state = false;
                 t.push_back({start_pos, i});
-                if (verbose) log_file << "MF: OK " << start_pos << ' ' << i << ' ' << '\n';
+                if (verbose) spdlog::trace("MF: OK {} {}", start_pos, i);
             }
         }
     }
@@ -205,7 +207,7 @@ void MathP::find_paren1(int start1, int end1, MathQList &res, bool verbose) {
     if (failed || state) {
         t.clear();
         t.push_back({start1, end1});
-        if (verbose) log_file << "MF: BB " << start1 << ' ' << end1 << '\n';
+        if (verbose) spdlog::trace("MF: BB {} {}", start1, end1);
     }
     res.splice(res.end(), t);
 }

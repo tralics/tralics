@@ -11,8 +11,9 @@
 #include "tralics/FpGenList.h"
 #include "tralics/FpNum.h"
 #include "tralics/FpStack.h"
-#include "tralics/Logger.h"
 #include "tralics/Parser.h"
+#include "tralics/fmt_compat.h"
+#include <spdlog/spdlog.h>
 #include <fmt/format.h>
 
 namespace {
@@ -1607,8 +1608,7 @@ auto Parser::fp_read_value() -> FpNum {
     FpNum res;
     if (res.create(fp_in_buf)) parse_error("overflow in FPread");
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{FPread for " << name << "=" << res << "}\n";
+        spdlog::trace("{{FPread for {}={}}}", fmt::streamed(name), fmt::streamed(res));
     }
     return res;
 }
@@ -1745,8 +1745,7 @@ void Parser::fp_e_eval() {
     FpGenList evaluator(B);
     evaluator.to_postfix();
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{FPpostfix " << evaluator << "}\n";
+        spdlog::trace("{{FPpostfix {}}}", fmt::streamed(evaluator));
     }
     back_input(hash_table.CB_token);
     back_input(evaluator);
@@ -1838,8 +1837,7 @@ void Parser::upn_eval(const TokenList &l) {
     TokenList          a1, a2;
     FpNum              x1, x2, x3, x4;
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{FPupcmd " << (n == 0 ? "??" : str) << "}\n";
+        spdlog::trace("{{FPupcmd {}}}", (n == 0 ? "??" : str));
     }
 
     if (n == 4 && (str == "copy")) {

@@ -12,12 +12,13 @@
 // things, but not the XML generator.
 
 #include "tralics/ConfigData.h"
-#include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/Saver.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include <fmt/format.h>
+#include <fmt/ostream.h>
+#include <spdlog/spdlog.h>
 
 namespace {
     // The  date parser
@@ -219,8 +220,7 @@ void Parser::E_xspace() {
     back_input();
     bool val = cur_cmd_chr.is_ok_for_xspace();
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "\\xspace after " << cur_tok << (val ? " did nothing " : " added space") << "\n";
+        spdlog::trace("\\xspace after {}{}", fmt::streamed(cur_tok), (val ? " did nothing " : " added space"));
     }
     if (val) return;
     back_input(hash_table.space_token);
@@ -241,8 +241,7 @@ auto Parser::T_xmllatex() -> std::string {
         // else token is bad or null
     }
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{Rawxml: " << mac_buffer << "}\n";
+        spdlog::trace("{{Rawxml: {}}}", fmt::streamed(mac_buffer));
     }
     return mac_buffer;
 }
@@ -261,10 +260,10 @@ void Parser::E_get_config(unsigned c) {
         res = config_data.format_keys(resource);
     TokenList L = Buffer(res ? *res : "").str_toks11(false);
     if (tracing_macros()) {
-        Logger::finish_seq();
-        the_log << T << " #1=" << resource;
-        if (c != 0) the_log << " #2=" << key;
-        the_log << " -> " << L << "\n";
+        std::string msg = fmt::format("{} #1={}", fmt::streamed(T), resource);
+        if (c != 0) msg += fmt::format(" #2={}", key);
+        msg += fmt::format(" -> {}", fmt::streamed(L));
+        spdlog::trace("{}", msg);
     }
     back_input(L);
 }
@@ -363,12 +362,10 @@ void Parser::E_car(bool first) {
     TokenList L = read_arg();
     TokenList M = read_until_nopar(hash_table.nil_token);
     if (tracing_macros()) {
-        Logger::finish_seq();
-        the_log << T << "#1#2\\@nil ->#" << (first ? "1" : "2") << "\n";
-        the_log << "#1 <-" << L << "\n";
-        the_log << "#2 <-" << M << "\n";
-        Logger::finish_seq();
-        the_log << T << "<- " << (first ? L : M) << "\n";
+        spdlog::trace("{}#1#2\\@nil ->#{}", fmt::streamed(T), (first ? "1" : "2"));
+        spdlog::trace("#1 <-{}", fmt::streamed(L));
+        spdlog::trace("#2 <-{}", fmt::streamed(M));
+        spdlog::trace("{}<- {}", fmt::streamed(T), fmt::streamed(first ? L : M));
     }
     if (first)
         back_input(L);
@@ -418,7 +415,7 @@ void Parser::T_typein() {
         cmd     = get_r_token();
         has_opt = true;
     }
-    log_and_tty << string_to_write(negative_out_slot); // \typeout next arg
+    spdlog::info("{}", string_to_write(negative_out_slot)); // \typeout next arg
     auto cc                              = eqtb_int_table[endlinechar_code].val;
     eqtb_int_table[endlinechar_code].val = -1;
     TokenList L                          = read_from_file(0, false);
@@ -591,8 +588,7 @@ void Parser::T_xkv_for(subtypes c) {
     default:;
     }
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << T << "<- " << res << "\n";
+        spdlog::trace("{}<- {}", fmt::streamed(T), fmt::streamed(res));
     }
     back_input(res);
 }
@@ -603,8 +599,7 @@ void Parser::M_cons() {
     Token     cmd = get_r_token();
     TokenList L   = read_arg();
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{\\@cons " << cmd << " + " << L << "}\n";
+        spdlog::trace("{{\\@cons {} + {}}}", fmt::streamed(cmd), fmt::streamed(L));
     }
     M_cons(cmd, L);
 }
@@ -726,7 +721,7 @@ void Parser::formatdate() {
     flush_buffer();
     std::string s = sT_arg_nopar();
     FormatDate  FP;
-    if (!FP.interpret(s, err_tok)) { the_log << "Date to scan was " << s << "\n"; }
+    if (!FP.interpret(s, err_tok)) { spdlog::trace("Date to scan was {}", s); }
     Xml *X = new Xml(std::string("date"), nullptr);
     the_stack.add_last(X);
     AttList &AL = X->id.get_att();
@@ -1573,8 +1568,7 @@ void Parser::E_parse_encoding(bool vb, subtypes what) {
     if (vb) {
         Buffer &B = mac_buffer;
         B         = fmt::format("-> \\char\"{:X}", r);
-        Logger::finish_seq();
-        the_log << T << c << B << ".\n";
+        spdlog::trace("{}{}{}.", fmt::streamed(T), c, fmt::streamed(B));
     }
     if (r == 0) {
         Buffer &B = err_buf;

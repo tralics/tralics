@@ -1,7 +1,7 @@
 #include "tralics/SaveAux.h"
-#include "tralics/Logger.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
+#include <spdlog/spdlog.h>
 
 namespace {
     Xml *                 the_box_to_end;
@@ -24,7 +24,7 @@ SaveAuxBoundary::~SaveAuxBoundary() {
 
 void SaveAuxBoundary::dump(int n) {
     std::string s = val == bt_semisimple ? "semi simple" : bt_to_string(val);
-    the_log << "### " << s << " group (level " << n << ") entered at line " << line << "\n";
+    spdlog::trace("### {} group (level {}) entered at line {}", s, n, line);
 }
 
 // Restore box. Called in the case {\setbox0=\hbox{...}}

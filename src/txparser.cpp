@@ -10,7 +10,6 @@
 
 // This file contains the TeX parser of tralics
 
-#include "tralics/Logger.h"
 #include "tralics/MathHelper.h"
 #include "tralics/SaveAux.h"
 #include "tralics/Saver.h"
@@ -18,6 +17,8 @@
 #include "tralics/util.h"
 #include <fmt/format.h>
 #include <fmt/ostream.h>
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 
 namespace {
     struct SpecialHash : public std::unordered_map<std::string, std::string> {
@@ -35,25 +36,19 @@ namespace {
     };
 
     void trace_if(String a, int k, String b) {
-        if (tracing_commands()) {
-            Logger::finish_seq();
-            the_log << "+" << a << k << " " << b << "\n";
-        }
+        if (tracing_commands()) spdlog::trace("+{}{} {}", a, k, b);
     }
 
     // same code
     void trace_if(String a, int k, long b) {
-        if (tracing_commands()) {
-            Logger::finish_seq();
-            the_log << "+" << a << k << " " << b << "\n";
-        }
+        if (tracing_commands()) spdlog::trace("+{}{} {}", a, k, b);
     }
 
     void show_box(Xml *X) {
         if (X != nullptr)
-            log_and_tty << X << "\n";
+            spdlog::info("{}", fmt::streamed(X));
         else
-            log_and_tty << "empty.\n";
+            spdlog::info("empty.");
     }
 
     Buffer trace_buffer, Thbuf2;
@@ -204,10 +199,7 @@ auto Parser::edef_aux(TokenList &L) -> bool {
         else {
             Token     T = cur_tok;
             TokenList q = E_the(cur_cmd_chr.chr);
-            if (tracing_commands()) {
-                Logger::finish_seq();
-                the_log << T << "->" << q << ".\n";
-            }
+            if (tracing_commands()) spdlog::trace("{}->{}.", fmt::streamed(T), fmt::streamed(q));
             L.splice(L.end(), q);
         }
     }
@@ -714,10 +706,7 @@ void Parser::T_verbatim(int my_number, Token style, Token pre, Token post) {
         res.push_back(par);
         res.push_back(noindent);
     }
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{Verbatim tokens: " << res << "}\n";
-    }
+    if (tracing_commands()) spdlog::trace("{{Verbatim tokens: {}}}", fmt::streamed(res));
     back_input(res);
 }
 
@@ -1181,10 +1170,7 @@ void Parser::M_def(bool edef, bool gbl, symcodes what, rd_flag fl) {
 void Parser::M_declare_math_operator() {
     bool  see_star = remove_initial_star();
     Token name     = get_r_token(true);
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{\\DeclareMathOperator " << name << "}\n";
-    }
+    if (tracing_commands()) spdlog::trace("{{\\DeclareMathOperator {}}}", fmt::streamed(name));
     auto *     X = new Macro;
     TokenList &L = X->body;
     read_mac_body(L, false, 0);
@@ -1201,10 +1187,7 @@ void Parser::M_declare_math_operator() {
 void Parser::M_new_thm() {
     bool        star = remove_initial_star();
     std::string name = group_to_string();
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{\\newtheorem " << name << "}\n";
-    }
+    if (tracing_commands()) spdlog::trace("{{\\newtheorem {}}}", name);
     TokenList ctr;
     int       which_case = star ? 4 : 2;
     if (which_case == 2) {
@@ -1411,10 +1394,7 @@ auto Parser::grab_env_comma(TokenList &v) -> bool {
 // This is macro_call in TeX
 // Assumes that cur_tok holds the macro name, the argument the value.
 void Parser::expand_mac(Macro &X) {
-    if (tracing_macros()) {
-        Logger::finish_seq();
-        the_log << " " << X << "\n";
-    }
+    if (tracing_macros()) spdlog::trace(" {}", fmt::streamed(X));
     def_type spec = X.type;
     if (spec == dt_empty) return;
     if (skip_prefix(X[0])) return;
@@ -1446,7 +1426,7 @@ void Parser::expand_mac(Macro &X) {
                     arguments[1] = X[1];
             }
         }
-        if (tracing_macros()) the_log << "#" << i << "<-" << arguments[i] << "\n";
+        if (tracing_macros()) spdlog::trace("#{}<-{}", i, fmt::streamed(arguments[i]));
     }
     TokenList res = X.body.expand_mac_inner(arguments.data()); // \todo pass the array instead
     if (spec == dt_brace) res.push_back(hash_table.OB_token);
@@ -1522,10 +1502,7 @@ auto Parser::list_to_string_c(TokenList &x, const std::string &s1, const std::st
 // This is like \csname s1 L s2 \endcsname
 // It returns true and signals in case of error.
 auto Parser::my_csname(String s1, String s2, TokenList &L, String s) -> bool {
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{" << s << "}\n";
-    }
+    if (tracing_commands()) spdlog::trace("{{{}}}", s ? s : "");
     Buffer b;
     b.append(s1);
     bool r = list_to_string(L, b);
@@ -1560,17 +1537,14 @@ void Parser::finish_csname(const std::string &b) {
 // Same as above, but the token is to be read again
 void Parser::finish_csname(const Buffer &b, const std::string &s) {
     finish_csname(b);
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{" << s << "->\\" << b.convert_to_log_encoding() << "}\n";
-    }
+    if (tracing_commands()) spdlog::trace("{{{}->\\{}}}", s, b.convert_to_log_encoding());
     back_input();
 }
 
 // This interprets \csname ... \endcsname; token is to be read again
 void Parser::E_csname() {
     Buffer b;
-    if (tracing_commands()) Logger::log_dump("csname");
+    if (tracing_commands()) spdlog::trace("{{\\{}}}", "csname");
     if (list_to_string0(b)) {
         if (cur_tok.is_valid()) back_input();
         bad_csname(true);
@@ -1589,26 +1563,23 @@ void Parser::csname_arg() {
 // Latex3 variants of \csname .. \endcsname
 void Parser::E_usename(subtypes c, bool vb) {
     Token t = cur_tok;
-    if (vb) {
-        Logger::finish_seq();
-        the_log << "{" << t << "}\n";
-    }
+    if (vb) spdlog::trace("{{{}}}", fmt::streamed(t));
     if (c == 0) { //  \use:c
         csname_arg();
-        if (vb) the_log << t << " -> " << cur_tok << "\n";
+        if (vb) spdlog::trace("{} -> {}", fmt::streamed(t), fmt::streamed(cur_tok));
     } else if (c == 1) { // \exp_args:Nc
         get_token();
         Token T = cur_tok;
         csname_arg();
         back_input(T);
-        if (vb) the_log << t << " -> " << T << cur_tok << "\n";
+        if (vb) spdlog::trace("{} -> {}{}", fmt::streamed(t), fmt::streamed(T), fmt::streamed(cur_tok));
     } else { // \exp_args:cc
         csname_arg();
         get_token();
         Token T = cur_tok;
         csname_arg();
         back_input(T);
-        if (vb) the_log << t << " -> " << T << cur_tok << "\n";
+        if (vb) spdlog::trace("{} -> {}{}", fmt::streamed(t), fmt::streamed(T), fmt::streamed(cur_tok));
     }
 }
 
@@ -1666,10 +1637,7 @@ void Parser::E_ifundefined(bool c) {
         get_token();
         undef = cur_cmd_chr.is_relax();
     }
-    if (tracing_macros()) {
-        Logger::finish_seq();
-        the_log << "{" << T << boolean(undef) << "}\n";
-    }
+    if (tracing_macros()) spdlog::trace("{{{}{}}}", fmt::streamed(T), boolean(undef));
     one_of_two(undef);
 }
 
@@ -1682,10 +1650,7 @@ void Parser::E_ifempty() {
     TokenList b = read_arg();
     if (c != 0U) token_ns::remove_first_last_space(L);
     bool ok = L.empty();
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{" << T << " " << boolean(ok) << "}\n";
-    }
+    if (tracing_commands()) spdlog::trace("{{{} {}}}", fmt::streamed(T), boolean(ok));
     one_of_two(a, b, ok);
 }
 
@@ -1694,10 +1659,7 @@ void Parser::T_ifstar() {
     TokenList a  = read_arg();
     TokenList b  = read_arg();
     bool      ok = remove_initial_star();
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{\\@ifstar " << boolean(ok) << "}\n";
-    }
+    if (tracing_commands()) spdlog::trace("{{\\@ifstar {}}}", boolean(ok));
     one_of_two(a, b, ok);
 }
 
@@ -1713,10 +1675,7 @@ void Parser::T_ifnextchar(bool c) {
     if (cur_tok.is_valid()) back_input();
     bool ok = cur_tok == d;
     if (!c && cur_tok.char_or_active() && d.char_or_active() && cur_tok.chr_val() == d.chr_val()) ok = true;
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{" << T << boolean(ok) << "}\n";
-    }
+    if (tracing_commands()) spdlog::trace("{{{}{}}}", fmt::streamed(T), boolean(ok));
     one_of_two(a, b, ok);
 }
 
@@ -1745,10 +1704,7 @@ void Parser::E_while(subtypes cc) {
         res.splice(res.begin(), A);
         res.push_front(cc == 1 ? hash_table.ifdim_token : hash_table.ifnum_token);
     }
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << T << "<- " << res << "\n";
-    }
+    if (tracing_commands()) spdlog::trace("{}<- {}", fmt::streamed(T), fmt::streamed(res));
     back_input(res);
 }
 
@@ -1778,10 +1734,7 @@ void Parser::E_iwhile(subtypes cc) {
         w.splice(w.begin(), A);
         w.push_front(cc == 1 ? hash_table.ifdim_token : hash_table.ifnum_token);
     }
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << T << "<- " << w << "\n";
-    }
+    if (tracing_commands()) spdlog::trace("{}<- {}", fmt::streamed(T), fmt::streamed(w));
     back_input(w);
 }
 
@@ -1789,7 +1742,7 @@ void Parser::E_iwhile(subtypes cc) {
 // We define \iterate as: \def\iterate{...\relax\expandafter\iterate\fi}
 // then execute \iterate\let\iterate\relax
 void Parser::E_loop() {
-    if (tracing_commands()) Logger::log_dump("loop");
+    if (tracing_commands()) spdlog::trace("{{\\{}}}", "loop");
     TokenList R = read_until(hash_table.repeat_token);
     R.push_back(hash_table.relax_token);
     R.push_back(hash_table.expandafter_token);
@@ -1956,7 +1909,6 @@ void Parser::new_constant(String /*name*/, size_t max_val, subtypes alloc_pos, s
     if (c == assign_mu_glue_cmd) k += muskip_reg_offset;
     CmdChr R(c, subtypes(k));
     eq_define(cur_tok.eqtb_loc(), R, true);
-    Logger::finish_seq();
 }
 
 // c is the code of \value, \stepcounter, \addtocounter, \setcounter, or
@@ -2002,10 +1954,7 @@ void Parser::E_counter(subtypes c) {
 
 // Backinputs the token list, plus some tracing info.
 void Parser::finish_counter_cmd(Token first, TokenList &L) {
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << first << "->" << L << "\n";
-    }
+    if (tracing_commands()) spdlog::trace("{}->{}", fmt::streamed(first), fmt::streamed(L));
     back_input(L);
 }
 
@@ -2040,10 +1989,7 @@ void Parser::E_setlength(subtypes c) {
 // Implements \newif. Check that the command starts with the letters if
 void Parser::M_newif() {
     Token T = get_r_token();
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{\\newif " << T << "}\n";
-    }
+    if (tracing_commands()) spdlog::trace("{{\\newif {}}}", fmt::streamed(T));
     if (T.active_or_single()) {
         parse_error(err_tok, "Illegal argument of \\newif: ", T, "", "bad newif");
         return;
@@ -2316,24 +2262,23 @@ void Parser::E_all_of_one(Token T, subtypes c) {
     default: s = " #1->#1 "; n = 1;
     }
     if (vb) {
-        Logger::finish_seq();
-        the_log << T << s << "\n";
+        spdlog::trace("{}{}", fmt::streamed(T), s);
     }
     TokenList L = read_arg();
-    if (vb) the_log << "#1<-" << L << "\n";
+    if (vb) spdlog::trace("#1<-{}", fmt::streamed(L));
     if (n == 1) {
         back_input(L);
         return;
     }
     TokenList L2 = read_arg();
-    if (vb) the_log << "#2<-" << L2 << "\n";
+    if (vb) spdlog::trace("#2<-{}", fmt::streamed(L2));
     if (n == 2) {
         back_input(L2);
         back_input(L);
         return;
     }
     TokenList L3 = read_arg();
-    if (vb) the_log << "#3<-" << L3 << "\n";
+    if (vb) spdlog::trace("#3<-{}", fmt::streamed(L3));
     if (c == 5) {
         back_input(L2);
         back_input(L);
@@ -2346,7 +2291,7 @@ void Parser::E_all_of_one(Token T, subtypes c) {
         return;
     }
     TokenList L4 = read_arg();
-    if (vb) the_log << "#4<-" << L4 << "\n";
+    if (vb) spdlog::trace("#4<-{}", fmt::streamed(L4));
     back_input(L4);
     back_input(L3);
     back_input(L2);
@@ -2385,10 +2330,7 @@ void Parser::E_scan_up_down() {
     TokenList df_down = read_arg();
     TokenList w       = read_arg();
     E_scan_up_down(df_up, df_down, w, cmd);
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "\\scanupdown ->" << cmd << "\n";
-    }
+    if (tracing_commands()) spdlog::trace("\\scanupdown ->{}", fmt::streamed(cmd));
     back_input(cmd);
 }
 
@@ -2450,10 +2392,7 @@ void Parser::E_sideset() {
     C.brace_me();
     C.push_front(hash_table.mathop_token);
     C.push_back(hash_table.limits_token);
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "\\sideset ->" << C << "\n";
-    }
+    if (tracing_commands()) spdlog::trace("\\sideset ->{}", fmt::streamed(C));
     back_input(C);
 }
 
@@ -2462,10 +2401,7 @@ void Parser::E_expandafter() {
     get_token();
     Token T = cur_tok;
     get_token();
-    if (tracing_macros()) {
-        Logger::finish_seq();
-        the_log << "{\\expandafter " << T << " " << cur_tok << "}\n";
-    }
+    if (tracing_macros()) spdlog::trace("{{\\expandafter {} {}}}", fmt::streamed(T), fmt::streamed(cur_tok));
     if (cur_cmd_chr.is_expandable())
         expand();
     else
@@ -2503,10 +2439,7 @@ void Parser::E_ensuremath() {
         L.push_front(hash_table.dollar_token);
         L.push_back(hash_table.dollar_token);
     }
-    if (tracing_macros()) {
-        Logger::finish_seq();
-        the_log << "\\ensuremath-> " << L << "\n";
-    }
+    if (tracing_macros()) spdlog::trace("\\ensuremath-> {}", fmt::streamed(L));
     back_input(L);
 }
 
@@ -2519,18 +2452,12 @@ void Parser::E_random() {
     Buffer B;
     B.format("{}", u);
     TokenList L = B.str_toks11(false);
-    if (tracing_macros()) {
-        Logger::finish_seq();
-        the_log << T << t << "->" << L << "\n";
-    }
+    if (tracing_macros()) spdlog::trace("{}{}->{}", fmt::streamed(T), t, fmt::streamed(L));
     back_input(L);
 }
 
 void Parser::E_user(bool vb, subtypes c, symcodes C) {
-    if (vb) {
-        Logger::finish_seq();
-        the_log << cur_tok;
-    }
+    if (vb) spdlog::trace("{}", fmt::streamed(cur_tok));
     auto guard1 = SaveScannerStatus(ss_macro);
     auto guard2 = SaveLongState(ls_normal);
     if (C == userl_cmd || C == userlo_cmd || C == userlp_cmd || C == userlpo_cmd) long_state = ls_long;
@@ -2538,31 +2465,25 @@ void Parser::E_user(bool vb, subtypes c, symcodes C) {
 }
 
 void Parser::E_first_of_two(bool vb, subtypes c) {
-    if (vb) {
-        Logger::finish_seq();
-        the_log << cur_tok << "#1#2->#" << (c == 1 ? "1" : "2") << "\n";
-    }
+    if (vb) spdlog::trace("{}#1#2->#{}", fmt::streamed(cur_tok), (c == 1 ? "1" : "2"));
     TokenList L1 = read_arg();
     TokenList L2 = read_arg();
     if (vb) {
-        the_log << "#1<-" << L1 << "\n";
-        the_log << "#2<-" << L2 << "\n";
+        spdlog::trace("#1<-{}", fmt::streamed(L1));
+        spdlog::trace("#2<-{}", fmt::streamed(L2));
     }
     one_of_two(L1, L2, c == 1);
 }
 
 void Parser::E_first_of_three(bool vb, subtypes c) {
-    if (vb) {
-        Logger::finish_seq();
-        the_log << cur_tok << "#1#2#3->#" << (c == 1 ? "1" : (c == 2 ? "2" : "3")) << "\n";
-    }
+    if (vb) spdlog::trace("{}#1#2#3->#{}", fmt::streamed(cur_tok), (c == 1 ? "1" : (c == 2 ? "2" : "3")));
     TokenList L1 = read_arg();
     TokenList L2 = read_arg();
     TokenList L3 = read_arg();
     if (vb) {
-        the_log << "#1<-" << L1 << "\n";
-        the_log << "#2<-" << L2 << "\n";
-        the_log << "#3<-" << L3 << "\n";
+        spdlog::trace("#1<-{}", fmt::streamed(L1));
+        spdlog::trace("#2<-{}", fmt::streamed(L2));
+        spdlog::trace("#3<-{}", fmt::streamed(L3));
     }
     if (c == 1)
         back_input(L1);
@@ -2573,19 +2494,17 @@ void Parser::E_first_of_three(bool vb, subtypes c) {
 }
 
 void Parser::E_first_of_four(bool vb, subtypes c) {
-    if (vb) {
-        Logger::finish_seq();
-        the_log << cur_tok << "#1#2#3#4->#" << (c == 1 ? "1" : (c == 2 ? "2" : (c == 3 ? "3" : "4"))) << "\n";
-    }
+    if (vb)
+        spdlog::trace("{}#1#2#3#4->#{}", fmt::streamed(cur_tok), (c == 1 ? "1" : (c == 2 ? "2" : (c == 3 ? "3" : "4"))));
     TokenList L1 = read_arg();
     TokenList L2 = read_arg();
     TokenList L3 = read_arg();
     TokenList L4 = read_arg();
     if (vb) {
-        the_log << "#1<-" << L1 << "\n";
-        the_log << "#2<-" << L2 << "\n";
-        the_log << "#3<-" << L3 << "\n";
-        the_log << "#4<-" << L4 << "\n";
+        spdlog::trace("#1<-{}", fmt::streamed(L1));
+        spdlog::trace("#2<-{}", fmt::streamed(L2));
+        spdlog::trace("#3<-{}", fmt::streamed(L3));
+        spdlog::trace("#4<-{}", fmt::streamed(L4));
     }
     if (c == 1)
         back_input(L1);
@@ -2600,13 +2519,10 @@ void Parser::E_first_of_four(bool vb, subtypes c) {
 void Parser::E_ignore_n_args(bool vb, subtypes c) {
     auto n = (c < 1 ? 1 : (c > 9 ? 9 : unsigned(c)));
     int  i = 1;
-    if (vb) {
-        Logger::finish_seq();
-        the_log << cur_tok << " ...#" << n << "->\n";
-    }
+    if (vb) spdlog::trace("{} ...#{}->", fmt::streamed(cur_tok), n);
     while (n > 0) {
         TokenList L = read_arg();
-        if (vb) the_log << "#" << i << "<-" << L << "\n";
+        if (vb) spdlog::trace("#{}<-{}", i, fmt::streamed(L));
         ++i;
         --n;
     }
@@ -2730,36 +2646,24 @@ void Parser::expand() {
         Token     TT = cur_tok;
         TokenList L  = E_the(the_code);
         token_ns::strip_pt(L);
-        if (vb) {
-            Logger::finish_seq();
-            the_log << TT << "->" << L << ".\n";
-        }
+        if (vb) spdlog::trace("{}->{}.", fmt::streamed(TT), fmt::streamed(L));
         back_input(L);
         return;
     }
     case obracket_cmd:
-        if (vb) {
-            Logger::finish_seq();
-            the_log << cur_tok << "->$$\n";
-        }
+        if (vb) spdlog::trace("{}->$$", fmt::streamed(cur_tok));
         back_input(hash_table.dollar_token);
         back_input(hash_table.dollar_token);
         return;
     case oparen_cmd:
-        if (vb) {
-            Logger::finish_seq();
-            the_log << cur_tok << "->$\n";
-        }
+        if (vb) spdlog::trace("{}->$", fmt::streamed(cur_tok));
         back_input(hash_table.dollar_token);
         return;
     case noexpand_cmd: { // see comments in txscan
         auto guard2 = SaveScannerStatus(ss_normal);
         if (get_token()) return;
         Token t = cur_tok;
-        if (vb) {
-            Logger::finish_seq();
-            the_log << "{\\noexpand " << t << "}\n";
-        }
+        if (vb) spdlog::trace("{{\\noexpand {}}}", fmt::streamed(t));
         back_input(t);
         if (!cur_tok.not_a_cmd()) back_input(hash_table.frozen_dont_expand);
         return;
@@ -2784,12 +2688,9 @@ void Parser::insert_relax() {
 // If k=-2, this is \if, must not print \unless,
 void Parser::trace_if(int k) const {
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "+";
-        if (k == -1) the_log << "\\unless";
-        the_log << cur_tok << conditions.top_serial();
-        if (k > 0) the_log << "(+" << k << ")";
-        the_log << "\n";
+        const std::string unless = (k == -1) ? "\\unless" : "";
+        const std::string plus   = (k > 0) ? fmt::format("(+{})", k) : "";
+        spdlog::trace("+{}{}{}{}", unless, fmt::streamed(cur_tok), conditions.top_serial(), plus);
     }
 }
 
@@ -2985,7 +2886,7 @@ auto Parser::E_ifx() -> bool {
         return false;
     }
     Token b = cur_tok;
-    if (tracing_commands()) the_log << "\\ifx compares " << a << b << "\n";
+    if (tracing_commands()) spdlog::trace("\\ifx compares {}{}", fmt::streamed(a), fmt::streamed(b));
     if (cur_cmd_chr.cmd != pq.cmd) return false;
     if (cur_cmd_chr.is_user()) {
         Macro &A = mac_table.get_macro(cur_cmd_chr.chr);
@@ -2998,10 +2899,7 @@ auto Parser::E_ifx() -> bool {
 void Parser::E_afterfi() {
     Token     T = hash_table.fi_token;
     TokenList L = read_until(T);
-    if (tracing_macros()) {
-        Logger::finish_seq();
-        the_log << cur_tok << "#1\\fi->\\fi#1\n#1<-" << L << "\n";
-    }
+    if (tracing_macros()) spdlog::trace("{}#1\\fi->\\fi#1\n#1<-{}", fmt::streamed(cur_tok), fmt::streamed(L));
     back_input(L);
     back_input(T);
 }
@@ -3011,10 +2909,8 @@ void Parser::E_afterelsefi() {
     Token     T2 = hash_table.fi_token;
     TokenList L1 = read_until(T1);
     TokenList L2 = read_until(T2);
-    if (tracing_macros()) {
-        Logger::finish_seq();
-        the_log << cur_tok << R"(#1\else#2\fi->\fi#1\n#1<-)" << L1 << "#2<-" << L2;
-    }
+    if (tracing_macros())
+        spdlog::trace("{}#1\\else#2\\fi->\\fi#1\n#1<-{}#2<-{}", fmt::streamed(cur_tok), fmt::streamed(L1), fmt::streamed(L2));
     back_input(L1);
     back_input(T2);
 }
@@ -3055,20 +2951,14 @@ auto Parser::get_r_token(bool br) -> Token {
 // If redef is true, it is an error to redefine the command
 
 void Parser::M_let(Token A, bool global, bool redef) {
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{\\let " << A << " " << cur_tok << "}\n";
-    }
+    if (tracing_commands()) spdlog::trace("{{\\let {} {}}}", fmt::streamed(A), fmt::streamed(cur_tok));
     if (redef && !ok_to_define(A, rd_if_undef)) return;
     auto pos = A.eqtb_loc();
     if (tracing_assigns()) {
         String action = global ? "globally " : "";
-        Logger::finish_seq();
-        the_log << "{" << action << "changing " << A << "=";
-        token_for_show(Hashtab::the_eqtb()[pos].val);
-        the_log << "}\n{into " << A << "=";
-        token_for_show(cur_cmd_chr);
-        the_log << "}\n";
+        auto before = token_for_show_str(Hashtab::the_eqtb()[pos].val);
+        auto after  = token_for_show_str(cur_cmd_chr);
+        spdlog::trace("{{{}changing {}={}}}\n{{into {}={}}}", action, fmt::streamed(A), before, fmt::streamed(A), after);
     }
     eq_define(pos, cur_cmd_chr, global);
 }
@@ -3119,12 +3009,10 @@ void Parser::M_let(subtypes chr, bool gbl) {
         } else
             T = get_r_token(true); // \cs_undefine:N
         if (tracing_commands()) {
-            Logger::finish_seq();
-            the_log << "{\\let " << T << "=\\undef}\n";
+            spdlog::trace("{{\\let {}=\\undef}}", fmt::streamed(T));
         }
         if (tracing_assigns()) {
-            Logger::finish_seq();
-            the_log << "{globally killing " << T << "}\n";
+            spdlog::trace("{{globally killing {}}}", fmt::streamed(T));
         }
         eq_define(T.eqtb_loc(), CmdChr(undef_cmd, zero_code), true);
     } else {               // cs_set_eq:NN and variants
@@ -3160,12 +3048,7 @@ void Parser::M_future_let(bool gbl) {
     get_token();
     Token B = cur_tok;
     get_token();
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{\\futurelet " << A << " ";
-        the_log << B << " ";
-        the_log << cur_tok << "}\n";
-    }
+    if (tracing_commands()) spdlog::trace("{{\\futurelet {} {} {}}}", fmt::streamed(A), fmt::streamed(B), fmt::streamed(cur_tok));
     eq_define(p, cur_cmd_chr, gbl); // \let\A\C
     back_input();
     back_input(B); // to be read again \B and \C
@@ -3176,10 +3059,7 @@ void Parser::M_newcommand(rd_flag redef) {
     bool     is_star = remove_initial_star(); // false means long
     symcodes what    = is_star ? user_cmd : userl_cmd;
     Token    name    = get_r_token(true);
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{" << err_tok << (is_star ? "* " : " ") << name << "}\n";
-    }
+    if (tracing_commands()) spdlog::trace("{{{}{}{}}}", fmt::streamed(err_tok), (is_star ? "* " : " "), fmt::streamed(name));
     Macro *X{nullptr};
     {
         auto guard = SaveErrTok(name);
@@ -3207,10 +3087,7 @@ void Parser::M_new_env(rd_flag redef) {
     bool        is_star = remove_initial_star(); // false means long
     symcodes    what    = is_star ? user_cmd : userl_cmd;
     std::string name    = group_to_string();
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{" << err_tok << (is_star ? "* " : " ") << name << "}\n";
-    }
+    if (tracing_commands()) spdlog::trace("{{{}{}{}}}", fmt::streamed(err_tok), (is_star ? "* " : " "), name);
     Token  T = find_env_token(name, true); // this is \foo
     Macro *X{nullptr};
     {
@@ -3374,7 +3251,6 @@ void Parser::M_shorthand_define(subtypes cmd, bool gbl) {
     }
     CmdChr R(ncmd, subtypes(k));
     eq_define(pos, R, gbl);
-    Logger::finish_seq();
 }
 
 // For bootstrap; always traced
@@ -3401,7 +3277,6 @@ auto Parser::shorthand_gdefine(subtypes cmd, String sh, unsigned k) -> Token {
     }
     CmdChr R(ncmd, subtypes(k));
     eq_define(p, R, true);
-    Logger::finish_seq();
     return T;
 }
 
@@ -3563,10 +3438,7 @@ void Parser::E_latex_ctr() {
             res.latex_ctr_fnsymbol(n);
     default:;
     }
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << T << "->" << res << "\n";
-    }
+    if (tracing_commands()) spdlog::trace("{}->{}", fmt::streamed(T), fmt::streamed(res));
     back_input(res);
 }
 
@@ -3637,10 +3509,7 @@ auto Parser::T_ifthenelse_inner(Token t) -> bool {
         if (get_token()) break; // seen the end
         Token x = cur_tok;
         if (x.is_space_token() || cur_cmd_chr.is_relax()) continue;
-        if (tracing_commands()) {
-            Logger::finish_seq();
-            the_log << "{ifthenelse " << x << "}\n";
-        }
+        if (tracing_commands()) spdlog::trace("{{ifthenelse {}}}", fmt::streamed(x));
         if (x == hash_table.not_token || x == hash_table.NOT_token) {
             must_negate = !must_negate;
             continue;
@@ -3685,10 +3554,7 @@ auto Parser::T_ifthenelse_inner(Token t) -> bool {
             cur_tok = t;
             read_toks_edef(L2);
             res = L1 == L2;
-            if (tracing_commands()) {
-                Logger::finish_seq();
-                the_log << "{ifthenelse equal " << boolean(res) << "}\n";
-            }
+            if (tracing_commands()) spdlog::trace("{{ifthenelse equal {}}}", boolean(res));
         } else {
             back_input();
             cur_tok = t;
@@ -3706,27 +3572,18 @@ auto Parser::T_ifthenelse_inner(Token t) -> bool {
             break;
         }
         if (x == hash_table.or_token || x == hash_table.OR_token) {
-            if (tracing_commands()) {
-                Logger::finish_seq();
-                the_log << "{ifthenelse \\or " << skip_or_continue(res) << "}\n";
-            }
+            if (tracing_commands()) spdlog::trace("{{ifthenelse \\or {}}}", skip_or_continue(res));
             if (res) break;
             return T_ifthenelse_inner(t);
         }
         if (x == hash_table.and_token || x == hash_table.AND_token) {
-            if (tracing_commands()) {
-                Logger::finish_seq();
-                the_log << "{ifthenelse \\and " << skip_or_continue(!res) << "}\n";
-            }
+            if (tracing_commands()) spdlog::trace("{{ifthenelse \\and {}}}", skip_or_continue(!res));
             if (!res) return false;
             return T_ifthenelse_inner(t);
         }
         break;
     }
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{ifthenelse -> " << boolean(res) << "}\n";
-    }
+    if (tracing_commands()) spdlog::trace("{{ifthenelse -> {}}}", boolean(res));
     return res;
 }
 
@@ -3847,10 +3704,7 @@ void Parser::calc_primitive(SthInternal &A) {
             A.int_val = cur_val.int_val;
         }
     }
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{calc primitive =" << A << "}\n";
-    }
+    if (tracing_commands()) spdlog::trace("{{calc primitive ={}}}", fmt::streamed(A));
 }
 
 // This is the big function
@@ -3863,10 +3717,7 @@ void Parser::calc_aux(SthInternal &A) {
         if (T.is_exclam_token()) return; // special end marker.
         if (T.is_close_paren()) return;
         if (T.is_plus_token() || T.is_minus_token()) {
-            if (tracing_commands()) {
-                Logger::finish_seq();
-                the_log << "{calc +-}\n";
-            }
+            if (tracing_commands()) spdlog::trace("{{calc +-}}");
             SthInternal B;
             B.initialise(A.type);
             calc_primitive(B);
@@ -3874,10 +3725,7 @@ void Parser::calc_aux(SthInternal &A) {
             A.add(B);
             continue;
         }
-        if (tracing_commands()) {
-            Logger::finish_seq();
-            the_log << "{calc */}\n";
-        }
+        if (tracing_commands()) spdlog::trace("{{calc */}}");
         if (!(T.is_star_token() || T.is_slash_token())) {
             parse_error(hash_table.calc_token, "unexpected token in calc\n", T.tok_to_str(), "unexpected in calc");
             return;
@@ -3939,27 +3787,18 @@ void Parser::ratio_evaluate(TokenList &A, TokenList &B, SthInternal &res) {
     else
         calc_main(it_dimen, num, A);
     calc_main(it_dimen, den, B);
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{calc \\ratio " << num << "/" << den << "}\n";
-    }
+    if (tracing_commands()) spdlog::trace("{{calc \\ratio {}/{}}}", fmt::streamed(num), fmt::streamed(den));
     calc_ratio_eval(num.get_int_val(), den.get_int_val(), res);
 }
 
 void Parser::calc_main(internal_type type, SthInternal &res, TokenList &B) {
     SthInternal A;
     A.initialise(type);
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{calc argument: " << B << "}\n";
-    }
+    if (tracing_commands()) spdlog::trace("{{calc argument: {}}}", fmt::streamed(B));
     back_input(Token(other_t_offset, '!'));
     back_input(B);
     calc_aux(A);
-    if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{calc res " << A << "}\n";
-    }
+    if (tracing_commands()) spdlog::trace("{{calc res {}}}", fmt::streamed(A));
     res.type = type;
     res.copy(A);
 }
@@ -3990,8 +3829,7 @@ void Parser::exec_calc() {
         p = it_glue; // ok ? should add a test here....
     if (tracing_commands()) {
         String s = p == it_int ? "integer" : (p == it_dimen ? " dimension" : "glue");
-        Logger::finish_seq();
-        the_log << "{calc modifying " << s << " at position " << to_signed(l) << "}\n";
+        spdlog::trace("{{calc modifying {} at position {}}}", s, to_signed(l));
     }
     SthInternal res;
     calc_main(p, res, b);
@@ -4142,13 +3980,10 @@ void Parser::begin_box(size_t src, subtypes c) {
     } else if (scan_keyword("to") || scan_keyword("spread"))
         scan_dimen(false, T);
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{";
         if (box_name.empty())
-            the_log << "Constructing an anonymous box"
-                    << "}\n";
+            spdlog::trace("{{Constructing an anonymous box}}");
         else
-            the_log << "Constructing a box named " << box_name << "}\n";
+            spdlog::trace("{{Constructing a box named {}}}", box_name);
     }
     scan_left_brace();
     push_level(bt_brace);
@@ -4168,8 +4003,7 @@ void Parser::begin_box(size_t src, subtypes c) {
                 name = "<everyxbox> ";
             else if (c == hbox_code)
                 name = "<everyhbox> ";
-            Logger::finish_seq();
-            the_log << "{" << name << L << "}\n";
+            spdlog::trace("{{{}{}}}", name, fmt::streamed(L));
         }
         back_input(L);
     }
@@ -4188,16 +4022,16 @@ void Parser::M_xray(subtypes c) {
         return;
     case showbox_code: {
         auto k = scan_reg_num();
-        log_and_tty << "Box " << k << ": ";
+        spdlog::info("Box {}:", k);
         show_box(box_table[k].val);
         return;
     }
     case show_xmlA_code:
-        log_and_tty << "xmlA: ";
+        spdlog::info("xmlA:");
         show_box(the_xmlA);
         return;
     case show_xmlB_code:
-        log_and_tty << "xmlB: ";
+        spdlog::info("xmlB:");
         show_box(the_xmlB);
         return;
     case register_show_code:
@@ -4212,12 +4046,12 @@ void Parser::M_xray(subtypes c) {
         }
         back_input();
         TokenList L = E_the(the_code);
-        log_and_tty << "\\show: " << T << " = " << L << "\n";
+        spdlog::info("\\show: {} = {}", fmt::streamed(T), fmt::streamed(L));
         return;
     }
     case showthe_code: {
         TokenList L = E_the(the_code);
-        log_and_tty << "\\show: " << L << "\n";
+        spdlog::info("\\show: {}", fmt::streamed(L));
         return;
     }
     case showgroups_code: dump_save_stack(); return;
@@ -4225,7 +4059,7 @@ void Parser::M_xray(subtypes c) {
     case showlists_code: the_stack.dump(); return;
     case showtokens_code: {
         TokenList L = scan_general_text();
-        log_and_tty << "\\show: " << L << "\n";
+        spdlog::info("\\show: {}", fmt::streamed(L));
         return;
     }
     default: return;
@@ -4264,11 +4098,10 @@ void Parser::M_prefixed() {
     if (gd > 0) b_global = true;
     if (gd < 0) b_global = false;
     if (tracing_commands() && (b_global || (flags != 0))) {
-        Logger::finish_seq();
-        the_log << "{";
         trace_buffer.clear();
         trace_buffer.dump_prefix(true, b_global, K);
-        the_log << trace_buffer << cur_tok << "}\n";
+        auto msg = fmt::format("{}{}", trace_buffer.convert_to_log_encoding(), fmt::streamed(cur_tok));
+        spdlog::trace("{{{}}}", msg);
     }
     if (C == let_cmd)
         M_let(cur_cmd_chr.chr, b_global);
@@ -4279,9 +4112,6 @@ void Parser::M_prefixed() {
     Token aat = get_after_ass_tok();
     if (!aat.is_null()) {
         back_input(aat);
-        if (tracing_commands()) {
-            Logger::finish_seq();
-            the_log << "{after assignment: " << aat << "}\n";
-        }
+        if (tracing_commands()) spdlog::trace("{{after assignment: {}}}", fmt::streamed(aat));
     }
 }

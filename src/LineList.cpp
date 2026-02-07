@@ -1,11 +1,12 @@
 #include "tralics/LineList.h"
-#include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/NameMapper.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include <ctre.hpp>
+#include <fstream>
+#include <spdlog/spdlog.h>
 
 namespace tpage_ns {
     auto scan_item(Buffer &in, Buffer &out, char del) -> bool;
@@ -85,7 +86,6 @@ namespace {
 void LineList::change_encoding(long wc) {
     if (wc >= 0 && wc < to_signed(max_encoding)) {
         encoding = to_unsigned(wc);
-        Logger::finish_seq();
         spdlog::trace("++ Input encoding changed to {} for {}", wc, file_name);
     }
 }
@@ -144,30 +144,28 @@ auto LineList::dump_name() const -> std::string { return file_name.empty() ? "vi
 
 // Whenever a TeX file is opened for reading, we print this in the log
 void LineList::after_open() {
-    Logger::finish_seq();
-    the_log << "++ Opened " << dump_name();
-    if (empty())
-        the_log << "; it is empty\n";
-    else {
+    if (empty()) {
+        spdlog::trace("++ Opened {}; it is empty", dump_name());
+    } else {
         int n = front().number;
         int m = back().number;
         if (n == 1) {
             if (m == 1)
-                the_log << "; it has 1 line\n";
+                spdlog::trace("++ Opened {}; it has 1 line", dump_name());
             else
-                the_log << "; it has " << m << " lines\n";
+                spdlog::trace("++ Opened {}; it has {} lines", dump_name(), m);
         } else
-            the_log << "; line range is " << n << "-" << m << "\n";
+            spdlog::trace("++ Opened {}; line range is {}-{}", dump_name(), n, m);
     }
 }
 
 // Whenever a TeX file is closed, we call this. If sigforce is true
 // we say if this was closed by a \endinput command.
 void LineList::before_close(bool sigforce) {
-    Logger::finish_seq();
-    the_log << "++ End of " << dump_name();
-    if (sigforce && !empty()) the_log << " (forced by \\endinput)";
-    the_log << "\n";
+    if (sigforce && !empty())
+        spdlog::trace("++ End of {} (forced by \\endinput)", dump_name());
+    else
+        spdlog::trace("++ End of {}", dump_name());
 }
 
 // Puts in b the next line of input.
@@ -454,7 +452,6 @@ void LineList::read(const std::string &x, int spec) { // \todo take a std::files
                 if (auto k = find_encoding(B)) {
                     encoding = *k;
                     co_try   = 0;
-                    Logger::finish_seq();
                     spdlog::trace("++ Input encoding number {} detected  at line {} of file {}", *k, cur_line + 1, x);
                 }
             }

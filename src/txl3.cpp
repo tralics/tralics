@@ -10,10 +10,11 @@
 
 // This file contains stuff for latex3
 
-#include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
+#include <fmt/ostream.h>
+#include <spdlog/spdlog.h>
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 
@@ -40,7 +41,6 @@ void Parser::E_pdfstrcmp() {
     auto      cmp = s1.compare(s2);
     TokenList L   = token_ns::string_to_list(cmp == 0 ? "0" : (cmp < 0 ? "-1" : "1"), false);
     if (tracing_macros()) {
-        Logger::finish_seq();
         spdlog::trace("{}{}=={}->{}", cur_tok, s1, s2, L);
     }
     back_input(L);
@@ -111,7 +111,7 @@ void Parser::L3_logid() {
     B << get_mac_value(hash_table.ExplFileVersion_token);
     B += " ";
     B << get_mac_value(hash_table.ExplFileDescription_token);
-    the_log << "svn Id: " << B.convert_to_log_encoding() << "\n";
+    spdlog::trace("svn Id: {}", B.convert_to_log_encoding());
 }
 
 // Complicated conditionals have the form \ifxxx ... \fi\c_zero{trueC}{falseC}
@@ -126,10 +126,9 @@ void Parser::E_prg_return(unsigned c) {
     TokenList L1 = read_arg();
     TokenList L2 = read_arg();
     if (tracing_macros()) {
-        Logger::finish_seq();
-        the_log << T << "#1#2->#" << (c == 0 ? "1" : "2") << "\n";
-        the_log << "#1<-" << L1 << "\n";
-        the_log << "#2<-" << L2 << "\n";
+        spdlog::trace("{}#1#2->#{}", fmt::streamed(T), (c == 0 ? "1" : "2"));
+        spdlog::trace("#1<-{}", fmt::streamed(L1));
+        spdlog::trace("#2<-{}", fmt::streamed(L2));
     }
     one_of_two(L1, L2, c == 0);
 }
@@ -195,8 +194,7 @@ void Parser::L3_user_split_next_name(bool base) {
     }
     std::string res = base ? tok_base : tok_sig;
     if (tracing_macros()) {
-        Logger::finish_seq();
-        the_log << T << cur_tok << "->" << res << "\n";
+        spdlog::trace("{}{}->{}", fmt::streamed(T), fmt::streamed(cur_tok), fmt::streamed(res));
     }
     B += res;
     TokenList L = B.str_toks(nlt_cr); // is this needed?
@@ -374,8 +372,7 @@ void Parser::l3_after_cond(Token T, bool test, subtypes c) {
     default: return; // should not happen
     }
     if (tracing_macros()) {
-        Logger::finish_seq();
-        the_log << T << "->" << res << "\n";
+        spdlog::trace("{}->{}", fmt::streamed(T), fmt::streamed(res));
     }
     back_input(res);
 }
@@ -473,8 +470,7 @@ void Parser::E_l3str_case(subtypes c) {
     std::string s1    = l3_to_string(exp, as1);
     if (exp == l3expo_code) exp = l3expn_code;
     if (tracing_macros()) {
-        Logger::finish_seq();
-        the_log << caller << " compares " << s1 << "\n";
+        spdlog::trace("{} compares {}", fmt::streamed(caller), s1);
     }
     for (;;) {
         token_ns::remove_initial_spaces(clauses);
@@ -494,8 +490,7 @@ void Parser::E_l3str_case(subtypes c) {
     else
         res.splice(res.end(), false_res);
     if (tracing_macros()) {
-        Logger::finish_seq();
-        the_log << caller << "->" << res << "\n";
+        spdlog::trace("{}->{}", fmt::streamed(caller), fmt::streamed(res));
     }
     back_input(res);
 }
@@ -801,13 +796,10 @@ void Parser::L3_set_num_code(subtypes c) {
     }
     auto v = eqtb_int_table[to_unsigned(m) + offset].val;
     if (show)
-        log_and_tty << T << "{" << m << "}=" << v << "\n";
+        spdlog::info("{}{{{}}}={}", fmt::streamed(T), m, v);
     else {
         Buffer &B = local_buffer;
-        if (tracing_commands()) {
-            Logger::finish_seq();
-            the_log << T << "->" << m << ".\n";
-        }
+        if (tracing_commands()) spdlog::trace("{}->{}.", fmt::streamed(T), m);
         B.clear();
         B.append(std::to_string(v));
         TokenList res = B.str_toks(nlt_space);
@@ -962,8 +954,7 @@ void Parser::Tl3_gen_from_ac(subtypes c) {
     read_until(hash_table.relax_token); // read all unused tokens
     TokenList parms = l3_parms_from_ac(n, fun, false);
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{" << caller << "-> " << creator << fun << parms << "}\n";
+        spdlog::trace("{{{}-> {}{}{}}}", fmt::streamed(caller), fmt::streamed(creator), fmt::streamed(fun), fmt::streamed(parms));
     }
     back_input(parms);
     back_input(fun);
@@ -1020,8 +1011,7 @@ void Parser::l3_generate_variant() {
     std::string spec = sE_arg_nopar();
     if (nok) return; // an error has already been generated
     if (tracing_commands()) {
-        Logger::finish_seq();
-        the_log << "{Generating variants for " << orig << " with " << spec << "}\n";
+        spdlog::trace("{{Generating variants for {} with {}}}", fmt::streamed(orig), fmt::streamed(spec));
     }
     for (const auto &p : split_commas(spec)) l3_generate_variant(p, prot, orig);
 }
@@ -1083,7 +1073,7 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
     nsig         = tok_base + ':' + osig;
     Token newfun = hash_table.locate(nsig);
     if (!Hashtab::the_eqtb()[newfun.eqtb_loc()].val.is_undef()) {
-        the_log << "Variant " << newfun << " already defined, not changing it.\n";
+        spdlog::trace("Variant {} already defined, not changing it.", fmt::streamed(newfun));
         return;
     }
     nsig                = "exp_args:N" + changes;
@@ -1115,8 +1105,7 @@ void Parser::E_l3expand_aux(subtypes c) {
     Token     T = cur_tok;
     TokenList L1, L2, L3, res;
     if (tracing_macros()) {
-        Logger::finish_seq();
-        the_log << T << " is expanded\n";
+        spdlog::trace("{} is expanded", fmt::streamed(T));
     }
     L1 = read_until(T3col_tok);
     L2 = read_arg();
@@ -1168,8 +1157,7 @@ void Parser::E_l3expand_aux(subtypes c) {
     }
     res.splice(res.end(), L2);
     if (tracing_macros()) {
-        Logger::finish_seq();
-        the_log << T << "->" << res << "\n";
+        spdlog::trace("{}->{}", fmt::streamed(T), fmt::streamed(res));
     }
     back_input(res);
 }
@@ -1182,16 +1170,14 @@ void Parser::E_l3noexpand(subtypes c) {
     bool      b = tracing_macros();
     TokenList L3, res;
     if (b) {
-        Logger::finish_seq();
-        the_log << T << " is expanded\n";
+        spdlog::trace("{} is expanded", fmt::streamed(T));
     }
     switch (c) {
     case l3expc_code:
         csname_arg(); // optimise, there is a single token
         back_input(T_exp_notN);
         if (b) {
-            Logger::finish_seq();
-            the_log << T << "->\\noexpand " << cur_tok << "\n";
+            spdlog::trace("{}->\\noexpand {}", fmt::streamed(T), fmt::streamed(cur_tok));
         }
         return;
     case l3expv_code:
@@ -1216,8 +1202,7 @@ void Parser::E_l3noexpand(subtypes c) {
     res.push_back(T_exp_notn);
     res.splice(res.end(), L3);
     if (b) {
-        Logger::finish_seq();
-        the_log << T << "->" << res << "\n";
+        spdlog::trace("{}->{}", fmt::streamed(T), fmt::streamed(res));
     }
     back_input(res);
 }
@@ -1334,8 +1319,7 @@ void Parser::E_l3expand_base(subtypes c) {
     TokenList L, res;
     Token     T = cur_tok;
     if (tracing_macros()) {
-        Logger::finish_seq();
-        the_log << T << " is expanded\n";
+        spdlog::trace("{} is expanded", fmt::streamed(T));
     }
     EXPAND_N; // macro to call
     switch (c) {
@@ -1582,8 +1566,7 @@ void Parser::E_l3expand_base(subtypes c) {
     default:;
     }
     if (tracing_macros()) {
-        Logger::finish_seq();
-        the_log << T << "->" << res << "\n";
+        spdlog::trace("{}->{}", fmt::streamed(T), fmt::streamed(res));
     }
     back_input(res);
 }
@@ -1593,7 +1576,7 @@ void Parser::L3_load(bool preload) {
     static bool loaded = false;
     if (loaded) return;
     loaded = true;
-    the_log << "Loading latex3...$Date: 2015/11/25 07:38:28 $\n";
+    spdlog::trace("Loading latex3...$Date: 2015/11/25 07:38:28 $");
     {
         TokenList L;
         new_prim("c_empty_tl", L);

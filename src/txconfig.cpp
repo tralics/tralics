@@ -8,10 +8,10 @@
 // "http://www.cecill.info".
 // (See the file COPYING in the main directory for details)
 
-#include "tralics/Logger.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
+#include <spdlog/spdlog.h>
 
 namespace config_ns {
     // We add a final slash, or double slash, this makes parsing easier;
@@ -23,10 +23,9 @@ namespace config_ns {
         bool ret_val = false;
         B.append(s);
         B.ptrs.b = 0;
-        if (B.head() == '+') {
+        if (B.head() == '+')
             B.advance();
-            the_log << "+";
-        } else
+        else
             ret_val = true;
         if ((s[0] != 0) && B.head() == '/') B.advance();
         return ret_val;
@@ -50,8 +49,11 @@ namespace config_ns {
 // In the case of "foo bar gee", puts foo, bar and gee in the vector.
 // Initial + means append, otherwise replace.
 
-void Buffer::interpret_aux(std::vector<std::string> &bib, std::vector<std::string> &bib2) {
-    if (config_ns::start_interpret(*this, "")) {
+void Buffer::interpret_aux(std::vector<std::string> &bib, std::vector<std::string> &bib2, std::string_view label) {
+    bool        reset   = config_ns::start_interpret(*this, "");
+    std::string log_line(label);
+    if (!reset) log_line += "+";
+    if (reset) {
         bib.resize(0);
         bib2.resize(0);
     }
@@ -65,7 +67,7 @@ void Buffer::interpret_aux(std::vector<std::string> &bib, std::vector<std::strin
             advance();
             if (head() == 0) break; // final dash ignored
             a++;
-            the_log << "--";
+            log_line += "--";
         }
         while ((head() != 0) && (std::isspace(head()) == 0)) advance();
         ptrs.a        = a;
@@ -74,7 +76,8 @@ void Buffer::interpret_aux(std::vector<std::string> &bib, std::vector<std::strin
             bib.emplace_back(k);
         else
             bib2.emplace_back(k);
-        the_log << k << " ";
+        log_line += k;
+        log_line += " ";
     }
-    the_log << "\n";
+    if (!log_line.empty()) spdlog::trace("{}", log_line);
 }
