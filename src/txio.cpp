@@ -11,6 +11,7 @@
 // Functions on files and characters;
 // Handle also utf8 input output
 
+#include "tralics/LineList.h"
 #include "tralics/MainClass.h"
 #include "tralics/Saver.h"
 #include "tralics/globals.h"
@@ -25,8 +26,8 @@
 namespace {
     /// Look for a file in the pool
     auto search_in_pool(const std::string &name) -> std::optional<size_t> {
-        for (size_t i = 0; i < file_pool.size(); i++)
-            if (file_pool[i].file_name == name) return i;
+        for (size_t i = 0; i < LineList::file_pool.size(); i++)
+            if (LineList::file_pool[i].file_name == name) return i;
         return {};
     }
 } // namespace
@@ -242,7 +243,7 @@ void Parser::T_filecontents(subtypes spec) {
         if (action == 1) outfile << input_buffer;
         if (action == 2) {
             int n = get_cur_line();
-            file_pool.back().emplace_back(n, input_buffer, is_encoded);
+            LineList::file_pool.back().emplace_back(n, input_buffer, is_encoded);
         }
         kill_line();
     }

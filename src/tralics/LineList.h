@@ -6,6 +6,7 @@ struct LineList : public std::list<Line> { // \todo use a vector instead
     int         cur_line{0};               // current line number
     std::string file_name;                 // file name associated to the lines
     size_t      encoding{1};               // current file encoding
+    static std::vector<LineList> file_pool; // pool managed by filecontents
     static inline std::optional<size_t> pool_position{};
 
     [[nodiscard]] auto dump_name() const -> std::string;
@@ -37,5 +38,3 @@ struct LineList : public std::list<Line> { // \todo use a vector instead
     auto skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const;
     void split_string(std::string x, int l);
 };
-
-inline std::vector<LineList> file_pool; // pool managed by filecontents \todo static inline in LineList

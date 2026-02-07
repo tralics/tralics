@@ -56,12 +56,14 @@ Parser::Parser() : cur_env_name("document") {
     cur_font.set_old_from_packed();
 }
 
+Parser::~Parser() = default;
+
 // saving and restoring things
 
 auto operator<<(std::ostream &fp, const boundary_type &x) -> std::ostream & { return fp << bt_to_string(x); }
 
 // This adds a new element to the save stack. \todo inline
-void Parser::push_save_stack(SaveAuxBase *v) { the_save_stack.emplace_back(v); }
+void Parser::push_save_stack(SaveAuxBase *v) { save_stack.emplace_back(v); }
 
 // This is done when we evaluate { or \begingroup.
 void Parser::push_level(boundary_type v) {
@@ -72,7 +74,7 @@ void Parser::push_level(boundary_type v) {
     }
 }
 
-void Parser::push_tpa() const {
+void Parser::push_tpa() {
     push_save_stack(new SaveAuxBoundary(bt_tpa));
     if (tracing_stack()) {
         spdlog::trace("+stack: level = {} for {}", cur_level, fmt::streamed(bt_tpa));
@@ -275,8 +277,8 @@ void Parser::save_font() {
 
 void Parser::dump_save_stack() const {
     int L = cur_level - 1;
-    for (size_t i = the_save_stack.size(); i > 0; i--) {
-        auto &p = the_save_stack[i - 1];
+    for (size_t i = save_stack.size(); i > 0; i--) {
+        auto &p = save_stack[i - 1];
         if (!p) continue;
         if (p->type != st_boundary) continue;
         dynamic_cast<SaveAuxBoundary *>(p.get())->dump(L);
@@ -324,12 +326,12 @@ void Parser::pop_level(boundary_type v) {
         // this is the wrong env, we nevertheless pop
     }
     for (;;) {
-        if (the_save_stack.empty()) {
+        if (save_stack.empty()) {
             parse_error(err_tok, "Internal error: empty save stack");
             return;
         }
-        auto p = std::move(the_save_stack.back());
-        the_save_stack.pop_back();
+        auto p = std::move(save_stack.back());
+        save_stack.pop_back();
         if (!p) continue;
         if (p->type != st_boundary) continue;
         if (must_throw) {
@@ -349,8 +351,8 @@ void Parser::pop_all_levels() {
     Buffer &    B = err_buf;
     B.clear();
     for (;;) {
-        if (the_save_stack.empty()) break;
-        SaveAuxBase *tmp = the_save_stack.back().get();
+        if (save_stack.empty()) break;
+        SaveAuxBase *tmp = save_stack.back().get();
         std::cout << to_string(tmp->type) << " at " << tmp->line << "\n";
         if (tmp->type == st_env) {
             auto *q = dynamic_cast<SaveAuxEnv *>(tmp);
@@ -368,7 +370,7 @@ void Parser::pop_all_levels() {
             if (w == bt_env) B += " `" + ename + "'";
             B.format(" started at line {}", l);
         }
-        the_save_stack.pop_back();
+        save_stack.pop_back();
     }
     if (started) {
         signal_error(Token(), "");
@@ -382,11 +384,11 @@ void Parser::pop_all_levels() {
 // We try to pop a font command
 void Parser::final_checks() {
     conditions.terminate();
-    auto n = the_save_stack.size();
+    auto n = save_stack.size();
     if (n == 1) {
-        if (the_save_stack.back()->type == st_font) {
-            the_save_stack.pop_back();
-            n = the_save_stack.size();
+        if (save_stack.back()->type == st_font) {
+            save_stack.pop_back();
+            n = save_stack.size();
         }
     }
     if (n == 0) return;
@@ -395,7 +397,7 @@ void Parser::final_checks() {
     B.clear();
     Buffer &A = Thbuf1;
     for (size_t i = n; i > 0; i--) {
-        SaveAuxBase *p = the_save_stack[i - 1].get();
+        SaveAuxBase *p = save_stack[i - 1].get();
         A.clear();
         A.format("{} at {}", to_string(p->type), p->line);
         if (B.empty()) {

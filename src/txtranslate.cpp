@@ -44,10 +44,10 @@ namespace {
 
     // Returns the number of environments
     auto nb_env_on_stack() -> int {
-        auto n = the_save_stack.size();
+        auto n = the_parser.save_stack.size();
         int  k = 0;
         for (size_t i = n; i > 0; i--) {
-            SaveAuxBase *p = the_save_stack[i - 1].get();
+            SaveAuxBase *p = the_parser.save_stack[i - 1].get();
             if (p->type == st_env) ++k;
         }
         return k;

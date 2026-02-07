@@ -216,8 +216,8 @@ namespace {
     // here xy can be } or \endgroup
     auto stack_math_in_cell() -> bool {
         bool first = true;
-        for (size_t i = the_save_stack.size(); i > 0; i--) {
-            auto &p = the_save_stack[i - 1];
+        for (size_t i = the_parser.save_stack.size(); i > 0; i--) {
+            auto &p = the_parser.save_stack[i - 1];
             if (!p) continue;
             if (p->type != st_boundary) continue;
             auto cur = dynamic_cast<SaveAuxBoundary *>(p.get())->val;

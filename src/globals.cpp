@@ -22,8 +22,8 @@ auto fonts1(const std::string &x) -> Xml * {
 }
 
 auto first_boundary() -> boundary_type {
-    for (size_t i = the_save_stack.size(); i > 0; i--) {
-        auto &p = the_save_stack[i - 1];
+    for (size_t i = the_parser.save_stack.size(); i > 0; i--) {
+        auto &p = the_parser.save_stack[i - 1];
         if (!p) continue;
         if (p->type != st_boundary) continue;
         the_parser.first_boundary_loc = p->line;
@@ -34,8 +34,8 @@ auto first_boundary() -> boundary_type {
 
 // Returns the slot associated to the env S
 auto is_env_on_stack(const std::string &s) -> SaveAuxEnv * {
-    for (size_t i = the_save_stack.size(); i > 0; i--) {
-        auto &p = the_save_stack[i - 1];
+    for (size_t i = the_parser.save_stack.size(); i > 0; i--) {
+        auto &p = the_parser.save_stack[i - 1];
         if (!p) continue; // \todo this should never happen but it does on linux+clang9
         if (p->type != st_env) continue;
         auto *q = dynamic_cast<SaveAuxEnv *>(p.get());

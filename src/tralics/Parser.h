@@ -11,6 +11,7 @@
 #include "SaveState.h"
 #include "Stack.h"
 #include "SthInternal.h"
+#include <memory>
 
 struct RealNumber;
 struct FpNum;
@@ -89,6 +90,7 @@ struct Parser {
     Buffer                fetch_name_res;                        // used by fetch_name
     LineList              lines;                                 // the lines to  be read
     TokenList             TL;                                    // list of tokens to be read again
+    std::vector<std::unique_ptr<SaveAuxBase>> save_stack;        // save stack for groups
     Condition             conditions;                            // condition stack for current \if
     SthInternal           cur_val;                               // result of scan_something internal
     TokenList             document_hook;                         // the document-hook
@@ -151,6 +153,7 @@ struct Parser {
     void L3_load(bool preload);
 
     Parser();
+    ~Parser();
 
     void add_buffer_to_document_hook(const Buffer &b, const std::string &name);
     void add_language_att() const;
@@ -638,7 +641,7 @@ struct Parser {
     void               push_level(boundary_type v);
     void               push_module();
     void               push_module(const std::string &aux);
-    void               push_tpa() const;
+    void               push_tpa();
     void               ratio_evaluate(TokenList &A, TokenList &B, SthInternal &res);
     void               read_into(TokenList &X);
     void               read_mac_body(TokenList &L, bool exp, size_t N);
@@ -959,7 +962,7 @@ struct Parser {
     static auto ileave_v_mode() -> Xid;
     static auto last_att_list() -> AttList &;
     static void add_bib_marker(bool force);
-    static void push_save_stack(SaveAuxBase *v);
+    void push_save_stack(SaveAuxBase *v);
     static void T_titlepage(size_t v);
 };
 

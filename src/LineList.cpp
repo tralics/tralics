@@ -8,6 +8,8 @@
 #include <fstream>
 #include <spdlog/spdlog.h>
 
+std::vector<LineList> LineList::file_pool;
+
 namespace tpage_ns {
     auto scan_item(Buffer &in, Buffer &out, char del) -> bool;
 } // namespace tpage_ns
@@ -416,7 +418,7 @@ auto LineList::find_aliases(const std::vector<std::string> &SL, std::string &res
 void LineList::read(const std::string &x, int spec) { // \todo take a std::filesystem::path
     reset(x);
     if (LineList::pool_position) {
-        insert(file_pool[*LineList::pool_position]);
+        insert(LineList::file_pool[*LineList::pool_position]);
         LineList::pool_position.reset();
         return;
     }
@@ -466,4 +468,4 @@ void LineList::read(const std::string &x, int spec) { // \todo take a std::files
     }
 }
 
-void LineList::register_file() { file_pool.push_back(std::move(*this)); }
+void LineList::register_file() { LineList::file_pool.push_back(std::move(*this)); }
