@@ -33,6 +33,12 @@ namespace {
     bool               old_need = false;  // prev value of trace_needs_space
     Token              fct_caller;
     std::vector<Xml *> all_maths;
+    constexpr long     mathcode_active_char = 32768;
+
+    auto is_math_active_char(subtypes c) -> bool {
+        if (c <= 0 || c >= nb_characters) return false;
+        return eqtb_int_table[c + math_code_offset].val == mathcode_active_char;
+    }
 
     // This adds a style element above res.
     auto add_style(int lvl, gsl::not_null<Xml *> res) -> gsl::not_null<Xml *> {
@@ -249,6 +255,11 @@ namespace tralics_ns {
 } // namespace tralics_ns
 
 using tralics_ns::math_env_props;
+
+auto math_env_needs_display_style(subtypes sname) -> bool {
+    if ((math_env_props(sname) & 1) != 0) return true;
+    return sname == aligned_code || sname == split_code;
+}
 
 // This duplicates the formula.
 // It removes tokens preceeded by the special marker.
@@ -961,16 +972,13 @@ auto Parser::scan_math1(size_t res) -> int {
         }
     }
     if (T == 11 || T == 12 || T == char_given_cmd) {
-        // FIXME what is the purpose of this math mode test
+        // TeX treats chars with mathcode 32768 as active in math mode.
         if (the_stack.get_mode() == mode_math) {
             auto c = cur_cmd_chr.chr;
-            if (c > 0 && c < nb_characters) {
-                auto u = eqtb_int_table[c + math_code_offset].val;
-                if (u == 32768) {
-                    cur_tok.active_char(c);
-                    back_input();
-                    return 1;
-                }
+            if (is_math_active_char(c)) {
+                cur_tok.active_char(c);
+                back_input();
+                return 1;
             }
         }
     }
@@ -1107,8 +1115,13 @@ auto Parser::scan_math(size_t res, math_list_type type) -> bool {
         case box_cmd:
             if (c == text_code)
                 scan_hbox(res, text_S_code);
-            else
-                scan_hbox(res, mbox_S_code); // what if it is makebox ? [FIXME]
+            else {
+                if (c == makebox_code) {
+                    (void)get_opt_dim(t);
+                    (void)get_ctb_opt();
+                }
+                scan_hbox(res, mbox_S_code);
+            }
             continue;
         case alignment_catcode: // case & and \\ in a table
         case backslash_cmd:
@@ -1253,7 +1266,7 @@ auto Parser::scan_math_env(size_t res, math_list_type type) -> bool {
                 cmi.update_math_env_ctr(false);
                 back_input(eenv);
             } else {
-                // FIXME
+                // End a user-defined environment outside of math-env nesting.
                 if (!T_end(s)) throw EndOfData();
                 return false;
             }
@@ -1787,9 +1800,7 @@ auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) ->
 auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool numbered) -> Xml * {
     Math cell;
     bool is_multline = sname == multline_code || sname == multline_star_code;
-    bool needs_dp    = (math_env_props(sname) & 1) != 0;
-    if (sname == aligned_code) needs_dp = true; // OK FIXME
-    if (sname == split_code) needs_dp = true;   // OK FIXME
+    bool needs_dp    = math_env_needs_display_style(sname);
     size_t n         = 0;                       // index of cell in row.
     Xml *  res       = new Xml(the_names["mtable"], nullptr);
     Xml *  row       = new Xml(the_names["mtr"], nullptr);
