@@ -177,20 +177,20 @@ namespace {
 
     // This removes the object S, together with the label n
     void remove_label(String s, const std::string &n) {
-        for (auto &i : ref_list) {
+        for (auto &i : global_state.ref_list) {
             std::string V  = i.second;
             auto *      li = labinfo(V);
             if (li->id != n) continue;
             if (!li->used) continue;
             log_and_tty << "Error signaled by postprocessor\n"
                         << "Removing `" << s << "' made the following label disappear: " << V << "\n";
-            nb_errs++;
+            global_state.nb_errs++;
         }
-        for (auto &defined_label : defined_labels) {
+        for (auto &defined_label : global_state.defined_labels) {
             std::string j = defined_label.first;
             LabelInfo * V = defined_label.second;
             if (j == n && V->defined && !V->used) {
-                removed_labels.emplace_back(s, n);
+                global_state.removed_labels.emplace_back(s, n);
                 V->defined = false;
             }
         }
@@ -244,12 +244,12 @@ Xml::Xml(std::string N, Xml *z) : name(std::move(N)) {
 // row, including the spans of the cells, is adapted to the pattern.
 // If action is true, we do something
 auto Xml::try_cline(bool action) -> bool {
-    auto a    = cline_first - 1;
+    auto a    = global_state.cline_first - 1;
     bool a_ok = false; // true after skip
     for (auto &k : *this) {
         if (a == 0) {
             if (a_ok) return true;
-            a    = (cline_last - cline_first) + 1;
+            a    = (global_state.cline_last - global_state.cline_first) + 1;
             a_ok = true;
         }
         if (!k->is_element()) {

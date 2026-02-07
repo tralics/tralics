@@ -57,7 +57,7 @@ void Condition::pop() {
 // This pops all conditions, signaling errors.
 void Condition::terminate() {
     while (!empty()) {
-        nb_errs++;
+        global_state.nb_errs++;
         spdlog::error("Unterminated \\if {}, started at line {}", top_serial(), top_line());
         pop_back();
     }

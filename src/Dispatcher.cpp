@@ -149,7 +149,7 @@ void Dispatcher::boot() {
     register_action_plain(description_cmd, &Parser::T_listenv);
     register_action_plain(ding_cmd, &Parser::T_ding);
     register_action_plain(divide_cmd, &Parser::M_prefixed);
-    register_action_plain(doc_class_cmd, [] { the_parser.T_documentclass(!the_stack.in_v_mode() || seen_document); });
+    register_action_plain(doc_class_cmd, [] { the_parser.T_documentclass(!the_stack.in_v_mode() || global_state.seen_document); });
     register_action_plain(document_cmd, &Parser::T_begindocument);
     register_action_plain(dollar_catcode, [] { return the_parser.flush_buffer(), the_parser.T_math(nomathenv_code); });
     register_action_plain(end_center_cmd, [] { the_parser.leave_h_mode(); });
@@ -262,7 +262,7 @@ void Dispatcher::boot() {
     register_action_plain(newcounter_cmd, [] { the_parser.M_counter(true); });
     register_action_plain(newif_cmd, &Parser::M_newif);
     register_action_plain(noargfont_cmd, &Parser::see_font_change);
-    register_action_plain(nobreakspace_cmd, [] { the_parser.LC(), the_parser.process_char(global_in_url ? '~' : 0xA0); });
+    register_action_plain(nobreakspace_cmd, [] { the_parser.LC(), the_parser.process_char(global_state.global_in_url ? '~' : 0xA0); });
     register_action_plain(nolinebreak_cmd, &Parser::ignore_optarg);
     register_action_plain(numberedverbatim_cmd, [] { the_parser.numbered_verbatim = true; });
     register_action_plain(numberwithin_cmd, &Parser::numberwithin);
@@ -410,7 +410,7 @@ void Dispatcher::boot() {
     });
 
     register_action_plain(hat_catcode, [](subtypes c) {
-        if (global_in_load || is_pos_par(nomath_code))
+        if (global_state.global_in_load || is_pos_par(nomath_code))
             the_parser.translate_char(CmdChr(letter_catcode, c));
         else
             the_parser.parse_error(the_parser.cur_tok, "Missing dollar not inserted, token ignored: ", the_parser.cur_tok.tok_to_str(),
@@ -418,7 +418,7 @@ void Dispatcher::boot() {
     });
 
     register_action_plain(underscore_catcode, [](subtypes c) {
-        if (global_in_load || is_pos_par(nomath_code))
+        if (global_state.global_in_load || is_pos_par(nomath_code))
             the_parser.translate_char(CmdChr(letter_catcode, c));
         else
             the_parser.parse_error(the_parser.cur_tok, "Missing dollar not inserted, token ignored: ", the_parser.cur_tok.tok_to_str(),
@@ -488,7 +488,7 @@ void Dispatcher::boot() {
     });
 
     register_action_plain(package_cmd, [] {
-        if (!the_stack.in_v_mode() || seen_document) the_parser.wrong_mode("Bad \\usepackage command");
+        if (!the_stack.in_v_mode() || global_state.seen_document) the_parser.wrong_mode("Bad \\usepackage command");
         the_parser.T_usepackage();
     });
 

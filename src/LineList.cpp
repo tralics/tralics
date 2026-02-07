@@ -178,7 +178,7 @@ auto LineList::get_next(Buffer &b) -> std::optional<int> {
     b.append(front());
     pop_front();
     if (!converted) {
-        cur_file_name = file_name;
+        global_state.cur_file_name = file_name;
         b.convert_line(n, encoding);
     }
     return n;
@@ -190,7 +190,7 @@ auto LineList::get_next_cv(Buffer &b, size_t w) -> int {
     auto n = front().number;
     pop_front();
     if (w != 0) {
-        cur_file_name = file_name;
+        global_state.cur_file_name = file_name;
         b.convert_line(n, w);
     }
     return n;
@@ -285,7 +285,7 @@ void LineList::find_top_atts() {
 void LineList::find_all_types(std::vector<std::string> &res) {
     Buffer &B = local_buf;
     for (auto C = cbegin(); C != cend(); C = skip_env(C, B)) {
-        init_file_pos = C->number;
+        global_state.init_file_pos = C->number;
         B             = *C;
         find_one_type(*C, res);
     }
@@ -368,7 +368,7 @@ void LineList::parse_conf_toplevel() const {
     Buffer B;
     for (const auto &C : *this) {
         B             = C;
-        init_file_pos = C.number;
+        global_state.init_file_pos = C.number;
         b += B.see_config_env();
         if (b == 0) see_main_a(B, local_buf);
     }
@@ -416,15 +416,15 @@ auto LineList::find_aliases(const std::vector<std::string> &SL, std::string &res
 // If 4, its is the main file, log not yet open.
 void LineList::read(const std::string &x, int spec) { // \todo take a std::filesystem::path
     reset(x);
-    if (pool_position) {
-        insert(file_pool[*pool_position]);
-        pool_position.reset();
+    if (global_state.pool_position) {
+        insert(file_pool[*global_state.pool_position]);
+        global_state.pool_position.reset();
         return;
     }
 
     std::ifstream fp(x);
-    std::string   old_name = cur_file_name;
-    cur_file_name          = x;
+    std::string   old_name = global_state.cur_file_name;
+    global_state.cur_file_name          = x;
     Buffer B;
     encoding       = the_main.input_encoding;
     bool converted = spec < 2;
@@ -440,7 +440,7 @@ void LineList::read(const std::string &x, int spec) { // \todo take a std::files
             emit = true;
         else if (c == EOF) {
             if (!B.empty()) emit = true;
-            cur_file_name = old_name;
+            global_state.cur_file_name = old_name;
         } else
             B.push_back(static_cast<char>(c));
         if (emit) {

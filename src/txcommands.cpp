@@ -56,7 +56,7 @@ void Parser::translate_char(uchar c1, uchar c2) {
 void Parser::umlaut() {
     get_token();
     if (!cur_lang_german()) {
-        if (!use_quotes) {
+        if (!global_state.use_quotes) {
             umlaut_bad();
             return;
         }
@@ -168,7 +168,7 @@ void Parser::translate_char(CmdChr X) {
     case '<':
     case '>': english_quotes(X); return;
     case '"':
-        if (X.is_letter() || global_in_url || global_in_load)
+        if (X.is_letter() || global_state.global_in_url || global_state.global_in_load)
             process_char(c);
         else
             umlaut();
@@ -189,7 +189,7 @@ void Parser::translate_char(CmdChr X) {
 // In some case ``, '', << and >> are translated as 0xAB and 0xBB
 void Parser::english_quotes(CmdChr X) {
     auto c = X.char_val(); // Should be a small int
-    if (global_in_url || global_in_load) {
+    if (global_state.global_in_url || global_state.global_in_load) {
         if (c == '<')
             process_string("&lt;");
         else if (c == '>')
@@ -217,9 +217,9 @@ void Parser::english_quotes(CmdChr X) {
         else if (c == '>')
             process_string("&gt;");
         else if (c == '\'' && X.is_other())
-            process_char(rightquote_val);
+            process_char(global_state.rightquote_val);
         else if (c == '`' && X.is_other())
-            process_char(leftquote_val);
+            process_char(global_state.leftquote_val);
         else
             unprocessed_xml.push_back(static_cast<char>(c));
     }
@@ -228,7 +228,7 @@ void Parser::english_quotes(CmdChr X) {
 
 // This translates -, --, or ---.
 void Parser::minus_sign(CmdChr X) {
-    if (global_in_url || global_in_load)
+    if (global_state.global_in_url || global_state.global_in_load)
         process_char('-');
     else if (X.is_letter()) {
         process_char('-');
@@ -253,7 +253,7 @@ void Parser::minus_sign(CmdChr X) {
 // This handles :;!? 0xAB 0xBB. Especially in French.
 void Parser::french_punctuation(CmdChr X) {
     auto c = X.char_val();
-    if (global_in_url || global_in_load || X.is_letter() || !cur_lang_fr()) {
+    if (global_state.global_in_url || global_state.global_in_load || X.is_letter() || !cur_lang_fr()) {
         extended_chars(c);
         return;
     }
@@ -704,7 +704,7 @@ void Parser::T_figure_table_end(bool is_fig) {
     Xml *aux = the_stack.top_stack();
     if (!aux->has_name(name))
         parse_error("no figure/table on stack");
-    else if (!nofloat_hack)
+    else if (!global_state.nofloat_hack)
         aux->postprocess_fig_table(is_fig);
     the_stack.pop(name);
     the_stack.add_nl();
@@ -722,18 +722,18 @@ void Parser::T_enddocument(subtypes c) {
     } else {
         flush_buffer();
         the_stack.end_module();
-        seen_enddocument = true;
+        global_state.seen_enddocument = true;
     }
 }
 
 // case \begin{document}
 void Parser::T_begindocument() {
-    if (seen_document) {
+    if (global_state.seen_document) {
         parse_error("Two environments named document");
         return;
     }
     if (cur_level != 2) parse_error("\\begin{document} not at level 0");
-    seen_document = true;
+    global_state.seen_document = true;
     if (!Titlepage.is_valid()) add_language_att();
     cur_tok.kill();
     pop_level(bt_env);

@@ -101,7 +101,7 @@ auto remove_digits(std::string s) -> std::string {
 }
 
 auto codepoints(const std::string &s) -> std::vector<char32_t> {
-    cur_file_line = the_parser.get_cur_line();
+    global_state.cur_file_line = the_parser.get_cur_line();
     std::vector<char32_t> res;
     for (auto it = s.begin(); it != s.end() && *it != 0;) res.emplace_back(utf8::next(it, s.end()));
     return res;
@@ -123,7 +123,7 @@ auto convert_to_utf8(const std::string &s, size_t wc) -> std::string {
     std::string res;
     for (auto ch : s) {
         auto C = static_cast<uchar>(ch);
-        auto c = wc == 1 ? char32_t(C) : custom_table[wc - 2][C];
+        auto c = wc == 1 ? char32_t(C) : global_state.custom_table[wc - 2][C];
         if (c != 0) utf8::append(c, std::back_inserter(res));
     }
     return res;

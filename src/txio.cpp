@@ -46,16 +46,16 @@ auto Buffer::next_utf8_char() -> char32_t {
     try {
         cp = it == end() ? char32_t(0U) : char32_t(utf8::next(it, end())); // \todo just if
     } catch (utf8::invalid_utf8 &) {
-        bad_chars++;
-        spdlog::warn("{}:{}:{}: UTF-8 parsing error, ignoring char", cur_file_name, cur_file_line, ptrs.b + 1);
+        global_state.bad_chars++;
+        spdlog::warn("{}:{}:{}: UTF-8 parsing error, ignoring char", global_state.cur_file_name, global_state.cur_file_line, ptrs.b + 1);
         ++ptrs.b;
         return char32_t();
     }
     auto nn = to_unsigned(it - it0);
     ptrs.b += nn;
     if (cp > 0x1FFFF) {
-        spdlog::error("UTF-8 parsing overflow (char U+{:04X}, line {}, file {})", size_t(cp), cur_file_line, cur_file_name);
-        bad_chars++;
+        spdlog::error("UTF-8 parsing overflow (char U+{:04X}, line {}, file {})", size_t(cp), global_state.cur_file_line, global_state.cur_file_name);
+        global_state.bad_chars++;
         return char32_t(); // \todo nullopt
     }
     return cp;
@@ -64,7 +64,7 @@ auto Buffer::next_utf8_char() -> char32_t {
 // This converts a line to UTF8
 // Result of conversion is pushed back in the buffer
 void Buffer::convert_line(int l, size_t wc) {
-    cur_file_line = l;
+    global_state.cur_file_line = l;
     if (wc != 0) *this = convert_to_utf8(*this, wc);
 }
 
@@ -80,16 +80,16 @@ void io_ns::set_enc_param(long enc, long pos, long v) {
         return;
     }
     if (0 < v && v < int(nb_characters))
-        custom_table[to_unsigned(enc)][to_unsigned(pos)] = char32_t(to_unsigned(v));
+        global_state.custom_table[to_unsigned(enc)][to_unsigned(pos)] = char32_t(to_unsigned(v));
     else
-        custom_table[to_unsigned(enc)][to_unsigned(pos)] = char32_t(to_unsigned(pos));
+        global_state.custom_table[to_unsigned(enc)][to_unsigned(pos)] = char32_t(to_unsigned(pos));
 }
 
 auto io_ns::get_enc_param(long enc, long pos) -> long {
     if (!(enc >= 2 && enc < to_signed(max_encoding))) return pos;
     enc -= 2;
     if (!(pos >= 0 && pos < lmaxchar)) return pos;
-    return to_signed(custom_table[to_unsigned(enc)][to_unsigned(pos)]);
+    return to_signed(global_state.custom_table[to_unsigned(enc)][to_unsigned(pos)]);
 }
 
 // This puts x into the buffer in utf8 form
@@ -255,8 +255,8 @@ void Parser::T_filecontents(subtypes spec) {
 // \todo the next three function are kind of misleadingly named
 
 auto main_ns::search_in_confdir(const std::string &s) -> std::optional<std::filesystem::path> {
-    for (auto i = conf_path.size(); i != 0; i--) {
-        auto f = conf_path[i - 1] / s;
+    for (auto i = global_state.conf_path.size(); i != 0; i--) {
+        auto f = global_state.conf_path[i - 1] / s;
         if (std::filesystem::exists(f)) {
             spdlog::trace("Found in configuration path: {}", f);
             return f;
@@ -267,8 +267,8 @@ auto main_ns::search_in_confdir(const std::string &s) -> std::optional<std::file
 }
 
 auto find_in_confdir(const std::string &s) -> std::optional<std::filesystem::path> {
-    pool_position = search_in_pool(s);
-    if (pool_position) return s;
+    global_state.pool_position = search_in_pool(s);
+    if (global_state.pool_position) return s;
     if (std::filesystem::exists(s)) return s;
     if (s.empty() || s[0] == '.' || s[0] == '/') return {};
     return main_ns::search_in_confdir(s);
@@ -276,13 +276,13 @@ auto find_in_confdir(const std::string &s) -> std::optional<std::filesystem::pat
 
 auto find_in_path(const std::string &s) -> std::optional<std::filesystem::path> {
     if (s.empty()) return {};
-    pool_position = search_in_pool(s);
-    if (pool_position) return s;
+    global_state.pool_position = search_in_pool(s);
+    if (global_state.pool_position) return s;
     if (s[0] == '.' || s[0] == '/') {
         if (std::filesystem::exists(s)) return s;
         return {};
     }
-    for (const auto &p : input_path) {
+    for (const auto &p : global_state.input_path) {
         auto ss = p.empty() ? std::filesystem::path(s) : p / s;
         if (std::filesystem::exists(ss)) return ss;
     }

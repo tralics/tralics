@@ -8,18 +8,18 @@
 
 void Xid::add_top_rule() const {
     add_attribute(the_names["cell_topborder"], the_names["true"]);
-    if (in_hlinee) {
-        add_attribute(the_names["border_top_width"], hlinee_width);
-        if (have_above) add_attribute(the_names["top_rule_space_above"], hlinee_above);
-        if (have_below) add_attribute(the_names["top_rule_space_below"], hlinee_below);
+    if (global_state.in_hlinee) {
+        add_attribute(the_names["border_top_width"], global_state.hlinee_width);
+        if (global_state.have_above) add_attribute(the_names["top_rule_space_above"], global_state.hlinee_above);
+        if (global_state.have_below) add_attribute(the_names["top_rule_space_below"], global_state.hlinee_below);
     }
 }
 void Xid::add_bottom_rule() const {
     add_attribute(the_names["cell_bottomborder"], the_names["true"]);
-    if (in_hlinee) {
-        add_attribute(the_names["border_bottom_width"], hlinee_width);
-        if (have_above) add_attribute(the_names["bottom_rule_space_above"], hlinee_above);
-        if (have_below) add_attribute(the_names["bottom_rule_space_below"], hlinee_below);
+    if (global_state.in_hlinee) {
+        add_attribute(the_names["border_bottom_width"], global_state.hlinee_width);
+        if (global_state.have_above) add_attribute(the_names["bottom_rule_space_above"], global_state.hlinee_above);
+        if (global_state.have_below) add_attribute(the_names["bottom_rule_space_below"], global_state.hlinee_below);
     }
 }
 
@@ -79,7 +79,7 @@ void Xid::add_attribute_but_rend(Xid b) const {
 void Xid::add_attribute(Xid b) const { add_attribute(b.get_att(), true); }
 
 // Implementation of \ref{foo}. We enter foo in the hashtab.
-// and create/update the LabelInfo. We remember the ref in the ref_list.
+// and create/update the LabelInfo. We remember the ref in the global_state.ref_list.
 void Xid::add_ref(const std::string &s) const { tralics_ns::add_ref(to_signed(value), s, false); }
 
 // Thew string S, a sequence of a='b', is converted to attributes of this.

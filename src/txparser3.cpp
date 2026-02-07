@@ -323,7 +323,7 @@ void Parser::pop_level(boundary_type v) {
     if (v == bt_env && cur_tok.is_valid()) {
         std::string foo = cur_tok.tok_to_str();
         if (foo != "\\end" + cur_env_name) {
-            err_buf = fmt::format("Environment '{}' started at line {} ended by ", cur_env_name, first_boundary_loc);
+            err_buf = fmt::format("Environment '{}' started at line {} ended by ", cur_env_name, global_state.first_boundary_loc);
             err_buf << cur_tok;
             signal_error(err_tok, "bad end env");
         }
@@ -367,7 +367,7 @@ void Parser::pop_all_levels() {
             int  l = tmp->line;
             if (started) {
                 B += ".\n";
-                nb_errs++;
+                global_state.nb_errs++;
             }
             started = true;
             B += "Non-closed " + bt_to_string(w);

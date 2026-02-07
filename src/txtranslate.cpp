@@ -841,7 +841,7 @@ void Parser::no_extension(AttList &AL, const std::string &s) {
             continue;
         }
         if (Tbuf[i] == '.' && Tbuf[i + 1] == '/') {
-            if (ii == 0) ii = 2; // compatibility
+            if (ii == 0) ii = 2; // global_state.compatibility
             i += 2;
             continue;
         }
@@ -1452,10 +1452,10 @@ void Parser::T_hanl(subtypes c) {
         B   = T_hanl_url();
     }
     the_stack.pop(the_names["hanl"]);
-    int e              = nb_errs;
+    int e              = global_state.nb_errs;
     unexpected_seen_hi = false;
     std::string b      = B->convert_to_string();
-    bool        failed = e != nb_errs;
+    bool        failed = e != global_state.nb_errs;
     if (unexpected_seen_hi && failed)
         log_and_tty << "you should perhaps use \\Href{\\url{x}}{y}\n"
                     << "  instead of \\Href{y}{\\url{x}}\n";

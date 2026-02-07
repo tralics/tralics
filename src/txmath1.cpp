@@ -1380,7 +1380,7 @@ auto Math::convert_char_seq(const MathElt &W) -> MathElt {
     if (spec)
         B.push_back(char(uchar(c)));
     else
-        B.append(math_chars[uchar(c)][f]);
+        B.append(global_state.math_chars[uchar(c)][f]);
     for (;;) {
         if (empty()) break;
         if (!front().maybe_seq(f)) break;
@@ -1388,7 +1388,7 @@ auto Math::convert_char_seq(const MathElt &W) -> MathElt {
         if (spec)
             B.push_back(char(uchar(c)));
         else
-            B.append(math_chars[uchar(c)][f]);
+            B.append(global_state.math_chars[uchar(c)][f]);
         pop_front();
     }
     if (f == 1) B.push_back(' ');

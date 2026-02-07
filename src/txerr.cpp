@@ -61,14 +61,14 @@ namespace err_ns {
 void Parser::signal_error() {
     int         line = get_cur_line();
     std::string file = get_cur_filename();
-    nb_errs++;
+    global_state.nb_errs++;
     flush_buffer();
     Logger::finish_seq();
     if (file.empty())
         spdlog::error("on line {}: {}", line, err_buf);
     else
         spdlog::error("{}:{} {}", file, line, err_buf);
-    if (nb_errs >= 5000) {
+    if (global_state.nb_errs >= 5000) {
         spdlog::critical("Translation aborted: Too many errors, aborting.");
         Logger::log_finish();
         exit(1);
@@ -80,7 +80,7 @@ void Parser::signal_error() {
 
 void Parser::signal_error(Token T, const std::string &s) {
     signal_error();
-    if (no_xml_error) return;
+    if (global_state.no_xml_error) return;
     if (T.is_null()) return;
     the_stack.add_newid0("error");
     the_stack.add_att_to_last(the_names["c"], s);

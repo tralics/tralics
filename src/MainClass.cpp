@@ -126,7 +126,7 @@ found at http://www.cecill.info.)";
 
     /// Initialises encoding tables
     void check_for_encoding() {
-        for (auto &i : custom_table)
+        for (auto &i : global_state.custom_table)
             for (unsigned j = 0; j < lmaxchar; ++j) i[j] = char32_t(j);
     }
 
@@ -134,12 +134,12 @@ found at http://www.cecill.info.)";
     auto hack_for_input(const std::filesystem::path &s) -> std::string {
         std::filesystem::path path = s.parent_path();
         the_parser.set_job_name(no_ext.string());
-        file_name = s.stem().string();
+        global_state.file_name = s.stem().string();
         if (out_dir.empty()) out_dir = path;
-        if (log_name.empty()) log_name = file_name;
-        if (input_path.size() == 1) {
-            input_path[0] = path;
-            if (!path.empty()) input_path.emplace_back("");
+        if (log_name.empty()) log_name = global_state.file_name;
+        if (global_state.input_path.size() == 1) {
+            global_state.input_path[0] = path;
+            if (!path.empty()) global_state.input_path.emplace_back("");
         }
         return s.filename().string();
     }
@@ -155,12 +155,12 @@ found at http://www.cecill.info.)";
         static const std::array<std::filesystem::path, 7> paths{"/usr/share/tralics", "/usr/lib/tralics/confdir",
                                                                 "/usr/local/lib/tralics/confdir", "/sw/share/tralics/confdir",
                                                                 "../../confdir"};
-        auto                                              ps = conf_path;
+        auto                                              ps = global_state.conf_path;
         std::copy(paths.begin(), paths.end(), std::back_inserter(ps));
 
         auto s = std::find_if(ps.begin(), ps.end(), [](const auto &S) { return exists(S / "book.clt"); });
         if (s != ps.end()) {
-            conf_path.emplace_back(*s);
+            global_state.conf_path.emplace_back(*s);
             spdlog::info("Found configuration folder: {}", *s);
             return;
         }
@@ -175,7 +175,7 @@ found at http://www.cecill.info.)";
             if (c == 0 || c == ':') {
                 if (!b.empty() && b.back() == '/') b.pop_back();
                 if (b.size() == 1 && b[0] == '.') b.pop_back();
-                input_path.emplace_back(b);
+                global_state.input_path.emplace_back(b);
                 b.clear();
                 if (c == 0) return;
             } else
@@ -251,7 +251,7 @@ found at http://www.cecill.info.)";
             tp_main_buf.clear();
             auto line = lines.get_next(tp_main_buf);
             if (!line) return;
-            init_file_pos = *line;
+            global_state.init_file_pos = *line;
             tpa_line k    = tp_main_buf.tp_fetch_something();
             if (k == tl_empty) continue;
             if (k == tl_end) break;
@@ -312,7 +312,7 @@ void MainClass::get_os() {
 }
 
 void MainClass::check_for_input() {
-    if (std::none_of(input_path.begin(), input_path.end(), [](const auto &s) { return s.empty(); })) input_path.emplace_back("");
+    if (std::none_of(global_state.input_path.begin(), global_state.input_path.end(), [](const auto &s) { return s.empty(); })) global_state.input_path.emplace_back("");
 
     std::string s  = hack_for_input(infile);
     auto        of = find_in_path(s);
@@ -353,19 +353,19 @@ void MainClass::open_log() { // \todo spdlog etc
     spdlog::default_logger()->sinks().push_back(sink);
     spdlog::default_logger()->sinks()[0]->set_level(spdlog::level::info); // \todo Link this with verbose (later in startup)
 
-    spdlog::trace("Transcript file of tralics {} for file {}", tralics_version, infile);
+    spdlog::trace("Transcript file of tralics {} for file {}", global_state.tralics_version, infile);
     spdlog::trace("Copyright INRIA/MIAOU/APICS/MARELLE 2002-2015, Jos\\'e Grimm");
     spdlog::trace("Tralics is licensed under the CeCILL Free Software Licensing Agreement");
     spdlog::trace("OS: {} running on {}", print_os(cur_os), machine);
     spdlog::trace("Output encoding: {}", print_enc(output_encoding));
     spdlog::trace("Transcript encoding: {}", print_enc(log_encoding));
-    spdlog::trace("Left quote is '{}', right quote is '{}'", to_utf8(char32_t(leftquote_val)), to_utf8(char32_t(rightquote_val)));
+    spdlog::trace("Left quote is '{}', right quote is '{}'", to_utf8(char32_t(global_state.leftquote_val)), to_utf8(char32_t(global_state.rightquote_val)));
     if (trivial_math != 0) spdlog::trace("\\notrivialmath={}", trivial_math);
     if (!default_class.empty()) spdlog::trace("Default class is {}", default_class);
-    if (input_path.size() > 1) {
+    if (global_state.input_path.size() > 1) {
         std::vector<std::string> tmp;
-        tmp.reserve(input_path.size());
-        std::copy(input_path.begin(), input_path.end(), std::back_inserter(tmp));
+        tmp.reserve(global_state.input_path.size());
+        std::copy(global_state.input_path.begin(), global_state.input_path.end(), std::back_inserter(tmp));
         spdlog::trace("Input path: ({})", fmt::format("{}", fmt::join(tmp, ",")));
     }
 
@@ -392,8 +392,8 @@ void MainClass::parse_args(int argc, char **argv) {
         spdlog::critical("Fatal: no source file given");
         end_with_help(1);
     }
-    if (leftquote_val == 0 || leftquote_val >= (1 << 16)) leftquote_val = '`';
-    if (rightquote_val == 0 || rightquote_val >= (1 << 16)) rightquote_val = '\'';
+    if (global_state.leftquote_val == 0 || global_state.leftquote_val >= (1 << 16)) global_state.leftquote_val = '`';
+    if (global_state.rightquote_val == 0 || global_state.rightquote_val >= (1 << 16)) global_state.rightquote_val = '\'';
 }
 
 enum param_args {
@@ -459,12 +459,12 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         case pa_confdir:
             if (a[0] == '0') return;                // ignore empty component
             if (a[0] == '/' && a[1] == '0') return; // ignore root
-            conf_path.emplace_back(a);
+            global_state.conf_path.emplace_back(a);
             return;
         case pa_externalprog: obsolete(s); return;
         case pa_trivialmath: trivial_math = stoi(a); return;
-        case pa_leftquote: leftquote_val = static_cast<char32_t>(std::stoul(a, nullptr, 16)); return;
-        case pa_rightquote: rightquote_val = static_cast<char32_t>(std::stoul(a, nullptr, 16)); return;
+        case pa_leftquote: global_state.leftquote_val = static_cast<char32_t>(std::stoul(a, nullptr, 16)); return;
+        case pa_rightquote: global_state.rightquote_val = static_cast<char32_t>(std::stoul(a, nullptr, 16)); return;
         case pa_defaultclass: default_class = a; return;
         case pa_inputfile: see_name(a); return;
         case pa_outputfile: out_name = a; return;
@@ -500,7 +500,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
     }
     if (s == "version") { exit(0); }
     if (s == "rawbib") {
-        raw_bib = true;
+        global_state.raw_bib = true;
         return;
     }
     if (s == "utf8") {
@@ -560,7 +560,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         return;
     }
     if (s == "nofloathack") {
-        nofloat_hack = true;
+        global_state.nofloat_hack = true;
         return;
     }
     if (s == "noprimehack") {
@@ -596,11 +596,11 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         return;
     }
     if (s == "allowbreak") {
-        bib_allow_break = true;
+        global_state.bib_allow_break = true;
         return;
     }
     if (s == "noallowbreak") {
-        bib_allow_break = false;
+        global_state.bib_allow_break = false;
         return;
     }
     if (s == "etex") {
@@ -612,7 +612,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         return;
     }
     if (s == "noxmlerror") {
-        no_xml_error = true;
+        global_state.no_xml_error = true;
         return;
     }
     if (s == "l3") {
@@ -627,20 +627,20 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         noconfig = true;
         return;
     }
-    if (s == "compatibility") {
-        compatibility = true;
+    if (s == "global_state.compatibility") {
+        global_state.compatibility = true;
         return;
     }
     if (s == "badminus") {
-        bad_minus = true;
+        global_state.bad_minus = true;
         return;
     }
     if (s == "nostraightquotes") {
-        rightquote_val = 0xB4;
+        global_state.rightquote_val = 0xB4;
         return;
     }
     if (s == "usequotes") {
-        use_quotes = true;
+        global_state.use_quotes = true;
         return;
     }
     if (s == "mathvariant") {
@@ -929,15 +929,15 @@ void MainClass::run(int argc, char **argv) {
     the_parser.init(input_content);
     the_parser.translate_all();
     the_parser.after_main_text();
-    if (seen_enddocument) the_stack.add_nl();
+    if (global_state.seen_enddocument) the_stack.add_nl();
     the_parser.final_checks();
     if (!no_xml) {
         if (the_parser.get_list_files()) {
             log_and_tty << " *File List*\n";
-            log_and_tty << file_list;
+            log_and_tty << global_state.file_list;
             log_and_tty << " ***********\n";
         }
-        if (bad_chars != 0) spdlog::warn("Input conversion errors: {} char{}.", bad_chars, bad_chars > 1 ? "s" : "");
+        if (global_state.bad_chars != 0) spdlog::warn("Input conversion errors: {} char{}.", global_state.bad_chars, global_state.bad_chars > 1 ? "s" : "");
         the_parser.finish_images();
         out_xml();
         Logger::log_finish();
@@ -954,7 +954,7 @@ void MainClass::out_xml() {
     if (auto sl = the_names["stylesheet"]; !sl.empty())
         fmt::print(fp, "<?xml-stylesheet href=\"{}\" type=\"{}\"?>\n", sl, the_names["stylesheettype"]);
     fmt::print(fp, "<!DOCTYPE {} SYSTEM '{}'>\n", dtd, dtd_uri);
-    fmt::print(fp, "<!-- Translated from LaTeX by tralics {}, date: {} -->\n", tralics_version, short_date);
+    fmt::print(fp, "<!-- Translated from LaTeX by tralics {}, date: {} -->\n", global_state.tralics_version, short_date);
     fp << the_stack.document_element() << "\n";
 
     spdlog::info("Output written on {} ({} bytes).", p, fp.tellp());

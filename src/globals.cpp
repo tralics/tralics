@@ -27,7 +27,7 @@ auto first_boundary() -> boundary_type {
         auto &p = the_save_stack[i - 1];
         if (!p) continue;
         if (p->type != st_boundary) continue;
-        first_boundary_loc = p->line;
+        global_state.first_boundary_loc = p->line;
         return dynamic_cast<SaveAuxBoundary *>(p.get())->val;
     }
     return bt_impossible;

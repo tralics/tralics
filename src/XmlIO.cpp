@@ -742,6 +742,6 @@ auto XmlIO::expand_PEReference() -> bool {
 }
 
 void XmlIO::error(const std::string &s) const {
-    nb_errs++;
+    global_state.nb_errs++;
     log_and_tty << "Error while parsing XML (line " << cur_line << ")\n" << s << ".\n";
 }

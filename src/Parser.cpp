@@ -33,7 +33,7 @@ namespace {
     // This is now cline
     void T_cline() {
         Xml *R       = the_stack.top_stack()->last_addr();
-        auto cl_span = (cline_last - cline_first) + 1;
+        auto cl_span = (global_state.cline_last - global_state.cline_first) + 1;
         if (R != nullptr) {
             if (R->try_cline(false)) {
                 R->try_cline(true);
@@ -41,7 +41,7 @@ namespace {
             }
             long tot_span = 0;
             if (R->total_span(tot_span)) {
-                tot_span = cline_first - 1 - tot_span;
+                tot_span = global_state.cline_first - 1 - tot_span;
                 if (0 <= tot_span) {
                     if (tot_span != 0) {
                         Xml *x = new Xml(the_names["cell"], nullptr);
@@ -59,13 +59,13 @@ namespace {
                 if (R->try_cline_again(false)) {
                     R->try_cline_again(true);
                     R->name = std::string();
-                    the_stack.add_border(cline_first, cl_span);
+                    the_stack.add_border(global_state.cline_first, cl_span);
                     the_log << "\\cline killed a cell \n";
                     return;
                 }
             }
         }
-        the_stack.add_border(cline_first, cl_span);
+        the_stack.add_border(global_state.cline_first, cl_span);
     }
 
     // This is for lower-case upper-case conversions.
@@ -155,7 +155,7 @@ namespace {
         T.dump(B);
         if (B.empty()) return;
         T.dump_data(B);
-        std::string auxname = file_name + ".aux";
+        std::string auxname = global_state.file_name + ".aux";
         try {
             std::ofstream(auxname) << B;
         } catch (...) {
@@ -164,7 +164,7 @@ namespace {
         }
         spdlog::info("Executing bibliography command: {}", T.cmd);
         system(T.cmd.c_str());
-        bbl.lines.read(file_name + ".bbl", 1);
+        bbl.lines.read(global_state.file_name + ".bbl", 1);
     }
 
     // This creates a <ref target='bidN'/> element. This is the REF that needs
@@ -955,12 +955,12 @@ namespace {
         hash_table.newline_token = Token(newline_token_val);
     }
 
-    // In ref_list, we have  (e,v), (e,v), (e,v) etc
+    // In global_state.ref_list, we have  (e,v), (e,v), (e,v) etc
     // where E is the xid of a <ref> element, and V is an entry in the
     // hash table of the label. After the translation is complete,
     // we know the value of the label, and can add the attribute target=...
     void check_all_ids() {
-        for (auto &i : ref_list) {
+        for (auto &i : global_state.ref_list) {
             auto        E = i.first;
             std::string V = i.second;
             auto *      L = labinfo(V);
@@ -970,12 +970,12 @@ namespace {
                             << "undefined label `" << V << "' (first use at line " << L->lineno << " in file " << L->filename << ")";
                 Xid(E).add_attribute(the_names["target"], V);
                 std::string B = L->id;
-                for (auto &removed_label : removed_labels) {
+                for (auto &removed_label : global_state.removed_labels) {
                     if (removed_label.second == B) log_and_tty << "\n(Label was removed with `" << removed_label.first << "')";
                     break;
                 }
                 log_and_tty << "\n";
-                nb_errs++;
+                global_state.nb_errs++;
             }
             std::string B = L->id;
             if (!B.empty()) Xid(E).add_attribute(the_names["target"], B);
@@ -1027,7 +1027,7 @@ void Parser::enter_file_in_table(const std::string &nm, bool ok) {
 // finish handling the images,
 void Parser::finish_images() {
     if (the_images.empty()) return;
-    std::string   name = file_name + ".img";
+    std::string   name = global_state.file_name + ".img";
     auto          wn   = get_out_dir(name);
     std::ofstream fp(wn);
     fp << "# images info, 1=ps, 2=eps, 4=epsi, 8=epsf, 16=pdf, 32=png, 64=gif\n";
@@ -1573,7 +1573,7 @@ void Parser::load_latex() {
     L.insert(R"(\def\incr@eqnum{\refstepcounter{equation}})");
     L.insert(R"(\def\@@theequation{\theparentequation\alph{equation}})");
 
-    if (!everyjob_string.empty()) L.insert(everyjob_string, true); // is this converted ?
+    if (!global_state.everyjob_string.empty()) L.insert(global_state.everyjob_string, true); // is this converted ?
     L.insert("%% End bootstrap commands for latex");
     init(L);
     translate0();
@@ -1759,7 +1759,7 @@ void Parser::E_accent() {
         the_log << "{accent " << cur_tok << "}\n";
     }
     unsigned acc_code = cur_cmd_chr.chr;
-    if (global_in_url && acc_code == '~') {
+    if (global_state.global_in_url && acc_code == '~') {
         if (tracing_macros()) {
             Logger::finish_seq();
             the_log << "{\\~ gives ~ }\n";
@@ -2044,9 +2044,9 @@ void Parser::T_cititem() {
 void Parser::T_omitcite() {
     flush_buffer();
     std::string s = sT_arg_nopar();
-    omitcite_list.push_back(s);
+    global_state.omitcite_list.push_back(s);
     Logger::finish_seq();
-    the_log << "{\\omitcite(" << int(omitcite_list.size());
+    the_log << "{\\omitcite(" << int(global_state.omitcite_list.size());
     the_log << ") = " << s << "}\n";
 }
 
@@ -2197,14 +2197,14 @@ void Parser::solve_cite(bool user) {
 // \bpers[opt-full]{first-name}{von-part}{last-name}{jr-name}
 // note that Tralics generates an empty von-part
 void Parser::T_bpers() {
-    int e              = nb_errs;
+    int e              = global_state.nb_errs;
     unexpected_seen_hi = false;
     auto        A      = nT_optarg_nopar();
     std::string a      = nT_arg_nopar();
     std::string b      = nT_arg_nopar();
     std::string c      = nT_arg_nopar();
     std::string d      = nT_arg_nopar();
-    if (unexpected_seen_hi && e != nb_errs) log_and_tty << "maybe you confused Publisher with Editor\n";
+    if (unexpected_seen_hi && e != global_state.nb_errs) log_and_tty << "maybe you confused Publisher with Editor\n";
     need_bib_mode();
     the_stack.add_newid0("bpers");
     if (A && !A->empty()) the_stack.add_att_to_last(the_names["full_first"], *A);
@@ -2455,13 +2455,13 @@ void Parser::T_start_tabular(subtypes c) {
 
 // implements \hline, \cline{p} or \hlinee[p]{w}{w}{w}
 // p is a sequence of two integers, separated by a dash
-// sets cline_first and cline_last;
+// sets global_state.cline_first and global_state.cline_last;
 // fills errbuf and returns a code in case of error
 
 auto Parser::scan_pair_ints(Token T, TokenList &L) -> bool {
     back_input(hash_table.relax_token);
     back_input(L);
-    cline_first = scan_int(T);
+    global_state.cline_first = scan_int(T);
     if (get_token()) {
         errbuf = fmt::format("Error in {} after first integer", T);
         return true;
@@ -2470,19 +2470,19 @@ auto Parser::scan_pair_ints(Token T, TokenList &L) -> bool {
         errbuf = fmt::format("Error in {} after first integer", T);
         return true;
     }
-    cline_last = scan_int(T);
+    global_state.cline_last = scan_int(T);
     read_until(hash_table.relax_token);
-    if (1 <= cline_first && cline_first <= cline_last) return false;
-    errbuf = fmt::format("Bad range in {}: {}-{}", T, cline_first, cline_last);
+    if (1 <= global_state.cline_first && global_state.cline_first <= global_state.cline_last) return false;
+    errbuf = fmt::format("Bad range in {}: {}-{}", T, global_state.cline_first, global_state.cline_last);
     return true;
 }
 
 // Now a function that parses the arguments, and returns a status
 // 0:none, 1: hline, 2: cline,
-// may set in_hlinee and hlinee_width
+// may set global_state.in_hlinee and global_state.hlinee_width
 
 auto Parser::T_hline_parse(subtypes c) -> int {
-    in_hlinee = false;
+    global_state.in_hlinee = false;
     Token T   = cur_tok;
     if (c == one_code) { // cline
         TokenList arg = read_arg();
@@ -2505,28 +2505,28 @@ auto Parser::T_hline_parse(subtypes c) -> int {
             return 0; // read the mandatory arguments before returning
         }
     }
-    have_above  = false;
-    have_below  = false;
+    global_state.have_above  = false;
+    global_state.have_below  = false;
     TokenList L = read_arg();
     if (!L.empty()) {
         ScaledInt tab_width = dimen_from_list(T, L);
         if (!(tab_width == ScaledInt{0})) {
-            have_above   = true;
-            hlinee_above = std::string(tab_width);
+            global_state.have_above   = true;
+            global_state.hlinee_above = std::string(tab_width);
         }
     }
     L = read_arg();
     if (!L.empty()) {
         ScaledInt tab_width = dimen_from_list(T, L);
         if (!(tab_width == ScaledInt{0})) {
-            have_below   = true;
-            hlinee_below = std::string(tab_width);
+            global_state.have_below   = true;
+            global_state.hlinee_below = std::string(tab_width);
         }
     }
     L                   = read_arg();
     ScaledInt tab_width = dimen_from_list(T, L);
-    in_hlinee           = true;
-    hlinee_width        = std::string(tab_width);
+    global_state.in_hlinee           = true;
+    global_state.hlinee_width        = std::string(tab_width);
     return rt;
 }
 
@@ -2610,7 +2610,7 @@ void Parser::E_multispan() {
     auto guard  = SaveErrTok(cur_tok);
     auto [x, c] = cur_cmd_chr;
 
-    if (x == underscore_catcode && global_in_load) return translate_char(cur_cmd_chr), true;
+    if (x == underscore_catcode && global_state.global_in_load) return translate_char(cur_cmd_chr), true;
     if (auto res = Symcode::get(x).call(c)) return *res;
 
     undefined_mac();

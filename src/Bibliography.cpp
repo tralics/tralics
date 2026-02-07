@@ -36,7 +36,7 @@ void Bibliography::stats() {
 void Bibliography::dump_data(Buffer &b) {
     b.format("\\bibstyle{{{}}}\n", bib_style);
     b.append("\\bibdata{");
-    if (biblio_src.empty()) b.append(file_name);
+    if (biblio_src.empty()) b.append(global_state.file_name);
     for (size_t i = 0; i < biblio_src.size(); i++) {
         if (i > 0) b.append(",");
         b.append(biblio_src[i]);
