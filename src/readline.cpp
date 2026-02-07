@@ -16,6 +16,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <memory>
 #include <optional>
 #include <string>
 #include <sys/types.h>
@@ -110,6 +111,7 @@ namespace readline_ns {
 using namespace readline_ns;
 
 class Slined { // \todo this should vanish at some point in refactoring
+    std::unique_ptr<char[]>    m_inbuf_storage;
     char *                     m_inbuf{nullptr};
     std::array<char, buf_size> m_buffer{};
     std::string                m_killbuf;
@@ -134,7 +136,10 @@ class Slined { // \todo this should vanish at some point in refactoring
 public:
     Slined(size_t sz, String P) {
         std::fill(m_buffer.begin(), m_buffer.end(), ' ');
-        if (sz != 0) m_inbuf = new char[sz]; // NOLINT
+        if (sz != 0) {
+            m_inbuf_storage = std::make_unique<char[]>(sz);
+            m_inbuf         = m_inbuf_storage.get();
+        }
         if (P != nullptr) {
             m_history.emplace_back(P);
             m_history_size = 1; // first line is a comment
@@ -142,7 +147,7 @@ public:
     }
 
     Slined(const Slined &) = delete;
-    ~Slined() {} // NOLINT \todo should delete m_inbuf but it breaks comp_pi
+    ~Slined() = default;
     auto operator=(const Slined &) -> Slined & = delete;
 
     auto newpos(size_t x, size_t n) -> long;
@@ -955,6 +960,7 @@ void Slined::do_command(unsigned n, int c) {
 }
 
 void Slined::initialise(char *buffer, const std::string &prompt, size_t size) {
+    m_inbuf_storage.reset();
     m_inbuf  = buffer;
     m_prompt = prompt;
     m_size   = size - prompt.size();
