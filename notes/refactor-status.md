@@ -23,6 +23,26 @@ Date: 2026-02-07
 - A phase-2 session object with `extern &` globals caused a `std::out_of_range` abort during `testerr`.
 - Root cause is likely static init order; avoided for now.
 
+## String migration notes (char* -> std::string/string_view)
+
+Hotspots where `String` is used as a nullable pointer or relies on pointer arithmetic. These cannot be replaced by `std::string` without redesign (use `std::optional<std::string_view>` or a separate flag).
+
+- `/Users/vincent/Prog/tralics/src/ScaledInt.cpp` and `/Users/vincent/Prog/tralics/src/Glue.cpp`
+  - `arith_ns::start_err(String)` treats `nullptr` as “no threshold”.
+- `/Users/vincent/Prog/tralics/src/CmdChr_name.cpp`
+  - `strip_end(String)` returns `nullptr` and does `s + 3`.
+  - `CmdChr::name()` (and the `token_*_name()` family) return `nullptr` for “no name”.
+- `/Users/vincent/Prog/tralics/src/txmath.cpp`
+  - `math_env_name()` is checked for `nullptr` and uses `S + 3`.
+- `/Users/vincent/Prog/tralics/src/txscan.cpp`
+  - `val.special_name()` may return `nullptr` and has a fallback string.
+
+Keep `char*` at boundaries (CLI/readline and mutable buffers):
+
+- `/Users/vincent/Prog/tralics/src/readline.cpp`
+- `/Users/vincent/Prog/tralics/src/tralics.cpp`
+- `/Users/vincent/Prog/tralics/src/MainClass.cpp`
+
 ## Next suggested steps
 
 - Continue moving remaining `GlobalState` members into owners:
