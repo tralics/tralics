@@ -10,11 +10,11 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
-include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/ctre-3.3.4/include)
-include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/fmt-7.1.3/include)
-include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/gsl-3.1.0/include)
-include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/spdlog-1.8.2/include)
-include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/utfcpp-3.1.2/source)
+include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/ctre-3.10.0/include)
+include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/fmt-12.1.0/include)
+include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/gsl-4.2.1/include)
+include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/spdlog-1.17.0/include)
+include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/utfcpp-4.0.9/source)
 
 add_compile_definitions(FMT_HEADER_ONLY)
 add_compile_options(-fdiagnostics-color=always -pedantic -Wall)
@@ -37,7 +37,7 @@ file (GLOB_RECURSE sources CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/src/*.cpp ${P
 
 add_executable(tralics ${sources})
 
-add_custom_target(alltests ALL 
+add_custom_target(alltests ALL
     ../test/alltests ${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR}
     DEPENDS tralics
     COMMENT "Running tests")
