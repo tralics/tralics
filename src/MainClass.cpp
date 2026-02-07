@@ -60,7 +60,7 @@ All options start with a single or double hyphen, they are:
   -nomathml: this disables mathml mode
   -dualmath: gives mathML and nomathML mode
   -(no)math_variant: for <mi mathvariant='script'>X</mi>
-  -(no)multi_math_label: allows multiple labels in a formula 
+  -(no)multi_math_label: allows multiple labels in a formula
   -noundefmac: alternate XML output for undefined commands
   -noxmlerror: no XML element is generated in case of error
   -no_float_hack: Removes hacks for figures and tables
@@ -342,14 +342,13 @@ void MainClass::check_for_input() {
 void MainClass::open_log() { // \todo spdlog etc
     auto base = std::filesystem::path(out_dir) / log_name;
     auto f    = base;
-    f.replace_extension("spdlog");
+    f.replace_extension("log");
     if (output_encoding == en_boot) output_encoding = en_utf8;
     if (log_encoding == en_boot) log_encoding = output_encoding;
 
     spdlog::set_level(spdlog::level::trace);
     auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_st>(f.string(), true);
     file_sink->set_level(spdlog::level::trace);
-    file_sink->set_pattern("%v");
     spdlog::default_logger()->sinks().push_back(file_sink);
     if (!spdlog::default_logger()->sinks().empty()) {
         spdlog::default_logger()->sinks()[0]->set_level(spdlog::level::info); // \todo Link this with verbose (later in startup)

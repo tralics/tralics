@@ -29,7 +29,6 @@
 auto main(int argc, char **argv) -> int {
     auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
     console_sink->set_level(spdlog::level::info);
-    console_sink->set_pattern("%v");
     auto logger = std::make_shared<spdlog::logger>("tralics", spdlog::sinks_init_list{console_sink});
     logger->set_level(spdlog::level::trace);
     spdlog::set_default_logger(logger);
