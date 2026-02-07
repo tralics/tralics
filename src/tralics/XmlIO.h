@@ -1,6 +1,7 @@
 #pragma once
 #include "Buffer.h"
 #include "LineList.h"
+#include <string_view>
 
 class XmlIO {
     enum x_type { xt_letter, xt_space, xt_digit, xt_ok_first, xt_other, xt_invalid };
@@ -51,7 +52,7 @@ private:
     void               parse_dec_conditional();
     void               parse_dec_notation();
     auto               parse_sys_pub() -> bool;
-    void               expect(String s);
+    void               expect(std::string_view s);
     void               parse_pi();
     void               parse_tag();
     void               parse_attributes();

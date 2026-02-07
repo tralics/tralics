@@ -227,7 +227,7 @@ namespace {
         biblio_buf2.clear();
         biblio_buf3.clear();
         biblio_buf4.clear();
-        name_buffer.normalise_for_bibtex(src.c_str());
+        name_buffer.normalise_for_bibtex(src);
         auto                    n = name_buffer.size() + 1;
         std::vector<bchar_type> table(n);
         NameSplitter            W(table.data());

@@ -5,6 +5,7 @@
 #include <fmt/format.h>
 #include <iostream>
 #include <optional>
+#include <string_view>
 #include <utility>
 #include <vector>
 
@@ -105,7 +106,7 @@ public:
     void interpret_aux(std::vector<std::string> &bib, std::vector<std::string> &bib2, std::string_view label = {});
     void l3_fabricate_cond(const std::string &base, const std::string &sig, subtypes w);
     void next_bibtex_char();
-    void normalise_for_bibtex(String s);
+    void normalise_for_bibtex(std::string_view s);
     void out_four_hats(char32_t ch);
     void out_log(char32_t ch, output_encoding_type T);
     void pt_to_mu();

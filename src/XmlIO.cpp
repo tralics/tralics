@@ -330,7 +330,7 @@ void XmlIO::parse_pi() {
     scan_name('?');
     bool is_tralics = B == "tralics";
     bool is_xml     = B == "xml";
-    aux             = B.c_str();
+    aux             = B;
     if (is_xml) {
         for (;;) {
             skip_space();
@@ -399,9 +399,8 @@ void XmlIO::parse_dec() {
 }
 
 // Note that first character is in cur_char
-void XmlIO::expect(String s) {
-    auto n = strlen(s);
-    for (size_t i = 0; i < n; i++) {
+void XmlIO::expect(std::string_view s) {
+    for (size_t i = 0; i < s.size(); i++) {
         cur_char = next_char();
         if (cur_char != uchar(s[i])) {
             Buffer b{fmt::format("Expected {} got ", s[i])};

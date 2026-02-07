@@ -545,7 +545,7 @@ void Slined::fast_ins(size_t n, String s, size_t l) {
     auto  aux    = size - pos;
     if (aux != 0) shift_string(buffer, aux, pos, pos + n * l); // make room
     for (size_t i = 0; i < n; i++) {
-        strncpy(buffer + pos, s, l);
+        std::memcpy(buffer + pos, s, l);
         pos += l;
         size += l;
     }
@@ -558,7 +558,7 @@ void Slined::fast_ins(size_t n, String s, size_t l) {
     aux     = size - pos;
     if (aux != 0) shift_string(buffer, aux, pos, pos + j * n); // make room here also
     for (size_t i = 0; i < n; i++) {
-        strncpy(buffer + pos, g_buffer.data(), j);
+        std::memcpy(buffer + pos, g_buffer.data(), j);
         pos += j;
         size += j;
     }
@@ -586,11 +586,11 @@ void Slined::Hshow() {
         p[1]            = char('0' + to_signed(n % 10));
         new_ed.m_prompt = p.data();
         new_ed.m_inpos  = 0;
-        String S        = m_history[i].c_str();
-        auto   k        = strlen(S);
+        const auto &entry = m_history[i];
+        auto        k     = entry.size();
         if (k > buf_size - 2) k = buf_size - 2;
         new_ed.m_inmax = k;
-        strncpy(new_ed.m_inbuf, S, k);
+        std::memcpy(new_ed.m_inbuf, entry.data(), k);
         new_ed.m_inbuf[k] = 0;
         new_ed.redisplay();
         std::cerr.put('\n');
@@ -734,7 +734,8 @@ void Slined::replace_string() {
     cur_line_modified = false;
     std::string s     = m_hpos < m_history_size ? m_history[m_hpos] : "";
     auto        l     = s.size();
-    strncpy(m_inbuf, s.c_str(), l);
+    std::memcpy(m_inbuf, s.data(), l);
+    m_inbuf[l] = 0;
     m_inmax = l;
     m_inpos = l;
     redisplay();

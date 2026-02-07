@@ -763,37 +763,34 @@ void Buffer::special_title(std::string s) {
 }
 
 // This replaces \c{c} by \char'347 in order to avoid some errors.
-void Buffer::normalise_for_bibtex(String s) {
+void Buffer::normalise_for_bibtex(std::string_view s) {
     clear();
     push_back(' '); // make sure we can always backup one char
-    for (;;) {
-        auto c = *s;
-        if (c == 0) {
-            ptrs.b = 0;
-            return;
-        }
+    for (size_t i = 0; i < s.size(); ++i) {
+        auto c = s[i];
         push_back(c);
-        s++;
         if (c != '\\') continue;
-        if (std::string(s).starts_with("c{c}")) {
+        auto rest = s.substr(i + 1);
+        if (rest.starts_with("c{c}")) {
             pop_back();
             push_back(char32_t(0347U));
-            s += 4;
-        } else if (std::string(s).starts_with("c{C}")) {
+            i += 4;
+        } else if (rest.starts_with("c{C}")) {
             pop_back();
             push_back(char32_t(0307U));
-            s += 4;
-        } else if (std::string(s).starts_with("v{c}")) {
+            i += 4;
+        } else if (rest.starts_with("v{c}")) {
             pop_back();
             append("{\\v c}");
-            s += 4;
+            i += 4;
             continue;
-        } else if (*s == 'a' && is_accent_char(s[1])) {
-            s++;
-        } else if (*s == ' ') {
+        } else if (rest.size() >= 2 && rest[0] == 'a' && is_accent_char(rest[1])) {
+            i += 1;
+        } else if (!rest.empty() && rest[0] == ' ') {
             pop_back();
         } // replace \space by space
     }
+    ptrs.b = 0;
 }
 
 // For each character, we have its type in the table.
