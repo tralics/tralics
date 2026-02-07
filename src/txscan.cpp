@@ -86,7 +86,7 @@ namespace {
     void trace_scan_expr(String s, const SthInternal &v, char t, Token T) {
         if (tracing_commands() && t != ' ') {
         spdlog::trace("+{} so far for {}{} {}",
-                      s, fmt::streamed(T), t, v);
+                      s, fmt::streamed(T), t, fmt::streamed(v));
         }
     }
 
@@ -386,7 +386,7 @@ void Parser::T_input(subtypes q) {
         res = find_in_path(file);
         if ((!res) && (!file.ends_with(".tex"))) res = find_in_path(file + ".tex");
     }
-    if (res) spdlog::trace("Found file for input: {}", *res);
+    if (res) spdlog::trace("Found file for input: {}", res->string());
     if (q == openin_code) {
         tex_input_files[stream].open(file, *res, static_cast<bool>(res));
         return;
@@ -1014,7 +1014,7 @@ auto Parser::scan_int(Token T) -> long {
     if (negative) val = -val;
     cur_val.set_int(val);
     if (tracing_commands()) {
-        spdlog::trace("+scanint for {}->{}", fmt::streamed(T), cur_val);
+        spdlog::trace("+scanint for {}->{}", fmt::streamed(T), fmt::streamed(cur_val));
     }
     return val;
 }
@@ -2011,7 +2011,7 @@ void Parser::assign_toks(Token T, size_t p, bool gbl) {
     else if (c == toks_register_cmd)
         q = scan_reg_num();
     else if (c != assign_toks_cmd) {
-        err_buf = fmt::format("Missing {{ inserted for token register {}; got {}", T, cur_tok);
+        err_buf = fmt::format("Missing {{ inserted for token register {}; got {}", fmt::streamed(T), fmt::streamed(cur_tok));
         signal_error(T, "missing brace");
         back_input();
         have_reg = false;
@@ -2228,7 +2228,7 @@ void Parser::scan_expr(subtypes m) {
         cur_val.kill();
     }
     if (tracing_commands()) {
-        spdlog::trace("+scan for {}= {}", fmt::streamed(T), cur_val);
+        spdlog::trace("+scan for {}= {}", fmt::streamed(T), fmt::streamed(cur_val));
     }
 }
 

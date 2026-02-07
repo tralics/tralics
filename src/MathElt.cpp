@@ -10,16 +10,16 @@ void MathElt::print() const {
         Trace.format("only for {}\n", chr == zero_code ? "math" : "nomath");
         return;
     }
-    Trace.format("ME {} - ", cmd);
+    Trace.format("ME {} - ", int(cmd));
     if (32 < chr && chr < 128)
         Trace.format("char {}", uchar(chr));
     else
-        Trace.format("{}", chr);
+        Trace.format("{}", int(chr));
     // is this secure ???
     //  if(cmd>16) Trace << " - " <<  Token(get_font());
     if (cmd == mathfont_cmd || is_m_font(symcodes(cmd)))
-        Trace.format(" - {}\n", Token(get_font()));
+        Trace.format(" - {}\n", fmt::streamed(Token(get_font())));
     else
-        Trace.format(" - {}\n", get_font());
+        Trace.format(" - {}\n", int(get_font()));
     if (cmd == math_list_cmd || cmd == special_math_cmd) get_list().print(); // recurse
 }

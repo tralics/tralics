@@ -282,7 +282,7 @@ void Parser::T_provides_package(bool c) // True for a file
         spdlog::warn("Warning: {}{} claims to be {}.", cur->pack_or_class(), S, name);
     }
     Buffer &b = txclasses_local_buf;
-    b         = fmt::format(cur->is_class() ? "Document class: {} {}\n" : "Package: {} {}\n", name, date);
+    b = fmt::format(fmt::runtime(cur->is_class() ? "Document class: {} {}\n" : "Package: {} {}\n"), name, date);
     if (cur->is_class())
         spdlog::info("{}", fmt::streamed(b));
     else

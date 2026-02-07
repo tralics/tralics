@@ -160,7 +160,7 @@ found at http://www.cecill.info.)";
         auto s = std::find_if(ps.begin(), ps.end(), [](const auto &S) { return exists(S / "book.clt"); });
         if (s != ps.end()) {
             the_main.conf_path.emplace_back(*s);
-            spdlog::info("Found configuration folder: {}", *s);
+            spdlog::info("Found configuration folder: {}", s->string());
             return;
         }
 
@@ -316,10 +316,10 @@ void MainClass::check_for_input() {
     std::string s  = hack_for_input(infile);
     auto        of = find_in_path(s);
     if (!of) {
-        spdlog::critical("Fatal error: Cannot open input file {}", infile);
+        spdlog::critical("Fatal error: Cannot open input file {}", infile.string());
         exit(1);
     }
-    spdlog::trace("Found input file: {}", *of);
+    spdlog::trace("Found input file: {}", of->string());
     s        = of->string();
     ult_name = of->replace_extension(".ult").string();
 
@@ -353,9 +353,9 @@ void MainClass::open_log() { // \todo spdlog etc
     if (!spdlog::default_logger()->sinks().empty()) {
         spdlog::default_logger()->sinks()[0]->set_level(spdlog::level::info); // \todo Link this with verbose (later in startup)
     }
-    spdlog::info("Transcript written to {}", f);
+    spdlog::info("Transcript written to {}", f.string());
 
-    spdlog::trace("Transcript file of tralics {} for file {}", the_main.tralics_version, infile);
+    spdlog::trace("Transcript file of tralics {} for file {}", the_main.tralics_version, infile.string());
     spdlog::trace("Copyright INRIA/MIAOU/APICS/MARELLE 2002-2015, Jos\\'e Grimm");
     spdlog::trace("Tralics is licensed under the CeCILL Free Software Licensing Agreement");
     spdlog::trace("OS: {} running on {}", print_os(cur_os), machine);
@@ -365,13 +365,16 @@ void MainClass::open_log() { // \todo spdlog etc
     if (trivial_math != 0) spdlog::trace("\\notrivialmath={}", trivial_math);
     if (!default_class.empty()) spdlog::trace("Default class is {}", default_class);
     if (the_main.input_path.size() > 1) {
-        std::vector<std::string> tmp;
-        tmp.reserve(the_main.input_path.size());
-        std::copy(the_main.input_path.begin(), the_main.input_path.end(), std::back_inserter(tmp));
-        spdlog::trace("Input path: ({})", fmt::format("{}", fmt::join(tmp, ",")));
+        std::string joined;
+        joined.reserve(128);
+        for (const auto &p : the_main.input_path) {
+            if (!joined.empty()) joined.push_back(',');
+            joined += p;
+        }
+        spdlog::trace("Input path: ({})", joined);
     }
 
-    spdlog::info("Starting translation of file {}", infile);
+    spdlog::info("Starting translation of file {}", infile.string());
     check_for_encoding(); // \todo this does not feel like it belongs here
 }
 
@@ -687,7 +690,7 @@ void MainClass::set_tpa_status(const std::string &s) { // \todo Erk this is not 
 auto MainClass::check_for_tcf(const std::string &s) -> bool {
     std::string tmp = s + ".tcf";
     if (auto of = find_in_confdir(tmp); of) {
-        spdlog::trace("Found TCF file: {}", *of);
+        spdlog::trace("Found TCF file: {}", of->string());
         tcf_file = of;
         return true;
     }
@@ -724,7 +727,7 @@ void MainClass::open_config_file(std::filesystem::path f) {
     }
     config_file.read(f.string(), 0); // \todo fs::path
     config_file.normalise_final_cr();
-    spdlog::info("Read configuration file {}", f);
+    spdlog::info("Read configuration file {}", f.string());
     if (f.extension() != ".tcf") return;
 
     tcf_file = f;
@@ -777,7 +780,7 @@ auto MainClass::check_for_alias_type(bool vb) -> bool {
     if (tcf_file) {
         config_file.read(tcf_file->string(), 0);
         config_file.normalise_final_cr();
-        spdlog::info("Read tcf file {}", *tcf_file);
+        spdlog::info("Read tcf file {}", tcf_file->string());
     }
     return true;
 }
@@ -864,7 +867,7 @@ void MainClass::read_config_and_other() {
 
 void MainClass::see_name(std::filesystem::path s) {
     if (!infile.empty()) {
-        spdlog::critical("Fatal error: seen two source files, {} and {}", infile, s);
+        spdlog::critical("Fatal error: seen two source files, {} and {}", infile.string(), s.string());
         exit(1);
     }
     s.replace_extension(".tex");
@@ -962,7 +965,7 @@ void MainClass::out_xml() {
     fmt::print(fp, "<!-- Translated from LaTeX by tralics {}, date: {} -->\n", the_main.tralics_version, short_date);
     fp << the_stack.document_element() << "\n";
 
-    spdlog::info("Output written on {} ({} bytes).", p, fp.tellp());
+    spdlog::info("Output written on {} ({} bytes).", p.string(), static_cast<long long>(fp.tellp()));
 }
 
 void MainClass::set_input_encoding(size_t wc) {

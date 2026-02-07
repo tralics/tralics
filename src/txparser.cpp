@@ -1898,7 +1898,7 @@ void Parser::new_constant(String /*name*/, size_t max_val, subtypes alloc_pos, s
     get_r_token(true);
     auto k = allocation_table[alloc_pos];
     if (k >= max_val) {
-        err_buf = fmt::format("Overflow in {}; max value is {}", T, max_val);
+        err_buf = fmt::format("Overflow in {}; max value is {}", fmt::streamed(T), max_val);
         signal_error(T, "allocation overflow");
         return;
     }
@@ -3074,7 +3074,7 @@ void Parser::M_newcommand(rd_flag redef) {
                 is_same  = X->is_same(B);
             }
             if (!is_same) {
-                Thbuf1 = fmt::format("Tralics Warning: Command {} has changed\n", name);
+                Thbuf1 = fmt::format("Tralics Warning: Command {} has changed\n", fmt::streamed(name));
                 out_warning(Thbuf1, mt_warning);
             }
         }

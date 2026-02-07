@@ -108,12 +108,12 @@ namespace {
                 return;
             }
             if (handle_key) last_name.make_key(!(ifn && iln), biblio_buf3);
-            biblio_buf1.format("\\bpers[{}]{{", first_name);
+            biblio_buf1.format("\\bpers[{}]{{", fmt::streamed(first_name));
             biblio_buf2.append(" ");
             first_name.print_first_name(biblio_buf1, biblio_buf2);
-            biblio_buf1.format("}}{{}}{{{}}}{{{}}}", last_name, jr_name);
-            biblio_buf2.format(" {} {} ", last_name, jr_name);
-            biblio_buf4.format("{} {} ", last_name, jr_name);
+            biblio_buf1.format("}}{{}}{{{}}}{{{}}}", fmt::streamed(last_name), fmt::streamed(jr_name));
+            biblio_buf2.format(" {} {} ", fmt::streamed(last_name), fmt::streamed(jr_name));
+            biblio_buf4.format("{} {} ", fmt::streamed(last_name), fmt::streamed(jr_name));
         };
 
         auto is_this_other() -> bool {

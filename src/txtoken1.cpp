@@ -24,7 +24,7 @@ namespace {
     auto make_name(const std::string &x, unsigned y) -> std::string { return fmt::format("{}{}", x, y); }
 } // namespace
 
-auto CmdChr::specchar_cmd_name() const -> std::string { return fmt::format("Character U+{:04X}", chr); }
+auto CmdChr::specchar_cmd_name() const -> std::string { return fmt::format("Character U+{:04X}", unsigned(chr)); }
 
 auto CmdChr::token_error_name() const -> String {
     switch (chr) {

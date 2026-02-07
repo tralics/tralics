@@ -12,9 +12,9 @@
 #include "tralics/FpNum.h"
 #include "tralics/FpStack.h"
 #include "tralics/Parser.h"
-#include "tralics/fmt_compat.h"
 #include <spdlog/spdlog.h>
 #include <fmt/format.h>
+#include <fmt/ostream.h>
 
 namespace {
     Token                           fp_tmp_token, fp_test_token;

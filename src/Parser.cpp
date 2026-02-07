@@ -1887,7 +1887,7 @@ void Parser::E_accent() {
     }
 
     if (tracing_macros()) {
-        spdlog::trace("{{accent on {} -> {}}}", uchar(achar), expansion);
+        spdlog::trace("{{accent on {} -> {}}}", uchar(achar), fmt::streamed(expansion));
     }
     back_input(expansion);
 }
@@ -2134,7 +2134,7 @@ void Parser::T_cite(subtypes sw) {
         res.push_back(hash_table.end_natcite_token);
     }
     if (tracing_commands()) {
-        spdlog::trace("{}->{}.", fmt::streamed(T), res);
+        spdlog::trace("{}->{}.", fmt::streamed(T), fmt::streamed(res));
     }
     back_input(res);
 }
@@ -2453,17 +2453,17 @@ auto Parser::scan_pair_ints(Token T, TokenList &L) -> bool {
     back_input(L);
     the_parser.cline_first = scan_int(T);
     if (get_token()) {
-        errbuf = fmt::format("Error in {} after first integer", T);
+        errbuf = fmt::format("Error in {} after first integer", fmt::streamed(T));
         return true;
     }
     if (cur_tok == hash_table.relax_token) {
-        errbuf = fmt::format("Error in {} after first integer", T);
+        errbuf = fmt::format("Error in {} after first integer", fmt::streamed(T));
         return true;
     }
     the_parser.cline_last = scan_int(T);
     read_until(hash_table.relax_token);
     if (1 <= the_parser.cline_first && the_parser.cline_first <= the_parser.cline_last) return false;
-    errbuf = fmt::format("Bad range in {}: {}-{}", T, the_parser.cline_first, the_parser.cline_last);
+    errbuf = fmt::format("Bad range in {}: {}-{}", fmt::streamed(T), the_parser.cline_first, the_parser.cline_last);
     return true;
 }
 

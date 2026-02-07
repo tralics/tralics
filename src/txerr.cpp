@@ -149,20 +149,20 @@ void Parser::bad_end_env(int cl) {
 // Error signaled if no closing brace is found
 void Parser::missing_close_brace(int cl) {
     err_buf = "End of data reached while scanning a group;\n";
-    err_buf.format("scanning started line {}\nscanning argument of {}", cl, err_tok);
+    err_buf.format("scanning started line {}\nscanning argument of {}", cl, fmt::streamed(err_tok));
     signal_error(err_tok, "Missing close brace");
 }
 
 // Error signaled if EOF found while scanning a delimited argument
 void Parser::bad_delimited(int cl, Token x) {
-    err_buf = fmt::format("End of data reached while scanning argument of {}\n", err_tok);
+    err_buf = fmt::format("End of data reached while scanning argument of {}\n", fmt::streamed(err_tok));
     err_buf.format("scanning started at line {}", cl);
     if (!x.is_null()) err_buf += "\nexpected " + x.tok_to_str();
     signal_error(err_tok, "bad macro");
 }
 
 void Parser::err_one_arg(const TokenList &L) {
-    err_buf = fmt::format("The command {} takes one token as argument instead of ", err_tok, L.size());
+    err_buf = fmt::format("The command {} takes one token as argument instead of ", fmt::streamed(err_tok), L.size());
     if (!L.empty()) {
         err_buf += "\nargument is: ";
         err_buf << L;
@@ -172,7 +172,7 @@ void Parser::err_one_arg(const TokenList &L) {
 
 // Case of \newcommand{\foo\bar}. Should use the previous code
 void Parser::get_new_command_aux(const TokenList &a) {
-    err_buf = fmt::format("Only one token allowed in argument list of {}\n", err_tok);
+    err_buf = fmt::format("Only one token allowed in argument list of {}\n", fmt::streamed(err_tok));
     err_ns::convert_to_string(a);
     signal_error(err_tok, "bad argument");
 }
@@ -216,14 +216,14 @@ void Parser::bad_nbargs(int k) {
 }
 
 void Parser::extra_fi_or_else() {
-    err_buf = fmt::format("Extra {}\nI'm ignoring this; it doesn't match any \\if", cur_tok);
+    err_buf = fmt::format("Extra {}\nI'm ignoring this; it doesn't match any \\if", fmt::streamed(cur_tok));
     signal_error(cur_tok, "extra fi or else");
 }
 
 // Case of \def\foo#2{}
 void Parser::bad_definition(Token name, size_t nb) {
-    err_buf = fmt::format("Error while scanning definition of {}\n", name);
-    err_buf.format("got #{}, expected #{}", cur_tok, nb + 1);
+    err_buf = fmt::format("Error while scanning definition of {}\n", fmt::streamed(name));
+    err_buf.format("got #{}, expected #{}", fmt::streamed(cur_tok), nb + 1);
     signal_error(name, "bad char after #");
 }
 
@@ -255,7 +255,7 @@ void Parser::bad_counter1(const Buffer &B, EqtbCmdChr &E) {
 void Parser::undefined_mac() {
     bool noxml = the_main.no_undef_mac;
     err_buf    = "Undefined command " + cur_tok.tok_to_str();
-    if (!cur_cmd_chr.is_undef()) err_buf.format("; command code = {}", cur_cmd_chr.cmd);
+    if (!cur_cmd_chr.is_undef()) err_buf.format("; command code = {}", int(cur_cmd_chr.cmd));
     if (noxml) {
         signal_error(Token(), "Undefined command");
         eq_define(cur_tok.eqtb_loc(), CmdChr(self_insert_cmd, zero_code), true);
@@ -293,7 +293,7 @@ void Parser::wrong_pop(Token T, const std::string &a, const std::string &b) {
 
 void Parser::extra_close_brace(int cl) {
     err_buf = "Extra closing brace\n";
-    err_buf.format("scanning started at line {}\nfor argument to ", cl, err_tok);
+    err_buf.format("scanning started at line {}\nfor argument to ", cl, fmt::streamed(err_tok));
     signal_error(err_tok, "extra close brace");
 }
 
@@ -305,7 +305,7 @@ void Parser::bad_macro_prefix(Token x, Token C) {
 }
 
 void Parser::invalid_key(Token T, const std::string &key, const TokenList &val) {
-    err_buf = fmt::format("Invalid key in {} {} = {}", T, key, val);
+    err_buf = fmt::format("Invalid key in {} {} = {}", fmt::streamed(T), key, fmt::streamed(val));
     signal_error(T, "invalid key");
 }
 
@@ -330,13 +330,13 @@ void Parser::missing_equals(Token T) {
 void Parser::short_verb_error(Token Tfe, Token t, unsigned x) {
     err_buf = Tfe.tok_to_str() + ':';
     if (x == 3)
-        err_buf.format("Not a short verb {}", t);
+        err_buf.format("Not a short verb {}", fmt::streamed(t));
     else if (x == 2)
-        err_buf.format("Already a short verb {}", t);
+        err_buf.format("Already a short verb {}", fmt::streamed(t));
     else if (t.is_null())
         err_buf += "One argument required";
     else
-        err_buf.format("A one-char control sequence is needed instead of {}", t);
+        err_buf.format("A one-char control sequence is needed instead of {}", fmt::streamed(t));
     signal_error(Tfe, "Bad argument to Define/Undefine ShortVerb");
 }
 
@@ -347,7 +347,7 @@ void Parser::fp_parse_error(Token a, Token b) {
 }
 
 void Parser::counter_overflow(Token T, long n, int nmax) {
-    err_buf = fmt::format("Illegal counter value {} for {}\n", n, T);
+    err_buf = fmt::format("Illegal counter value {} for {}\n", n, fmt::streamed(T));
     if (n <= 0)
         err_buf += "Value must be positive";
     else
@@ -356,7 +356,7 @@ void Parser::counter_overflow(Token T, long n, int nmax) {
 }
 
 void Parser::bad_redefinition(int rd, Token T) {
-    err_buf = fmt::format("{}: Cannot define {}; token is {}", err_tok, T,
+    err_buf = fmt::format("{}: Cannot define {}; token is {}", fmt::streamed(err_tok), fmt::streamed(T),
                           (rd == 1   ? "undefined"
                            : rd == 0 ? "already defined"
                                      : "not a command"));
@@ -379,27 +379,28 @@ void Parser::missing_flush() {
 
 void Parser::signal_ovf(Token T, String h, long cur, long max) {
     if (h != nullptr) err_buf = h;
-    err_buf.format("{} wants 0<=N<={}, with N={}", T, max, cur);
+    err_buf.format("{} wants 0<=N<={}, with N={}", fmt::streamed(T), max, cur);
     signal_error(T, "number too big");
 }
 
 // Error signaled when a token list in seen a number expected
 void Parser::bad_number() {
-    err_buf = fmt::format("Missing number, treated as zero\nfound token list {} while scanning {}", cur_tok, err_tok);
+    err_buf = fmt::format("Missing number, treated as zero\nfound token list {} while scanning {}", fmt::streamed(cur_tok),
+                          fmt::streamed(err_tok));
     signal_error(err_tok, "Missing number");
     cur_val.set_dim(0);
 }
 
 void Parser::bad_number1(Buffer &B) {
-    err_buf = fmt::format("Missing number, treated as zero\nfound box name '{}' while scanning {}", B, err_tok);
+    err_buf = fmt::format("Missing number, treated as zero\nfound box name '{}' while scanning {}", B, fmt::streamed(err_tok));
     signal_error(err_tok, "Missing number");
     cur_val.set_dim(0);
 }
 
 void Parser::missing_number() {
     err_buf = "Missing number, treated as zero\n";
-    if (cur_tok.is_valid()) err_buf.format("found  {} ", cur_tok);
-    err_buf.format("while scanning {}", err_tok);
+    if (cur_tok.is_valid()) err_buf.format("found  {} ", fmt::streamed(cur_tok));
+    err_buf.format("while scanning {}", fmt::streamed(err_tok));
     signal_error(err_tok, "Missing number");
 }
 

@@ -2108,6 +2108,6 @@ void Parser::T_unimp(subtypes c) {
 
 void Parser::need_bib_mode() {
     if (the_stack.in_bib_mode()) return;
-    Tbuf = fmt::format("Command {} should occur in bibliographic mode only", err_tok);
+    Tbuf = fmt::format("Command {} should occur in bibliographic mode only", fmt::streamed(err_tok));
     parse_error(err_tok, Tbuf);
 }

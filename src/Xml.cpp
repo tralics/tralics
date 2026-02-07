@@ -9,6 +9,7 @@
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include <fmt/ostream.h>
+#include <fmt/ostream.h>
 #include <fstream>
 #include <spdlog/spdlog.h>
 
@@ -550,11 +551,11 @@ void Xml::print_on(std::ostream &o) const {
     }
 
     if (empty() && !name.empty()) {
-        fmt::print(o, "<{}{}/>", name.c_str(), id.get_att());
+        fmt::print(o, "<{}{}/>", name.c_str(), fmt::streamed(id.get_att()));
         return;
     }
 
-    if (!name.empty()) fmt::print(o, "<{}{}>", name.c_str(), id.get_att());
+    if (!name.empty()) fmt::print(o, "<{}{}>", name.c_str(), fmt::streamed(id.get_att()));
     for (const auto &e : *this) o << e;
     if (!name.empty()) fmt::print(o, "</{}>", name.c_str());
 }

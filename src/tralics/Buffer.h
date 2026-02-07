@@ -1,11 +1,11 @@
 #pragma once
 #include "TokenList.h"
 #include "enums.h"
-#include "fmt_compat.h"
 #include <cstring>
 #include <fmt/format.h>
 #include <iostream>
 #include <optional>
+#include <utility>
 #include <vector>
 
 struct Glue;
@@ -141,7 +141,9 @@ public:
     void push_back(const Macro &x, bool sw);
     void push_back(const TokenList &L);
 
-    template <typename... Args> void format(const char *f, Args &&...args) { append(fmt::format(f, args...)); }
+    template <typename... Args> void format(const char *f, Args &&...args) {
+        append(fmt::format(fmt::runtime(f), std::forward<Args>(args)...));
+    }
 };
 
 template <typename T> auto operator<<(Buffer &B, const T &t) -> Buffer & {

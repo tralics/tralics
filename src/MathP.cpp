@@ -1,6 +1,5 @@
 #include "tralics/MathP.h"
 #include "tralics/Parser.h"
-#include "tralics/fmt_compat.h"
 #include <fmt/ostream.h>
 #include <spdlog/spdlog.h>
 
@@ -157,7 +156,7 @@ void MathP::find_paren2(int start, MathQList &res, bool verbose) {
     while (!empty()) {
         int   k   = 0;
         MathP cur = find_relbin(k);
-        if (verbose) spdlog::trace("MF: Find paren2 k={} {}", k, cur);
+        if (verbose) spdlog::trace("MF: Find paren2 k={} {}", k, fmt::streamed(cur));
         if (cur.has_small()) cur.find_paren1(start + 1, k - 1, res, verbose);
         start = k;
     }

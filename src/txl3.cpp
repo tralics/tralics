@@ -41,7 +41,7 @@ void Parser::E_pdfstrcmp() {
     auto      cmp = s1.compare(s2);
     TokenList L   = token_ns::string_to_list(cmp == 0 ? "0" : (cmp < 0 ? "-1" : "1"), false);
     if (tracing_macros()) {
-        spdlog::trace("{}{}=={}->{}", cur_tok, s1, s2, L);
+        spdlog::trace("{}{}=={}->{}", fmt::streamed(cur_tok), s1, s2, fmt::streamed(L));
     }
     back_input(L);
 }
@@ -143,7 +143,7 @@ auto Parser::l3_parms_from_ac(long n, Token t, bool s) -> TokenList {
         n = 0;
     }
     if (n > 9) {
-        err_buf = fmt::format("Too many arguments {} for {}", n, t);
+        err_buf = fmt::format("Too many arguments {} for {}", n, fmt::streamed(t));
         if (s) err_buf += " (wrong argument specification)";
         signal_error(err_tok, "bad args");
         n = 0;
@@ -169,7 +169,7 @@ auto Parser::L3_split_next_name() -> bool {
     if (!out) {
         tok_base = B;
         tok_sig  = "";
-        err_buf  = fmt::format("Missing colon in macro name {} by {}", cur_tok, err_tok);
+        err_buf  = fmt::format("Missing colon in macro name {} by {}", fmt::streamed(cur_tok), fmt::streamed(err_tok));
         signal_error(err_tok, "no colon in name");
         return true;
     }
@@ -244,7 +244,7 @@ auto l3_ns::conditional_aux(const std::string &p) -> subtypes {
     if (p == "F") return l3_F_code;
     if (p.empty()) return l3_bad_code;
 
-    err_buf = fmt::format("Bad specification '{}' for {} by {}", p, token_to_split, cmd_name);
+    err_buf = fmt::format("Bad specification '{}' for {} by {}", p, fmt::streamed(token_to_split), fmt::streamed(cmd_name));
     the_parser.signal_error(the_parser.err_tok, "bad spec");
     return l3_bad_code;
 }
@@ -279,7 +279,7 @@ void Parser::L3_generate_form(subtypes c, TokenList parms, TokenList body, subty
         body.push_back(Tc_true_bool);
         body.push_back(Tc_false_bool);
         if (pt) { // predicate, requires non-protected
-            err_buf = fmt::format("{} for \\{}:{}: A predicate cannot be protected", cmd_name, tok_base, tok_sig);
+            err_buf = fmt::format("{} for \\{}:{}: A predicate cannot be protected", fmt::streamed(cmd_name), tok_base, tok_sig);
             signal_error(err_tok, "bad protected");
         }
         break;
@@ -1038,7 +1038,7 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
     auto n = var.size();
     if (n == 0) return; // ignore empty sepc
     if (n > tok_sig.size()) {
-        err_buf = fmt::format("New spec size '{}' too big for {}", var, orig);
+        err_buf = fmt::format("New spec size '{}' too big for {}", var, fmt::streamed(orig));
         signal_error(err_tok, "spec too big");
         return;
     }

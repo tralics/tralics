@@ -2697,7 +2697,7 @@ auto Math::M_mbox1(Buffer &B, subtypes &f) -> int {
             push_front(old.get_list()); // insert the sublist here
         else {
             math_ns::bad_math_warn(B);
-            spdlog::trace("Subformula is of type {}", old.get_list().type);
+            spdlog::trace("Subformula is of type {}", int(old.get_list().type));
             return 0;
         }
     }

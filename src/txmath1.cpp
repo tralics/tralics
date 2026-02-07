@@ -544,7 +544,7 @@ void MathElt::cv_noML_special() const {
         mathml_buffer += '{' + sz + '}';
         L.pop_front();
         if (L.front().cmd == style_cmd)
-            mathml_buffer.format("{}", math_ns::style_level(L.front().chr));
+            mathml_buffer.format("{}", static_cast<int>(math_ns::style_level(L.front().chr)));
         else
             mathml_buffer.append("{}");
         L.pop_front();
@@ -653,7 +653,7 @@ void MathElt::cv_noMLt_special0() const {
             L.pop_front();
         }
         if (!L.empty()) {
-            if (L.front().cmd == style_cmd) mathml_buffer.format(" style='{}'", math_ns::style_level(L.front().chr));
+            if (L.front().cmd == style_cmd) mathml_buffer.format(" style='{}'", static_cast<int>(math_ns::style_level(L.front().chr)));
             L.pop_front();
         }
         mathml_buffer.push_back('>');
@@ -712,7 +712,7 @@ void MathElt::cv_noML_list() const {
         X.convert_math_noML0();
         mathml_buffer += "}";
         return;
-    default: mathml_buffer.format("bad group{}", T);
+    default: mathml_buffer.format("bad group{}", static_cast<int>(T));
     }
 }
 
@@ -981,7 +981,7 @@ auto Math::chars_to_mb(Buffer &B, bool rec) const -> bool {
         else if (rec && w.cmd == math_list_cmd && L->get_font() == subtypes(math_open_cd)) {
             if (!L->get_list().chars_to_mb(B, true)) return false;
         } else {
-            spdlog::error("First invalid token in math-to-string cmd={} chr={}", w.cmd, w.chr);
+            spdlog::error("First invalid token in math-to-string cmd={} chr={}", static_cast<int>(w.cmd), static_cast<int>(w.chr));
             std::cout << "\n";
             return false;
         }

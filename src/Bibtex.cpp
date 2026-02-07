@@ -112,8 +112,8 @@ namespace {
 // like miaou+foot. Prints a warning if this is a bad name.
 void Bibtex::read_bib_file(const std::string &s) {
     if (auto of = find_in_path(s + (s.ends_with(".bib") ? "" : ".bib")); of) {
-        spdlog::trace("Found BIB file: {}", *of);
-        bbl.format("% reading source {}", *of);
+        spdlog::trace("Found BIB file: {}", of->string());
+        bbl.format("% reading source {}", of->string());
         bbl.flush();
         in_lines.read(of->string(), 1);
         last_ok_line = 0;

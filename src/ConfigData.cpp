@@ -1,5 +1,6 @@
 #include "tralics/ConfigData.h"
 #include "tralics/Parser.h"
+#include <numeric>
 
 auto ConfigData::find_one_key(const std::string &name, const std::string &key) const -> std::optional<std::string> {
     auto it = find(name);

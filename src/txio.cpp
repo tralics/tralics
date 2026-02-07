@@ -217,7 +217,7 @@ void Parser::T_filecontents(subtypes spec) {
         res.register_file();
         if (spec == 3) is_encoded = false;
     } else if (auto of = find_in_path(filename); of) {
-        spdlog::warn("File {} already exists, not generating from source.", *of);
+        spdlog::warn("File {} already exists, not generating from source.", of->string());
     } else {
         auto fn = get_out_dir(filename);
         outfile = open_file(fn.string(), false);
@@ -258,7 +258,7 @@ auto main_ns::search_in_confdir(const std::string &s) -> std::optional<std::file
     for (auto i = the_main.conf_path.size(); i != 0; i--) {
         auto f = the_main.conf_path[i - 1] / s;
         if (std::filesystem::exists(f)) {
-            spdlog::trace("Found in configuration path: {}", f);
+        spdlog::trace("Found in configuration path: {}", f.string());
             return f;
         }
     }

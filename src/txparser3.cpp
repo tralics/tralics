@@ -139,7 +139,7 @@ void Parser::word_define(size_t a, long c, bool gbl) {
     bool     reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
         CmdChr tmp(assign_int_cmd, subtypes(a));
-        std::string msg = fmt::format("{{{}\\{}={}", gbl_or_assign(gbl, reassign), tmp.name(), W.val);
+        std::string msg = fmt::format("{{{}\\{}={}", gbl_or_assign(gbl, reassign), tmp.name(), fmt::streamed(W.val));
         if (!reassign) msg += fmt::format(" into \\{}={}", tmp.name(), c);
         msg += "}";
         spdlog::trace("{}", msg);
@@ -158,7 +158,7 @@ void Parser::string_define(size_t a, const std::string &c, bool gbl) {
     EqtbString &W        = eqtb_string_table[a];
     bool        reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
-        std::string msg = fmt::format("{{{}{}={}", gbl_or_assign(gbl, reassign), save_string_name(a), W.val);
+        std::string msg = fmt::format("{{{}{}={}", gbl_or_assign(gbl, reassign), save_string_name(a), fmt::streamed(W.val));
         if (!reassign) msg += fmt::format(" into {}={}", save_string_name(a), c);
         msg += "}";
         spdlog::trace("{}", msg);
@@ -179,8 +179,8 @@ void Parser::dim_define(size_t a, ScaledInt c, bool gbl) {
     bool     reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
         CmdChr tmp(assign_dimen_cmd, subtypes(a));
-        std::string msg = fmt::format("{{{}\\{}={}", gbl_or_assign(gbl, reassign), tmp.name(), W.val);
-        if (!reassign) msg += fmt::format(" into \\{}={}", tmp.name(), c);
+        std::string msg = fmt::format("{{{}\\{}={}", gbl_or_assign(gbl, reassign), tmp.name(), fmt::streamed(W.val));
+        if (!reassign) msg += fmt::format(" into \\{}={}", tmp.name(), fmt::streamed(c));
         msg += "}";
         spdlog::trace("{}", msg);
     }
