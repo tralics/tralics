@@ -119,11 +119,11 @@ void Parser::T_titlepage_finish(size_t v) {
     if (the_main.tpa_mode == 2)
         finished = true;
     else if (the_main.tpa_mode == 0) {
-        if (global_state.nb_errs > 0) finished = true;
+        if (the_parser.nb_errs > 0) finished = true;
     }
     if (finished && also_bib) {
         the_bibliography.set_nocite();
-        if (the_bibliography.number_of_data_bases() == 0) { the_bibliography.push_back_src(global_state.file_name); }
+        if (the_bibliography.number_of_data_bases() == 0) { the_bibliography.push_back_src(the_main.file_name); }
     }
     if (finished) {
         log_and_tty << "Translation terminated after title page\n";

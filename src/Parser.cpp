@@ -7,6 +7,7 @@
 #include "tralics/Dispatcher.h"
 #include "tralics/LineList.h"
 #include "tralics/Logger.h"
+#include "tralics/MainClass.h"
 #include "tralics/NameMapper.h"
 #include "tralics/NewArray.h"
 #include "tralics/Saver.h"
@@ -155,7 +156,7 @@ namespace {
         T.dump(B);
         if (B.empty()) return;
         T.dump_data(B);
-        std::string auxname = global_state.file_name + ".aux";
+        std::string auxname = the_main.file_name + ".aux";
         try {
             std::ofstream(auxname) << B;
         } catch (...) {
@@ -164,7 +165,7 @@ namespace {
         }
         spdlog::info("Executing bibliography command: {}", T.cmd);
         system(T.cmd.c_str());
-        bbl.lines.read(global_state.file_name + ".bbl", 1);
+        bbl.lines.read(the_main.file_name + ".bbl", 1);
     }
 
     // This creates a <ref target='bidN'/> element. This is the REF that needs
@@ -975,7 +976,7 @@ namespace {
                     break;
                 }
                 log_and_tty << "\n";
-                global_state.nb_errs++;
+                the_parser.nb_errs++;
             }
             std::string B = L->id;
             if (!B.empty()) Xid(E).add_attribute(the_names["target"], B);
@@ -1027,7 +1028,7 @@ void Parser::enter_file_in_table(const std::string &nm, bool ok) {
 // finish handling the images,
 void Parser::finish_images() {
     if (the_images.empty()) return;
-    std::string   name = global_state.file_name + ".img";
+    std::string   name = the_main.file_name + ".img";
     auto          wn   = get_out_dir(name);
     std::ofstream fp(wn);
     fp << "# images info, 1=ps, 2=eps, 4=epsi, 8=epsf, 16=pdf, 32=png, 64=gif\n";
@@ -2197,14 +2198,14 @@ void Parser::solve_cite(bool user) {
 // \bpers[opt-full]{first-name}{von-part}{last-name}{jr-name}
 // note that Tralics generates an empty von-part
 void Parser::T_bpers() {
-    int e              = global_state.nb_errs;
+    int e              = the_parser.nb_errs;
     unexpected_seen_hi = false;
     auto        A      = nT_optarg_nopar();
     std::string a      = nT_arg_nopar();
     std::string b      = nT_arg_nopar();
     std::string c      = nT_arg_nopar();
     std::string d      = nT_arg_nopar();
-    if (unexpected_seen_hi && e != global_state.nb_errs) log_and_tty << "maybe you confused Publisher with Editor\n";
+    if (unexpected_seen_hi && e != the_parser.nb_errs) log_and_tty << "maybe you confused Publisher with Editor\n";
     need_bib_mode();
     the_stack.add_newid0("bpers");
     if (A && !A->empty()) the_stack.add_att_to_last(the_names["full_first"], *A);

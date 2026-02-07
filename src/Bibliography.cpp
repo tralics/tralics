@@ -1,6 +1,7 @@
 #include "tralics/Bibliography.h"
 #include "tralics/Bbl.h"
 #include "tralics/Bibtex.h"
+#include "tralics/MainClass.h"
 #include "tralics/globals.h"
 #include <fmt/format.h>
 #include <spdlog/spdlog.h>
@@ -36,7 +37,7 @@ void Bibliography::stats() {
 void Bibliography::dump_data(Buffer &b) {
     b.format("\\bibstyle{{{}}}\n", bib_style);
     b.append("\\bibdata{");
-    if (biblio_src.empty()) b.append(global_state.file_name);
+    if (biblio_src.empty()) b.append(the_main.file_name);
     for (size_t i = 0; i < biblio_src.size(); i++) {
         if (i > 0) b.append(",");
         b.append(biblio_src[i]);

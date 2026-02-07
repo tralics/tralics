@@ -149,7 +149,7 @@ void Dispatcher::boot() {
     register_action_plain(description_cmd, &Parser::T_listenv);
     register_action_plain(ding_cmd, &Parser::T_ding);
     register_action_plain(divide_cmd, &Parser::M_prefixed);
-    register_action_plain(doc_class_cmd, [] { the_parser.T_documentclass(!the_stack.in_v_mode() || global_state.seen_document); });
+    register_action_plain(doc_class_cmd, [] { the_parser.T_documentclass(!the_stack.in_v_mode() || the_parser.seen_document); });
     register_action_plain(document_cmd, &Parser::T_begindocument);
     register_action_plain(dollar_catcode, [] { return the_parser.flush_buffer(), the_parser.T_math(nomathenv_code); });
     register_action_plain(end_center_cmd, [] { the_parser.leave_h_mode(); });
@@ -488,7 +488,7 @@ void Dispatcher::boot() {
     });
 
     register_action_plain(package_cmd, [] {
-        if (!the_stack.in_v_mode() || global_state.seen_document) the_parser.wrong_mode("Bad \\usepackage command");
+        if (!the_stack.in_v_mode() || the_parser.seen_document) the_parser.wrong_mode("Bad \\usepackage command");
         the_parser.T_usepackage();
     });
 

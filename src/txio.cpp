@@ -47,14 +47,14 @@ auto Buffer::next_utf8_char() -> char32_t {
         cp = it == end() ? char32_t(0U) : char32_t(utf8::next(it, end())); // \todo just if
     } catch (utf8::invalid_utf8 &) {
         global_state.bad_chars++;
-        spdlog::warn("{}:{}:{}: UTF-8 parsing error, ignoring char", global_state.cur_file_name, global_state.cur_file_line, ptrs.b + 1);
+        spdlog::warn("{}:{}:{}: UTF-8 parsing error, ignoring char", the_parser.cur_file_name, the_parser.cur_file_line, ptrs.b + 1);
         ++ptrs.b;
         return char32_t();
     }
     auto nn = to_unsigned(it - it0);
     ptrs.b += nn;
     if (cp > 0x1FFFF) {
-        spdlog::error("UTF-8 parsing overflow (char U+{:04X}, line {}, file {})", size_t(cp), global_state.cur_file_line, global_state.cur_file_name);
+        spdlog::error("UTF-8 parsing overflow (char U+{:04X}, line {}, file {})", size_t(cp), the_parser.cur_file_line, the_parser.cur_file_name);
         global_state.bad_chars++;
         return char32_t(); // \todo nullopt
     }
@@ -64,7 +64,7 @@ auto Buffer::next_utf8_char() -> char32_t {
 // This converts a line to UTF8
 // Result of conversion is pushed back in the buffer
 void Buffer::convert_line(int l, size_t wc) {
-    global_state.cur_file_line = l;
+    the_parser.cur_file_line = l;
     if (wc != 0) *this = convert_to_utf8(*this, wc);
 }
 
@@ -255,8 +255,8 @@ void Parser::T_filecontents(subtypes spec) {
 // \todo the next three function are kind of misleadingly named
 
 auto main_ns::search_in_confdir(const std::string &s) -> std::optional<std::filesystem::path> {
-    for (auto i = global_state.conf_path.size(); i != 0; i--) {
-        auto f = global_state.conf_path[i - 1] / s;
+    for (auto i = the_main.conf_path.size(); i != 0; i--) {
+        auto f = the_main.conf_path[i - 1] / s;
         if (std::filesystem::exists(f)) {
             spdlog::trace("Found in configuration path: {}", f);
             return f;
@@ -282,7 +282,7 @@ auto find_in_path(const std::string &s) -> std::optional<std::filesystem::path> 
         if (std::filesystem::exists(s)) return s;
         return {};
     }
-    for (const auto &p : global_state.input_path) {
+    for (const auto &p : the_main.input_path) {
         auto ss = p.empty() ? std::filesystem::path(s) : p / s;
         if (std::filesystem::exists(ss)) return ss;
     }

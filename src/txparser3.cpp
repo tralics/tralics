@@ -367,7 +367,7 @@ void Parser::pop_all_levels() {
             int  l = tmp->line;
             if (started) {
                 B += ".\n";
-                global_state.nb_errs++;
+                the_parser.nb_errs++;
             }
             started = true;
             B += "Non-closed " + bt_to_string(w);

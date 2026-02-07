@@ -101,7 +101,7 @@ auto remove_digits(std::string s) -> std::string {
 }
 
 auto codepoints(const std::string &s) -> std::vector<char32_t> {
-    global_state.cur_file_line = the_parser.get_cur_line();
+    the_parser.cur_file_line = the_parser.get_cur_line();
     std::vector<char32_t> res;
     for (auto it = s.begin(); it != s.end() && *it != 0;) res.emplace_back(utf8::next(it, s.end()));
     return res;

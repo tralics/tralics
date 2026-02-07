@@ -722,18 +722,18 @@ void Parser::T_enddocument(subtypes c) {
     } else {
         flush_buffer();
         the_stack.end_module();
-        global_state.seen_enddocument = true;
+        the_parser.seen_enddocument = true;
     }
 }
 
 // case \begin{document}
 void Parser::T_begindocument() {
-    if (global_state.seen_document) {
+    if (the_parser.seen_document) {
         parse_error("Two environments named document");
         return;
     }
     if (cur_level != 2) parse_error("\\begin{document} not at level 0");
-    global_state.seen_document = true;
+    the_parser.seen_document = true;
     if (!Titlepage.is_valid()) add_language_att();
     cur_tok.kill();
     pop_level(bt_env);

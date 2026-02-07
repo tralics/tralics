@@ -134,12 +134,12 @@ found at http://www.cecill.info.)";
     auto hack_for_input(const std::filesystem::path &s) -> std::string {
         std::filesystem::path path = s.parent_path();
         the_parser.set_job_name(no_ext.string());
-        global_state.file_name = s.stem().string();
+        the_main.file_name = s.stem().string();
         if (out_dir.empty()) out_dir = path;
-        if (log_name.empty()) log_name = global_state.file_name;
-        if (global_state.input_path.size() == 1) {
-            global_state.input_path[0] = path;
-            if (!path.empty()) global_state.input_path.emplace_back("");
+        if (log_name.empty()) log_name = the_main.file_name;
+        if (the_main.input_path.size() == 1) {
+            the_main.input_path[0] = path;
+            if (!path.empty()) the_main.input_path.emplace_back("");
         }
         return s.filename().string();
     }
@@ -155,12 +155,12 @@ found at http://www.cecill.info.)";
         static const std::array<std::filesystem::path, 7> paths{"/usr/share/tralics", "/usr/lib/tralics/confdir",
                                                                 "/usr/local/lib/tralics/confdir", "/sw/share/tralics/confdir",
                                                                 "../../confdir"};
-        auto                                              ps = global_state.conf_path;
+        auto                                              ps = the_main.conf_path;
         std::copy(paths.begin(), paths.end(), std::back_inserter(ps));
 
         auto s = std::find_if(ps.begin(), ps.end(), [](const auto &S) { return exists(S / "book.clt"); });
         if (s != ps.end()) {
-            global_state.conf_path.emplace_back(*s);
+            the_main.conf_path.emplace_back(*s);
             spdlog::info("Found configuration folder: {}", *s);
             return;
         }
@@ -175,7 +175,7 @@ found at http://www.cecill.info.)";
             if (c == 0 || c == ':') {
                 if (!b.empty() && b.back() == '/') b.pop_back();
                 if (b.size() == 1 && b[0] == '.') b.pop_back();
-                global_state.input_path.emplace_back(b);
+                the_main.input_path.emplace_back(b);
                 b.clear();
                 if (c == 0) return;
             } else
@@ -312,7 +312,7 @@ void MainClass::get_os() {
 }
 
 void MainClass::check_for_input() {
-    if (std::none_of(global_state.input_path.begin(), global_state.input_path.end(), [](const auto &s) { return s.empty(); })) global_state.input_path.emplace_back("");
+    if (std::none_of(the_main.input_path.begin(), the_main.input_path.end(), [](const auto &s) { return s.empty(); })) the_main.input_path.emplace_back("");
 
     std::string s  = hack_for_input(infile);
     auto        of = find_in_path(s);
@@ -362,10 +362,10 @@ void MainClass::open_log() { // \todo spdlog etc
     spdlog::trace("Left quote is '{}', right quote is '{}'", to_utf8(char32_t(global_state.leftquote_val)), to_utf8(char32_t(global_state.rightquote_val)));
     if (trivial_math != 0) spdlog::trace("\\notrivialmath={}", trivial_math);
     if (!default_class.empty()) spdlog::trace("Default class is {}", default_class);
-    if (global_state.input_path.size() > 1) {
+    if (the_main.input_path.size() > 1) {
         std::vector<std::string> tmp;
-        tmp.reserve(global_state.input_path.size());
-        std::copy(global_state.input_path.begin(), global_state.input_path.end(), std::back_inserter(tmp));
+        tmp.reserve(the_main.input_path.size());
+        std::copy(the_main.input_path.begin(), the_main.input_path.end(), std::back_inserter(tmp));
         spdlog::trace("Input path: ({})", fmt::format("{}", fmt::join(tmp, ",")));
     }
 
@@ -459,7 +459,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         case pa_confdir:
             if (a[0] == '0') return;                // ignore empty component
             if (a[0] == '/' && a[1] == '0') return; // ignore root
-            global_state.conf_path.emplace_back(a);
+            the_main.conf_path.emplace_back(a);
             return;
         case pa_externalprog: obsolete(s); return;
         case pa_trivialmath: trivial_math = stoi(a); return;
@@ -929,12 +929,12 @@ void MainClass::run(int argc, char **argv) {
     the_parser.init(input_content);
     the_parser.translate_all();
     the_parser.after_main_text();
-    if (global_state.seen_enddocument) the_stack.add_nl();
+    if (the_parser.seen_enddocument) the_stack.add_nl();
     the_parser.final_checks();
     if (!no_xml) {
         if (the_parser.get_list_files()) {
             log_and_tty << " *File List*\n";
-            log_and_tty << global_state.file_list;
+            log_and_tty << the_main.file_list;
             log_and_tty << " ***********\n";
         }
         if (global_state.bad_chars != 0) spdlog::warn("Input conversion errors: {} char{}.", global_state.bad_chars, global_state.bad_chars > 1 ? "s" : "");

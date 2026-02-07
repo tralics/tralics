@@ -20,7 +20,6 @@ struct GlobalState {
     bool compatibility{false};
     bool nofloat_hack{false};
     bool raw_bib{false};
-    bool seen_enddocument{false};
     bool global_in_load{false};
     bool global_in_url{false};
     bool in_hlinee{false};
@@ -28,15 +27,12 @@ struct GlobalState {
     bool have_below{false};
     bool no_xml_error{false};
     bool use_quotes{false};
-    bool seen_document{false}; // did we see \begin{document} ?
     char32_t leftquote_val{'`'};
     char32_t rightquote_val{'\''};
     int      bad_chars{0};
     int      first_boundary_loc{0};
     int      cur_entry_line{0}; // position of entry in source file
-    int      cur_file_line{0};  // current line number
     int      init_file_pos{0};  // position in init file
-    int      nb_errs{0};
     long     cline_first{0};
     long     cline_last{0};
 
@@ -45,18 +41,13 @@ struct GlobalState {
     std::array<String, 3>                                        my_constant_table{};
     std::optional<size_t> pool_position{}; // \todo this is a static variable that should disappear
     std::string          cur_entry_name;   // name of entry under construction.
-    std::string          cur_file_name{"tty"};
     std::string          everyjob_string;
-    std::string          file_name; // Job name, without directory
-    std::string          file_list; // \todo vector of std::fs::path
     std::string          hlinee_above;
     std::string          hlinee_width;
     std::string          hlinee_below;
     std::string          tralics_version{"2.15.4"};
     std::string          the_tag;
 
-    std::vector<std::filesystem::path>              conf_path{"../confdir"};
-    std::vector<std::filesystem::path>              input_path;
     std::vector<std::pair<size_t, std::string>>     ref_list;       // list of all \ref
     std::vector<std::pair<std::string, LabelInfo *>> defined_labels; // list of all \label
     std::vector<std::pair<String, std::string>>     removed_labels;  // list of all \label removed

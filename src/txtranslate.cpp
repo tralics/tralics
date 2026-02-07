@@ -1452,10 +1452,10 @@ void Parser::T_hanl(subtypes c) {
         B   = T_hanl_url();
     }
     the_stack.pop(the_names["hanl"]);
-    int e              = global_state.nb_errs;
+    int e              = the_parser.nb_errs;
     unexpected_seen_hi = false;
     std::string b      = B->convert_to_string();
-    bool        failed = e != global_state.nb_errs;
+    bool        failed = e != the_parser.nb_errs;
     if (unexpected_seen_hi && failed)
         log_and_tty << "you should perhaps use \\Href{\\url{x}}{y}\n"
                     << "  instead of \\Href{y}{\\url{x}}\n";

@@ -184,7 +184,7 @@ namespace {
             if (!li->used) continue;
             log_and_tty << "Error signaled by postprocessor\n"
                         << "Removing `" << s << "' made the following label disappear: " << V << "\n";
-            global_state.nb_errs++;
+            the_parser.nb_errs++;
         }
         for (auto &defined_label : global_state.defined_labels) {
             std::string j = defined_label.first;

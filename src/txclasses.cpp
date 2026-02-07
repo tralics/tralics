@@ -253,14 +253,14 @@ void Parser::insert_hook(long n) {
     }
 }
 
-// Store the file name (without dir) and date in the global_state.file_list buffer
+// Store the file name (without dir) and date in the the_main.file_list buffer
 void classes_ns::add_to_filelist(const std::string &s, const std::string &date) {
     auto n = s.size();
     long k = -1;
     for (size_t i = 0; i < n; i++)
         if (s[i] == '/') k = to_signed(i); // last slash \todo std::filesystem
     auto S = s.substr(to_unsigned(k + 1));
-    global_state.file_list += fmt::format("{:>12}   {}\n", S, date);
+    the_main.file_list += fmt::format("{:>12}   {}\n", S, date);
 }
 
 // This implements \ProvidesPackage, \ProvidesClass (synonym)

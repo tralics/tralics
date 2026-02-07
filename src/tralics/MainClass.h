@@ -47,6 +47,11 @@ class MainClass {
     bool verbose{false}; ///< Are we verbose ?
 
 public:
+    std::vector<std::filesystem::path> conf_path{"../confdir"};
+    std::vector<std::filesystem::path> input_path;
+    std::string                        file_name; // Job name, without directory
+    std::string                        file_list; // \todo vector of std::fs::path
+
     std::string default_class; ///< The default class
     std::string short_date;    ///< Date of start of run (short format)
 

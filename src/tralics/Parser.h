@@ -50,8 +50,12 @@ struct Parser {
     bool                  chapter_has_star{false};               // true in frontmatter, backmatter
     bool                  list_files_p{false};                   // Should we list the files at the end ?
     bool                  tok_is_defined{};                      // use by \ifcsname
+    bool                  seen_document{false};                  // did we see \begin{document} ?
+    bool                  seen_enddocument{false};
     int                   old_nberrs{};                          // previous number of errors
+    int                   nb_errs{};                             // current number of errors
     int                   cur_line{};                            // current input line number
+    int                   cur_file_line{};                       // current line number (file read helpers)
     int                   begin_env_line{0};                     // input line number of
     int                   default_language_num{0};               // default language
     int                   cur_level{1};                          // current level on the execution stack
@@ -65,6 +69,7 @@ struct Parser {
     long                  cur_file_pos{0};                       // pos of file in the package list (0= none)
     std::string           cur_env_name;                          // name of current environment
     std::string           job_name;                              // the name, without extensions
+    std::string           cur_file_name{"tty"};
     Buffer                input_buffer;                          // input buffer
     Buffer                mac_buffer;                            // buffer the current macro
     Buffer                group_buffer;                          // buffer for arg of \begin{...} \end(...)

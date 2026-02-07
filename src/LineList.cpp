@@ -2,6 +2,7 @@
 #include "tralics/Logger.h"
 #include "tralics/MainClass.h"
 #include "tralics/NameMapper.h"
+#include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include <ctre.hpp>
@@ -178,7 +179,7 @@ auto LineList::get_next(Buffer &b) -> std::optional<int> {
     b.append(front());
     pop_front();
     if (!converted) {
-        global_state.cur_file_name = file_name;
+        the_parser.cur_file_name = file_name;
         b.convert_line(n, encoding);
     }
     return n;
@@ -190,7 +191,7 @@ auto LineList::get_next_cv(Buffer &b, size_t w) -> int {
     auto n = front().number;
     pop_front();
     if (w != 0) {
-        global_state.cur_file_name = file_name;
+        the_parser.cur_file_name = file_name;
         b.convert_line(n, w);
     }
     return n;
@@ -423,8 +424,8 @@ void LineList::read(const std::string &x, int spec) { // \todo take a std::files
     }
 
     std::ifstream fp(x);
-    std::string   old_name = global_state.cur_file_name;
-    global_state.cur_file_name          = x;
+    std::string   old_name = the_parser.cur_file_name;
+    the_parser.cur_file_name          = x;
     Buffer B;
     encoding       = the_main.input_encoding;
     bool converted = spec < 2;
@@ -440,7 +441,7 @@ void LineList::read(const std::string &x, int spec) { // \todo take a std::files
             emit = true;
         else if (c == EOF) {
             if (!B.empty()) emit = true;
-            global_state.cur_file_name = old_name;
+            the_parser.cur_file_name = old_name;
         } else
             B.push_back(static_cast<char>(c));
         if (emit) {
