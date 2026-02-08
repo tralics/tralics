@@ -591,7 +591,7 @@ void Parser::add_buffer_to_document_hook(const Buffer &b, const std::string &nam
 // (because we add a '\n' at the end of the string).
 void Parser::titlepage_evaluate(const std::string &s, const std::string &cmd) {
     TokenList L = tokenize_buffer(s, "(tpa post " + cmd + ")");
-    T_translate(L);
+    if (!T_translate(L)) throw EndOfData();
 }
 
 // Puts in cur_tok the next non-expandable token.
@@ -1294,7 +1294,7 @@ void Parser::T_start_theorem(subtypes c) {
     bool noref = ctr.empty();
     if (!noref) {
         refstepcounter(mecounter, true);
-        T_translate(mecounter);
+        if (!T_translate(mecounter)) throw EndOfData();
     }
     if (c == 0) {
         Xid id1 = the_stack.get_xid();

@@ -104,13 +104,13 @@ auto Parser::translate0() -> bool {
 
 // Main function: translates a token list.
 // Result is added to the current element on the stack.
-void Parser::T_translate(TokenList &X) {
-    if (X.empty()) return;
+auto Parser::T_translate(TokenList &X) -> bool {
+    if (X.empty()) return true;
     SaveState s(TL, restricted);
     restricted = true;
     TL.swap(X);
     if (!unprocessed_xml.empty()) missing_flush();
-    if (!translate_all()) throw EndOfData();
+    return translate_all();
 }
 
 // This prints the command to translate. The case of a space is special
@@ -174,14 +174,14 @@ void Parser::leave_h_mode() {
 // translates {foo}
 void Parser::T_arg() {
     TokenList L = read_arg();
-    T_translate(L);
+    if (!T_translate(L)) throw EndOfData();
 }
 
 // translates {foo} in a group
 auto Parser::T_arg_local() -> bool {
     push_level(bt_local);
     TokenList L = read_arg();
-    T_translate(L);
+    if (!T_translate(L)) throw EndOfData();
     if (!pop_level(bt_local)) return false;
     return true;
 }
@@ -189,13 +189,13 @@ auto Parser::T_arg_local() -> bool {
 // translates [foo]
 void Parser::T_optarg() {
     auto L = read_optarg().value_or(TokenList{});
-    T_translate(L);
+    if (!T_translate(L)) throw EndOfData();
 }
 
 // Translates a list of token in argument mode. Returns the value.
 auto Parser::translate_list(TokenList &L) -> Xml * {
     Xml *res = the_stack.temporary();
-    T_translate(L);
+    if (!T_translate(L)) throw EndOfData();
     the_stack.pop(the_names["argument"]);
     return res;
 }
@@ -432,7 +432,7 @@ void Parser::T_arg1(const std::string &y) {
     the_stack.push1(y);
     TokenList L = read_arg();
     L.brace_me();
-    T_translate(L);
+    if (!T_translate(L)) throw EndOfData();
     the_stack.pop(y);
 }
 
@@ -470,7 +470,7 @@ auto Parser::T_item_label(unsigned c) -> std::string {
     L.brace_me(); // \item[\bf x] puts only x in \bf
     the_stack.push1(the_names["labelitem"]);
     the_stack.set_arg_mode();
-    T_translate(L);
+    if (!T_translate(L)) throw EndOfData();
     the_stack.pop(the_names["labelitem"]);
     if (!((c != 0) || get_cur_env_name() == "enumerate")) return {};
     Xml *res      = the_stack.remove_last();
@@ -517,7 +517,7 @@ void Parser::start_paras(int y, const std::string &Y, bool star) {
     TokenList L     = read_arg();
     if (module_p) check_module_title(L);
     L.brace_me();
-    T_translate(L);
+    if (!T_translate(L)) throw EndOfData();
     current_head.clear();
     title->put_in_buffer(current_head);
     the_stack.pop(the_names["head"]);
@@ -817,7 +817,7 @@ void Parser::T_keywords() {
         if (!v.empty() && v.back().is_dot()) v.pop_back();
         the_stack.push1(the_names["term"]);
         the_stack.set_arg_mode();
-        T_translate(v);
+        if (!T_translate(v)) throw EndOfData();
         the_stack.pop(the_names["term"]);
         the_stack.add_nl();
         if (seen_end) break;
@@ -1144,7 +1144,7 @@ auto Parser::internal_makebox() -> Xml * {
     Xml      *mbox = the_stack.top_stack();
     TokenList d    = read_arg();
     d.brace_me();
-    T_translate(d);
+    if (!T_translate(d)) throw EndOfData();
     the_stack.pop(the_names["mbox"]);
     return mbox;
 }
@@ -1259,7 +1259,7 @@ auto Parser::T_save_box(bool simple) -> bool {
         Xml      *mbox = the_stack.top_stack();
         TokenList d    = read_arg();
         d.brace_me();
-        T_translate(d);
+        if (!T_translate(d)) throw EndOfData();
         the_stack.pop(the_names["mbox"]);
         if (ipos && ipos->empty()) ipos.reset();       // \todo this is ugly
         if (iwidth && iwidth->empty()) iwidth.reset(); // \todo this is ugly
@@ -1409,7 +1409,7 @@ void Parser::T_url() {
     if (in_href) {
         if (!no_hack) X.url_hack();
         X.brace_me();
-        T_translate(X);
+        if (!T_translate(X)) throw EndOfData();
     } else {
         std::string x = translate_list(Y)->convert_to_string();
         if (!no_hack) X.url_hack();
@@ -1517,9 +1517,7 @@ auto Parser::special_tpa_arg(const std::string &name, const std::string &y, bool
         cur_level++;
         if (tracing_stack()) { spdlog::trace("+stack: level + {} (spec)", cur_level); }
     }
-    try {
-        if (!translate_all()) throw EndOfData();
-    } catch (EndOfData &) {};
+    translate_all();
     flush_buffer();
     if (special_case) {
         if (tracing_stack()) { spdlog::trace("+stack: level - {} (spec)", cur_level); }
@@ -1541,7 +1539,7 @@ auto Parser::tpa_exec(const std::string &cmd) -> Xml * {
     get_token();
     TokenList L;
     L.push_back(cur_tok);
-    T_translate(L);
+    if (!T_translate(L)) throw EndOfData();
     the_stack.pop(Y);
     the_stack.set_mode(m);
     return the_stack.remove_last();
@@ -1551,7 +1549,7 @@ auto Parser::tpa_exec(const std::string &cmd) -> Xml * {
 // \@reevaluate\foo\bar{gee} is \foo{gee}\bar{gee}
 // \begin{X}\@reevaluate*{foo}{bar} etc \end{X}
 //  is \begin{foo} etc \end{foo}\begin{bar} etc \end{bar}
-void Parser::T_reevaluate() {
+auto Parser::T_reevaluate() -> bool {
     bool      in_env = remove_initial_star();
     TokenList L1     = read_arg();
     TokenList L2     = read_arg();
@@ -1562,7 +1560,7 @@ void Parser::T_reevaluate() {
         back_input(L2);
         back_input(cur_tok);
         back_input(L1);
-        return;
+        return true;
     }
     if (in_env) back_input(cur_tok);
     // Now the hard case
@@ -1574,10 +1572,10 @@ void Parser::T_reevaluate() {
         std::string s = group_to_string();
         if (is_env_on_stack(s) == nullptr) {
             parse_error(err_tok, "cannot close environment ", s, "bad \\end");
-            return;
+            return true;
         }
         cur_tok.kill();
-        if (!pop_level(bt_env)) throw EndOfData(); // closes current env
+        if (!pop_level(bt_env)) return false; // closes current env
     }
     Tbuf.clear();
     L1.reevaluate0(in_env);
@@ -1586,10 +1584,11 @@ void Parser::T_reevaluate() {
     push_input_stack("(reevaluate)", false, false);
     lines.push_front(Line(-1));
     lines.split_string(Tbuf, 0);
+    return true;
 }
 
 // Translates \uppercase, \MakeUpperCase, etc
-void Parser::T_case_shift(subtypes c) {
+auto Parser::T_case_shift(subtypes c) -> bool {
     Token        T        = cur_tok;
     bool         to_upper = (c == 1 || c == 3 || c == 5 || c == 7);
     const size_t offset   = to_upper ? uc_code_offset : lc_code_offset;
@@ -1615,7 +1614,7 @@ void Parser::T_case_shift(subtypes c) {
             new_macro(LL, table[2 * i]);
         }
         read_toks_edef(L);
-        if (!pop_level(bt_brace)) throw EndOfData();
+        if (!pop_level(bt_brace)) return false;
     }
     if (tracing_commands()) { spdlog::trace("{{{}(a)->{}}}", fmt::streamed(T), fmt::streamed(L)); }
     auto      P = L.begin();
@@ -1667,6 +1666,7 @@ void Parser::T_case_shift(subtypes c) {
     }
     if (tracing_commands()) { spdlog::trace("{{{}->{} }}", fmt::streamed(T), fmt::streamed(res)); }
     back_input(res);
+    return true;
 }
 
 // This parses the arguments A,B in \put(A,B){C}
@@ -1869,7 +1869,7 @@ void Parser::T_curves(subtypes c) {
         skip_initial_space();
         if (cur_tok != match) bad_macro_prefix(cur_tok, match);
         TokenList L = read_until_nopar(Token(other_t_offset, ')'));
-        T_translate(L);
+        if (!T_translate(L)) throw EndOfData();
     }
     the_stack.pop(the_names[x0]);
 }

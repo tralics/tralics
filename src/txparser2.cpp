@@ -1111,7 +1111,7 @@ void Parser::refstepcounter_inner(TokenList &L, bool star) {
     std::string name = txparser2_local_buf;
     L.brace_me();
     L.push_front(hash_table.stepcounter_token);
-    T_translate(L);
+    if (!T_translate(L)) throw EndOfData();
     std::string v = make_label_inner(name);
     string_define(0, v, false);
     if (star) the_stack.add_new_anchor();

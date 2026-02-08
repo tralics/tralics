@@ -126,7 +126,7 @@ void Dispatcher::boot() {
     register_action(caption_cmd, [] {
         return the_parser.T_cap_or_note(true);
     });
-    register_action_plain(case_shift_cmd, &Parser::T_case_shift);
+    register_action(case_shift_cmd, &Parser::T_case_shift);
     register_action_plain(change_element_name_cmd, &Parser::T_change_element_name);
     register_action_plain(char_given_cmd, [](subtypes c) { the_parser.extended_chars(size_t(c)); });
     register_action_plain(char_num_cmd, [] { the_parser.extended_chars(the_parser.scan_27bit_int()); });
@@ -299,7 +299,7 @@ void Dispatcher::boot() {
         return true;
     });
     register_action(read_to_cs_cmd, &Parser::M_prefixed);
-    register_action_plain(reevaluate_cmd, &Parser::T_reevaluate);
+    register_action(reevaluate_cmd, &Parser::T_reevaluate);
     register_action_plain(ref_cmd, [](subtypes c) { the_parser.leave_v_mode(), the_parser.T_ref(c == 0); });
     register_action(register_cmd, &Parser::M_prefixed);
     register_action_plain(relax_cmd, [] {});

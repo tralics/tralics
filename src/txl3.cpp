@@ -664,7 +664,7 @@ auto Parser::tl_set_rescan(subtypes c) -> bool {
     TokenList eof;
     token_list_define(everyeof_code, eof, false);
     flush_buffer();
-    T_translate(side_effects);
+    if (!T_translate(side_effects)) throw EndOfData();
     back_input(hash_table.CB_token);
     T_scantokens(arg);
     back_input(hash_table.OB_token);

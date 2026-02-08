@@ -726,7 +726,7 @@ struct Parser {
     void               T_bibliostyle();
     void               T_bpers();
     bool               T_cap_or_note(bool cap);
-    void               T_case_shift(subtypes c);
+    [[nodiscard]] bool T_case_shift(subtypes c);
     void               T_catperso();
     void               T_change_element_name();
     void               T_citation();
@@ -833,7 +833,7 @@ struct Parser {
     void               T_put(subtypes c);
     void               T_ra_startdoc();
     bool               T_raisebox();
-    void               T_reevaluate();
+    [[nodiscard]] bool T_reevaluate();
     void               T_ref(bool is_ref);
     void               T_remove_element();
     bool               T_save_box(bool simple);
@@ -848,7 +848,7 @@ struct Parser {
     void               T_subequations(bool start);
     void               T_subfigure();
     void               T_testopt();
-    void               T_translate(TokenList &X);
+    [[nodiscard]] bool T_translate(TokenList &X);
     void               T_trees(subtypes c);
     void               T_twodims(std::string &A, std::string &B, Token C);
     void               T_twoints(std::string &A, std::string &B, Token C);
