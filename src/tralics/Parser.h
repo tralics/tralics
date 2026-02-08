@@ -484,7 +484,7 @@ struct Parser {
     void               expand_verb(unsigned char t);
     void               expand_verb1(TokenList &);
     void               expand_when_ok(bool allow_undef);
-    void               expand();
+    [[nodiscard]] bool expand();
     void               extra_close_brace(int cl);
     void               extra_fi_or_else();
     void               fast_new_macro(TokenList &L, Token name);

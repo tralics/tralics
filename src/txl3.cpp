@@ -1233,9 +1233,9 @@ void Parser::l3_expand_Vv(TokenList &L, bool spec) {
     else
         back_input(L);
     get_token(); // look at what follows
-    if (cur_cmd_chr.is_expandable())
-        expand();
-    else {
+    if (cur_cmd_chr.is_expandable()) {
+        if (!expand()) throw EndOfData();
+    } else {
         back_input();
         E_the_traced(err_tok, the_code);
     }

@@ -194,9 +194,9 @@ auto Parser::edef_aux(TokenList &L) -> bool {
         if (get_token()) return true;
         if (!cur_cmd_chr.is_expandable()) return false;
         if (cur_cmd_chr.is_protected()) return false;
-        if (cur_cmd_chr.cmd != the_cmd)
-            expand();
-        else {
+        if (cur_cmd_chr.cmd != the_cmd) {
+            if (!expand()) throw EndOfData();
+        } else {
             Token     T = cur_tok;
             TokenList q = E_the(cur_cmd_chr.chr);
             if (tracing_commands()) spdlog::trace("{}->{}.", fmt::streamed(T), fmt::streamed(q));
@@ -598,9 +598,9 @@ void Parser::titlepage_evaluate(const std::string &s, const std::string &cmd) {
 auto Parser::get_x_token() -> bool {
     for (;;) {
         if (get_token()) return true;
-        if (cur_cmd_chr.is_expandable())
-            expand();
-        else
+        if (cur_cmd_chr.is_expandable()) {
+            if (!expand()) throw EndOfData();
+        } else
             return false;
     }
 }
@@ -2202,8 +2202,9 @@ auto Parser::env_helper(const std::string &s) -> SaveAuxEnv * {
         Macro &T    = mac_table.get_macro(cur_cmd_chr.chr);
         if (T.nbargs != 0)
             parse_error(err_tok, "Illegal end of environment");
-        else
-            expand();
+        else {
+            if (!expand()) throw EndOfData();
+        }
     } else {
         Token t                    = hash_table.temp_token;
         auto  k                    = t.eqtb_loc();
@@ -2227,9 +2228,9 @@ void Parser::expand_no_arg(const std::string &s) {
 void Parser::expand_when_ok(bool allow_undef) {
     get_token();
     if (allow_undef && cur_cmd_chr.is_undef()) {
-    } else if (cur_cmd_chr.is_expandable())
-        expand();
-    else
+    } else if (cur_cmd_chr.is_expandable()) {
+        if (!expand()) throw EndOfData();
+    } else
         back_input();
 }
 
@@ -2412,9 +2413,9 @@ void Parser::E_expandafter() {
     Token T = cur_tok;
     get_token();
     if (tracing_macros()) spdlog::trace("{{\\expandafter {} {}}}", fmt::streamed(T), fmt::streamed(cur_tok));
-    if (cur_cmd_chr.is_expandable())
-        expand();
-    else
+    if (cur_cmd_chr.is_expandable()) {
+        if (!expand()) throw EndOfData();
+    } else
         back_input();
     back_input(T);
 }
@@ -2560,70 +2561,70 @@ auto Parser::scan_keyword(String s) -> bool {
 
 // ------------------------------------
 
-void Parser::expand() {
+auto Parser::expand() -> bool {
     auto     guard = SaveErrTok(cur_tok);
     subtypes c     = cur_cmd_chr.chr;
     symcodes C     = cur_cmd_chr.cmd;
     Token    T     = cur_tok;
     bool     vb    = tracing_macros();
     switch (C) {
-    case a_cmd: E_accent_a(); return;
-    case accent_cmd: E_accent(); return;
-    case ifundefined_cmd: E_ifundefined(c != 0); return;
-    case car_cmd: E_car(c == zero_code); return;
-    case all_of_one_cmd: E_all_of_one(cur_tok, c); return;
-    case refstepcounter_cmd: refstepcounter(); return;
-    case month_day_cmd: month_day(c); return;
-    case scan_up_down_cmd: E_scan_up_down(); return;
-    case sideset_cmd: E_sideset(); return;
-    case multispan_cmd: E_multispan(); return;
-    case ifempty_cmd: E_ifempty(); return;
-    case split_cmd: E_split(); return;
-    case useverb_cmd: E_useverb(); return;
+    case a_cmd: E_accent_a(); return true;
+    case accent_cmd: E_accent(); return true;
+    case ifundefined_cmd: E_ifundefined(c != 0); return true;
+    case car_cmd: E_car(c == zero_code); return true;
+    case all_of_one_cmd: E_all_of_one(cur_tok, c); return true;
+    case refstepcounter_cmd: refstepcounter(); return true;
+    case month_day_cmd: month_day(c); return true;
+    case scan_up_down_cmd: E_scan_up_down(); return true;
+    case sideset_cmd: E_sideset(); return true;
+    case multispan_cmd: E_multispan(); return true;
+    case ifempty_cmd: E_ifempty(); return true;
+    case split_cmd: E_split(); return true;
+    case useverb_cmd: E_useverb(); return true;
     case counter_cmd:
-        if (!E_counter(c)) throw EndOfData();
-        return;
-    case setlength_cmd: E_setlength(c); return;
-    case csname_cmd: E_csname(); return;
-    case usename_cmd: E_usename(c, vb); return;
-    case convert_cmd: E_convert(); return;
-    case the_cmd: E_the_traced(T, c); return;
-    case if_test_cmd: E_if_test(c, false); return;
-    case fi_or_else_cmd: E_fi_or_else(); return;
-    case loop_cmd: E_loop(); return;
-    case input_cmd: E_input(c); return;
-    case xspace_cmd: E_xspace(); return;
-    case ensuremath_cmd: E_ensuremath(); return;
-    case while_cmd: E_while(c); return;
-    case iwhile_cmd: E_iwhile(c); return;
+        if (!E_counter(c)) return false;
+        return true;
+    case setlength_cmd: E_setlength(c); return true;
+    case csname_cmd: E_csname(); return true;
+    case usename_cmd: E_usename(c, vb); return true;
+    case convert_cmd: E_convert(); return true;
+    case the_cmd: E_the_traced(T, c); return true;
+    case if_test_cmd: E_if_test(c, false); return true;
+    case fi_or_else_cmd: E_fi_or_else(); return true;
+    case loop_cmd: E_loop(); return true;
+    case input_cmd: E_input(c); return true;
+    case xspace_cmd: E_xspace(); return true;
+    case ensuremath_cmd: E_ensuremath(); return true;
+    case while_cmd: E_while(c); return true;
+    case iwhile_cmd: E_iwhile(c); return true;
     case latex_ctr_cmd:
-        if (!E_latex_ctr()) throw EndOfData();
-        return;
-    case undef_cmd: undefined_mac(); return;
-    case mathversion_cmd: E_mathversion(); return;
-    case get_config_cmd: E_get_config(c); return;
-    case random_cmd: E_random(); return;
-    case pdfstrcmp_cmd: E_pdfstrcmp(); return;
-    case ot2enc_cmd: E_parse_encoding(vb, c); return;
-    case afterfi_cmd: E_afterfi(); return;
-    case afterelsefi_cmd: E_afterelsefi(); return;
+        if (!E_latex_ctr()) return false;
+        return true;
+    case undef_cmd: undefined_mac(); return true;
+    case mathversion_cmd: E_mathversion(); return true;
+    case get_config_cmd: E_get_config(c); return true;
+    case random_cmd: E_random(); return true;
+    case pdfstrcmp_cmd: E_pdfstrcmp(); return true;
+    case ot2enc_cmd: E_parse_encoding(vb, c); return true;
+    case afterfi_cmd: E_afterfi(); return true;
+    case afterelsefi_cmd: E_afterelsefi(); return true;
     case expandafter_cmd:
         if (c != 0U)
             E_unless();
         else
             E_expandafter();
-        return;
-    case l3expand_aux_cmd: E_l3expand_aux(c); return;
-    case l3expand_base_cmd: E_l3expand_base(c); return;
-    case l3noexpand_cmd: E_l3noexpand(c); return;
-    case l3E_set_num_cmd: L3_set_num_code(c); return;
-    case l3_ifx_cmd: E_l3_ifx(c); return;
-    case l3str_ifeq_cmd: E_l3str_ifeq(c); return;
-    case l3str_case_cmd: E_l3str_case(c); return;
-    case token_if_cmd: l3_token_check(c); return;
-    case cat_ifeq_cmd: E_cat_ifeq(c); return;
-    case specchar_cmd: back_input(Token(other_t_offset, char32_t(char32_t(c)))); return;
-    case splitfun_cmd: L3_user_split_next_name(c == 0); return;
+        return true;
+    case l3expand_aux_cmd: E_l3expand_aux(c); return true;
+    case l3expand_base_cmd: E_l3expand_base(c); return true;
+    case l3noexpand_cmd: E_l3noexpand(c); return true;
+    case l3E_set_num_cmd: L3_set_num_code(c); return true;
+    case l3_ifx_cmd: E_l3_ifx(c); return true;
+    case l3str_ifeq_cmd: E_l3str_ifeq(c); return true;
+    case l3str_case_cmd: E_l3str_case(c); return true;
+    case token_if_cmd: l3_token_check(c); return true;
+    case cat_ifeq_cmd: E_cat_ifeq(c); return true;
+    case specchar_cmd: back_input(Token(other_t_offset, char32_t(char32_t(c)))); return true;
+    case splitfun_cmd: L3_user_split_next_name(c == 0); return true;
     case user_cmd:
     case usero_cmd:
     case userl_cmd:
@@ -2631,13 +2632,13 @@ void Parser::expand() {
     case userp_cmd:
     case userpo_cmd:
     case userlp_cmd:
-    case userlpo_cmd: E_user(vb, c, C); return;
-    case prg_return_cmd: E_prg_return(c); return;
-    case first_of_two_cmd: E_first_of_two(vb, c); return;
-    case first_of_three_cmd: E_first_of_three(vb, c); return;
-    case first_of_four_cmd: E_first_of_four(vb, c); return;
+    case userlpo_cmd: E_user(vb, c, C); return true;
+    case prg_return_cmd: E_prg_return(c); return true;
+    case first_of_two_cmd: E_first_of_two(vb, c); return true;
+    case first_of_three_cmd: E_first_of_three(vb, c); return true;
+    case first_of_four_cmd: E_first_of_four(vb, c); return true;
     case gobble_cmd:
-    case ignore_n_args_cmd: E_ignore_n_args(vb, c); return;
+    case ignore_n_args_cmd: E_ignore_n_args(vb, c); return true;
     case zapspace_cmd:
         if (c != 0U) {
             TokenList a = read_arg();
@@ -2645,8 +2646,8 @@ void Parser::expand() {
             back_input(a);
         } else
             E_zapspace();
-        return;
-    case stripprefix_cmd: read_until(Token(other_t_offset, '>')); return;
+        return true;
+    case stripprefix_cmd: read_until(Token(other_t_offset, '>')); return true;
     case hexnumber_cmd: {
         TokenList L = read_arg();
         back_input(L);
@@ -2654,37 +2655,37 @@ void Parser::expand() {
         if (i >= 0 && i < 10) back_input(Token(other_t_offset, uchar(i + '0')));
         if (i >= 10 && i < 16) back_input(Token(letter_t_offset, uchar(i + 'A' - 10)));
     }
-        return;
+        return true;
     case strippt_cmd: {
         Token     TT = cur_tok;
         TokenList L  = E_the(the_code);
         token_ns::strip_pt(L);
         if (vb) spdlog::trace("{}->{}.", fmt::streamed(TT), fmt::streamed(L));
         back_input(L);
-        return;
+        return true;
     }
     case obracket_cmd:
         if (vb) spdlog::trace("{}->$$", fmt::streamed(cur_tok));
         back_input(hash_table.dollar_token);
         back_input(hash_table.dollar_token);
-        return;
+        return true;
     case oparen_cmd:
         if (vb) spdlog::trace("{}->$", fmt::streamed(cur_tok));
         back_input(hash_table.dollar_token);
-        return;
+        return true;
     case noexpand_cmd: { // see comments in txscan
         auto guard2 = SaveScannerStatus(ss_normal);
-        if (get_token()) return;
+        if (get_token()) return true;
         Token t = cur_tok;
         if (vb) spdlog::trace("{{\\noexpand {}}}", fmt::streamed(t));
         back_input(t);
         if (!cur_tok.not_a_cmd()) back_input(hash_table.frozen_dont_expand);
-        return;
+        return true;
     }
     case top_bot_mark_cmd: // no marks...
         if (c >= topmarks_code) scan_int(T);
-        return;
-    default: parse_error(cur_tok, "unexpandable command in expand? ", T, "", "bad"); return;
+        return true;
+    default: parse_error(cur_tok, "unexpandable command in expand? ", T, "", "bad"); return true;
     }
 }
 
