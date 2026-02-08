@@ -35,7 +35,7 @@ private:
     void               skip_char();
     auto               next_char() -> char32_t;
     void               skip_space();
-    void               next_line();
+    auto               next_line() -> bool;
     [[nodiscard]] auto at_eol() const -> bool { return input_line_pos >= cur_line_len; }
     void               scan_name();
     void               scan_name(uchar c);

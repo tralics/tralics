@@ -118,7 +118,7 @@ void XmlIO::run() {
 }
 
 // This fetches a line from the file, true at eof
-void XmlIO::next_line() {
+auto XmlIO::next_line() -> bool {
     line_buffer.clear();
     int n = lines.get_next_cv(line_buffer, encoding);
     if (n == -1) {
@@ -126,19 +126,22 @@ void XmlIO::next_line() {
             ;
         else
             error("Unexpected EOF");
-        throw EndOfData();
+        return false;
     }
     cur_line       = n;
     input_line     = codepoints(line_buffer);
     input_line_pos = 0;
     cur_line_len   = input_line.size();
+    return true;
 }
 
 // Characters can come from back of readlist, or head of input_line
 // This leaves the character where it is
 auto XmlIO::peek_char() -> char32_t {
     if (!reread_list.empty()) return reread_list.back();
-    if (at_eol()) next_line();
+    if (at_eol()) {
+        if (!next_line()) throw EndOfData();
+    }
     return input_line[input_line_pos];
 }
 
