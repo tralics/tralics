@@ -131,16 +131,10 @@ void Dispatcher::boot() {
     register_action_plain(cite_cmd, &Parser::T_cite);
     register_action_plain(cite_one_cmd, &Parser::T_cite_one);
     register_action_plain(cititem_cmd, &Parser::T_cititem);
-    register_action_plain(close_catcode, [] {
-        if (!the_parser.pop_level(bt_brace)) throw EndOfData();
-    });
+    register_action(close_catcode, [] { return the_parser.pop_level(bt_brace); });
     register_action_plain(color_cmd, &Parser::T_color);
-    register_action_plain(cons_cmd, [] {
-        if (!the_parser.M_cons()) throw EndOfData();
-    });
-    register_action_plain(cr_cmd, [] {
-        if (!the_parser.T_cr()) throw EndOfData();
-    });
+    register_action(cons_cmd, [] { return the_parser.M_cons(); });
+    register_action(cr_cmd, [] { return the_parser.T_cr(); });
     register_action_plain(cst_cmd, &Parser::T_cst1);
     register_action_plain(cst1_cmd, &Parser::T_cst1);
     register_action_plain(cst2_cmd, &Parser::T_cst2);
@@ -157,9 +151,7 @@ void Dispatcher::boot() {
     register_action_plain(ding_cmd, &Parser::T_ding);
     register_action_plain(divide_cmd, &Parser::M_prefixed);
     register_action_plain(doc_class_cmd, [] { the_parser.T_documentclass(!the_stack.in_v_mode() || the_parser.seen_document); });
-    register_action_plain(document_cmd, [] {
-        if (!the_parser.T_begindocument()) throw EndOfData();
-    });
+    register_action(document_cmd, [] { return the_parser.T_begindocument(); });
     register_action_plain(dollar_catcode, [] { return the_parser.flush_buffer(), the_parser.T_math(nomathenv_code); });
     register_action_plain(end_center_cmd, [] { the_parser.leave_h_mode(); });
     register_action_plain(end_citation_cmd, [] { the_stack.pop(::the_names["citation"]); });
@@ -179,9 +171,7 @@ void Dispatcher::boot() {
     register_action_plain(end_thebibliography_cmd, &Parser::T_end_the_biblio);
     register_action_plain(end_xmlelement_env_cmd, &Parser::T_xmlenv_end);
     register_action_plain(endcsname_cmd, [] { the_parser.parse_error("Extra \\endcsname"); });
-    register_action_plain(endv_cmd, [] {
-        if (!the_parser.T_endv()) throw EndOfData();
-    });
+    register_action(endv_cmd, [] { return the_parser.T_endv(); });
     register_action_plain(enumerate_cmd, &Parser::T_listenv);
     register_action_plain(eof_marker_cmd, [] {});
     register_action_plain(epsfbox_cmd, &Parser::T_epsfbox);
@@ -194,9 +184,7 @@ void Dispatcher::boot() {
     register_action_plain(fancy_cmd, &Parser::T_fancy);
     register_action_plain(figure_cmd, [](symcodes x, subtypes c) { the_parser.T_figure_table(x, c); });
     register_action_plain(file_cmd, &Parser::T_input);
-    register_action_plain(filecontents_env_cmd, [](subtypes c) {
-        if (!the_parser.T_filecontents(c)) throw EndOfData();
-    });
+    register_action(filecontents_env_cmd, [](subtypes c) { return the_parser.T_filecontents(c); });
     register_action_plain(float_cmd, &Parser::T_float);
     register_action_plain(fnhack_cmd, &Parser::fnhack);
     register_action_plain(fontsize_cmd, &Parser::translate_font_size);
@@ -225,9 +213,7 @@ void Dispatcher::boot() {
     register_action_plain(ifnextchar_cmd, [](subtypes c) { the_parser.T_ifnextchar(c == 0); });
     register_action_plain(ifstar_cmd, &Parser::T_ifstar);
     register_action_plain(ifthenelse_cmd, &Parser::T_ifthenelse);
-    register_action_plain(ignore_content_cmd, [] {
-        if (!the_parser.T_raw_env(false)) throw EndOfData();
-    });
+    register_action(ignore_content_cmd, [] { return static_cast<bool>(the_parser.T_raw_env(false)); });
     register_action_plain(ignore_env_cmd, [] {});
     register_action_plain(ignore_two_argument_cmd, [] { the_parser.ignore_arg(), the_parser.ignore_arg(); });
     register_action_plain(ignoreA_cmd, [] { the_parser.T_ignoreA(); });
@@ -249,9 +235,7 @@ void Dispatcher::boot() {
     register_action_plain(l3_gen_from_ac_cmd, &Parser::Tl3_gen_from_ac);
     register_action_plain(l3_gen_from_sig_cmd, &Parser::generate_from_sig);
     register_action_plain(l3_generate_variant_cmd, &Parser::l3_generate_variant);
-    register_action_plain(l3_rescan_cmd, [](subtypes c) {
-        if (!the_parser.tl_set_rescan(c)) throw EndOfData();
-    });
+    register_action(l3_rescan_cmd, [](subtypes c) { return the_parser.tl_set_rescan(c); });
     register_action_plain(l3_set_cat_cmd, &Parser::L3_set_cat_code);
     register_action_plain(l3_set_num_cmd, &Parser::L3_set_num_code);
     register_action_plain(label_cmd, [](subtypes c) { the_parser.flush_buffer(), the_parser.T_label(c); });
@@ -264,9 +248,7 @@ void Dispatcher::boot() {
     register_action_plain(list_cmd, &Parser::T_listenv);
     register_action_plain(listfiles_cmd, [] { the_parser.list_files_p = true; });
     register_action_plain(load_with_options_cmd, [](subtypes c) { the_parser.T_load_with_options(c == 0); });
-    register_action_plain(loadlatex3_cmd, [] {
-        if (!the_parser.L3_load(false)) throw EndOfData();
-    });
+    register_action(loadlatex3_cmd, [] { return the_parser.L3_load(false); });
     register_action_plain(make_box_cmd, [](subtypes c) { the_parser.begin_box(makebox_location, c); });
     register_action_plain(makeatletter_cmd, [] { the_parser.word_define('@', letter_catcode, false); });
     register_action_plain(makeatother_cmd, [] { the_parser.word_define('@', other_catcode, false); });
@@ -278,17 +260,13 @@ void Dispatcher::boot() {
     register_action_plain(newboolean_cmd, &Parser::M_newboolean);
     register_action_plain(newcolumntype_cmd, &Parser::T_newcolumn_type);
     register_action_plain(newcount_cmd, &Parser::new_constant);
-    register_action_plain(newcounter_cmd, [] {
-        if (!the_parser.M_counter(true)) throw EndOfData();
-    });
+    register_action(newcounter_cmd, [] { return static_cast<bool>(the_parser.M_counter(true)); });
     register_action_plain(newif_cmd, &Parser::M_newif);
     register_action_plain(noargfont_cmd, &Parser::see_font_change);
     register_action_plain(nobreakspace_cmd, [] { the_parser.LC(), the_parser.process_char(the_parser.global_in_url ? '~' : 0xA0); });
     register_action_plain(nolinebreak_cmd, &Parser::ignore_optarg);
     register_action_plain(numberedverbatim_cmd, [] { the_parser.numbered_verbatim = true; });
-    register_action_plain(numberwithin_cmd, [] {
-        if (!the_parser.numberwithin()) throw EndOfData();
-    });
+    register_action(numberwithin_cmd, [] { return the_parser.numberwithin(); });
     register_action_plain(oldfont_cmd, &Parser::old_font);
     register_action_plain(omitcite_cmd, &Parser::T_omitcite);
     register_action_plain(open_catcode, [] { the_parser.push_level(bt_brace); });
@@ -297,19 +275,18 @@ void Dispatcher::boot() {
     register_action_plain(par_cmd, &Parser::T_par1);
     register_action_plain(pass_options_cmd, [](subtypes c) { the_parser.T_pass_options(c == 0); });
     register_action_plain(picture_env_cmd, &Parser::T_picture);
-    register_action_plain(pop_stack_cmd, [] {
-        if (!the_parser.pop_all_levels()) throw EndOfData();
-    });
+    register_action(pop_stack_cmd, [] { return the_parser.pop_all_levels(); });
     register_action_plain(popmodule_cmd, [] { the_stack.end_module(); });
     register_action_plain(prefix_cmd, &Parser::M_prefixed);
     register_action_plain(process_options_cmd, &Parser::T_process_options);
     register_action_plain(provides_package_cmd, [](subtypes c) { the_parser.T_provides_package(c == 0); });
     register_action_plain(pushmodule_cmd, &Parser::push_module);
     register_action_plain(put_cmd, &Parser::T_put);
-    register_action_plain(raw_env_cmd, [] {
+    register_action(raw_env_cmd, [] {
         auto res = the_parser.T_raw_env(true);
-        if (!res) throw EndOfData();
+        if (!res) return false;
         the_stack.add_last(new Xml(std::string(*res)));
+        return true;
     });
     register_action_plain(read_to_cs_cmd, &Parser::M_prefixed);
     register_action_plain(reevaluate_cmd, &Parser::T_reevaluate);
@@ -369,9 +346,7 @@ void Dispatcher::boot() {
     register_action_plain(usecounter_cmd, &Parser::T_use_counter);
     register_action_plain(usefont_cmd, &Parser::T_usefont);
     register_action_plain(verb_cmd, [](subtypes c) { the_parser.T_verb(c != 0U ? the_parser.verb_saved_char : char32_t(0U)); });
-    register_action_plain(verbatim_env_cmd, [] {
-        if (!the_parser.T_verbatim()) throw EndOfData();
-    });
+    register_action(verbatim_env_cmd, [] { return the_parser.T_verbatim(); });
     register_action_plain(vfill_cmd, [](subtypes c) { the_parser.leave_h_mode(), the_stack.add_newid0(vfill_to_np(c)); });
     register_action_plain(whiledo_cmd, &Parser::T_whiledo);
     register_action_plain(xfancy_cmd, &Parser::T_xfancy);
@@ -428,16 +403,15 @@ void Dispatcher::boot() {
             the_parser.process_string("to appear");
     });
 
-    register_action_plain(begingroup_cmd, [](subtypes c) {
+    register_action(begingroup_cmd, [](subtypes c) {
         the_parser.flush_buffer();
         if (c == 0) {
             the_parser.push_level(bt_semisimple);
-        } else if (c == 1) {
-            if (!the_parser.pop_level(bt_semisimple)) throw EndOfData();
-        } else {
-            the_parser.get_token();
-            if (!the_parser.pop_level(bt_env)) throw EndOfData();
+            return true;
         }
+        if (c == 1) return the_parser.pop_level(bt_semisimple);
+        the_parser.get_token();
+        return the_parser.pop_level(bt_env);
     });
 
     register_action_plain(hat_catcode, [](subtypes c) {
@@ -578,9 +552,9 @@ void Dispatcher::boot() {
             the_parser.T_start_theorem(c);
     });
 
-    register_action_plain(math_env_cmd, [](subtypes c) {
+    register_action(math_env_cmd, [](subtypes c) {
         the_parser.cur_tok.kill();
-        if (!the_parser.pop_level(bt_env)) throw EndOfData();
+        if (!the_parser.pop_level(bt_env)) return false;
         return the_parser.T_math(c);
     });
 
