@@ -1185,7 +1185,7 @@ void Parser::M_declare_math_operator() {
 // \newtheorem{name}{text}       case 2
 // \newtheorem{name}[c]{text}    case 3
 // \newtheorem*{name}{text}      case 4
-void Parser::M_new_thm() {
+auto Parser::M_new_thm() -> bool {
     bool        star = remove_initial_star();
     std::string name = group_to_string();
     if (tracing_commands()) spdlog::trace("{{\\newtheorem {}}}", name);
@@ -1207,7 +1207,7 @@ void Parser::M_new_thm() {
     // We have now read the arguments.
     Token y = find_env_token(name, true);
     err_tok = y; // replaces \newtheorem by \name
-    if (!ok_to_define(y, rd_if_undef)) return;
+    if (!ok_to_define(y, rd_if_undef)) return true;
     find_env_token(name, false);
     M_let_fast(cur_tok, hash_table.eth_token, true); // defines \endname
     Token thename_cmd;
@@ -1237,19 +1237,19 @@ void Parser::M_new_thm() {
     text.splice(text.end(), aux);
     text.push_front(hash_table.bth_token);
     new_macro(text, y, true); // This defines \name
-    if (which_case == 4) return;
+    if (which_case == 4) return true;
     if (which_case == 3) {
         if (csname_ctr(ctr, Thbuf1)) {
             bad_counter0();
-            return;
+            return true;
         }
-        if (counter_check(Thbuf1, false)) return; // checks the counter
+        if (counter_check(Thbuf1, false)) return true; // checks the counter
         Thbuf2  = "the" + Thbuf1.substr(2);
         cur_tok = hash_table.locate(Thbuf2);
         TokenList R;
         R.push_back(cur_tok);
         new_macro(R, thename_cmd, true);
-        return;
+        return true;
     }
     TokenList the_value = token_ns::string_to_list(name, true);
     TokenList V         = the_value;
@@ -1269,8 +1269,9 @@ void Parser::M_new_thm() {
     }
     back_input(V);
     auto res = M_counter(true);
-    if (!res) throw EndOfData();
+    if (!res) return false;
     if (!*res) new_macro(the_value, thename_cmd, true);
+    return true;
 }
 
 void Parser::T_end_theorem() {
@@ -3134,7 +3135,9 @@ void Parser::define_something(subtypes chr, bool gbl, symcodes w) {
     case def_code: M_def(false, gbl, w, rd_always); return; // hack
     case newcommand_code: M_newcommand(rd_if_undef); return;
     case checkcommand_code: M_newcommand(rd_never); return;
-    case newthm_code: M_new_thm(); return;
+    case newthm_code:
+        if (!M_new_thm()) throw EndOfData();
+        return;
     case newenv_code: M_new_env(rd_if_undef); return;
     case renewenv_code: M_new_env(rd_if_defined); return;
     case renew_code: M_newcommand(rd_if_defined); return;

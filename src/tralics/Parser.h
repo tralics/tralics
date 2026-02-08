@@ -574,7 +574,7 @@ struct Parser {
     void               M_let(Token A, bool global, bool redef);
     void               M_let(Token a, Token b, bool gbl, bool redef);
     void               M_new_env(rd_flag redef);
-    void               M_new_thm();
+    bool               M_new_thm();
     void               M_newboolean(subtypes c);
     void               M_newcommand(rd_flag redef);
     void               M_newif_aux(Token T, const std::string &s, bool b);
