@@ -1310,14 +1310,15 @@ auto Parser::T_fbox_dash_box() -> bool {
     return true;
 }
 
-void Parser::T_fbox_rotate_box() {
+auto Parser::T_fbox_rotate_box() -> bool {
     flush_buffer();
     std::string val = nT_arg_nopar();
     leave_v_mode();
     the_stack.push1(the_names["rotatebox"]);
     the_stack.get_top_id().add_attribute(the_names["rotate_angle"], val);
-    if (!T_arg_local()) throw EndOfData();
+    if (!T_arg_local()) return false;
     the_stack.pop(the_names["rotatebox"]);
+    return true;
 }
 
 // \fbox{\includegraphics{...}} is special.
