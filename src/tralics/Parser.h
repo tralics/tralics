@@ -665,12 +665,12 @@ struct Parser {
     void               scan_expr(subtypes m);
     void               scan_group3(TokenList &res, int cl, bool exp, size_t N);
     void               scan_group4(TokenList &res, int cl);
-    void               scan_hbox(size_t ptr, subtypes c);
+    auto               scan_hbox(size_t ptr, subtypes c) -> bool;
     void               scan_ignore_group();
     void               scan_left_brace_and_back_input();
     void               scan_left_brace();
     void               scan_math_endcell_ok(size_t res);
-    void               scan_math_hbox(size_t res, subtypes c);
+    auto               scan_math_hbox(size_t res, subtypes c) -> bool;
     void               scan_math_mi(size_t res, subtypes c, subtypes k, CmdChr W);
     void               scan_math_rel(subtypes c, size_t res);
     void               scan_math_tag(subtypes c);

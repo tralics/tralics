@@ -1101,26 +1101,26 @@ auto Parser::scan_math(size_t res, math_list_type type) -> bool {
         case special_math_cmd: interpret_math_cmd(res, c); continue;
         case multicolumn_cmd: interpret_math_cmd(res, multicolumn_code); continue;
         case make_box_cmd:
-            if (c == hbox_code)
-                scan_math_hbox(res, hbox_S_code);
-            else
+            if (c == hbox_code) {
+                if (!scan_math_hbox(res, hbox_S_code)) return false;
+            } else
                 math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.val));
             continue;
         case fbox_cmd:
-            if (c == fbox_code)
-                scan_math_hbox(res, fbox_S_code);
-            else
+            if (c == fbox_code) {
+                if (!scan_math_hbox(res, fbox_S_code)) return false;
+            } else
                 math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.val));
             continue;
         case box_cmd:
-            if (c == text_code)
-                scan_hbox(res, text_S_code);
-            else {
+            if (c == text_code) {
+                if (!scan_hbox(res, text_S_code)) return false;
+            } else {
                 if (c == makebox_code) {
                     (void)get_opt_dim(t);
                     (void)get_ctb_opt();
                 }
-                scan_hbox(res, mbox_S_code);
+                if (!scan_hbox(res, mbox_S_code)) return false;
             }
             continue;
         case alignment_catcode: // case & and \\ in a table
@@ -1487,7 +1487,7 @@ void Parser::scan_math_rel(subtypes c, size_t res) {
 }
 
 // Case of a \hbox; like \mbox, but inserts \everyhbox tokens
-void Parser::scan_math_hbox(size_t res, subtypes c) {
+auto Parser::scan_math_hbox(size_t res, subtypes c) -> bool {
     TokenList L = toks_registers[everyhbox_code].val;
     if (!L.empty()) {
         if (before_mac_arg()) back_input(hash_table.CB_token);
@@ -1498,17 +1498,18 @@ void Parser::scan_math_hbox(size_t res, subtypes c) {
         back_input(L);
         back_input(hash_table.OB_token);
     }
-    scan_hbox(res, c);
+    return scan_hbox(res, c);
 }
 
 // Scans a mbox or a hbox
-void Parser::scan_hbox(size_t ptr, subtypes c) {
+auto Parser::scan_hbox(size_t ptr, subtypes c) -> bool {
     if (before_mac_arg()) back_input(hash_table.CB_token);
     add_to_trace('{');
     subtypes k                  = math_data.find_math_location(math_hbox_cd, nomathenv_code, "");
     math_data.get_list(k).sname = c;
-    if (!scan_math3(k, math_hbox_cd, 2)) throw EndOfData();
+    if (!scan_math3(k, math_hbox_cd, 2)) return false;
     math_data.push_back(ptr, CmdChr(math_list_cmd, k), subtypes(math_hbox_cd));
+    return true;
 }
 
 // Scans an argument of a procedure.
