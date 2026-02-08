@@ -935,7 +935,7 @@ void MainClass::run(int argc, char **argv) {
     boot_bibtex();
     trans0();
     the_parser.init(input_content);
-    the_parser.translate_all();
+    if (!the_parser.translate_all()) throw EndOfData();
     the_parser.after_main_text();
     if (the_parser.seen_enddocument) the_stack.add_nl();
     the_parser.final_checks();

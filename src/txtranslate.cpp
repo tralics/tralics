@@ -83,13 +83,14 @@ namespace translate_ns {
 } // namespace translate_ns
 
 // This code translates everything, until end of file.
-void Parser::translate_all() {
+auto Parser::translate_all() -> bool {
     unprocessed_xml.clear();
     while (!get_x_token()) {
         if (tracing_commands()) translate02();
-        if (!translate03()) throw EndOfData();
+        if (!translate03()) return false;
     }
     flush_buffer();
+    return true;
 }
 
 // Same, with a test that unprocessed_xml is empty
@@ -97,7 +98,7 @@ void Parser::translate_all() {
 // restricted is true, and token list is exhausted
 void Parser::translate0() {
     if (!unprocessed_xml.empty()) missing_flush();
-    translate_all();
+    if (!translate_all()) throw EndOfData();
 }
 
 // Main function: translates a token list.
@@ -108,7 +109,7 @@ void Parser::T_translate(TokenList &X) {
     restricted = true;
     TL.swap(X);
     if (!unprocessed_xml.empty()) missing_flush();
-    translate_all();
+    if (!translate_all()) throw EndOfData();
 }
 
 // This prints the command to translate. The case of a space is special
@@ -1509,7 +1510,7 @@ auto Parser::special_tpa_arg(const std::string &name, const std::string &y, bool
         }
     }
     try {
-        translate_all();
+        if (!translate_all()) throw EndOfData();
     } catch (EndOfData &) {};
     flush_buffer();
     if (special_case) {

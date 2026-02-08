@@ -207,7 +207,7 @@ struct Parser {
     auto tpa_exec(const std::string &cmd) -> Xml *;
     void M_tracingall();
     void translate0();
-    void translate_all();
+    auto translate_all() -> bool;
     void word_define(size_t a, long c, bool gbl);
     void mu_error(String s, int i);
     void expand_nct(TokenList &L);
