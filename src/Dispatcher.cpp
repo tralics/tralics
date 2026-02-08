@@ -118,7 +118,9 @@ void Dispatcher::boot() {
     register_action_plain(bibitem_cmd, [](subtypes c) { c == 1 ? the_parser.T_empty_bibitem() : the_parser.T_bibitem(); });
     register_action_plain(biblio_cmd, &Parser::T_biblio);
     register_action_plain(bibliographystyle_cmd, &Parser::T_bibliostyle);
-    register_action_plain(box_cmd, &Parser::T_mbox);
+    register_action_plain(box_cmd, [](subtypes c) {
+        if (!the_parser.T_mbox(c)) throw EndOfData();
+    });
     register_action_plain(bpers_cmd, &Parser::T_bpers);
     register_action_plain(calc_cmd, &Parser::exec_calc);
     register_action_plain(caption_cmd, [] {

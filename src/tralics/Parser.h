@@ -800,7 +800,7 @@ struct Parser {
     void               T_mark(subtypes c);
     auto               T_math(subtypes type) -> bool;
     void               T_matter(subtypes c);
-    void               T_mbox(subtypes c);
+    bool               T_mbox(subtypes c);
     void               T_minipage();
     void               T_moreinfo_end();
     void               T_multicolumn();

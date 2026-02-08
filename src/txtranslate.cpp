@@ -1154,7 +1154,7 @@ auto Parser::internal_makebox() -> Xml * {
 }
 
 // Translates \makebox and \mbox, \text
-void Parser::T_mbox(subtypes c) {
+auto Parser::T_mbox(subtypes c) -> bool {
     Token       T = cur_tok;
     std::string ipos;
     std::string iwidth;
@@ -1162,8 +1162,8 @@ void Parser::T_mbox(subtypes c) {
         flush_buffer();
         skip_initial_space_and_back_input();
         if (cur_tok.is_open_paren()) {
-            if (!T_makebox(false, T)) throw EndOfData();
-            return;
+            if (!T_makebox(false, T)) return false;
+            return true;
         }
         iwidth = get_opt_dim(T);
         auto x = get_ctb_opt();
@@ -1173,13 +1173,14 @@ void Parser::T_mbox(subtypes c) {
     if (!(ipos.empty() && iwidth.empty())) {
         if (!ipos.empty()) mbox->id.add_attribute(the_names["box_pos"], ipos);
         mbox->id.add_attribute(the_names["box_width"], iwidth);
-        return;
+        return true;
     }
     // Hack the box
     Xml *u = mbox->single_non_empty();
     if ((u != nullptr) && u->has_name_of("figure")) mbox->kill_name();
     if (std::none_of(mbox->begin(), mbox->end(), [](Xml *t) { return t->is_element(); })) mbox->kill_name();
     if (mbox->only_hi()) mbox->kill_name();
+    return true;
 }
 
 // This translates \caption or \footnote
