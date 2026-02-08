@@ -265,7 +265,7 @@ struct Parser {
     auto               is_verbatim_end() -> bool;
     auto               kvo_getfam() -> std::string;
     auto               latex_input(subtypes q) -> std::string;
-    auto               M_counter(bool def) -> bool;
+    auto               M_counter(bool def) -> std::optional<bool>;
     auto               make_label_inner(const std::string &name) -> std::string;
     auto               math_argument(int w, Token T) -> subtypes;
     auto               math_dimen_attrib(Token C, String s) -> int;

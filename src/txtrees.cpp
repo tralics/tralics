@@ -403,26 +403,32 @@ auto Parser::scan_date_ctrs() -> bool {
     year_ctr  = hash_table.relax_token;
     month_ctr = hash_table.relax_token;
     day_ctr   = hash_table.relax_token;
-    bool bad  = M_counter(false);
-    bool res  = true;
+    auto counter_res = M_counter(false);
+    if (!counter_res) throw EndOfData();
+    bool bad = *counter_res;
+    bool ok  = true;
     if (!bad) {
         get_token();
         year_ctr = cur_tok;
     } else
-        res = false;
-    bad = M_counter(false);
+        ok = false;
+    counter_res = M_counter(false);
+    if (!counter_res) throw EndOfData();
+    bad = *counter_res;
     if (!bad) {
         get_token();
         month_ctr = cur_tok;
     } else
-        res = false;
-    bad = M_counter(false);
+        ok = false;
+    counter_res = M_counter(false);
+    if (!counter_res) throw EndOfData();
+    bad = *counter_res;
     if (!bad) {
         get_token();
         day_ctr = cur_tok;
     } else
-        res = false;
-    return res;
+        ok = false;
+    return ok;
 }
 
 // This sets the three counters
@@ -496,7 +502,9 @@ auto date_ns::check_date(long y, size_t m, size_t d) -> bool {
 // Returns the number of days between start/01/01 and cur/month/day
 void Parser::count_days() {
     Token T   = cur_tok;
-    bool  bad = M_counter(false);
+    auto res = M_counter(false);
+    if (!res) throw EndOfData();
+    bool bad = *res;
     if (!bad) get_token();
     Token ctr   = cur_tok;
     auto  start = scan_braced_int(T);

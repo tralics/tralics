@@ -1268,7 +1268,9 @@ void Parser::M_new_thm() {
         the_value.push_front(x);
     }
     back_input(V);
-    if (!M_counter(true)) new_macro(the_value, thename_cmd, true);
+    auto res = M_counter(true);
+    if (!res) throw EndOfData();
+    if (!*res) new_macro(the_value, thename_cmd, true);
 }
 
 void Parser::T_end_theorem() {
@@ -1761,7 +1763,7 @@ void Parser::E_loop() {
 // Returns true in case of error. If def is false we check
 // that foo is a counter i.e. \c@foo is assign_int.
 // Otherwise we define a counter
-auto Parser::M_counter(bool def) -> bool {
+auto Parser::M_counter(bool def) -> std::optional<bool> {
     Token     T = cur_tok;
     Buffer    b;
     TokenList L0 = read_arg();
@@ -1773,7 +1775,7 @@ auto Parser::M_counter(bool def) -> bool {
     back_input();
     if (!def) return false;
     auto res = counter_aux(b.substr(2), nullptr, T);
-    if (!res) throw EndOfData();
+    if (!res) return std::nullopt;
     return *res;
 }
 
@@ -1928,7 +1930,9 @@ void Parser::E_counter(subtypes c) {
         if (!E_addtoreset()) throw EndOfData();
         return;
     }
-    if (M_counter(false)) return;
+    auto res = M_counter(false);
+    if (!res) throw EndOfData();
+    if (*res) return;
     if (c == value_code) return;
     get_token();
     Token     t = cur_tok; // we have \c@foo
@@ -3412,7 +3416,8 @@ void Parser::E_latex_ctr() {
     long      n = 0;
     TokenList res;
     if (t < at_number_code) {
-        M_counter(false);
+        auto counter_res = M_counter(false);
+        if (!counter_res) throw EndOfData();
         get_token();
         res.push_back(cur_tok);
     } else

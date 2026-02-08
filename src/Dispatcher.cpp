@@ -278,7 +278,9 @@ void Dispatcher::boot() {
     register_action_plain(newboolean_cmd, &Parser::M_newboolean);
     register_action_plain(newcolumntype_cmd, &Parser::T_newcolumn_type);
     register_action_plain(newcount_cmd, &Parser::new_constant);
-    register_action_plain(newcounter_cmd, [] { the_parser.M_counter(true); });
+    register_action_plain(newcounter_cmd, [] {
+        if (!the_parser.M_counter(true)) throw EndOfData();
+    });
     register_action_plain(newif_cmd, &Parser::M_newif);
     register_action_plain(noargfont_cmd, &Parser::see_font_change);
     register_action_plain(nobreakspace_cmd, [] { the_parser.LC(), the_parser.process_char(the_parser.global_in_url ? '~' : 0xA0); });
