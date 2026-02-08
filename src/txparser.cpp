@@ -3134,19 +3134,34 @@ auto Parser::read_latex_macro() -> Macro * {
 
 // \def, \xdef, \gdef, \edef, latex variants and latex3 variants
 // \long \protected flags are integrated in w
-void Parser::define_something(subtypes chr, bool gbl, symcodes w) {
+auto Parser::define_something(subtypes chr, bool gbl, symcodes w) -> bool {
     switch (chr) {
-    case def_code: M_def(false, gbl, w, rd_always); return; // hack
-    case newcommand_code: M_newcommand(rd_if_undef); return;
-    case checkcommand_code: M_newcommand(rd_never); return;
+    case def_code:
+        M_def(false, gbl, w, rd_always);
+        return true; // hack
+    case newcommand_code:
+        M_newcommand(rd_if_undef);
+        return true;
+    case checkcommand_code:
+        M_newcommand(rd_never);
+        return true;
     case newthm_code:
-        if (!M_new_thm()) throw EndOfData();
-        return;
-    case newenv_code: M_new_env(rd_if_undef); return;
-    case renewenv_code: M_new_env(rd_if_defined); return;
-    case renew_code: M_newcommand(rd_if_defined); return;
-    case provide_code: M_newcommand(rd_skip); return;
-    case declare_math_operator_code: M_declare_math_operator(); return;
+        return M_new_thm();
+    case newenv_code:
+        M_new_env(rd_if_undef);
+        return true;
+    case renewenv_code:
+        M_new_env(rd_if_defined);
+        return true;
+    case renew_code:
+        M_newcommand(rd_if_defined);
+        return true;
+    case provide_code:
+        M_newcommand(rd_skip);
+        return true;
+    case declare_math_operator_code:
+        M_declare_math_operator();
+        return true;
     default:;
     }
     bool csname = false;
@@ -3181,6 +3196,7 @@ void Parser::define_something(subtypes chr, bool gbl, symcodes w) {
         cur_tok = err_tok; // hack
     }
     M_def(exp, gbl, w, fl);
+    return true;
 }
 
 // This handles \catcode, \lccode etc, in a set context.
@@ -4122,8 +4138,9 @@ void Parser::M_prefixed() {
     }
     if (C == let_cmd)
         M_let(cur_cmd_chr.chr, b_global);
-    else if (C == def_cmd)
-        define_something(cur_cmd_chr.chr, b_global, K);
+    else if (C == def_cmd) {
+        if (!define_something(cur_cmd_chr.chr, b_global, K)) throw EndOfData();
+    }
     else
         M_prefixed_aux(b_global);
     Token aat = get_after_ass_tok();

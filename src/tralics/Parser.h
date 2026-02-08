@@ -421,7 +421,7 @@ struct Parser {
     void               dbl_arg();
     void               declaretopics();
     void               default_bp(Buffer &B, Token T, TokenList &val);
-    void               define_something(subtypes chr, bool gbl, symcodes w);
+    bool               define_something(subtypes chr, bool gbl, symcodes w);
     void               dim_define(size_t a, ScaledInt c, bool gbl);
     void               dimen_from_list0(Token T, TokenList &L);
     void               do_register_command(bool gbl);
