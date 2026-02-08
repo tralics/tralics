@@ -1291,7 +1291,7 @@ void Parser::T_picture() {
     }
 }
 
-void Parser::T_fbox_dash_box() {
+auto Parser::T_fbox_dash_box() -> bool {
     Token T = cur_tok;
     flush_buffer();
     TokenList   a = read_arg();
@@ -1305,8 +1305,9 @@ void Parser::T_fbox_dash_box() {
     cur_id.add_attribute(the_names["height"], C);
     cur_id.add_attribute(the_names["width"], B);
     cur_id.add_attribute(the_names["dashdim"], A);
-    if (!T_arg_local()) throw EndOfData();
+    if (!T_arg_local()) return false;
     the_stack.pop(the_names["pic-dashbox"]);
+    return true;
 }
 
 void Parser::T_fbox_rotate_box() {

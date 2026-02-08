@@ -508,8 +508,9 @@ void Dispatcher::boot() {
     });
 
     register_action_plain(fbox_cmd, [](subtypes c) {
-        if (c == dashbox_code)
-            the_parser.T_fbox_dash_box();
+        if (c == dashbox_code) {
+            if (!the_parser.T_fbox_dash_box()) throw EndOfData();
+        }
         else if (c == rotatebox_code)
             the_parser.T_fbox_rotate_box();
         else
