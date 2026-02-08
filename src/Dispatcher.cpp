@@ -142,7 +142,7 @@ void Dispatcher::boot() {
     register_action_plain(cst_cmd, &Parser::T_cst1);
     register_action_plain(cst1_cmd, &Parser::T_cst1);
     register_action_plain(cst2_cmd, &Parser::T_cst2);
-    register_action_plain(curves_cmd, &Parser::T_curves);
+    register_action(curves_cmd, &Parser::T_curves);
     register_action_plain(dashline_cmd, &Parser::T_dashline);
     register_action_plain(dblarg_cmd, &Parser::dbl_arg);
     register_action_plain(declare_options_cmd, &Parser::T_declare_options);
@@ -234,7 +234,7 @@ void Dispatcher::boot() {
     register_action_plain(item_cmd, &Parser::T_item);
     register_action_plain(itemize_cmd, &Parser::T_listenv);
     register_action_plain(kern_cmd, [](subtypes c) { the_parser.scan_dimen(c == 1, the_parser.cur_tok); });
-    register_action_plain(keywords_cmd, &Parser::T_keywords);
+    register_action(keywords_cmd, &Parser::T_keywords);
     register_action_plain(kvo_family_cmd, &Parser::kvo_family);
     register_action_plain(l3_check_cmd, &Parser::L3_check_cmd);
     register_action_plain(l3_gen_cond_Nnn_cmd, &Parser::L3_new_conditional);
@@ -354,7 +354,7 @@ void Dispatcher::boot() {
     register_action_plain(unimp_cmd, &Parser::T_unimp);
     register_action_plain(unimp_font_cmd, &Parser::T_unimplemented_font);
     register_action_plain(unnumberedverbatim_cmd, [] { the_parser.numbered_verbatim = false; });
-    register_action_plain(url_cmd, &Parser::T_url);
+    register_action(url_cmd, &Parser::T_url);
     register_action_plain(usecounter_cmd, &Parser::T_use_counter);
     register_action_plain(usefont_cmd, &Parser::T_usefont);
     register_action_plain(verb_cmd, [](subtypes c) { the_parser.T_verb(c != 0U ? the_parser.verb_saved_char : char32_t(0U)); });
@@ -554,11 +554,9 @@ void Dispatcher::boot() {
         the_parser.token_list_define(c, L, false);
     });
 
-    register_action_plain(start_thm_cmd, [](subtypes c) {
-        if (c == 2)
-            the_parser.T_end_theorem();
-        else
-            the_parser.T_start_theorem(c);
+    register_action(start_thm_cmd, [](subtypes c) -> bool {
+        if (c == 2) { the_parser.T_end_theorem(); return true; }
+        return the_parser.T_start_theorem(c);
     });
 
     register_action(math_env_cmd, [](subtypes c) {

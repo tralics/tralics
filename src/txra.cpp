@@ -50,5 +50,5 @@ void Parser::push_module(const std::string &aux) {
     the_stack.add_nl();
     the_stack.push1(the_names["module"]);
     //  refstepcounter("module",false); Assume done by the package
-    start_paras(8, aux, false);
+    if (!start_paras(8, aux, false)) throw EndOfData();
 }

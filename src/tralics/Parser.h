@@ -169,7 +169,7 @@ struct Parser {
     auto               csname_aux(TokenList &L, bool cs, Buffer &b) -> bool;
     auto               csname_ctr(TokenList &L, Buffer &b) -> bool;
     void               eq_define(size_t a, CmdChr bc, bool gbl);
-    void               titlepage_evaluate(const std::string &s, const std::string &cmd);
+    [[nodiscard]] bool titlepage_evaluate(const std::string &s, const std::string &cmd);
     void               final_checks();
     void               finish_images();
     void               flush_buffer();
@@ -647,7 +647,7 @@ struct Parser {
     void               read_mac_body(TokenList &L, bool exp, size_t N);
     void               read_one_space();
     void               read_toks_edef(TokenList &L);
-    void               refstepcounter_inner(TokenList &L, bool star);
+    [[nodiscard]] bool refstepcounter_inner(TokenList &L, bool star);
     void               refstepcounter();
     void               refstepcounter(const std::string &s, bool star);
     void               refstepcounter(TokenList &L, bool star);
@@ -702,7 +702,7 @@ struct Parser {
     void               special_fvset();
     void               start_a_cell(bool started);
     void               start_a_row(long a, const std::string &s = "");
-    void               start_paras(int y, const std::string &Y, bool star);
+    [[nodiscard]] bool start_paras(int y, const std::string &Y, bool star);
     void               store_new_line(int n, bool vb);
     void               string_define(size_t a, const std::string &c, bool gbl);
     void               strip_pt();
@@ -710,8 +710,8 @@ struct Parser {
     void               T_aftergroup();
     void               T_ampersand();
     bool               T_arg_local();
-    void               T_arg();
-    void               T_arg1(const std::string &y);
+    [[nodiscard]] bool T_arg();
+    [[nodiscard]] bool T_arg1(const std::string &y);
     void               T_at_end_of_class();
     void               T_atdocument(subtypes c);
     void               T_backslash();
@@ -740,7 +740,7 @@ struct Parser {
     auto               T_cr() -> bool;
     void               T_cst1(subtypes c);
     void               T_cst2(subtypes c);
-    void               T_curves(subtypes c);
+    [[nodiscard]] bool T_curves(subtypes c);
     void               T_dashline(subtypes c);
     void               T_declare_option_star();
     void               T_declare_options();
@@ -789,7 +789,7 @@ struct Parser {
     void               T_inputclass();
     void               T_isin();
     void               T_item(subtypes c);
-    void               T_keywords();
+    [[nodiscard]] bool T_keywords();
     void               T_label(subtypes c);
     bool               T_line(subtypes c);
     void               T_linethickness(subtypes c);
@@ -816,7 +816,7 @@ struct Parser {
     void               T_nodepoint();
     void               T_nodetriangle(const std::string &W);
     void               T_omitcite();
-    void               T_optarg();
+    [[nodiscard]] bool T_optarg();
     void               T_option_not_used();
     void               T_par1();
     void               T_par1(const std::string &u);
@@ -843,7 +843,7 @@ struct Parser {
     void               T_specimp(subtypes c);
     void               T_start_tabular(subtypes c);
     void               T_start_the_biblio();
-    void               T_start_theorem(subtypes c);
+    [[nodiscard]] bool T_start_theorem(subtypes c);
     void               T_startprojet(String proj, String loc);
     void               T_subequations(bool start);
     void               T_subfigure();
@@ -857,7 +857,7 @@ struct Parser {
     void               T_un_box(subtypes c);
     void               T_unimp(subtypes c);
     void               T_unimplemented_font(subtypes c);
-    void               T_url();
+    [[nodiscard]] bool T_url();
     void               T_use_counter();
     void               T_use_counter(const std::string &s);
     void               T_usefont();
@@ -926,7 +926,7 @@ struct Parser {
     void l3_expand_f(TokenList &L);
     void l3_expand_N(TokenList &L);
     void l3_expand_o(TokenList &L);
-    void l3_expand_Vv(TokenList &L, bool spec);
+    [[nodiscard]] bool l3_expand_Vv(TokenList &L, bool spec);
     void l3_expand_x(TokenList &L);
     void L3_generate_form(subtypes c, TokenList parms, TokenList body, subtypes s);
     void l3_generate_variant();

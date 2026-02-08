@@ -69,7 +69,7 @@ void Parser::T_xfancy() {
     the_stack.push1(the_names["headings"]);
     the_stack.add_att_to_last(the_names["type"], s);
     the_stack.set_arg_mode();
-    T_arg();
+    if (!T_arg()) throw EndOfData();
     flush_buffer();
     the_stack.pop(the_names["headings"]);
 }
@@ -1107,14 +1107,15 @@ auto Parser::make_label_inner(const std::string &name) -> std::string {
 
 // executes \stepcounter{foo}\makelabel*{foo}
 // the name of the counter is in txparser2_local_buf abd L
-void Parser::refstepcounter_inner(TokenList &L, bool star) {
+auto Parser::refstepcounter_inner(TokenList &L, bool star) -> bool {
     std::string name = txparser2_local_buf;
     L.brace_me();
     L.push_front(hash_table.stepcounter_token);
-    if (!T_translate(L)) throw EndOfData();
+    if (!T_translate(L)) return false;
     std::string v = make_label_inner(name);
     string_define(0, v, false);
     if (star) the_stack.add_new_anchor();
+    return true;
 }
 
 // takes a string as argument and translates the thing
@@ -1143,10 +1144,8 @@ void Parser::refstepcounter(TokenList &L, bool star) {
         bad_counter0();
         return;
     }
-    refstepcounter_inner(L, star);
+    if (!refstepcounter_inner(L, star)) throw EndOfData();
 }
-
-// If the argument is foo, executes \global\c@foo=0 with a test
 // remembers locally the name.
 void Parser::T_use_counter(const std::string &s) {
     string_define(1, s, false);

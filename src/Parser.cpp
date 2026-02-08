@@ -2024,7 +2024,7 @@ void Parser::T_cititem() {
     the_stack.set_arg_mode();
     auto name = std::string(a);
     the_stack.push(name, new Xml(name, nullptr));
-    T_arg();
+    if (!T_arg()) throw EndOfData();
     the_stack.pop(name);
     the_stack.set_mode(m);
     the_stack.add_nl();

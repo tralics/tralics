@@ -401,7 +401,7 @@ auto Parser::l3_to_string(subtypes c, TokenList &L) -> std::string {
     switch (c) {
     case l3expx_code: read_toks_edef(L); break;
     case l3expo_code: l3_reexpand_o(L); break;
-    case l3expV_code: l3_expand_Vv(L, false); break;
+    case l3expV_code: if (!l3_expand_Vv(L, false)) throw EndOfData(); break;
     default:;
     }
     group_buffer.clear();
@@ -564,11 +564,11 @@ void Parser::l3_tl_set(subtypes c) {
     case l3expx_code: l3_expand_x(res); break;
     case l3expv_code:
         csname_arg();
-        l3_expand_Vv(res, true);
+        if (!l3_expand_Vv(res, true)) throw EndOfData();
         break;
     case l3expV_code:
         res = read_arg();
-        l3_expand_Vv(res, false);
+        if (!l3_expand_Vv(res, false)) throw EndOfData();
         break;
     case l3expf_code: l3_expand_f(res); break;
     default: parse_error(err_tok, "internal error unimplemented", err_tok, "", "internal error"); return;
@@ -618,7 +618,7 @@ void Parser::l3_tl_put_left(subtypes c) {
     case l3expx_code: l3_expand_x(res); break;
     case l3expV_code:
         res = read_arg();
-        l3_expand_Vv(res, false);
+        if (!l3_expand_Vv(res, false)) throw EndOfData();
         break;
     default: parse_error(err_tok, "internal error unimplemented ", err_tok, "", "internal error"); return;
     }
@@ -664,7 +664,7 @@ auto Parser::tl_set_rescan(subtypes c) -> bool {
     TokenList eof;
     token_list_define(everyeof_code, eof, false);
     flush_buffer();
-    if (!T_translate(side_effects)) throw EndOfData();
+    if (!T_translate(side_effects)) return false;
     back_input(hash_table.CB_token);
     T_scantokens(arg);
     back_input(hash_table.OB_token);
@@ -1125,11 +1125,11 @@ void Parser::E_l3expand_aux(subtypes c) {
         break;
     case l3expV_code: // \::V case of a list
     case l3expv_code: // \::v case of a csname unread
-        l3_expand_Vv(L3, c == l3expv_code);
+        if (!l3_expand_Vv(L3, c == l3expv_code)) throw EndOfData();
         L3.brace_me();
         break;
     case l3expVu_code: // \::v_unbraced idem, unbraced
-    case l3expvu_code: l3_expand_Vv(L3, c == l3expvu_code); break;
+    case l3expvu_code: if (!l3_expand_Vv(L3, c == l3expvu_code)) throw EndOfData(); break;
     default: // \::N \::p there is nothing to do; idem for other unbraced variants
         break;
     }
@@ -1162,11 +1162,11 @@ void Parser::E_l3noexpand(subtypes c) {
         return;
     case l3expv_code:
         csname_arg();
-        l3_expand_Vv(L3, true);
+        if (!l3_expand_Vv(L3, true)) throw EndOfData();
         break;
     case l3expV_code:
         L3 = read_arg();
-        l3_expand_Vv(L3, false);
+        if (!l3_expand_Vv(L3, false)) throw EndOfData();
         break;
     case l3expo_code: l3_expand_o(L3); break;
     case l3expf_code:
@@ -1225,7 +1225,7 @@ void Parser::l3_expand_x(TokenList &L) {
 // to read, otherwise something in L. If a macro, we expand; otherwise call \the
 // the result is in L.
 
-void Parser::l3_expand_Vv(TokenList &L, bool spec) {
+auto Parser::l3_expand_Vv(TokenList &L, bool spec) -> bool {
     if (spec) get_token();
     back_input(hash_table.CB_token);
     if (spec)
@@ -1234,13 +1234,14 @@ void Parser::l3_expand_Vv(TokenList &L, bool spec) {
         back_input(L);
     get_token(); // look at what follows
     if (cur_cmd_chr.is_expandable()) {
-        if (!expand()) throw EndOfData();
+        if (!expand()) return false;
     } else {
         back_input();
         E_the_traced(err_tok, the_code);
     }
     back_input(hash_table.OB_token);
     L = read_arg();
+    return true;
 }
 
 // used in the next function
@@ -1272,19 +1273,19 @@ void Parser::l3_expand_Vv(TokenList &L, bool spec) {
     INSERT
 #define EXPAND_V                                                                                                                           \
     L = read_arg();                                                                                                                        \
-    l3_expand_Vv(L, false);                                                                                                                \
+    if (!l3_expand_Vv(L, false)) throw EndOfData();                                                                                        \
     INSERT_B
 #define EXPAND_Vu                                                                                                                          \
     L = read_arg();                                                                                                                        \
-    l3_expand_Vv(L, false);                                                                                                                \
+    if (!l3_expand_Vv(L, false)) throw EndOfData();                                                                                        \
     INSERT
 #define EXPAND_v                                                                                                                           \
     csname_arg();                                                                                                                          \
-    l3_expand_Vv(L, true);                                                                                                                 \
+    if (!l3_expand_Vv(L, true)) throw EndOfData();                                                                                         \
     INSERT_B
 #define EXPAND_vu                                                                                                                          \
     csname_arg();                                                                                                                          \
-    l3_expand_Vv(L, true);                                                                                                                 \
+    if (!l3_expand_Vv(L, true)) throw EndOfData();                                                                                         \
     INSERT
 #define EXPAND_n                                                                                                                           \
     L = read_arg();                                                                                                                        \

@@ -589,9 +589,10 @@ void Parser::add_buffer_to_document_hook(const Buffer &b, const std::string &nam
 
 // Evaluates now a token string. First action is to put chars in a buffer
 // (because we add a '\n' at the end of the string).
-void Parser::titlepage_evaluate(const std::string &s, const std::string &cmd) {
+auto Parser::titlepage_evaluate(const std::string &s, const std::string &cmd) -> bool {
     TokenList L = tokenize_buffer(s, "(tpa post " + cmd + ")");
-    if (!T_translate(L)) throw EndOfData();
+    if (!T_translate(L)) return false;
+    return true;
 }
 
 // Puts in cur_tok the next non-expandable token.
@@ -1280,7 +1281,7 @@ void Parser::T_end_theorem() {
     the_stack.add_nl();
 }
 
-void Parser::T_start_theorem(subtypes c) {
+auto Parser::T_start_theorem(subtypes c) -> bool {
     TokenList name      = read_arg();
     TokenList ctr       = read_arg(); // empty in case of theorem*
     TokenList font2     = read_arg();
@@ -1294,7 +1295,7 @@ void Parser::T_start_theorem(subtypes c) {
     bool noref = ctr.empty();
     if (!noref) {
         refstepcounter(mecounter, true);
-        if (!T_translate(mecounter)) throw EndOfData();
+        if (!T_translate(mecounter)) return false;
     }
     if (c == 0) {
         Xid id1 = the_stack.get_xid();
@@ -1321,7 +1322,7 @@ void Parser::T_start_theorem(subtypes c) {
         the_stack.set_arg_mode();
         the_stack.add_nl();
         back_input_braced(name);
-        T_arg1(the_names["head"]);
+        if (!T_arg1(the_names["head"])) return false;
         the_stack.add_nl();
         back_input_braced(me);
         std::string n = nT_arg_nopar();
@@ -1331,12 +1332,13 @@ void Parser::T_start_theorem(subtypes c) {
         the_stack.add_att_to_cur(the_names["style"], n);
         if (opt) {
             back_input_braced(*opt);
-            T_arg1(the_names["theorem_head"]);
+            if (!T_arg1(the_names["theorem_head"])) return false;
             the_stack.add_nl();
         }
         the_stack.set_v_mode();
         remove_initial_space_and_back_input();
     }
+    return true;
 }
 
 // Returns all tokens before the \end at level zero
@@ -2203,7 +2205,7 @@ auto Parser::env_helper(const std::string &s) -> SaveAuxEnv * {
         if (T.nbargs != 0)
             parse_error(err_tok, "Illegal end of environment");
         else {
-            if (!expand()) throw EndOfData();
+            if (!expand()) return false;
         }
     } else {
         Token t                    = hash_table.temp_token;

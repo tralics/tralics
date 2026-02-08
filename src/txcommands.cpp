@@ -795,7 +795,7 @@ void Parser::T_bauteursediteurs(subtypes c) {
     mode m = the_stack.get_mode();
     need_bib_mode();
     flush_buffer();
-    T_arg1(the_names[c == 0 ? "bauteurs"s : "bediteur"s]);
+    if (!T_arg1(the_names[c == 0 ? "bauteurs"s : "bediteur"s])) throw EndOfData();
     the_stack.set_mode(m);
     the_stack.add_nl();
 }

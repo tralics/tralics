@@ -214,7 +214,7 @@ void Parser::T_node() {
     the_stack.push1(the_names["node"]);
     AttList &cur           = last_att_list();
     cur[the_names["name"]] = A;
-    T_arg();
+    if (!T_arg()) throw EndOfData();
     the_stack.pop(the_names["node"]);
 }
 

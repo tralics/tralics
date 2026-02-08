@@ -172,24 +172,26 @@ void Parser::leave_h_mode() {
 }
 
 // translates {foo}
-void Parser::T_arg() {
+auto Parser::T_arg() -> bool {
     TokenList L = read_arg();
-    if (!T_translate(L)) throw EndOfData();
+    if (!T_translate(L)) return false;
+    return true;
 }
 
 // translates {foo} in a group
 auto Parser::T_arg_local() -> bool {
     push_level(bt_local);
     TokenList L = read_arg();
-    if (!T_translate(L)) throw EndOfData();
+    if (!T_translate(L)) return false;
     if (!pop_level(bt_local)) return false;
     return true;
 }
 
 // translates [foo]
-void Parser::T_optarg() {
+auto Parser::T_optarg() -> bool {
     auto L = read_optarg().value_or(TokenList{});
-    if (!T_translate(L)) throw EndOfData();
+    if (!T_translate(L)) return false;
+    return true;
 }
 
 // Translates a list of token in argument mode. Returns the value.
@@ -341,7 +343,7 @@ void Parser::T_fonts(const std::string &x) {
     leave_v_mode();
     Xml *res = fonts1(x);
     the_stack.push(the_names["fonts"], res);
-    T_arg();
+    if (!T_arg()) throw EndOfData();
     the_stack.pop(the_names["fonts"]);
 }
 
@@ -422,18 +424,16 @@ void Parser::T_xmlelt(subtypes w) {
     leave_v_mode();
     auto name = std::string("xmlelt");
     the_stack.push(name, res);
-    T_arg();
+    if (!T_arg()) throw EndOfData();
     the_stack.pop(name);
 }
-
-// Special case where the XML name and the frame name are the same
-// Note the additional braces
-void Parser::T_arg1(const std::string &y) {
+auto Parser::T_arg1(const std::string &y) -> bool {
     the_stack.push1(y);
     TokenList L = read_arg();
     L.brace_me();
-    if (!T_translate(L)) throw EndOfData();
+    if (!T_translate(L)) return false;
     the_stack.pop(y);
+    return true;
 }
 
 // Case of an item in a list...
@@ -470,7 +470,7 @@ auto Parser::T_item_label(unsigned c) -> std::string {
     L.brace_me(); // \item[\bf x] puts only x in \bf
     the_stack.push1(the_names["labelitem"]);
     the_stack.set_arg_mode();
-    if (!T_translate(L)) throw EndOfData();
+    if (!T_translate(L)) return {};
     the_stack.pop(the_names["labelitem"]);
     if (!((c != 0) || get_cur_env_name() == "enumerate")) return {};
     Xml *res      = the_stack.remove_last();
@@ -484,10 +484,10 @@ void Parser::T_glo() {
     leave_h_mode(); // mode should be no_mode now.
     mode w = the_stack.get_mode();
     the_stack.set_arg_mode();
-    T_arg1(the_names["gloitem"]);
+    if (!T_arg1(the_names["gloitem"])) throw EndOfData();
     the_stack.push1(the_names["item"]);
     the_stack.set_v_mode();
-    T_arg();
+    if (!T_arg()) throw EndOfData();
     leave_h_mode();
     the_stack.pop(the_names["item"]);
     the_stack.set_mode(w);
@@ -498,7 +498,7 @@ void Parser::T_glo() {
 // Since there are no more old modules  7 is replaced by 8
 // We have opened the current XML element,
 // we have to allow for a label and read the title.
-void Parser::start_paras(int y, const std::string &Y, bool star) {
+auto Parser::start_paras(int y, const std::string &Y, bool star) -> bool {
     bool module_p = y == 7 || y == 8;
     if (!star || module_p) {
         if (y == 0)
@@ -517,7 +517,7 @@ void Parser::start_paras(int y, const std::string &Y, bool star) {
     TokenList L     = read_arg();
     if (module_p) check_module_title(L);
     L.brace_me();
-    if (!T_translate(L)) throw EndOfData();
+    if (!T_translate(L)) return false;
     current_head.clear();
     title->put_in_buffer(current_head);
     the_stack.pop(the_names["head"]);
@@ -532,9 +532,8 @@ void Parser::start_paras(int y, const std::string &Y, bool star) {
         spdlog::info("Translating section command {}: {}.", Y, YY);
     }
     spdlog::trace("Translating {}: {}.", Y, YY);
+    return true;
 }
-
-// An error is signaled if the title of the module is empty
 void Parser::check_module_title(TokenList &L) {
     static int ctr = 0;
     ++ctr;
@@ -610,10 +609,8 @@ void Parser::T_paras(subtypes x) {
         else
             star = true;
     }
-    start_paras(y, Y, star);
+    if (!start_paras(y, Y, star)) throw EndOfData();
 }
-
-// Translates \ref or \pageref
 void Parser::T_ref(bool is_ref) {
     std::string a = special_next_arg();
     the_stack.add_newid0("ref");
@@ -741,11 +738,11 @@ void Parser::T_subfigure() {
     refstepcounter("subfigure", true);
     the_stack.set_arg_mode();
     the_stack.push1(the_names["leg"]);
-    T_optarg();
+    if (!T_optarg()) throw EndOfData();
     the_stack.pop(the_names["leg"]);
     {
         auto guard = SaveCatcode('_', 13); // allow underscore in the file name (needed ?)
-        T_arg1(the_names["texte"]);
+        if (!T_arg1(the_names["texte"])) throw EndOfData();
     }
     the_stack.pop(the_names["subfigure"]);
 }
@@ -805,7 +802,7 @@ void Parser::T_grabenv() {
 }
 
 // This is the code of \begin{motscle}
-void Parser::T_keywords() {
+auto Parser::T_keywords() -> bool {
     leave_h_mode();
     the_stack.push1(the_names["keywords"]);
     the_stack.add_nl();
@@ -817,11 +814,12 @@ void Parser::T_keywords() {
         if (!v.empty() && v.back().is_dot()) v.pop_back();
         the_stack.push1(the_names["term"]);
         the_stack.set_arg_mode();
-        if (!T_translate(v)) throw EndOfData();
+        if (!T_translate(v)) return false;
         the_stack.pop(the_names["term"]);
         the_stack.add_nl();
         if (seen_end) break;
     }
+    return true;
 }
 
 // Handle the case of an argument of \includegraphics
@@ -1192,7 +1190,7 @@ auto Parser::T_cap_or_note(bool cap) -> bool {
         opt  = xT_optarg_nopar();
         note = the_stack.top_stack();
         the_stack.set_v_mode();
-        T_arg();
+        if (!T_arg()) return false;
         leave_h_mode();
     } else {             // case of footnote, locally redefines fonts
         ignore_optarg(); // is this OK ?
@@ -1205,7 +1203,7 @@ auto Parser::T_cap_or_note(bool cap) -> bool {
         cur_font.change_size(6);
         font_has_changed();
         the_stack.set_v_mode();
-        T_arg();
+        if (!T_arg()) return false;
         leave_h_mode();
         cur_font = sv;
         font_has_changed();
@@ -1259,7 +1257,7 @@ auto Parser::T_save_box(bool simple) -> bool {
         Xml      *mbox = the_stack.top_stack();
         TokenList d    = read_arg();
         d.brace_me();
-        if (!T_translate(d)) throw EndOfData();
+        if (!T_translate(d)) return false;
         the_stack.pop(the_names["mbox"]);
         if (ipos && ipos->empty()) ipos.reset();       // \todo this is ugly
         if (iwidth && iwidth->empty()) iwidth.reset(); // \todo this is ugly
@@ -1386,7 +1384,7 @@ void Parser::new_xref(Xml *val, std::string v, bool err) {
 }
 
 // Translates \url
-void Parser::T_url() {
+auto Parser::T_url() -> bool {
     bool no_hack = remove_initial_star();
     leave_v_mode();
     auto      guard1 = SaveCatcode('~', other_catcode);
@@ -1409,7 +1407,7 @@ void Parser::T_url() {
     if (in_href) {
         if (!no_hack) X.url_hack();
         X.brace_me();
-        if (!T_translate(X)) throw EndOfData();
+        if (!T_translate(X)) return false;
     } else {
         std::string x = translate_list(Y)->convert_to_string();
         if (!no_hack) X.url_hack();
@@ -1417,6 +1415,7 @@ void Parser::T_url() {
         Xml *y = translate_list(X);
         new_xref(y, x, true);
     }
+    return true;
 }
 
 // Grabs the text of the URL. This does nothing special with ~.
@@ -1770,7 +1769,7 @@ void Parser::T_put(subtypes c) {
     if (c == frame_code) {
         the_stack.push1(the_names[x0]);
         the_stack.set_arg_mode();
-        T_arg();
+        if (!T_arg()) throw EndOfData();
         the_stack.pop(the_names[x0]);
         return;
     }
@@ -1822,7 +1821,7 @@ void Parser::T_put(subtypes c) {
     }
     cur_id.add_attribute(the_names["ypos"], B);
     cur_id.add_attribute(the_names["xpos"], A);
-    T_arg();
+    if (!T_arg()) throw EndOfData();
     the_stack.pop(the_names[x0]);
     if (c == put_code || c == multiput_code) remove_initial_space_and_back_input();
 }
@@ -1836,7 +1835,7 @@ void Parser::T_linethickness(subtypes c) {
     if (c == linethickness_code) res[the_names["size"]] = nT_arg_nopar();
 }
 
-void Parser::T_curves(subtypes c) {
+auto Parser::T_curves(subtypes c) -> bool {
     Token C = cur_tok;
     flush_buffer();
     std::string x0 = "cst_empty";
@@ -1869,9 +1868,10 @@ void Parser::T_curves(subtypes c) {
         skip_initial_space();
         if (cur_tok != match) bad_macro_prefix(cur_tok, match);
         TokenList L = read_until_nopar(Token(other_t_offset, ')'));
-        if (!T_translate(L)) throw EndOfData();
+        if (!T_translate(L)) return false;
     }
     the_stack.pop(the_names[x0]);
+    return true;
 }
 
 void Parser::T_multiput() {
@@ -1898,7 +1898,7 @@ void Parser::T_multiput() {
         AttList &AL           = last_att_list();
         AL[the_names["ypos"]] = dimen_attrib(Y);
         AL[the_names["xpos"]] = dimen_attrib(X);
-        T_arg();
+        if (!T_arg()) throw EndOfData();
         the_stack.pop(the_names["put"]);
         the_stack.add_nl();
         r--;

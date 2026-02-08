@@ -136,7 +136,7 @@ void TitlePageAux::exec_post() const {
     if (type == tpi_rt_constant) Titlepage[idx] = new Xml(std::string(T1));
     if (type == tpi_rt_exec) Titlepage[idx] = the_parser.tpa_exec(T2);
     if (type != tpi_rt_normal) return;
-    if (get_flags2() == tp_C_flag) the_parser.titlepage_evaluate(T4, T1);
+    if (get_flags2() == tp_C_flag) if (!the_parser.titlepage_evaluate(T4, T1)) throw EndOfData();
     if (!has_plus_flags()) return;
     if (has_u_flags()) return;
     the_parser.parse_error(the_parser.err_tok, "No value given for command \\", T1, "");
