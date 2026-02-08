@@ -617,7 +617,7 @@ struct Parser {
     void               next_from_list();
     void               no_arg_font();
     void               no_extension(AttList &AL, const std::string &s);
-    void               numberwithin();
+    bool               numberwithin();
     void               old_font();
     void               one_of_two(bool which);
     void               one_of_two(TokenList &A, TokenList &B, bool which);

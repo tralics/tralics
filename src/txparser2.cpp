@@ -1060,7 +1060,7 @@ void Parser::dbl_arg() {
 // \numberwithin[\c]{foo}{bar}
 // evaluate: \@cons\cl@bar{{foo}}; i.e. M_cons(\cl@bar, {foo}).
 // and \def\thefoo{\thebar.\c{foo}}
-void Parser::numberwithin() {
+auto Parser::numberwithin() -> bool {
     auto L = read_optarg().value_or(TokenList{});
     if (L.empty()) L.push_back(hash_table.arabic_token);
     TokenList foo_list = read_arg();
@@ -1069,21 +1069,21 @@ void Parser::numberwithin() {
     Buffer &  b        = txparser2_local_buf;
     if (csname_ctr(foo_list, b)) {
         bad_counter0();
-        return;
+        return true;
     }
-    if (counter_check(b, false)) return;
+    if (counter_check(b, false)) return true;
     auto fooname = b.substr(2);
     if (csname_ctr(bar_list, b)) {
         bad_counter0();
-        return;
+        return true;
     }
-    if (counter_check(b, false)) return;
+    if (counter_check(b, false)) return true;
     auto barname      = b.substr(2);
     b                 = "cl@" + barname;
     Token clbar_token = hash_table.locate(b);
     A.brace_me();
     TokenList B = A;
-    if (!M_cons(clbar_token, B)) throw EndOfData();
+    if (!M_cons(clbar_token, B)) return false;
     b            = "the" + barname;
     Token thebar = hash_table.locate(b);
     b            = "the" + fooname;
@@ -1092,6 +1092,7 @@ void Parser::numberwithin() {
     L.push_front(Token(other_t_offset, '.'));
     L.push_front(thebar);
     new_macro(L, thefoo, true);
+    return true;
 }
 
 auto Parser::make_label_inner(const std::string &name) -> std::string {

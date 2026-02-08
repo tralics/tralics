@@ -282,7 +282,9 @@ void Dispatcher::boot() {
     register_action_plain(nobreakspace_cmd, [] { the_parser.LC(), the_parser.process_char(the_parser.global_in_url ? '~' : 0xA0); });
     register_action_plain(nolinebreak_cmd, &Parser::ignore_optarg);
     register_action_plain(numberedverbatim_cmd, [] { the_parser.numbered_verbatim = true; });
-    register_action_plain(numberwithin_cmd, &Parser::numberwithin);
+    register_action_plain(numberwithin_cmd, [] {
+        if (!the_parser.numberwithin()) throw EndOfData();
+    });
     register_action_plain(oldfont_cmd, &Parser::old_font);
     register_action_plain(omitcite_cmd, &Parser::T_omitcite);
     register_action_plain(open_catcode, [] { the_parser.push_level(bt_brace); });
