@@ -121,7 +121,9 @@ void Dispatcher::boot() {
     register_action_plain(box_cmd, &Parser::T_mbox);
     register_action_plain(bpers_cmd, &Parser::T_bpers);
     register_action_plain(calc_cmd, &Parser::exec_calc);
-    register_action_plain(caption_cmd, [] { the_parser.T_cap_or_note(true); });
+    register_action_plain(caption_cmd, [] {
+        if (!the_parser.T_cap_or_note(true)) throw EndOfData();
+    });
     register_action_plain(case_shift_cmd, &Parser::T_case_shift);
     register_action_plain(change_element_name_cmd, &Parser::T_change_element_name);
     register_action_plain(char_given_cmd, [](subtypes c) { the_parser.extended_chars(size_t(c)); });
@@ -189,7 +191,9 @@ void Dispatcher::boot() {
     register_action_plain(fnhack_cmd, &Parser::fnhack);
     register_action_plain(fontsize_cmd, &Parser::translate_font_size);
     register_action_plain(footcitepre_cmd, [] { the_parser.unprocessed_xml.push_back_unless_punct(' '); });
-    register_action_plain(footnote_cmd, [] { the_parser.T_cap_or_note(false); });
+    register_action_plain(footnote_cmd, [] {
+        if (!the_parser.T_cap_or_note(false)) throw EndOfData();
+    });
     register_action_plain(for_cmd, &Parser::T_xkv_for);
     register_action_plain(formatdate_cmd, &Parser::formatdate);
     register_action_plain(fp_cmd, &Parser::exec_fp_cmd);

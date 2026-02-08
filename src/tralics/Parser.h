@@ -725,7 +725,7 @@ struct Parser {
     void               T_biblio();
     void               T_bibliostyle();
     void               T_bpers();
-    void               T_cap_or_note(bool cap);
+    bool               T_cap_or_note(bool cap);
     void               T_case_shift(subtypes c);
     void               T_catperso();
     void               T_change_element_name();

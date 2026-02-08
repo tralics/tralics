@@ -1183,7 +1183,7 @@ void Parser::T_mbox(subtypes c) {
 }
 
 // This translates \caption or \footnote
-void Parser::T_cap_or_note(bool cap) {
+auto Parser::T_cap_or_note(bool cap) -> bool {
     leave_v_mode();
     std::string name = cap ? "scaption" : "footnote";
     push_level(bt_local);
@@ -1215,8 +1215,9 @@ void Parser::T_cap_or_note(bool cap) {
     }
     the_stack.pop(the_names[name]);
     if (opt != nullptr) the_stack.add_last(new Xml(the_names["alt_caption"], opt));
-    if (!pop_level(bt_local)) throw EndOfData();
+    if (!pop_level(bt_local)) return false;
     if (the_main.footnote_hack) note->remove_par_bal_if_ok();
+    return true;
 }
 
 void Parser::T_makebox(bool framed, Token C) {
