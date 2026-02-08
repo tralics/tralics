@@ -1926,16 +1926,16 @@ void Parser::new_constant(String /*name*/, size_t max_val, subtypes alloc_pos, s
 // or \global\advance\c@foo 25\relax for \addtocounter{foo}{25}
 // In the case of \stepcounter, we do
 //  \global\advance\c@foo\@one\let\elt@stpelt\cl@foo
-void Parser::E_counter(subtypes c) {
+auto Parser::E_counter(subtypes c) -> bool {
     Token first = cur_tok;
     if (c == addtoreset_code) {
-        if (!E_addtoreset()) throw EndOfData();
-        return;
+        if (!E_addtoreset()) return false;
+        return true;
     }
     auto res = M_counter(false);
-    if (!res) throw EndOfData();
-    if (*res) return;
-    if (c == value_code) return;
+    if (!res) return false;
+    if (*res) return true;
+    if (c == value_code) return true;
     get_token();
     Token     t = cur_tok; // we have \c@foo
     TokenList L;
@@ -1961,6 +1961,7 @@ void Parser::E_counter(subtypes c) {
     } else
         L.push_back(hash_table.relax_token);
     finish_counter_cmd(first, L);
+    return true;
 }
 
 // Backinputs the token list, plus some tracing info.
@@ -2582,7 +2583,9 @@ void Parser::expand() {
     case ifempty_cmd: E_ifempty(); return;
     case split_cmd: E_split(); return;
     case useverb_cmd: E_useverb(); return;
-    case counter_cmd: E_counter(c); return;
+    case counter_cmd:
+        if (!E_counter(c)) throw EndOfData();
+        return;
     case setlength_cmd: E_setlength(c); return;
     case csname_cmd: E_csname(); return;
     case usename_cmd: E_usename(c, vb); return;

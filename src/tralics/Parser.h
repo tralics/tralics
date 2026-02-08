@@ -434,7 +434,7 @@ struct Parser {
     void               E_all_of_one(Token T, subtypes c);
     void               E_car(bool first);
     void               E_convert();
-    void               E_counter(subtypes c);
+    bool               E_counter(subtypes c);
     void               E_csname();
     void               E_ensuremath();
     void               E_expandafter();
