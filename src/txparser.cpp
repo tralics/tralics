@@ -1861,16 +1861,17 @@ auto Parser::counter_aux(const std::string &name, String opt, Token T) -> bool {
 
 // \@addtreset{foo}{bar}
 // evaluate: \@cons\cl@bar{{foo}}; i.e. M_cons(\cl@bar, {foo}).
-void Parser::E_addtoreset() {
+auto Parser::E_addtoreset() -> bool {
     int       ne       = the_parser.nb_errs;
     TokenList foo_list = read_arg_nopar();
     TokenList L        = read_arg_nopar();
-    if (ne != the_parser.nb_errs) return;
+    if (ne != the_parser.nb_errs) return true;
     foo_list.brace_me();
-    if (my_csname("cl@", "", L, "\\@addtoreset")) return;
+    if (my_csname("cl@", "", L, "\\@addtoreset")) return true;
     Token cl_token = cur_tok; // \cl@bar
     get_token();              // get the \cl@bar token
-    if (!M_cons(cl_token, foo_list)) throw EndOfData();
+    if (!M_cons(cl_token, foo_list)) return false;
+    return true;
 }
 
 //  Implements \newcount etc.
@@ -1920,7 +1921,7 @@ void Parser::new_constant(String /*name*/, size_t max_val, subtypes alloc_pos, s
 void Parser::E_counter(subtypes c) {
     Token first = cur_tok;
     if (c == addtoreset_code) {
-        E_addtoreset();
+        if (!E_addtoreset()) throw EndOfData();
         return;
     }
     if (M_counter(false)) return;

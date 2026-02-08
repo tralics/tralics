@@ -428,7 +428,7 @@ struct Parser {
     void               dump_save_stack() const;
     void               E_accent_a();
     void               E_accent();
-    void               E_addtoreset();
+    bool               E_addtoreset();
     void               E_afterelsefi();
     void               E_afterfi();
     void               E_all_of_one(Token T, subtypes c);
