@@ -730,16 +730,16 @@ void Parser::T_enddocument(subtypes c) {
 }
 
 // case \begin{document}
-void Parser::T_begindocument() {
+auto Parser::T_begindocument() -> bool {
     if (the_parser.seen_document) {
         parse_error("Two environments named document");
-        return;
+        return true;
     }
     if (cur_level != 2) parse_error("\\begin{document} not at level 0");
     the_parser.seen_document = true;
     if (!Titlepage.is_valid()) add_language_att();
     cur_tok.kill();
-    if (!pop_level(bt_env)) throw EndOfData();
+    if (!pop_level(bt_env)) return false;
     cur_level = 1; // this is the outer level...
     if (the_main.dverbose) M_tracingall();
     if (tracing_commands()) {
@@ -755,6 +755,7 @@ void Parser::T_begindocument() {
     back_input(document_hook);
     show_unused_options();
     if (tracing_commands()) spdlog::trace("atbegindocumenthook= {}", fmt::streamed(TL));
+    return true;
 }
 
 // case \begin \end

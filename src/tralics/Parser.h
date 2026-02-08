@@ -718,7 +718,7 @@ struct Parser {
     void               T_barnodeconnect(const std::string &W);
     void               T_bauteursediteurs(subtypes c);
     [[nodiscard]] auto T_begin(const std::string &s) -> bool;
-    void               T_begindocument();
+    bool               T_begindocument();
     [[nodiscard]] auto T_beginend(symcodes x) -> bool;
     void               T_bezier(subtypes c);
     void               T_bibitem();

@@ -157,7 +157,9 @@ void Dispatcher::boot() {
     register_action_plain(ding_cmd, &Parser::T_ding);
     register_action_plain(divide_cmd, &Parser::M_prefixed);
     register_action_plain(doc_class_cmd, [] { the_parser.T_documentclass(!the_stack.in_v_mode() || the_parser.seen_document); });
-    register_action_plain(document_cmd, &Parser::T_begindocument);
+    register_action_plain(document_cmd, [] {
+        if (!the_parser.T_begindocument()) throw EndOfData();
+    });
     register_action_plain(dollar_catcode, [] { return the_parser.flush_buffer(), the_parser.T_math(nomathenv_code); });
     register_action_plain(end_center_cmd, [] { the_parser.leave_h_mode(); });
     register_action_plain(end_citation_cmd, [] { the_stack.pop(::the_names["citation"]); });
