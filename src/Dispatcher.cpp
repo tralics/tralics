@@ -118,13 +118,13 @@ void Dispatcher::boot() {
     register_action_plain(bibitem_cmd, [](subtypes c) { c == 1 ? the_parser.T_empty_bibitem() : the_parser.T_bibitem(); });
     register_action_plain(biblio_cmd, &Parser::T_biblio);
     register_action_plain(bibliographystyle_cmd, &Parser::T_bibliostyle);
-    register_action_plain(box_cmd, [](subtypes c) {
-        if (!the_parser.T_mbox(c)) throw EndOfData();
+    register_action(box_cmd, [](subtypes c) {
+        return the_parser.T_mbox(c);
     });
     register_action_plain(bpers_cmd, &Parser::T_bpers);
     register_action_plain(calc_cmd, &Parser::exec_calc);
-    register_action_plain(caption_cmd, [] {
-        if (!the_parser.T_cap_or_note(true)) throw EndOfData();
+    register_action(caption_cmd, [] {
+        return the_parser.T_cap_or_note(true);
     });
     register_action_plain(case_shift_cmd, &Parser::T_case_shift);
     register_action_plain(change_element_name_cmd, &Parser::T_change_element_name);
@@ -193,8 +193,8 @@ void Dispatcher::boot() {
     register_action_plain(fnhack_cmd, &Parser::fnhack);
     register_action_plain(fontsize_cmd, &Parser::translate_font_size);
     register_action_plain(footcitepre_cmd, [] { the_parser.unprocessed_xml.push_back_unless_punct(' '); });
-    register_action_plain(footnote_cmd, [] {
-        if (!the_parser.T_cap_or_note(false)) throw EndOfData();
+    register_action(footnote_cmd, [] {
+        return the_parser.T_cap_or_note(false);
     });
     register_action_plain(for_cmd, &Parser::T_xkv_for);
     register_action_plain(formatdate_cmd, &Parser::formatdate);
@@ -208,8 +208,8 @@ void Dispatcher::boot() {
     register_action_plain(gloss_cmd, [](subtypes c) { the_parser.T_gloss(c == 0); });
     register_action_plain(glossaire_cmd, &Parser::T_glossaire);
     register_action_plain(grabenv_cmd, &Parser::T_grabenv);
-    register_action_plain(hanl_cmd, [](subtypes c) {
-        if (!the_parser.T_hanl(c)) throw EndOfData();
+    register_action(hanl_cmd, [](subtypes c) {
+        return the_parser.T_hanl(c);
     });
     register_action_plain(hfill_cmd, [](subtypes c) { the_parser.leave_v_mode(), the_stack.add_newid0(hfill_to_np(c)); });
     register_action_plain(hline_cmd, [](subtypes c) { the_parser.T_hline(c); });
@@ -251,8 +251,8 @@ void Dispatcher::boot() {
     register_action_plain(leave_v_mode_cmd, &Parser::leave_v_mode);
     register_action_plain(let_cmd, &Parser::M_prefixed);
     register_action_plain(letter_catcode, &Parser::translate_char);
-    register_action_plain(line_cmd, [](subtypes c) {
-        if (!the_parser.T_line(c)) throw EndOfData();
+    register_action(line_cmd, [](subtypes c) {
+        return the_parser.T_line(c);
     });
     register_action_plain(linebreak_cmd, &Parser::ignore_optarg);
     register_action_plain(list_cmd, &Parser::T_listenv);
@@ -305,8 +305,8 @@ void Dispatcher::boot() {
     register_action_plain(relax_cmd, [] {});
     register_action_plain(removeelement_cmd, &Parser::T_remove_element);
     register_action_plain(rule_cmd, &Parser::scan_rule);
-    register_action_plain(save_box_cmd, [](subtypes c) {
-        if (!the_parser.T_save_box(c == 0)) throw EndOfData();
+    register_action(save_box_cmd, [](subtypes c) {
+        return the_parser.T_save_box(c == 0);
     });
     register_action_plain(saveverb_cmd, &Parser::T_saveverb);
     register_action_plain(scan_glue_cmd, &Parser::T_scan_glue);
@@ -511,14 +511,12 @@ void Dispatcher::boot() {
         if (c != 0U) the_stack.add_center_to_p();
     });
 
-    register_action_plain(fbox_cmd, [](subtypes c) {
-        if (c == dashbox_code) {
-            if (!the_parser.T_fbox_dash_box()) throw EndOfData();
-        } else if (c == rotatebox_code) {
-            if (!the_parser.T_fbox_rotate_box()) throw EndOfData();
-        } else {
-            if (!the_parser.T_fbox(c)) throw EndOfData();
-        }
+    register_action(fbox_cmd, [](subtypes c) -> bool {
+        if (c == dashbox_code)
+            return the_parser.T_fbox_dash_box();
+        if (c == rotatebox_code)
+            return the_parser.T_fbox_rotate_box();
+        return the_parser.T_fbox(c);
     });
 
     register_action_plain(only_preamble_cmd, [] {
