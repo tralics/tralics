@@ -669,7 +669,7 @@ struct Parser {
     void               scan_ignore_group();
     void               scan_left_brace_and_back_input();
     void               scan_left_brace();
-    void               scan_math_endcell_ok(size_t res);
+    auto               scan_math_endcell_ok(size_t res) -> bool;
     auto               scan_math_hbox(size_t res, subtypes c) -> bool;
     void               scan_math_mi(size_t res, subtypes c, subtypes k, CmdChr W);
     void               scan_math_rel(subtypes c, size_t res);

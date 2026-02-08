@@ -1130,7 +1130,7 @@ auto Parser::scan_math(size_t res, math_list_type type) -> bool {
 
                 continue;
             }
-            scan_math_endcell_ok(res);
+            if (!scan_math_endcell_ok(res)) return false;
             continue;
         case mathfont_cmd:
             math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.val));
@@ -1216,7 +1216,7 @@ auto Parser::scan_math_endcell(Token t) -> bool {
 }
 
 // We have seen & or \\. Must interpret it
-void Parser::scan_math_endcell_ok(size_t res) {
+auto Parser::scan_math_endcell_ok(size_t res) -> bool {
     math_data.push_back(res, cur_cmd_chr, subtypes(cur_tok.val));
     if (cur_cmd_chr.cmd == backslash_cmd && res == 0 && cmi.eqnum_status == 2) {
         bool w = cmi.end_of_row();
@@ -1225,8 +1225,9 @@ void Parser::scan_math_endcell_ok(size_t res) {
             cmi.insert_special_tag(the_parser.eqtb_string_table[0].val);
         }
     }
-    if (!pop_level(bt_cell)) throw EndOfData(); // start-end a group for the next cell
+    if (!pop_level(bt_cell)) return false; // start-end a group for the next cell
     push_level(bt_cell);
+    return true;
 }
 
 // We have seen \begin or \end
