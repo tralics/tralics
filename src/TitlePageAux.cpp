@@ -147,7 +147,7 @@ auto TitlePageAux::exec_post() const -> bool {
 void TitlePageAux::exec(size_t v, bool vb) {
     if (vb) { spdlog::trace("{{\\titlepage {}=\\{}}}", v, fmt::streamed(T1)); }
     if (type == tpi_rt_tp) {
-        the_parser.T_titlepage_finish(v);
+        if (!the_parser.T_titlepage_finish(v)) throw EndOfData();
         return;
     }
     if (type == tpi_rt_ur) { // easy case

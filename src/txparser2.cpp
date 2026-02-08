@@ -438,13 +438,14 @@ auto Parser::read_for_variable() -> Token {
 
 // expand the first element of L, like in \expandafter{\foo...}
 // the result is pushed back in L
-void Parser::expand_first(TokenList &L) {
+bool Parser::expand_first(TokenList &L) {
     back_input(hash_table.CB_token);
     back_input(L);
-    if (!expand_when_ok(true)) throw EndOfData();
+    if (!expand_when_ok(true)) return false;
     back_input(hash_table.OB_token);
     TokenList res = read_arg();
     L.swap(res);
+    return true;
 }
 
 // should be expand rather than translate
@@ -459,7 +460,7 @@ void Parser::T_xkv_for(subtypes c) {
         Token     cmd      = read_for_variable();
         TokenList L        = read_until(hash_table.do_token);
         TokenList function = read_arg();
-        expand_first(L);
+        if (!expand_first(L)) throw EndOfData();
         if (L.empty()) break;
         function.brace_me();
         res.push_back(hash_table.forloop_token);

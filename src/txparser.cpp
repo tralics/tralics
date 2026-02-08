@@ -2219,12 +2219,13 @@ auto Parser::env_helper(const std::string &s) -> SaveAuxEnv * {
 // Given a string like foo, this evaluates to \expandafter{\foo}
 // If \foo is undefined, the result is {}; if \foo expands to 'gee'
 // the result is {gee}. The result can be obtained via read_arg.
-void Parser::expand_no_arg(const std::string &s) {
+bool Parser::expand_no_arg(const std::string &s) {
     Token t = hash_table.locate(s);
     back_input(hash_table.CB_token);
     back_input(t);
-    if (!expand_when_ok(true)) throw EndOfData();
+    if (!expand_when_ok(true)) return false;
     back_input(hash_table.OB_token);
+    return true;
 }
 
 auto Parser::expand_when_ok(bool allow_undef) -> bool {
@@ -2623,8 +2624,8 @@ auto Parser::expand() -> bool {
     case l3noexpand_cmd: return E_l3noexpand(c);
     case l3E_set_num_cmd: L3_set_num_code(c); return true;
     case l3_ifx_cmd: E_l3_ifx(c); return true;
-    case l3str_ifeq_cmd: E_l3str_ifeq(c); return true;
-    case l3str_case_cmd: E_l3str_case(c); return true;
+    case l3str_ifeq_cmd: return E_l3str_ifeq(c);
+    case l3str_case_cmd: return E_l3str_case(c);
     case token_if_cmd: l3_token_check(c); return true;
     case cat_ifeq_cmd: E_cat_ifeq(c); return true;
     case specchar_cmd: back_input(Token(other_t_offset, char32_t(char32_t(c)))); return true;

@@ -335,7 +335,7 @@ void Parser::T_declare_option_star() {
 void Parser::T_option_not_used() {
     if (!the_class_data.cur_pack()->is_class()) return;
     OptionList &GO = the_class_data.global_options;
-    expand_no_arg("CurrentOption");
+    if (!expand_no_arg("CurrentOption")) throw EndOfData();
     TokenList L = read_arg();
     KeyAndVal s = make_keyval(L);
     auto      j = is_in_vector(GO, s.full_name, true);
@@ -943,7 +943,7 @@ void Parser::kvo_family(subtypes k) {
     case kvo_fam_set_code:
     case kvo_fam_get_code:
     case kvo_pre_set_code:
-    case kvo_pre_get_code: kvo_family_etc(k); return;
+    case kvo_pre_get_code: if (!kvo_family_etc(k)) throw EndOfData(); return;
     case kvo_bool_opt_code: kvo_bool_opt(); return;
     case kvo_comp_opt_code: kvo_comp_opt(); return;
     case kvo_boolkey_code: kvo_bool_key(); return;
@@ -1145,7 +1145,7 @@ void Parser::kvo_comp_opt() {
 }
 
 // Get/set for family and prefix
-void Parser::kvo_family_etc(subtypes k) {
+bool Parser::kvo_family_etc(subtypes k) {
     std::string s = the_class_data.cur_pack()->full_name();
     Buffer     &B = txclasses_local_buf;
     B             = "KVO@";
@@ -1165,14 +1165,15 @@ void Parser::kvo_family_etc(subtypes k) {
         back_input(res);
     } else {
         back_input(T);
-        if (!expand_when_ok(true)) throw EndOfData();
+        if (!expand_when_ok(true)) return false;
     }
+    return true;
 }
 
 // This gets prefix and family
 auto Parser::kvo_getfam() -> std::string {
     back_input(hash_table.CB_token);
-    kvo_family_etc(kvo_fam_get_code);
+    if (!kvo_family_etc(kvo_fam_get_code)) throw EndOfData();
     back_input(hash_table.OB_token);
     return sE_arg_nopar();
 }

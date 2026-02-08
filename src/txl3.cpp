@@ -409,7 +409,7 @@ auto Parser::l3_to_string(subtypes c, TokenList &L) -> std::optional<std::string
     return std::string(group_buffer);
 }
 
-void Parser::E_l3str_ifeq(subtypes c) {
+bool Parser::E_l3str_ifeq(subtypes c) {
     Token    caller = cur_tok;
     subtypes exp1   = l3expn_code;
     subtypes exp2   = l3expn_code;
@@ -438,14 +438,15 @@ void Parser::E_l3str_ifeq(subtypes c) {
     TokenList   a1  = read_arg();
     TokenList   a2  = read_arg();
     auto        os1 = l3_to_string(exp1, a1);
-    if (!os1) throw EndOfData();
+    if (!os1) return false;
     auto os2 = l3_to_string(exp2, a2);
-    if (!os2) throw EndOfData();
+    if (!os2) return false;
     l3_after_cond(caller, *os1 == *os2, c);
+    return true;
 }
 
 // Args: string to compare, case a-list, plus additional args
-void Parser::E_l3str_case(subtypes c) {
+bool Parser::E_l3str_case(subtypes c) {
     subtypes exp = l3expn_code;
     if (c >= 8) {
         exp = l3expo_code;
@@ -463,7 +464,7 @@ void Parser::E_l3str_case(subtypes c) {
     if (c == l3_TF_code || c == l3_F_code) false_res = read_arg();
     bool        match = false;
     auto        os1   = l3_to_string(exp, as1);
-    if (!os1) throw EndOfData();
+    if (!os1) return false;
     std::string s1 = *os1;
     if (exp == l3expo_code) exp = l3expn_code;
     if (tracing_macros()) { spdlog::trace("{} compares {}", fmt::streamed(caller), s1); }
@@ -474,7 +475,7 @@ void Parser::E_l3str_case(subtypes c) {
         // should we check for bad termination?
         TokenList code = clauses.get_a_param();
         auto      os2  = l3_to_string(exp, as2);
-        if (!os2) throw EndOfData();
+        if (!os2) return false;
         if (s1 == *os2) {
             match = true;
             res   = code;
@@ -487,6 +488,7 @@ void Parser::E_l3str_case(subtypes c) {
         res.splice(res.end(), false_res);
     if (tracing_macros()) { spdlog::trace("{}->{}", fmt::streamed(caller), fmt::streamed(res)); }
     back_input(res);
+    return true;
 }
 
 void Parser::L3_check_cmd(subtypes c) {
@@ -565,7 +567,7 @@ auto Parser::l3_tl_set(subtypes c) -> bool {
     TokenList res;
     switch (c) {
     case l3expn_code: res = scan_general_text(); break;
-    case l3expo_code: l3_expand_o(res); break;
+    case l3expo_code: if (!l3_expand_o(res)) return false; break;
     case l3expx_code: l3_expand_x(res); break;
     case l3expv_code:
         csname_arg();
@@ -590,9 +592,9 @@ void Parser::l3_tl_concat(subtypes c) {
     // TODO:  if(check_declaration) check all 3 arg are not undef_or_relax
     TokenList A, B;
     if (c_flag) csname_arg();
-    l3_expand_o(A);
+    if (!l3_expand_o(A)) throw EndOfData();
     if (c_flag) csname_arg();
-    l3_expand_o(B);
+    if (!l3_expand_o(B)) throw EndOfData();
     A.splice(A.end(), B);
     new_macro(A, name, (c >= 2));
 }
@@ -620,7 +622,7 @@ auto Parser::l3_tl_put_left(subtypes c) -> bool {
     TokenList res;
     switch (c) {
     case l3expn_code: res = scan_general_text(); break;
-    case l3expo_code: l3_expand_o(res); break;
+    case l3expo_code: if (!l3_expand_o(res)) return false; break;
     case l3expx_code: l3_expand_x(res); break;
     case l3expV_code:
         res = read_arg();
@@ -660,9 +662,9 @@ auto Parser::tl_set_rescan(subtypes c) -> bool {
     TokenList arg;
     if (c == 0)
         arg = read_arg();
-    else if (c == 1)
-        l3_expand_o(arg);
-    else
+    else if (c == 1) {
+        if (!l3_expand_o(arg)) return false;
+    } else
         l3_expand_x(arg);
     TokenList res;
     push_level(bt_brace);
@@ -1107,7 +1109,7 @@ auto Parser::E_l3expand_aux(subtypes c) -> bool {
     case l3expv_code:
     case l3expvu_code: csname_arg(); break;
     case l3expo_code:
-    case l3expou_code: l3_expand_o(L3); break;
+    case l3expou_code: if (!l3_expand_o(L3)) return false; break;
     case l3expf_code:
     case l3expfu_code: l3_expand_f(L3); break;
     case l3expx_code:
@@ -1176,7 +1178,7 @@ auto Parser::E_l3noexpand(subtypes c) -> bool {
         L3 = read_arg();
         if (!l3_expand_Vv(L3, false)) return false;
         break;
-    case l3expo_code: l3_expand_o(L3); break;
+    case l3expo_code: if (!l3_expand_o(L3)) return false; break;
     case l3expf_code:
         l3_expand_f(L3);
         break;
@@ -1198,18 +1200,19 @@ auto Parser::E_l3noexpand(subtypes c) -> bool {
 // Instead of reading the argument, we read an open brace
 // (if there is none, we read a token T, and insert T close-braceà)
 
-void Parser::l3_expand_o(TokenList &L) {
-    if (before_mac_arg()) return; // case of error
-    if (!expand_when_ok(false)) throw EndOfData();
+bool Parser::l3_expand_o(TokenList &L) {
+    if (before_mac_arg()) return true; // case of error
+    if (!expand_when_ok(false)) return false;
     back_input(hash_table.OB_token);
     L = read_arg();
+    return true;
 }
 
 // assumes the list already read
 void Parser::l3_reexpand_o(TokenList &L) {
     back_input_braced(L);
     L.clear();
-    l3_expand_o(L);
+    if (!l3_expand_o(L)) throw EndOfData();
 }
 
 // \::f is  \expandafter{\romannumeral-`0#1}
@@ -1259,10 +1262,10 @@ auto Parser::l3_expand_Vv(TokenList &L, bool spec) -> bool {
     (L.brace_me());                                                                                                                        \
     INSERT
 #define EXPAND_o                                                                                                                           \
-    l3_expand_o(L);                                                                                                                        \
+    if (!l3_expand_o(L)) return false;                                                                                                     \
     INSERT_B
 #define EXPAND_ou                                                                                                                          \
-    l3_expand_o(L);                                                                                                                        \
+    if (!l3_expand_o(L)) return false;                                                                                                     \
     INSERT
 #define EXPAND_c                                                                                                                           \
     csname_arg();                                                                                                                          \

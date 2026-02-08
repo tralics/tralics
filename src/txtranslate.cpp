@@ -460,7 +460,7 @@ auto Parser::T_item_label(unsigned c) -> std::string {
     bool      opt = cur_tok.is_open_bracket();
     if (opt) L = read_optarg_nopar().value_or(TokenList{});
     std::string list_ctr = the_parser.eqtb_string_table[1].val;
-    if (!list_ctr.empty()) if (!refstepcounter(list_ctr, false)) throw EndOfData();
+    if (!list_ctr.empty()) if (!refstepcounter(list_ctr, false)) return {};
     if (!opt) {
         Token t = hash_table.itemlabel_token;
         token_from_list(t);
@@ -624,22 +624,22 @@ void Parser::T_ref(bool is_ref) {
 }
 
 // \begin or \end of subequations
-void Parser::T_subequations(bool start) {
+bool Parser::T_subequations(bool start) {
     static bool in_subequations = false;
     if (!start) { // easy part: \global\c@equation=\c@parentequation
         if (!in_subequations) {
             parse_error("Illegal \\endsubequations");
-            return;
+            return true;
         }
         in_subequations = false;
         auto v          = eqtb_int_table[equation_ctr_pos + 1].val;
         word_define(equation_ctr_pos, v, true);
         state = state_S;
-        return;
+        return true;
     }
     if (in_subequations) {
         parse_error("Illegal nesting of subequations environment");
-        return;
+        return true;
     }
     in_subequations = true;
     leave_h_mode();
@@ -651,7 +651,7 @@ void Parser::T_subequations(bool start) {
         T_at_theparentequation = hash_table.locate("@@theequation");
     }
     the_stack.add_newid0("anchor");
-    if (!refstepcounter("equation", true)) throw EndOfData();
+    if (!refstepcounter("equation", true)) return false;
     back_input(hash_table.CB_token);
     back_input(T_theequation);
     back_input(hash_table.OB_token);
@@ -662,6 +662,7 @@ void Parser::T_subequations(bool start) {
     word_define(equation_ctr_pos + 1, v, true); // par = cur
     word_define(equation_ctr_pos, 0, true);     // cur = 0
     M_let_fast(T_theequation, T_at_theparentequation, false);
+    return true;
 }
 
 auto Parser::scan_anchor(bool &h) -> std::string {
@@ -691,7 +692,7 @@ void Parser::T_label(subtypes c) {
 }
 
 // Commands for the float package
-void Parser::T_float(subtypes c) {
+bool Parser::T_float(subtypes c) {
     switch (c) {
     case 0: //@float
     case 1: // @dblfloat
@@ -702,7 +703,7 @@ void Parser::T_float(subtypes c) {
         auto        opt  = nT_optarg_nopar();
         if (!opt) {
             B = "fps@" + sarg;
-            expand_no_arg(B);
+            if (!expand_no_arg(B)) return false;
             opt = nT_arg_nopar();
         }
         word_define(incentering_code, 1, false);
@@ -712,17 +713,17 @@ void Parser::T_float(subtypes c) {
         if (c == 1) the_stack.add_att_to_last(the_names["starred"], the_names["true"]);
         the_stack.add_att_to_last(the_names["type"], arg);
         B = "fname@" + sarg;
-        expand_no_arg(B);
+        if (!expand_no_arg(B)) return false;
         opt = nT_arg_nopar();
         the_stack.add_att_to_last(the_names["name"], *opt);
-        if (!refstepcounter(sarg, true)) throw EndOfData();
+        if (!refstepcounter(sarg, true)) return false;
         B = "@float@every@" + sarg;
         back_input(hash_table.locate(B));
         back_input(hash_table.locate("the"));
         B = "fst@" + sarg;
         back_input(hash_table.locate(B));
         the_stack.set_v_mode();
-        return;
+        return true;
     }
     case 2: // float@end
     case 3: // float@dblend
@@ -730,8 +731,8 @@ void Parser::T_float(subtypes c) {
         if (!the_stack.top_stack()->has_name_of("float")) parse_error("no float on stack");
         the_stack.pop(the_names["float"]);
         the_stack.add_nl();
-        return;
-    default: return;
+        return true;
+    default: return true;
     }
 }
 
@@ -903,7 +904,7 @@ void Parser::includegraphics(subtypes C) {
         } else
             W = read_arg();
     }
-    expand_no_arg("Gin@keys");
+    if (!expand_no_arg("Gin@keys")) throw EndOfData();
     {
         TokenList K = read_arg();
         W.splice(W.begin(), K);

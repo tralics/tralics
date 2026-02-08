@@ -1623,24 +1623,25 @@ void Parser::fp_finish(const FpNum &X) {
 
 // \FPprint{foo} is the same as \foo.
 // This is very, very strange
-void Parser::fp_special_expand(TokenList &B) {
+bool Parser::fp_special_expand(TokenList &B) {
     if (B.empty()) B.push_back(hash_table.zero_token);
     Token B1 = B.front();
     token_from_list(B1);
     if (cur_cmd_chr.cmd == other_catcode) {
         back_input(B);
-        return;
+        return true;
     }
     if (B1.not_a_cmd())
         my_csname("", "", B, "FPprint");
     else
         back_input(B);
-    if (!expand_when_ok(false)) throw EndOfData();
+    if (!expand_when_ok(false)) return false;
+    return true;
 }
 
 void Parser::fp_print() {
     TokenList A = read_arg();
-    fp_special_expand(A);
+    if (!fp_special_expand(A)) throw EndOfData();
 }
 
 // \FPset{foo}{bar} => \def\foo{...} where .. is expansion of \bar
@@ -1649,7 +1650,7 @@ void Parser::fp_set() {
     TokenList A = read_arg();
     TokenList B = read_arg();
     back_input(hash_table.CB_token);
-    fp_special_expand(B);
+    if (!fp_special_expand(B)) throw EndOfData();
     back_input(hash_table.OB_token);
     if (!A.empty()) {
         Token A1 = A.front();
@@ -2123,7 +2124,7 @@ void Parser::upn_eval(const TokenList &l) {
         return;
     }
     back_input(hash_table.CB_token);
-    fp_special_expand(L);
+    if (!fp_special_expand(L)) throw EndOfData();
     back_input(hash_table.OB_token);
     TokenList w = read_arg();
     S.push_upn(w);

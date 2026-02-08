@@ -203,7 +203,7 @@ struct Parser {
     void               signal_ovf(Token T, String h, long cur, long max);
     auto               special_expand(TokenList *args) -> TokenList;
     auto               special_tpa_arg(const std::string &name, const std::string &y, bool par, bool env, bool has_q) -> Xml *;
-    void               T_titlepage_finish(size_t v);
+    bool               T_titlepage_finish(size_t v);
     auto               tpa_exec(const std::string &cmd) -> Xml *;
     void               M_tracingall();
     auto               translate0() -> bool;
@@ -475,9 +475,9 @@ struct Parser {
     void               exec_calc();
     void               exec_fp_cmd(subtypes i);
     void               exec_fpi_cmd(subtypes i);
-    void               expand_first(TokenList &L);
+    bool               expand_first(TokenList &L);
     void               expand_mac(Macro &X);
-    void               expand_no_arg(const std::string &s);
+    bool               expand_no_arg(const std::string &s);
     void               expand_no_arg0(Token);
     void               expand_spaces();
     void               expand_twoargs();
@@ -527,7 +527,7 @@ struct Parser {
     void               fp_print();
     void               fp_set();
     void               fp_setseed();
-    void               fp_special_expand(TokenList &B);
+    bool               fp_special_expand(TokenList &B);
     void               french_punctuation(CmdChr X);
     void               get_date_ctrs(long &year, size_t &month, size_t &day);
     void               get_def_nbargs(Macro *X, Token name);
@@ -553,7 +553,7 @@ struct Parser {
     void               kvo_bool_key();
     void               kvo_bool_opt();
     void               kvo_comp_opt();
-    void               kvo_family_etc(subtypes k);
+    bool               kvo_family_etc(subtypes k);
     void               kvo_family(subtypes k);
     void               kvo_process();
     void               kvo_string_opt();
@@ -764,9 +764,9 @@ struct Parser {
     bool               T_fbox_rotate_box();
     bool               T_fbox(subtypes cc);
     void               T_figure_table_end(bool is_fig);
-    void               T_figure_table(symcodes x, subtypes c);
+    bool               T_figure_table(symcodes x, subtypes c);
     bool               T_filecontents(subtypes spec);
-    void               T_float(subtypes c);
+    bool               T_float(subtypes c);
     auto               T_fonts(subtypes c) -> bool;
     auto               T_glo() -> bool;
     void               T_gloss(bool c);
@@ -845,11 +845,11 @@ struct Parser {
     void               T_start_the_biblio();
     [[nodiscard]] bool T_start_theorem(subtypes c);
     void               T_startprojet(String proj, String loc);
-    void               T_subequations(bool start);
+    bool               T_subequations(bool start);
     auto               T_subfigure() -> bool;
     void               T_testopt();
     [[nodiscard]] bool T_translate(TokenList &X);
-    void               T_trees(subtypes c);
+    bool               T_trees(subtypes c);
     void               T_twodims(std::string &A, std::string &B, Token C);
     void               T_twoints(std::string &A, std::string &B, Token C);
     void               T_twoints(TokenList &A, TokenList &B);
@@ -915,8 +915,8 @@ struct Parser {
     auto E_l3expand_aux(subtypes c) -> bool;
     auto E_l3expand_base(subtypes c) -> bool;
     auto E_l3noexpand(subtypes c) -> bool;
-    void E_l3str_case(subtypes c);
-    void E_l3str_ifeq(subtypes c);
+    bool E_l3str_case(subtypes c);
+    bool E_l3str_ifeq(subtypes c);
     void E_pdfstrcmp();
     void E_prg_return(unsigned c);
     void generate_from_sig();
@@ -925,7 +925,7 @@ struct Parser {
     void L3_eq_conditional(subtypes s);
     void l3_expand_f(TokenList &L);
     void l3_expand_N(TokenList &L);
-    void l3_expand_o(TokenList &L);
+    bool l3_expand_o(TokenList &L);
     [[nodiscard]] bool l3_expand_Vv(TokenList &L, bool spec);
     void l3_expand_x(TokenList &L);
     void L3_generate_form(subtypes c, TokenList parms, TokenList body, subtypes s);

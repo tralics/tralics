@@ -93,10 +93,10 @@ auto tpage_ns::scan_item(Buffer &in, Buffer &out, char del) -> bool {
 
 // This is executed when we see the \titlepage command,
 // After that, no more titlepage ...
-void Parser::T_titlepage_finish(size_t v) {
+bool Parser::T_titlepage_finish(size_t v) {
     Buffer B;
     auto   kmax = Titlepage.bigtable.size();
-    for (size_t k = 0; k < kmax; k++) if (!Titlepage.bigtable[k].exec_post()) throw EndOfData();
+    for (size_t k = 0; k < kmax; k++) if (!Titlepage.bigtable[k].exec_post()) return false;
     add_language_att();
     TitlePageAux &tpa      = Titlepage.bigtable[v];
     std::string   tmp      = tpa.T4;
@@ -115,7 +115,7 @@ void Parser::T_titlepage_finish(size_t v) {
     the_stack.add_nl();
     ileave_v_mode();
     Titlepage.make_invalid();
-    if (the_main.tpa_mode == 1) return;
+    if (the_main.tpa_mode == 1) return true;
     if (the_main.tpa_mode == 2)
         finished = true;
     else if (the_main.tpa_mode == 0) {
@@ -129,6 +129,7 @@ void Parser::T_titlepage_finish(size_t v) {
         spdlog::info("Translation terminated after title page");
         E_input(end_all_input_code);
     }
+    return true;
 }
 
 void Parser::T_titlepage(size_t v) {

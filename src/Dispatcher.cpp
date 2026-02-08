@@ -169,7 +169,7 @@ void Dispatcher::boot() {
     register_action_plain(end_keywords_cmd, [] { the_stack.pop(::the_names["keywords"]); });
     register_action_plain(end_list_cmd, &Parser::T_listenv_end);
     register_action_plain(end_picture_env_cmd, [] { the_stack.pop(::the_names["picture"]); });
-    register_action_plain(end_subequations_cmd, [] { the_parser.T_subequations(false); });
+    register_action(end_subequations_cmd, [] { return the_parser.T_subequations(false); });
     register_action_plain(end_table_cmd, [] { the_parser.T_figure_table_end(false); });
     register_action_plain(end_tabular_env_cmd, &Parser::T_end_tabular);
     register_action_plain(end_thebibliography_cmd, &Parser::T_end_the_biblio);
@@ -186,10 +186,10 @@ void Dispatcher::boot() {
     register_action_plain(expandtwoargs_cmd, &Parser::expand_twoargs);
     register_action_plain(extension_cmd, &Parser::M_extension);
     register_action_plain(fancy_cmd, &Parser::T_fancy);
-    register_action_plain(figure_cmd, [](symcodes x, subtypes c) { the_parser.T_figure_table(x, c); });
+    register_action(figure_cmd, [](symcodes x, subtypes c) { return the_parser.T_figure_table(x, c); });
     register_action_plain(file_cmd, &Parser::T_input);
     register_action(filecontents_env_cmd, [](subtypes c) { return the_parser.T_filecontents(c); });
-    register_action_plain(float_cmd, &Parser::T_float);
+    register_action(float_cmd, &Parser::T_float);
     register_action_plain(fnhack_cmd, &Parser::fnhack);
     register_action_plain(fontsize_cmd, &Parser::translate_font_size);
     register_action_plain(footcitepre_cmd, [] { the_parser.unprocessed_xml.push_back_unless_punct(' '); });
@@ -335,9 +335,9 @@ void Dispatcher::boot() {
     register_action_plain(specimp_cmd, &Parser::T_specimp);
     register_action_plain(start_par_cmd, &Parser::implicit_par);
     register_action(sub_cmd, &Parser::T_fonts);
-    register_action_plain(subequations_cmd, [] { the_parser.T_subequations(true); });
+    register_action(subequations_cmd, [] { return the_parser.T_subequations(true); });
     register_action(subfigure_cmd, &Parser::T_subfigure);
-    register_action_plain(table_cmd, [](symcodes x, subtypes c) { the_parser.T_figure_table(x, c); });
+    register_action(table_cmd, [](symcodes x, subtypes c) { return the_parser.T_figure_table(x, c); });
     register_action_plain(tabular_env_cmd, &Parser::T_start_tabular);
     register_action_plain(testopt_cmd, &Parser::T_testopt);
     register_action_plain(thebibliography_cmd, &Parser::T_start_the_biblio);
@@ -348,7 +348,7 @@ void Dispatcher::boot() {
     register_action(tl_set_cmd, &Parser::l3_tl_set);
     register_action(toks_register_cmd, &Parser::M_prefixed);
     register_action_plain(tracingall_cmd, &Parser::M_tracingall);
-    register_action_plain(trees_cmd, &Parser::T_trees);
+    register_action(trees_cmd, &Parser::T_trees);
     register_action_plain(typein_cmd, &Parser::T_typein);
     register_action_plain(un_box_cmd, &Parser::T_un_box);
     register_action_plain(unimp_cmd, &Parser::T_unimp);

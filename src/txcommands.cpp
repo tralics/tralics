@@ -671,7 +671,7 @@ void Parser::T_glossaire_end() {
 
 // case \begin{figure}\begin{table}
 // c=2 is wrapfigure
-void Parser::T_figure_table(symcodes x, subtypes c) {
+bool Parser::T_figure_table(symcodes x, subtypes c) {
     auto                       opt = nT_optarg_nopar();
     std::optional<std::string> overhang;
     std::string                place, width;
@@ -693,8 +693,9 @@ void Parser::T_figure_table(symcodes x, subtypes c) {
         if (opt && !opt->empty()) the_stack.add_att_to_last(the_names["place"], *opt);
         if (c == 1) the_stack.add_att_to_last(the_names["starred"], the_names["true"]);
     }
-    if (!refstepcounter(x == figure_cmd ? "figure" : "table", true)) throw EndOfData();
+    if (!refstepcounter(x == figure_cmd ? "figure" : "table", true)) return false;
     the_stack.set_v_mode();
+    return true;
 }
 
 // Translates \enf{figure} or \end{table}

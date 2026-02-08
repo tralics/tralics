@@ -174,10 +174,10 @@ void Parser::T_index(subtypes c) {
 
 // -----------------------------------------------
 // Commands from tree-dvips.sty
-void Parser::T_trees(subtypes c) {
+bool Parser::T_trees(subtypes c) {
     flush_buffer();
     if (c == node_code) {
-        if (!T_node()) throw EndOfData();
+        if (!T_node()) return false;
     } else if (c == nodepoint_code)
         T_nodepoint();
     else if (c == nodeconnect_code)
@@ -200,6 +200,7 @@ void Parser::T_trees(subtypes c) {
         T_nodetriangle(the_names["nodetriangle"]);
     else if (c == nodecircle_code)
         T_nodecircle(the_names["nodecircle"]);
+    return true;
 }
 
 // Something like
