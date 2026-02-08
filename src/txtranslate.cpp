@@ -29,7 +29,7 @@ void readline_newprompt(std::string s); // in readline.cpp, but only used here
 
 namespace {
     Buffer current_head;
-    Xml *  unfinished_par{nullptr};
+    Xml   *unfinished_par{nullptr};
     Token  T_theequation, T_theparentequation, T_at_theparentequation;
 
     const std::string list[] = {"sup", "sub", "oldstyle", "caps", "hl", "so", "st", "ul"};
@@ -127,9 +127,7 @@ void Parser::translate02() const {
 // Flushes the buffer, creating a new xml element that will be added
 // to the main tree.
 void Parser::flush_buffer1() {
-    if (tracing_commands()) {
-        spdlog::trace("{{Text:{}}}", unprocessed_xml.convert_to_log_encoding());
-    }
+    if (tracing_commands()) { spdlog::trace("{{Text:{}}}", unprocessed_xml.convert_to_log_encoding()); }
     the_stack.add_last_string(unprocessed_xml);
     unprocessed_xml.clear();
 }
@@ -246,7 +244,7 @@ auto Parser::sT_optarg_nopar() -> std::string {
 auto Parser::nT_optarg_nopar() -> std::optional<std::string> {
     auto L = read_optarg_nopar().value_or(TokenList{});
     if (L.empty()) return {};
-    Xml *       x = translate_list(L);
+    Xml        *x = translate_list(L);
     std::string y = x->convert_to_string();
     return std::string(y);
 }
@@ -414,7 +412,7 @@ void Parser::T_par1(const std::string &u) {
 void Parser::T_xmlelt(subtypes w) {
     flush_buffer();
     std::string s   = sT_arg_nopar();
-    Xml *       res = new Xml(std::string(s), nullptr);
+    Xml        *res = new Xml(std::string(s), nullptr);
     if (w != 0U) {
         if (w == two_code) res->id = size_t(-1); // XML comment
         flush_buffer();
@@ -515,7 +513,7 @@ void Parser::start_paras(int y, const std::string &Y, bool star) {
         opt = xT_optarg_nopar();
     the_stack.set_arg_mode();
     the_stack.push1(the_names["head"]);
-    Xml *     title = the_stack.top_stack();
+    Xml      *title = the_stack.top_stack();
     TokenList L     = read_arg();
     if (module_p) check_module_title(L);
     L.brace_me();
@@ -697,7 +695,7 @@ void Parser::T_float(subtypes c) {
     case 0: //@float
     case 1: // @dblfloat
     {
-        Buffer &    B    = Tbuf;
+        Buffer     &B    = Tbuf;
         std::string sarg = sT_arg_nopar();
         auto        arg  = std::string(sarg);
         auto        opt  = nT_optarg_nopar();
@@ -1071,14 +1069,14 @@ void Parser::T_color(subtypes c) {
         std::string opt         = sT_optarg_nopar();
         std::string name        = sT_arg_nopar();
         std::string C           = scan_color(opt, name);
-        AttList &   res         = the_stack.add_newid0("pagecolor");
+        AttList    &res         = the_stack.add_newid0("pagecolor");
         res[the_names["color"]] = C;
     }
     if (c == colorbox_code) {
         std::string opt  = sT_optarg_nopar();
         std::string name = sT_arg_nopar();
         std::string C    = scan_color(opt, name);
-        Xml *       mbox = internal_makebox();
+        Xml        *mbox = internal_makebox();
         mbox->id.add_attribute(the_names["color"], C);
         return;
     }
@@ -1088,7 +1086,7 @@ void Parser::T_color(subtypes c) {
         std::string name2 = sT_arg_nopar();
         std::string C1    = scan_color(opt, name1);
         std::string C2    = scan_color(opt, name2);
-        Xml *       mbox  = internal_makebox();
+        Xml        *mbox  = internal_makebox();
         mbox->id.add_attribute(the_names["color"], C1);
         mbox->id.add_attribute(the_names["color2"], C2);
         return;
@@ -1114,9 +1112,7 @@ void Parser::T_color(subtypes c) {
         all_colors.emplace_back(name, model, value);
         CmdChr v(color_cmd, subtypes(n + color_offset));
         eq_define(C.eqtb_loc(), v, true);
-        if (tracing_assigns()) {
-            spdlog::trace("{{Globally changing {} into color number {}}}", fmt::streamed(C), n);
-        }
+        if (tracing_assigns()) { spdlog::trace("{{Globally changing {} into color number {}}}", fmt::streamed(C), n); }
         return;
     }
     if (c >= color_offset) {
@@ -1132,7 +1128,7 @@ void Parser::T_color(subtypes c) {
 // Add the given dimension as spacebefore value to the paragraph x.
 void Parser::add_vspace(Token T, ScaledInt dimen, Xid x) {
     AttList &L = x.get_att();
-    auto *   K = L.lookup(the_names["space_before"]);
+    auto    *K = L.lookup(the_names["space_before"]);
     if (K != nullptr) {
         TokenList La = token_ns::string_to_list(*K, false);
         list_to_glue(it_glue, T, La);
@@ -1145,7 +1141,7 @@ void Parser::add_vspace(Token T, ScaledInt dimen, Xid x) {
 auto Parser::internal_makebox() -> Xml * {
     leave_v_mode();
     the_stack.push1(the_names["mbox"]);
-    Xml *     mbox = the_stack.top_stack();
+    Xml      *mbox = the_stack.top_stack();
     TokenList d    = read_arg();
     d.brace_me();
     T_translate(d);
@@ -1260,7 +1256,7 @@ auto Parser::T_save_box(bool simple) -> bool {
         }
         the_stack.push1(the_names["mbox"]);
         the_stack.set_arg_mode();
-        Xml *     mbox = the_stack.top_stack();
+        Xml      *mbox = the_stack.top_stack();
         TokenList d    = read_arg();
         d.brace_me();
         T_translate(d);
@@ -1356,7 +1352,7 @@ auto Parser::T_fbox(subtypes cc) -> bool {
     Xml *cur = the_stack.top_stack(); // will contain the argument.
     if (!T_arg_local()) return false;
     the_stack.pop(the_names[cc == scalebox_code ? "scalebox" : "fbox"]);
-    Xml *    aux = cur->single_non_empty();
+    Xml     *aux = cur->single_non_empty();
     AttList &AL  = cur->id.get_att();
     if (cc == scalebox_code) {
         if ((aux != nullptr) && aux->has_name(the_names["figure"])) {
@@ -1449,7 +1445,7 @@ auto Parser::T_hanl(subtypes c) -> bool {
     Xml *B{nullptr};
     Xml *val{nullptr};
     if (c == 2) {
-        B   = T_hanl_url();
+        B         = T_hanl_url();
         auto text = T_hanl_text();
         if (!text) return false;
         val = *text;
@@ -1519,18 +1515,14 @@ auto Parser::special_tpa_arg(const std::string &name, const std::string &y, bool
     }
     if (special_case) {
         cur_level++;
-        if (tracing_stack()) {
-            spdlog::trace("+stack: level + {} (spec)", cur_level);
-        }
+        if (tracing_stack()) { spdlog::trace("+stack: level + {} (spec)", cur_level); }
     }
     try {
         if (!translate_all()) throw EndOfData();
     } catch (EndOfData &) {};
     flush_buffer();
     if (special_case) {
-        if (tracing_stack()) {
-            spdlog::trace("+stack: level - {} (spec)", cur_level);
-        }
+        if (tracing_stack()) { spdlog::trace("+stack: level - {} (spec)", cur_level); }
         cur_level--;
     }
     if (par) the_stack.pop(the_names["cst_p"]);
@@ -1590,9 +1582,7 @@ void Parser::T_reevaluate() {
     Tbuf.clear();
     L1.reevaluate0(in_env);
     L2.reevaluate0(in_env);
-    if (tracing_commands()) {
-        spdlog::trace("{{Reeval: {}}}", fmt::streamed(Tbuf));
-    }
+    if (tracing_commands()) { spdlog::trace("{{Reeval: {}}}", fmt::streamed(Tbuf)); }
     push_input_stack("(reevaluate)", false, false);
     lines.push_front(Line(-1));
     lines.split_string(Tbuf, 0);
@@ -1604,7 +1594,7 @@ void Parser::T_case_shift(subtypes c) {
     bool         to_upper = (c == 1 || c == 3 || c == 5 || c == 7);
     const size_t offset   = to_upper ? uc_code_offset : lc_code_offset;
     int          k        = to_upper ? +1 : -1;
-    Token *      table    = to_upper ? uclc_list.data() : uclc_list.data() + 1;
+    Token       *table    = to_upper ? uclc_list.data() : uclc_list.data() + 1;
     bool         ltx      = (c >= 2);
     bool         extended = (c == 4 || c == 5);
     bool         latex3   = (c >= 6);
@@ -1627,9 +1617,7 @@ void Parser::T_case_shift(subtypes c) {
         read_toks_edef(L);
         if (!pop_level(bt_brace)) throw EndOfData();
     }
-    if (tracing_commands()) {
-        spdlog::trace("{{{}(a)->{}}}", fmt::streamed(T), fmt::streamed(L));
-    }
+    if (tracing_commands()) { spdlog::trace("{{{}(a)->{}}}", fmt::streamed(T), fmt::streamed(L)); }
     auto      P = L.begin();
     auto      E = L.end();
     TokenList res;
@@ -1677,9 +1665,7 @@ void Parser::T_case_shift(subtypes c) {
         }
         res.push_back(a);
     }
-    if (tracing_commands()) {
-        spdlog::trace("{{{}->{} }}", fmt::streamed(T), fmt::streamed(res));
-    }
+    if (tracing_commands()) { spdlog::trace("{{{}->{} }}", fmt::streamed(T), fmt::streamed(res)); }
     back_input(res);
 }
 
@@ -1933,7 +1919,7 @@ void Parser::T_dashline(subtypes c) {
         bool        has_star  = remove_initial_star();
         TokenList   L         = read_arg();
         std::string aa        = token_list_to_att(L, T, false);
-        AttList &   AL        = the_stack.add_newid0(x0);
+        AttList    &AL        = the_stack.add_newid0(x0);
         AL[the_names["size"]] = aa;
         if (has_star) AL[the_names["full"]] = the_names["true"];
         return;
@@ -2055,7 +2041,7 @@ void Parser::T_define_verbatim_env() {
     Token xt2 = find_env_token(b, false);
     M_let_fast(xt1, xt2, true);
     TokenList L = read_arg();
-    Buffer &  B = Tbuf;
+    Buffer   &B = Tbuf;
     B           = a + "@hook";
     new_macro(L, hash_table.locate(b));
 }

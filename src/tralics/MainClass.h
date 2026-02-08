@@ -75,25 +75,25 @@ public:
     int init_file_pos{0}; // position in init file
     int bad_chars{0};
 
-    bool double_quote_att{false}; ///< double quote as attribute value delimitor
-    bool dverbose{false};         ///< Are we verbose at begin document ?
-    bool footnote_hack{true};     ///< Not sure what this activates
-    bool math_variant{false};
-    bool no_entnames{false};
-    bool no_undef_mac{false};
-    bool no_xml{false}; ///< Are we in syntax-only mode (no XML output)?
-    bool no_zerowidthelt{false};
-    bool no_zerowidthspace{false};
-    bool pack_font_elt{false};
-    bool prime_hack{false};
-    bool shell_escape_allowed{false};
-    bool use_all_sizes{false};
-    bool use_font_elt{false};
-    bool bad_minus{false};
-    bool compatibility{false};
-    bool nofloat_hack{false};
-    bool no_xml_error{false};
-    bool use_quotes{false};
+    bool     double_quote_att{false}; ///< double quote as attribute value delimitor
+    bool     dverbose{false};         ///< Are we verbose at begin document ?
+    bool     footnote_hack{true};     ///< Not sure what this activates
+    bool     math_variant{false};
+    bool     no_entnames{false};
+    bool     no_undef_mac{false};
+    bool     no_xml{false}; ///< Are we in syntax-only mode (no XML output)?
+    bool     no_zerowidthelt{false};
+    bool     no_zerowidthspace{false};
+    bool     pack_font_elt{false};
+    bool     prime_hack{false};
+    bool     shell_escape_allowed{false};
+    bool     use_all_sizes{false};
+    bool     use_font_elt{false};
+    bool     bad_minus{false};
+    bool     compatibility{false};
+    bool     nofloat_hack{false};
+    bool     no_xml_error{false};
+    bool     use_quotes{false};
     char32_t leftquote_val{'`'};
     char32_t rightquote_val{'\''};
 

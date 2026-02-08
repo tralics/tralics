@@ -89,7 +89,7 @@ void MathHelper::handle_tags() {
 
 // debug
 void MathHelper::dump_labels() {
-    auto n = multi_labels.size();
+    auto        n = multi_labels.size();
     std::string msg;
     for (size_t i = 0; i < n; i++) {
         int v = multi_labels_type[i];
@@ -231,7 +231,7 @@ void MathHelper::ml_last_pass(bool vb) {
     if (slabel) label_val = label;
     cmi.tag = tag;
     if (vb) {
-    spdlog::trace("Check labels");
+        spdlog::trace("Check labels");
         dump_labels();
         if (slabel) spdlog::trace("label for formula {}.", label);
         if (stag) spdlog::trace("tag for formula {}.", tag);

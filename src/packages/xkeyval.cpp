@@ -83,7 +83,7 @@ namespace {
     // Otherwise we look for \savevalue or \gsavevalue, skip equals.
     // We set some booleans
     auto xkv_find_key_of(const TokenList &L, int type) -> std::string {
-        Hashtab & H      = hash_table;
+        Hashtab  &H      = hash_table;
         Token     equals = H.equals_token;
         auto      C      = L.begin();
         auto      E      = L.end();
@@ -221,9 +221,7 @@ namespace {
         the_parser.new_macro(fams, hash_table.locate("XKV@fams"));
         the_parser.new_macro(na, hash_table.locate("XKV@na"));
         if (!delayed.empty()) delayed.pop_back(); // remove trailing comma
-        if (tracing_commands()) {
-            spdlog::trace("setkeys <- {}", fmt::streamed(action));
-        }
+        if (tracing_commands()) { spdlog::trace("setkeys <- {}", fmt::streamed(action)); }
         the_parser.new_macro(delayed, hash_table.locate("XKV@rm"));
         the_parser.back_input(action);
     }
@@ -915,15 +913,11 @@ namespace {
             keyvals = the_parser.get_mac_value(hash_table.locate("XKV@rm")); // case of \setrmkeys
         else
             keyvals = the_parser.read_arg();
-        if (tracing_commands()) {
-            spdlog::trace("setkeys -> {}", fmt::streamed(keyvals));
-        }
+        if (tracing_commands()) { spdlog::trace("setkeys -> {}", fmt::streamed(keyvals)); }
         extract_keys(keyvals, Keys);
     }
 
-    void XkvSetkeys::dump_keys() {
-        spdlog::trace("{{Options to execute->{}}}", fmt::streamed(keyvals));
-    }
+    void XkvSetkeys::dump_keys() { spdlog::trace("{{Options to execute->{}}}", fmt::streamed(keyvals)); }
 
     void XkvSetkeys::run(bool c) {
         no_err  = the_parser.remove_initial_plus(false);

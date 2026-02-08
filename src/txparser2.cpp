@@ -219,9 +219,7 @@ void Parser::E_xspace() {
     if (get_token()) return;
     back_input();
     bool val = cur_cmd_chr.is_ok_for_xspace();
-    if (tracing_commands()) {
-        spdlog::trace("\\xspace after {}{}", fmt::streamed(cur_tok), (val ? " did nothing " : " added space"));
-    }
+    if (tracing_commands()) { spdlog::trace("\\xspace after {}{}", fmt::streamed(cur_tok), (val ? " did nothing " : " added space")); }
     if (val) return;
     back_input(hash_table.space_token);
 }
@@ -240,9 +238,7 @@ auto Parser::T_xmllatex() -> std::string {
             mac_buffer.append(hash_table[x.hash_loc()]);
         // else token is bad or null
     }
-    if (tracing_commands()) {
-        spdlog::trace("{{Rawxml: {}}}", fmt::streamed(mac_buffer));
-    }
+    if (tracing_commands()) { spdlog::trace("{{Rawxml: {}}}", fmt::streamed(mac_buffer)); }
     return mac_buffer;
 }
 
@@ -589,9 +585,7 @@ void Parser::T_xkv_for(subtypes c) {
         //
     default:;
     }
-    if (tracing_commands()) {
-        spdlog::trace("{}<- {}", fmt::streamed(T), fmt::streamed(res));
-    }
+    if (tracing_commands()) { spdlog::trace("{}<- {}", fmt::streamed(T), fmt::streamed(res)); }
     back_input(res);
 }
 
@@ -600,9 +594,7 @@ void Parser::T_xkv_for(subtypes c) {
 auto Parser::M_cons() -> bool {
     Token     cmd = get_r_token();
     TokenList L   = read_arg();
-    if (tracing_commands()) {
-        spdlog::trace("{{\\@cons {} + {}}}", fmt::streamed(cmd), fmt::streamed(L));
-    }
+    if (tracing_commands()) { spdlog::trace("{{\\@cons {} + {}}}", fmt::streamed(cmd), fmt::streamed(L)); }
     return M_cons(cmd, L);
 }
 
@@ -1068,7 +1060,7 @@ auto Parser::numberwithin() -> bool {
     TokenList foo_list = read_arg();
     TokenList A        = foo_list;
     TokenList bar_list = read_arg();
-    Buffer &  b        = txparser2_local_buf;
+    Buffer   &b        = txparser2_local_buf;
     if (csname_ctr(foo_list, b)) {
         bad_counter0();
         return true;
@@ -1099,7 +1091,7 @@ auto Parser::numberwithin() -> bool {
 
 auto Parser::make_label_inner(const std::string &name) -> std::string {
     TokenList res;
-    Buffer &  b = txparser2_local_buf;
+    Buffer   &b = txparser2_local_buf;
     b           = "the" + name;
     res.push_back(hash_table.locate(b));
     b = "p@" + name;
@@ -1207,10 +1199,10 @@ void Parser::T_ifdefinable() {
 // executes \def\@itemlabel{(\theenumiv)}
 // redefines \def\theenumiv{\roman{enumiv}}
 auto Parser::optional_enumerate(TokenList &L, const std::string &ctr) -> bool {
-    Hashtab & H = hash_table;
+    Hashtab  &H = hash_table;
     TokenList res;
     int       b   = 0;
-    Buffer &  B   = txparser2_local_buf;
+    Buffer   &B   = txparser2_local_buf;
     B             = "the" + ctr;
     Token the_ctr = H.locate(B);
     Token cmd     = H.relax_token;
@@ -1301,7 +1293,7 @@ void Parser::T_listenv(symcodes x) {
     }
     if (x == list_cmd) {
         TokenList LL = read_arg();
-        auto *    X  = new Macro(LL);
+        auto     *X  = new Macro(LL);
         mac_define(t, X, false, rd_always, user_cmd);
         TokenList L2 = read_arg();
         back_input(L2); // remove a pair of braces here

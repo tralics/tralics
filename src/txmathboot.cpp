@@ -26,8 +26,8 @@ std::array<Xml *, 128> single_chars{};
 
 #define LANGLE "&#x02329;"
 #define RANGLE "&#x0232A;"
-//#define LANGLE "&#x27E8;"
-//#define RANGLE "&#x27E9;"
+// #define LANGLE "&#x27E8;"
+// #define RANGLE "&#x27E9;"
 
 auto math_ns::get_builtin_alt(size_t p) -> Xml * { return math_data.get_builtin_alt(p); } // \todo Why a global function?
 

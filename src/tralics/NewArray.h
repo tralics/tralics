@@ -29,8 +29,8 @@ class NewArray {
     bool                            have_token_list{};
     Token                           current_token;
     TokenList                       current_list;
-    Parser *                        P{}; // \todo always the_parser, remove
-    ArrayInfo *                     AI{};
+    Parser                         *P{}; // \todo always the_parser, remove
+    ArrayInfo                      *AI{};
     Xid                             id;
     TokenList                       u_list, v_list;
     AttList                         attribs;

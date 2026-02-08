@@ -12,9 +12,9 @@
 #include "tralics/FpNum.h"
 #include "tralics/FpStack.h"
 #include "tralics/Parser.h"
-#include <spdlog/spdlog.h>
 #include <fmt/format.h>
 #include <fmt/ostream.h>
+#include <spdlog/spdlog.h>
 
 namespace {
     Token                           fp_tmp_token, fp_test_token;
@@ -1607,9 +1607,7 @@ auto Parser::fp_read_value() -> FpNum {
     }
     FpNum res;
     if (res.create(fp_in_buf)) parse_error("overflow in FPread");
-    if (tracing_commands()) {
-        spdlog::trace("{{FPread for {}={}}}", fmt::streamed(name), fmt::streamed(res));
-    }
+    if (tracing_commands()) { spdlog::trace("{{FPread for {}={}}}", fmt::streamed(name), fmt::streamed(res)); }
     return res;
 }
 
@@ -1744,9 +1742,7 @@ void Parser::fp_e_eval() {
     TokenList B = read_arg();
     FpGenList evaluator(B);
     evaluator.to_postfix();
-    if (tracing_commands()) {
-        spdlog::trace("{{FPpostfix {}}}", fmt::streamed(evaluator));
-    }
+    if (tracing_commands()) { spdlog::trace("{{FPpostfix {}}}", fmt::streamed(evaluator)); }
     back_input(hash_table.CB_token);
     back_input(evaluator);
     back_input(hash_table.OB_token);
@@ -1820,7 +1816,7 @@ void Parser::fp_e_qqsolve() {
 
 // upn evaluator. Is a rather big function.
 void Parser::upn_eval(const TokenList &l) {
-    FpStack & S = upn_stack;
+    FpStack  &S = upn_stack;
     FpGenList L(l);
     L.remove_spaces();
     Token     t1 = hash_table.space_token;
@@ -1836,9 +1832,7 @@ void Parser::upn_eval(const TokenList &l) {
     const std::string &str = tkbuf;
     TokenList          a1, a2;
     FpNum              x1, x2, x3, x4;
-    if (tracing_commands()) {
-        spdlog::trace("{{FPupcmd {}}}", (n == 0 ? "??" : str));
-    }
+    if (tracing_commands()) { spdlog::trace("{{FPupcmd {}}}", (n == 0 ? "??" : str)); }
 
     if (n == 4 && (str == "copy")) {
         L.remove_first_n(n);

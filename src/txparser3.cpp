@@ -69,16 +69,12 @@ void Parser::push_save_stack(SaveAuxBase *v) { save_stack.emplace_back(v); }
 void Parser::push_level(boundary_type v) {
     push_save_stack(new SaveAuxBoundary(v));
     cur_level++;
-    if (tracing_stack()) {
-        spdlog::trace("+stack: level + {} for {} entered on line {}", cur_level, fmt::streamed(v), get_cur_line());
-    }
+    if (tracing_stack()) { spdlog::trace("+stack: level + {} for {} entered on line {}", cur_level, fmt::streamed(v), get_cur_line()); }
 }
 
 void Parser::push_tpa() {
     push_save_stack(new SaveAuxBoundary(bt_tpa));
-    if (tracing_stack()) {
-        spdlog::trace("+stack: level = {} for {}", cur_level, fmt::streamed(bt_tpa));
-    }
+    if (tracing_stack()) { spdlog::trace("+stack: level = {} for {}", cur_level, fmt::streamed(bt_tpa)); }
 }
 
 // Defines something at position A, with type and subtype B and C.
@@ -138,7 +134,7 @@ void Parser::word_define(size_t a, long c, bool gbl) {
     EqtbInt &W        = eqtb_int_table[a];
     bool     reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
-        CmdChr tmp(assign_int_cmd, subtypes(a));
+        CmdChr      tmp(assign_int_cmd, subtypes(a));
         std::string msg = fmt::format("{{{}\\{}={}", gbl_or_assign(gbl, reassign), tmp.name(), fmt::streamed(W.val));
         if (!reassign) msg += fmt::format(" into \\{}={}", tmp.name(), c);
         msg += "}";
@@ -178,7 +174,7 @@ void Parser::dim_define(size_t a, ScaledInt c, bool gbl) {
     EqtbDim &W        = eqtb_dim_table[a];
     bool     reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
-        CmdChr tmp(assign_dimen_cmd, subtypes(a));
+        CmdChr      tmp(assign_dimen_cmd, subtypes(a));
         std::string msg = fmt::format("{{{}\\{}={}", gbl_or_assign(gbl, reassign), tmp.name(), fmt::streamed(W.val));
         if (!reassign) msg += fmt::format(" into \\{}={}", tmp.name(), fmt::streamed(c));
         msg += "}";
@@ -232,8 +228,7 @@ void Parser::glue_define(size_t a, Glue c, bool gbl) {
 void Parser::box_define(size_t a, Xml *c, bool gbl) {
     EqtbBox &W = box_table[a];
     if (tracing_assigns()) {
-        spdlog::trace("{{{}\\box{}={} into \\box{}={}}}", gbl_or_assign(gbl, false), a, fmt::streamed(W.val), a,
-                      fmt::streamed(c));
+        spdlog::trace("{{{}\\box{}={} into \\box{}={}}}", gbl_or_assign(gbl, false), a, fmt::streamed(W.val), a, fmt::streamed(c));
     }
     if (gbl)
         W = {c, 1};
@@ -248,7 +243,7 @@ void Parser::token_list_define(size_t p, const TokenList &c, bool gbl) {
     EqtbToken &W        = toks_registers[p];
     bool       reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
-        CmdChr tmp(assign_toks_cmd, subtypes(p));
+        CmdChr      tmp(assign_toks_cmd, subtypes(p));
         std::string msg = fmt::format("{{{}\\{}={}", gbl_or_assign(gbl, reassign), tmp.name(), fmt::streamed(W.val));
         if (!reassign) msg += fmt::format(" into \\{}={}", tmp.name(), fmt::streamed(c));
         msg += "}";
@@ -267,9 +262,7 @@ void Parser::token_list_define(size_t p, const TokenList &c, bool gbl) {
 // This is called whenever a font has changed.
 // It pushes the value on the save stack if needed.
 void Parser::save_font() {
-    if (tracing_commands()) {
-        spdlog::trace("{{font change {}}}", fmt::streamed(cur_font));
-    }
+    if (tracing_commands()) { spdlog::trace("{{font change {}}}", fmt::streamed(cur_font)); }
     if (cur_font.level == cur_level) return;
     push_save_stack(new SaveAuxFont(cur_font.level, cur_font.old, cur_font.old_color));
     cur_font.set_level(cur_level);
@@ -348,7 +341,7 @@ auto Parser::pop_all_levels() -> bool {
     if (!pop_level(bt_env)) return false; // pop the end document
     bool        started = false;
     std::string ename;
-    Buffer &    B = err_buf;
+    Buffer     &B = err_buf;
     B.clear();
     for (;;) {
         if (save_stack.empty()) break;

@@ -964,15 +964,14 @@ namespace {
         for (auto &i : the_parser.ref_list) {
             auto        E = i.first;
             std::string V = i.second;
-            auto *      L = labinfo(V);
+            auto       *L = labinfo(V);
             if (!L->defined) {
                 std::string msg = fmt::format("Error signaled in postprocessor\nundefined label `{}` (first use at line {} in file {})", V,
                                               L->lineno, L->filename);
                 Xid(E).add_attribute(the_names["target"], V);
                 std::string B = L->id;
                 for (auto &removed_label : the_parser.removed_labels) {
-                    if (removed_label.second == B)
-                        msg += fmt::format("\n(Label was removed with `{}`)", removed_label.first);
+                    if (removed_label.second == B) msg += fmt::format("\n(Label was removed with `{}`)", removed_label.first);
                     break;
                 }
                 spdlog::error("{}", msg);
@@ -1730,9 +1729,7 @@ void Parser::boot() {
 // This implements \a', or \a{'}, expansion is \', empty in case of an error
 // cur_tok is \a, in case of error
 void Parser::E_accent_a() {
-    if (tracing_macros()) {
-        spdlog::trace("{{{}}}", fmt::streamed(cur_tok));
-    }
+    if (tracing_macros()) { spdlog::trace("{{{}}}", fmt::streamed(cur_tok)); }
     TokenList y = read_arg();
     if (!token_ns::has_a_single_token(y)) {
         parse_error("wanted a single token as argument to \\a");
@@ -1756,14 +1753,10 @@ void Parser::E_accent_a() {
 // or \'{\= u}, a double accent
 // cur_tok, cur_cmd_chr explain what to do.
 void Parser::E_accent() {
-    if (tracing_macros()) {
-        spdlog::trace("{{accent {}}}", fmt::streamed(cur_tok));
-    }
+    if (tracing_macros()) { spdlog::trace("{{accent {}}}", fmt::streamed(cur_tok)); }
     unsigned acc_code = cur_cmd_chr.chr;
     if (the_parser.global_in_url && acc_code == '~') {
-        if (tracing_macros()) {
-            spdlog::trace("{{\\~ gives ~ }}");
-        }
+        if (tracing_macros()) { spdlog::trace("{{\\~ gives ~ }}"); }
         back_input(Token(other_t_offset, '~'));
         return;
     }
@@ -1888,9 +1881,7 @@ void Parser::E_accent() {
         expansion.push_front(hash_table.composite_token);
     }
 
-    if (tracing_macros()) {
-        spdlog::trace("{{accent on {} -> {}}}", uchar(achar), fmt::streamed(expansion));
-    }
+    if (tracing_macros()) { spdlog::trace("{{accent on {} -> {}}}", uchar(achar), fmt::streamed(expansion)); }
     back_input(expansion);
 }
 
@@ -2136,9 +2127,7 @@ void Parser::T_cite(subtypes sw) {
         res.push_back(hash_table.locate("NAT@close"));
         res.push_back(hash_table.end_natcite_token);
     }
-    if (tracing_commands()) {
-        spdlog::trace("{}->{}.", fmt::streamed(T), fmt::streamed(res));
-    }
+    if (tracing_commands()) { spdlog::trace("{}->{}.", fmt::streamed(T), fmt::streamed(res)); }
     back_input(res);
 }
 
@@ -2177,7 +2166,7 @@ void Parser::solve_cite(bool user) {
         return;
     }
     AttList &AL    = N.get_att();
-    auto *   my_id = AL.lookup(the_names["id"]);
+    auto    *my_id = AL.lookup(the_names["id"]);
     if (my_id != nullptr) {
         if (CI.id.empty())
             CI.id = *my_id;
@@ -2254,9 +2243,7 @@ void Parser::T_citation() {
 void Parser::insert_every_bib() {
     TokenList everybib = toks_registers[everybibitem_code].val;
     if (everybib.empty()) return;
-    if (tracing_commands()) {
-        spdlog::trace("{{<everybibitem> {}}}", fmt::streamed(everybib));
-    }
+    if (tracing_commands()) { spdlog::trace("{{<everybibitem> {}}}", fmt::streamed(everybib)); }
     back_input(everybib);
 }
 
@@ -2304,9 +2291,7 @@ auto Parser::nct_aux(Token T, TokenList &body) -> std::optional<size_t> {
 // If for some reason, the character is invalid, we remove it from the table.
 void Parser::expand_nct(TokenList &L) {
     bool action = true;
-    if (tracing_commands()) {
-        spdlog::trace("array preamble at start: {}", fmt::streamed(L));
-    }
+    if (tracing_commands()) { spdlog::trace("array preamble at start: {}", fmt::streamed(L)); }
     if (!new_array_object.has_a_nct()) return;
     int max_iter = max_newcolumn_loops;
     while (action) {
@@ -2394,9 +2379,7 @@ void Parser::start_a_cell(bool started) {
         new_array_object.run(cid, false);
     } else {
         TokenList L = the_stack.get_u_or_v(true);
-        if (tracing_commands() && !L.empty()) {
-            spdlog::trace("{{template u-part {}}}", fmt::streamed(L));
-        }
+        if (tracing_commands() && !L.empty()) { spdlog::trace("{{template u-part {}}}", fmt::streamed(L)); }
         back_input(L);
     }
 }
@@ -2411,9 +2394,7 @@ void Parser::finish_a_cell(Token T, const std::string &a) {
     back_input(T);
     if (the_stack.is_omit_cell()) return;
     TokenList L = the_stack.get_u_or_v(false);
-    if (tracing_commands() && !L.empty()) {
-        spdlog::trace("{{template v-part {}}}", fmt::streamed(L));
-    }
+    if (tracing_commands() && !L.empty()) { spdlog::trace("{{template v-part {}}}", fmt::streamed(L)); }
     back_input(L);
 }
 
@@ -2476,7 +2457,7 @@ auto Parser::scan_pair_ints(Token T, TokenList &L) -> bool {
 
 auto Parser::T_hline_parse(subtypes c) -> int {
     the_parser.in_hlinee = false;
-    Token T   = cur_tok;
+    Token T              = cur_tok;
     if (c == one_code) { // cline
         TokenList arg = read_arg();
         if (scan_pair_ints(T, arg)) {
@@ -2498,9 +2479,9 @@ auto Parser::T_hline_parse(subtypes c) -> int {
             return 0; // read the mandatory arguments before returning
         }
     }
-    the_parser.have_above  = false;
-    the_parser.have_below  = false;
-    TokenList L = read_arg();
+    the_parser.have_above = false;
+    the_parser.have_below = false;
+    TokenList L           = read_arg();
     if (!L.empty()) {
         ScaledInt tab_width = dimen_from_list(T, L);
         if (!(tab_width == ScaledInt{0})) {
@@ -2516,10 +2497,10 @@ auto Parser::T_hline_parse(subtypes c) -> int {
             the_parser.hlinee_below = std::string(tab_width);
         }
     }
-    L                   = read_arg();
-    ScaledInt tab_width = dimen_from_list(T, L);
-    the_parser.in_hlinee           = true;
-    the_parser.hlinee_width        = std::string(tab_width);
+    L                       = read_arg();
+    ScaledInt tab_width     = dimen_from_list(T, L);
+    the_parser.in_hlinee    = true;
+    the_parser.hlinee_width = std::string(tab_width);
     return rt;
 }
 

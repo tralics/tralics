@@ -9,7 +9,6 @@
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include <fmt/ostream.h>
-#include <fmt/ostream.h>
 #include <fstream>
 #include <spdlog/spdlog.h>
 
@@ -115,7 +114,7 @@ namespace {
 
     // Post processor of figure.
     void postprocess_figure(Xml *to, Xml *from) {
-        Xml *     X{nullptr};
+        Xml      *X{nullptr};
         XmlAction X1(the_names["table"], rc_contains);
         XmlAction X2(the_names["subfigure"], rc_contains);
         XmlAction X3(the_names["figure"], rc_how_many);
@@ -180,7 +179,7 @@ namespace {
     void remove_label(String s, const std::string &n) {
         for (auto &i : the_parser.ref_list) {
             std::string V  = i.second;
-            auto *      li = labinfo(V);
+            auto       *li = labinfo(V);
             if (li->id != n) continue;
             if (!li->used) continue;
             spdlog::error("Error signaled by postprocessor\nRemoving `{}` made the following label disappear: {}", s, V);
@@ -188,7 +187,7 @@ namespace {
         }
         for (auto &defined_label : the_parser.defined_labels) {
             std::string j = defined_label.first;
-            LabelInfo * V = defined_label.second;
+            LabelInfo  *V = defined_label.second;
             if (j == n && V->defined && !V->used) {
                 the_parser.removed_labels.emplace_back(s, n);
                 V->defined = false;

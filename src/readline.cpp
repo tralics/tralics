@@ -112,7 +112,7 @@ using namespace readline_ns;
 
 class Slined { // \todo this should vanish at some point in refactoring
     std::unique_ptr<char[]>    m_inbuf_storage;
-    char *                     m_inbuf{nullptr};
+    char                      *m_inbuf{nullptr};
     std::array<char, buf_size> m_buffer{};
     std::string                m_killbuf;
     size_t                     m_inpos{0};
@@ -146,8 +146,8 @@ public:
         }
     }
 
-    Slined(const Slined &) = delete;
-    ~Slined() = default;
+    Slined(const Slined &)                     = delete;
+    ~Slined()                                  = default;
     auto operator=(const Slined &) -> Slined & = delete;
 
     auto newpos(size_t x, size_t n) -> long;
@@ -248,7 +248,7 @@ void readline_ns::tybeep() { std::cerr.put(7); }
 
 auto Slined::copystring(String string, size_t s, size_t inpos, bool sw) -> unsigned {
     unsigned j   = 0;
-    char *   buf = sw ? m_buffer.data() : g_buffer.data();
+    char    *buf = sw ? m_buffer.data() : g_buffer.data();
     for (size_t i = 0; i < s; i++) {
         if (i == inpos) m_pos = j;
         auto cn = string[i];
@@ -373,7 +373,7 @@ void Slined::insert_in_image(size_t n, char c1, char c2) {
             std::cerr.put(c2);
         }
         if (p == m) {
-        }                // we are at the right end
+        } // we are at the right end
         else if (p == d) // we are at the boundary
             right_fill();
         else
@@ -571,7 +571,7 @@ void Slined::fast_ins(size_t n, String s, size_t l) {
 void Slined::Hshow() {
     unsigned            n      = 0;
     auto                sz     = m_history.size();
-    Slined &            new_ed = *the_editor_c;
+    Slined             &new_ed = *the_editor_c;
     std::array<char, 4> p{};
     p[2]          = ' ';
     p[3]          = 0;
@@ -583,9 +583,9 @@ void Slined::Hshow() {
             p[0] = ' ';
         else
             p[0] = '0' + static_cast<char>(n / 10);
-        p[1]            = char('0' + to_signed(n % 10));
-        new_ed.m_prompt = p.data();
-        new_ed.m_inpos  = 0;
+        p[1]              = char('0' + to_signed(n % 10));
+        new_ed.m_prompt   = p.data();
+        new_ed.m_inpos    = 0;
         const auto &entry = m_history[i];
         auto        k     = entry.size();
         if (k > buf_size - 2) k = buf_size - 2;
@@ -736,8 +736,8 @@ void Slined::replace_string() {
     auto        l     = s.size();
     std::memcpy(m_inbuf, s.data(), l);
     m_inbuf[l] = 0;
-    m_inmax = l;
-    m_inpos = l;
+    m_inmax    = l;
+    m_inpos    = l;
     redisplay();
 }
 

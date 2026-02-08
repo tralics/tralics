@@ -2,9 +2,9 @@
 #include "Math.h"
 
 class Cv3Helper : public Math {
-    Xml *      index{};
-    Xml *      exponent{};
-    Xml *      p{};
+    Xml       *index{};
+    Xml       *exponent{};
+    Xml       *p{};
     long       ploc{};
     math_types ptype{};
     math_types prefix_type{};

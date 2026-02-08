@@ -19,8 +19,6 @@
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 #include <spdlog/spdlog.h>
-#include <fmt/ostream.h>
-#include <spdlog/spdlog.h>
 
 using namespace std::string_literals;
 
@@ -244,8 +242,7 @@ void Parser::insert_hook(long n) {
     auto k = the_class_data.packages.size();
     if (n <= 0 || n >= to_signed(k)) return;
     LatexPackage *C = the_class_data.packages[to_unsigned(n)];
-    if (!C->seen_process && !C->Uoptions.empty())
-        spdlog::warn("Warning: {}{} has no \\ProcessOptions", C->pack_or_class(), C->real_name());
+    if (!C->seen_process && !C->Uoptions.empty()) spdlog::warn("Warning: {}{} has no \\ProcessOptions", C->pack_or_class(), C->real_name());
     back_input(C->hook);
     if (parse_version(C->date) < parse_version(C->req_date)) {
         spdlog::warn("Warning: You have requested, on line {}, version\n`{}' of {}{},\n"
@@ -278,11 +275,9 @@ void Parser::T_provides_package(bool c) // True for a file
     LatexPackage *cur = the_class_data.cur_pack();
     if (!date.empty()) cur->date = date;
     auto S = cur->real_name();
-    if (name != S && !the_class_data.using_default_class) {
-        spdlog::warn("Warning: {}{} claims to be {}.", cur->pack_or_class(), S, name);
-    }
+    if (name != S && !the_class_data.using_default_class) { spdlog::warn("Warning: {}{} claims to be {}.", cur->pack_or_class(), S, name); }
     Buffer &b = txclasses_local_buf;
-    b = fmt::format(fmt::runtime(cur->is_class() ? "Document class: {} {}\n" : "Package: {} {}\n"), name, date);
+    b         = fmt::format(fmt::runtime(cur->is_class() ? "Document class: {} {}\n" : "Package: {} {}\n"), name, date);
     if (cur->is_class())
         spdlog::info("{}", fmt::streamed(b));
     else
@@ -405,7 +400,7 @@ void classes_ns::unknown_optionX(TokenList &cur, TokenList &action) {
 
 // General case.
 void classes_ns::unknown_option(KeyAndVal &cur, TokenList &res, TokenList &spec, int X) {
-    LatexPackage *     C    = the_class_data.cur_pack();
+    LatexPackage      *C    = the_class_data.cur_pack();
     const std::string &name = cur.full_name;
     if (!C->has_a_default) {
         if (C->is_class()) {
@@ -493,9 +488,9 @@ void Parser::T_process_options() {
 void Parser::T_execute_options() {
     TokenList     opt  = read_arg();
     LatexPackage *C    = the_class_data.cur_pack();
-    OptionList &  pack = C->Poptions;
+    OptionList   &pack = C->Poptions;
     TokenList     action;
-    Buffer &      b = txclasses_local_buf;
+    Buffer       &b = txclasses_local_buf;
     b.clear();
     OptionList L = make_options(opt);
     auto       n = L.size();
@@ -514,9 +509,7 @@ void Parser::T_execute_options() {
 // Common code;
 void Parser::T_process_options_aux(TokenList &action) {
     spdlog::trace("{{Options to execute->{}}}", fmt::streamed(txclasses_local_buf));
-    if (tracing_commands()) {
-        spdlog::trace("{{Options code to execute->{}}}", fmt::streamed(action));
-    }
+    if (tracing_commands()) { spdlog::trace("{{Options code to execute->{}}}", fmt::streamed(action)); }
     back_input(action);
 }
 
@@ -738,7 +731,7 @@ void show_unused_options() { ClassesData::show_unused(); }
 
 void ClassesData::show_unused() {
     OptionList &GO = the_class_data.global_options;
-    Buffer &    B  = txclasses_local_buf;
+    Buffer     &B  = txclasses_local_buf;
     B.clear();
     int k = 0;
     for (auto &i : GO) {
@@ -979,9 +972,7 @@ void Parser::call_define_key(TokenList &L, Token cmd, const std::string &arg, co
     aux = string_to_list(fam, true);
     L.splice(L.begin(), aux);
     L.push_front(hash_table.locate("define@key"));
-    if (tracing_commands()) {
-        spdlog::trace("{}->{}", fmt::streamed(cmd), fmt::streamed(L));
-    }
+    if (tracing_commands()) { spdlog::trace("{}->{}", fmt::streamed(cmd), fmt::streamed(L)); }
     back_input(L);
 }
 
@@ -1033,7 +1024,7 @@ void Parser::kvo_string_opt() {
     auto        deflt = read_optarg();
     classes_ns::register_key(arg);
     std::string fam = kvo_getfam();
-    Buffer &    B   = txclasses_local_buf;
+    Buffer     &B   = txclasses_local_buf;
     B               = fam + "@" + arg;
     Token T         = hash_table.locate(B);
     if (!Hashtab::the_eqtb()[T.eqtb_loc()].val.is_undef_or_relax()) {
@@ -1081,7 +1072,7 @@ void Parser::kvo_void_opt() {
     Token       cmd = cur_tok;
     std::string arg = sE_arg_nopar();
     std::string fam = kvo_getfam();
-    Buffer &    B   = txclasses_local_buf;
+    Buffer     &B   = txclasses_local_buf;
     classes_ns::register_key(arg);
     B       = fam + "@" + arg;
     Token T = hash_table.locate(B);
@@ -1132,7 +1123,7 @@ void Parser::kvo_comp_opt() {
     std::string arg  = sE_arg_nopar();
     std::string comp = sE_arg_nopar();
     std::string fam  = kvo_getfam();
-    Buffer &    B    = txclasses_local_buf;
+    Buffer     &B    = txclasses_local_buf;
     B                = "if" + fam + '@' + comp;
     Token T          = hash_table.locate(B);
     if (Hashtab::the_eqtb()[T.eqtb_loc()].val.is_undef()) {
@@ -1156,7 +1147,7 @@ void Parser::kvo_comp_opt() {
 // Get/set for family and prefix
 void Parser::kvo_family_etc(subtypes k) {
     std::string s = the_class_data.cur_pack()->full_name();
-    Buffer &    B = txclasses_local_buf;
+    Buffer     &B = txclasses_local_buf;
     B             = "KVO@";
     if (k == kvo_fam_set_code || k == kvo_fam_get_code)
         B += "family@";

@@ -56,7 +56,8 @@ auto Buffer::next_utf8_char() -> char32_t {
     auto nn = to_unsigned(it - it0);
     ptrs.b += nn;
     if (cp > 0x1FFFF) {
-        spdlog::error("UTF-8 parsing overflow (char U+{:04X}, line {}, file {})", size_t(cp), the_parser.cur_file_line, the_parser.cur_file_name);
+        spdlog::error("UTF-8 parsing overflow (char U+{:04X}, line {}, file {})", size_t(cp), the_parser.cur_file_line,
+                      the_parser.cur_file_name);
         the_main.bad_chars++;
         return char32_t(); // \todo nullopt
     }
@@ -259,7 +260,7 @@ auto main_ns::search_in_confdir(const std::string &s) -> std::optional<std::file
     for (auto i = the_main.conf_path.size(); i != 0; i--) {
         auto f = the_main.conf_path[i - 1] / s;
         if (std::filesystem::exists(f)) {
-        spdlog::trace("Found in configuration path: {}", f.string());
+            spdlog::trace("Found in configuration path: {}", f.string());
             return f;
         }
     }

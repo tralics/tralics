@@ -10,7 +10,7 @@ struct MathF {
     int                next_finish{-1};
     MathQList          aux;
     std::list<MathElt> res;
-    Xml *              t{};
+    Xml               *t{};
 
     void change_state();
     void handle_t();

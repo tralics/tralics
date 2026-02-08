@@ -15,7 +15,7 @@ auto next_label_id() -> std::string {
 
 auto fonts1(const std::string &x) -> Xml * {
     bool     w   = the_main.use_font_elt;
-    Xml *    res = new Xml(the_names[w ? x : "hi"], nullptr);
+    Xml     *res = new Xml(the_names[w ? x : "hi"], nullptr);
     AttList &W   = res->id.get_att();
     if (!w) W[the_names["rend"]] = the_names[x];
     return res;

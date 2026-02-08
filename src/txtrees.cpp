@@ -51,7 +51,7 @@ namespace {
 // then we can say \XMLaddatt{idx}{bar}{gee}
 auto Parser::get_index_value() -> size_t {
     std::string s         = sT_optarg_nopar();
-    auto &      the_index = AllIndex::the_index();
+    auto       &the_index = AllIndex::the_index();
     return the_index.find(s).AL;
 }
 
@@ -355,9 +355,7 @@ void Parser::T_gloss(bool c) {
     res.splice(res.end(), second_line);
     res.splice(res.end(), third_line);
     res.add_env("tabular");
-    if (tracing_commands()) {
-        spdlog::trace("{{Gloss: {}}}", fmt::streamed(res));
-    }
+    if (tracing_commands()) { spdlog::trace("{{Gloss: {}}}", fmt::streamed(res)); }
     back_input(res);
 }
 
@@ -401,9 +399,9 @@ auto Parser::get_counter(Token T) -> long { // \todo rewrite properly
 
 // Reads three counter names; return true if OK
 auto Parser::scan_date_ctrs() -> std::optional<bool> {
-    year_ctr  = hash_table.relax_token;
-    month_ctr = hash_table.relax_token;
-    day_ctr   = hash_table.relax_token;
+    year_ctr         = hash_table.relax_token;
+    month_ctr        = hash_table.relax_token;
+    day_ctr          = hash_table.relax_token;
     auto counter_res = M_counter(false);
     if (!counter_res) return std::nullopt;
     bool bad = *counter_res;
@@ -503,7 +501,7 @@ auto date_ns::check_date(long y, size_t m, size_t d) -> bool {
 // Returns the number of days between start/01/01 and cur/month/day
 auto Parser::count_days() -> bool {
     Token T   = cur_tok;
-    auto res = M_counter(false);
+    auto  res = M_counter(false);
     if (!res) return false;
     bool bad = *res;
     if (!bad) get_token();
@@ -528,7 +526,7 @@ auto Parser::datebynumber() -> bool {
     Token T     = cur_tok;
     auto  start = scan_braced_int(T);              // start date
     auto  val   = to_unsigned(scan_braced_int(T)); // value to convert
-    if (!scan_date_ctrs()) return false;      // fetch the counters
+    if (!scan_date_ctrs()) return false;           // fetch the counters
     auto   year = start;
     size_t c    = 1;
     for (;;) {

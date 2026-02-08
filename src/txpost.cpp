@@ -108,7 +108,7 @@ void tralics_ns::find_index_labels(std::vector<std::string> &W) {
     for (auto &i : refindex_list) {
         auto        E = to_unsigned(i.first);
         std::string V = i.second;
-        auto *      L = labinfo(V);
+        auto       *L = labinfo(V);
         if (!L->defined) continue; // should not happen
         std::string B = L->id;
         scbuf.clear();

@@ -478,9 +478,7 @@ void Dispatcher::boot() {
     register_action_plain(after_assignment_cmd, [] {
         the_parser.get_token();
         the_parser.set_after_ass_tok(the_parser.cur_tok);
-        if (tracing_commands()) {
-            spdlog::trace("{{\\afterassignment: {}}}", fmt::streamed(the_parser.cur_tok));
-        }
+        if (tracing_commands()) { spdlog::trace("{{\\afterassignment: {}}}", fmt::streamed(the_parser.cur_tok)); }
     });
 
     register_action_plain(leader_ship_cmd, [](subtypes c) {
@@ -516,11 +514,9 @@ void Dispatcher::boot() {
     register_action_plain(fbox_cmd, [](subtypes c) {
         if (c == dashbox_code) {
             if (!the_parser.T_fbox_dash_box()) throw EndOfData();
-        }
-        else if (c == rotatebox_code) {
+        } else if (c == rotatebox_code) {
             if (!the_parser.T_fbox_rotate_box()) throw EndOfData();
-        }
-        else {
+        } else {
             if (!the_parser.T_fbox(c)) throw EndOfData();
         }
     });

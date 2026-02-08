@@ -18,10 +18,10 @@
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include <algorithm>
-#include <sstream>
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 #include <spdlog/spdlog.h>
+#include <sstream>
 
 enum { pbm_empty, pbm_start, pbm_end, pbm_att, pbm_att_empty };
 static Buffer                 mathml_buffer;
@@ -471,7 +471,7 @@ auto MathElt::get_fml_subtype() const -> subtypes { return math_to_sub(get_lcmd(
 void MathElt::cv_noML_special() const {
     subtypes c = get_fml_subtype();
     CmdChr   Val(special_math_cmd, c);
-    Math &   L = get_list();
+    Math    &L = get_list();
     if (c == formula_attribute_code || c == thismath_attribute_code) {
         static Buffer atb;
         std::string   s1 = L.get_arg1().convert_this_to_string(atb);
@@ -583,7 +583,7 @@ void MathElt::cv_noMLt_special() const {
 void MathElt::cv_noMLt_special0() const {
     subtypes c = get_fml_subtype();
     int      n = nb_args_for_cmd(c);
-    Math &   L = get_list();
+    Math    &L = get_list();
     if (n == -1) mathml_buffer.append("unknown");
     if (c == mathbox_code) {
         mathml_buffer.append("<name>");
@@ -688,7 +688,7 @@ void MathElt::cv_noMLt_special0() const {
 
 // Handles the case of a group
 void MathElt::cv_noML_list() const {
-    Math &         X = get_list();
+    Math          &X = get_list();
     math_list_type T = get_lcmd();
     switch (T) {
     case math_open_cd:
@@ -718,7 +718,7 @@ void MathElt::cv_noML_list() const {
 
 // Handles the case of a group
 void MathElt::cv_noMLt_list() const {
-    Math &         X = get_list();
+    Math          &X = get_list();
     math_list_type T = get_lcmd();
     switch (T) {
     case math_open_cd:
@@ -1208,7 +1208,7 @@ void Math::is_font_cmd1_list(const_math_iterator &B, const_math_iterator &E) {
 // True if it is a group containing \grave{e}
 auto MathElt::is_e_grave() const -> bool {
     if (cmd != special_math_cmd && get_font() != grave_code) return false;
-    Math &  A = get_list();
+    Math   &A = get_list();
     Buffer &B = mathml_buffer; // not aux_buffer !!
     if (!A.get_arg1().chars_to_mb(B, false)) return false;
     if (B.single_char() != 'e') return false;
@@ -1222,7 +1222,7 @@ auto Math::special1() const -> Xml * {
     special2(ok, U);
     if (!ok) return U;
     const MathElt &W = back();
-    Xml *          xval{nullptr};
+    Xml           *xval{nullptr};
     if (W.cmd == letter_catcode && W.get_char() == 'o')
         xval = math_ns::get_builtin(xml_o_loc);
     else if (W.cmd == letter_catcode && W.get_char() == 'e')
@@ -1377,8 +1377,8 @@ auto MathElt::maybe_iseq(subtypes f) const -> bool {
 auto Math::convert_char_seq(const MathElt &W) -> MathElt {
     subtypes f = W.get_font();
     auto     w = eqtb_int_table[mathprop_ctr_code].val;
-    Xml *    res{nullptr};
-    Buffer & B = aux_buffer;
+    Xml     *res{nullptr};
+    Buffer  &B = aux_buffer;
     B.clear();
     if (f == 1) B.push_back(' ');
     bool     spec = (f == 1) || ((w & (1 << f)) != 0);
@@ -1409,7 +1409,7 @@ auto Math::convert_char_seq(const MathElt &W) -> MathElt {
 // reads only a single one.
 auto Math::convert_char_iseq(const MathElt &W, bool multiple) -> MathElt {
     subtypes f = W.get_font();
-    Buffer & B = aux_buffer;
+    Buffer  &B = aux_buffer;
     B.clear();
     unsigned c = W.chr;
     B.push_back(char(uchar(c)));

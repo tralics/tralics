@@ -12,9 +12,8 @@
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
-#include <fmt/ostream.h>
-#include <spdlog/spdlog.h>
 #include <fmt/format.h>
+#include <fmt/ostream.h>
 #include <spdlog/spdlog.h>
 
 // Converts an integer into a token list, catcode 12
@@ -438,9 +437,7 @@ void Parser::E_split() {
         R.splice(R.end(), key);
         if (seen_val) R.splice(R.end(), val);
     }
-    if (tracing_macros()) {
-        spdlog::trace("{}->{}", fmt::streamed(T), fmt::streamed(R));
-    }
+    if (tracing_macros()) { spdlog::trace("{}->{}", fmt::streamed(T), fmt::streamed(R)); }
     back_input(R);
 }
 

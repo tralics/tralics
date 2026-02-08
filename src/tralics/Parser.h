@@ -41,67 +41,67 @@ struct Parser {
     std::vector<Xml *>                        all_heads;
     Token                                     err_tok; // in case of error
 
-    bool                  unexpected_seen_hi{false};             // check for wrongly placed font changes
-    bool                  calc_loaded{false};                    // did we see \usepackage{calc} ?
-    bool                  numbered_verbatim{};                   // has this verbatim line numbers ?
-    bool                  restricted{false};                     // are we in restricted mode ?
-    bool                  force_eof{false};                      // did we see \endinput ?
-    bool                  no_new_file{false};                    // can we pop the input stack ?
-    bool                  file_ended{};                          //
-    bool                  chapter_has_star{false};               // true in frontmatter, backmatter
-    bool                  list_files_p{false};                   // Should we list the files at the end ?
-    bool                  tok_is_defined{};                      // use by \ifcsname
-    bool                  seen_document{false};                  // did we see \begin{document} ?
-    bool                  seen_enddocument{false};
-    bool                  global_in_load{false};
-    bool                  global_in_url{false};
-    bool                  in_hlinee{false};
-    bool                  have_above{false};
-    bool                  have_below{false};
-    int                   old_nberrs{};                          // previous number of errors
-    int                   nb_errs{};                             // current number of errors
-    int                   cur_line{};                            // current input line number
-    int                   cur_file_line{};                       // current line number (file read helpers)
-    int                   begin_env_line{0};                     // input line number of
-    int                   first_boundary_loc{0};
-    int                   default_language_num{0};               // default language
-    int                   cur_level{1};                          // current level on the execution stack
-    size_t                equation_ctr_pos{};                    // position in the table of the counter equation
-    states                state{};                               // current state of the scanner
-    Token                 after_assignment_token;                // token for \afterassignment
-    subtypes              sectionning_offset{section_code};      // what is the main section, part, chapter ?
-    l_state               long_state{ls_long};                   // Error recovery handling (\long)
-    scan_stat             scanner_status{ss_normal};             // Error recovery handling (\outer)
-    size_t                cur_in_chan{main_in_chan};             // if get_token call get_a_new_line
-    long                  cur_file_pos{0};                       // pos of file in the package list (0= none)
-    long                  cline_first{0};
-    long                  cline_last{0};
-    std::string           cur_env_name;                          // name of current environment
-    std::string           job_name;                              // the name, without extensions
-    std::string           cur_file_name{"tty"};
-    std::string           everyjob_string;
-    std::string           hlinee_above;
-    std::string           hlinee_width;
-    std::string           hlinee_below;
-    Buffer                input_buffer;                          // input buffer
-    Buffer                mac_buffer;                            // buffer the current macro
-    Buffer                group_buffer;                          // buffer for arg of \begin{...} \end(...)
-    Buffer                unprocessed_xml;                       // chars to be converted into an XML element
-    Buffer                fetch_name_res;                        // used by fetch_name
-    LineList              lines;                                 // the lines to  be read
-    TokenList             TL;                                    // list of tokens to be read again
-    std::vector<std::unique_ptr<SaveAuxBase>> save_stack;        // save stack for groups
-    Condition             conditions;                            // condition stack for current \if
-    SthInternal           cur_val;                               // result of scan_something internal
-    TokenList             document_hook;                         // the document-hook
-    TokenList             end_document_hook;                     // the end-document-hook
-    char32_t              verb_saved_char{};                     // Char to use for verb by ShortVewrb
-    std::vector<char32_t> input_line;                            // input line converted to chars
-    size_t                input_line_pos{0};                     // position in input_line
-    Xml *                 the_xmlA{nullptr}, *the_xmlB{nullptr}; // for XML tree manipulations
-    std::vector<std::pair<size_t, std::string>>     ref_list;       // list of all \ref
-    std::vector<std::pair<std::string, LabelInfo *>> defined_labels; // list of all \label
-    std::vector<std::pair<String, std::string>>     removed_labels;  // list of all \label removed
+    bool                                             unexpected_seen_hi{false}; // check for wrongly placed font changes
+    bool                                             calc_loaded{false};        // did we see \usepackage{calc} ?
+    bool                                             numbered_verbatim{};       // has this verbatim line numbers ?
+    bool                                             restricted{false};         // are we in restricted mode ?
+    bool                                             force_eof{false};          // did we see \endinput ?
+    bool                                             no_new_file{false};        // can we pop the input stack ?
+    bool                                             file_ended{};              //
+    bool                                             chapter_has_star{false};   // true in frontmatter, backmatter
+    bool                                             list_files_p{false};       // Should we list the files at the end ?
+    bool                                             tok_is_defined{};          // use by \ifcsname
+    bool                                             seen_document{false};      // did we see \begin{document} ?
+    bool                                             seen_enddocument{false};
+    bool                                             global_in_load{false};
+    bool                                             global_in_url{false};
+    bool                                             in_hlinee{false};
+    bool                                             have_above{false};
+    bool                                             have_below{false};
+    int                                              old_nberrs{};      // previous number of errors
+    int                                              nb_errs{};         // current number of errors
+    int                                              cur_line{};        // current input line number
+    int                                              cur_file_line{};   // current line number (file read helpers)
+    int                                              begin_env_line{0}; // input line number of
+    int                                              first_boundary_loc{0};
+    int                                              default_language_num{0};          // default language
+    int                                              cur_level{1};                     // current level on the execution stack
+    size_t                                           equation_ctr_pos{};               // position in the table of the counter equation
+    states                                           state{};                          // current state of the scanner
+    Token                                            after_assignment_token;           // token for \afterassignment
+    subtypes                                         sectionning_offset{section_code}; // what is the main section, part, chapter ?
+    l_state                                          long_state{ls_long};              // Error recovery handling (\long)
+    scan_stat                                        scanner_status{ss_normal};        // Error recovery handling (\outer)
+    size_t                                           cur_in_chan{main_in_chan};        // if get_token call get_a_new_line
+    long                                             cur_file_pos{0};                  // pos of file in the package list (0= none)
+    long                                             cline_first{0};
+    long                                             cline_last{0};
+    std::string                                      cur_env_name; // name of current environment
+    std::string                                      job_name;     // the name, without extensions
+    std::string                                      cur_file_name{"tty"};
+    std::string                                      everyjob_string;
+    std::string                                      hlinee_above;
+    std::string                                      hlinee_width;
+    std::string                                      hlinee_below;
+    Buffer                                           input_buffer;                          // input buffer
+    Buffer                                           mac_buffer;                            // buffer the current macro
+    Buffer                                           group_buffer;                          // buffer for arg of \begin{...} \end(...)
+    Buffer                                           unprocessed_xml;                       // chars to be converted into an XML element
+    Buffer                                           fetch_name_res;                        // used by fetch_name
+    LineList                                         lines;                                 // the lines to  be read
+    TokenList                                        TL;                                    // list of tokens to be read again
+    std::vector<std::unique_ptr<SaveAuxBase>>        save_stack;                            // save stack for groups
+    Condition                                        conditions;                            // condition stack for current \if
+    SthInternal                                      cur_val;                               // result of scan_something internal
+    TokenList                                        document_hook;                         // the document-hook
+    TokenList                                        end_document_hook;                     // the end-document-hook
+    char32_t                                         verb_saved_char{};                     // Char to use for verb by ShortVewrb
+    std::vector<char32_t>                            input_line;                            // input line converted to chars
+    size_t                                           input_line_pos{0};                     // position in input_line
+    Xml                                             *the_xmlA{nullptr}, *the_xmlB{nullptr}; // for XML tree manipulations
+    std::vector<std::pair<size_t, std::string>>      ref_list;                              // list of all \ref
+    std::vector<std::pair<std::string, LabelInfo *>> defined_labels;                        // list of all \label
+    std::vector<std::pair<String, std::string>>      removed_labels;                        // list of all \label removed
 
     [[nodiscard]] auto at_eol() const -> bool { return input_line_pos >= input_line.size(); }
     auto               get_next_char() -> char32_t { return input_line[input_line_pos++]; }
@@ -124,7 +124,7 @@ struct Parser {
     void set_after_ass_tok(Token x) { after_assignment_token = x; }
     void set_def_language_num(int x) { default_language_num = x; }
 
-    auto               get_cur_env_name() -> std::string & { return cur_env_name; }
+    auto               get_cur_env_name() -> std::string               &{ return cur_env_name; }
     void               back_input() { TL.push_front(cur_tok); }
     void               back_input(Token t) { TL.push_front(t); }
     void               back_input(TokenList &L) { TL.splice(TL.begin(), L); }
@@ -134,7 +134,7 @@ struct Parser {
     [[nodiscard]] auto get_cur_file_pos() const -> long { return cur_file_pos; } // \todo remove
     [[nodiscard]] auto get_cur_level() const -> int { return cur_level; }
     [[nodiscard]] auto get_cur_line() const -> int { return cur_line; }
-    auto               get_cur_val() -> SthInternal & { return cur_val; }
+    auto               get_cur_val() -> SthInternal               &{ return cur_val; }
     [[nodiscard]] auto get_job_name() const -> std::string { return job_name; }
     [[nodiscard]] auto get_list_files() const -> bool { return list_files_p; }
     void               init(LineList x) { lines = std::move(x); }
@@ -155,66 +155,66 @@ struct Parser {
     Parser();
     ~Parser();
 
-    void add_buffer_to_document_hook(const Buffer &b, const std::string &name);
-    void add_language_att() const;
-    bool after_main_text();
-    void boot();
-    void box_end(Xml *res, size_t pos);
-    auto list_to_string0(Buffer &b) -> bool;
-    auto list_to_string(TokenList &L, Buffer &b) -> bool;
-    auto list_to_string_cv(TokenList &L, Buffer &b) -> bool;
-    auto list_to_string_c(TokenList &x, const std::string &s1, const std::string &s2, const std::string &msg) -> Buffer;
-    auto list_to_string_c(TokenList &x, String msg) -> std::string;
-    auto csname_aux(String s1, String s2, TokenList &L, bool cs, Buffer &b) -> bool;
-    auto csname_aux(TokenList &L, bool cs, Buffer &b) -> bool;
-    auto csname_ctr(TokenList &L, Buffer &b) -> bool;
-    void eq_define(size_t a, CmdChr bc, bool gbl);
-    void titlepage_evaluate(const std::string &s, const std::string &cmd);
-    void final_checks();
-    void finish_images();
-    void flush_buffer();
-    void font_has_changed1();
-    auto fp_read_value() -> FpNum;
-    void fp_send_one_arg(TokenList &res);
-    void init_all(const std::string &doc_elt);
-    bool load_latex();
-    auto read_arg() -> TokenList;
-    auto read_arg_nopar() -> TokenList;
-    auto nct_aux(Token T, TokenList &body) -> std::optional<size_t>;
-    auto nE_arg_nopar() -> std::string;
-    auto nT_arg_nopar() -> std::string;
-    auto nT_optarg_nopar() -> std::optional<std::string>;
-    void parse_error(Token T, const std::string &s, const TokenList &L);
-    void parse_error(Token T, const std::string &s);
-    void parse_error(const std::string &s);
-    void parse_error(Token T, const std::string &s1, const std::string &s2);
-    void parse_error(Token T, const std::string &s1, Token s2, const std::string &s3, const std::string &s4);
-    void parse_error(Token T, const std::string &s1, const std::string &s2, const std::string &s3);
-    void remove_junk();
-    void scan_eqno(math_list_type type);
-    void scan_glue(internal_type level);
-    void scan_glue(internal_type level, Token T);
-    void scan_glue(internal_type level, Token T, bool opt);
-    void list_to_glue(internal_type level, Token t, TokenList &L);
-    void set_default_language(int v);
-    void signal_error();
-    void signal_error(const std::string &s);
-    void signal_error(Token T, const std::string &s);
-    void signal_ovf(Token T, String h, long cur, long max);
-    auto special_expand(TokenList *args) -> TokenList;
-    auto special_tpa_arg(const std::string &name, const std::string &y, bool par, bool env, bool has_q) -> Xml *;
-    void T_titlepage_finish(size_t v);
-    auto tpa_exec(const std::string &cmd) -> Xml *;
-    void M_tracingall();
-    auto translate0() -> bool;
-    auto translate_all() -> bool;
-    void word_define(size_t a, long c, bool gbl);
-    void mu_error(String s, int i);
-    void expand_nct(TokenList &L);
+    void               add_buffer_to_document_hook(const Buffer &b, const std::string &name);
+    void               add_language_att() const;
+    bool               after_main_text();
+    void               boot();
+    void               box_end(Xml *res, size_t pos);
+    auto               list_to_string0(Buffer &b) -> bool;
+    auto               list_to_string(TokenList &L, Buffer &b) -> bool;
+    auto               list_to_string_cv(TokenList &L, Buffer &b) -> bool;
+    auto               list_to_string_c(TokenList &x, const std::string &s1, const std::string &s2, const std::string &msg) -> Buffer;
+    auto               list_to_string_c(TokenList &x, String msg) -> std::string;
+    auto               csname_aux(String s1, String s2, TokenList &L, bool cs, Buffer &b) -> bool;
+    auto               csname_aux(TokenList &L, bool cs, Buffer &b) -> bool;
+    auto               csname_ctr(TokenList &L, Buffer &b) -> bool;
+    void               eq_define(size_t a, CmdChr bc, bool gbl);
+    void               titlepage_evaluate(const std::string &s, const std::string &cmd);
+    void               final_checks();
+    void               finish_images();
+    void               flush_buffer();
+    void               font_has_changed1();
+    auto               fp_read_value() -> FpNum;
+    void               fp_send_one_arg(TokenList &res);
+    void               init_all(const std::string &doc_elt);
+    bool               load_latex();
+    auto               read_arg() -> TokenList;
+    auto               read_arg_nopar() -> TokenList;
+    auto               nct_aux(Token T, TokenList &body) -> std::optional<size_t>;
+    auto               nE_arg_nopar() -> std::string;
+    auto               nT_arg_nopar() -> std::string;
+    auto               nT_optarg_nopar() -> std::optional<std::string>;
+    void               parse_error(Token T, const std::string &s, const TokenList &L);
+    void               parse_error(Token T, const std::string &s);
+    void               parse_error(const std::string &s);
+    void               parse_error(Token T, const std::string &s1, const std::string &s2);
+    void               parse_error(Token T, const std::string &s1, Token s2, const std::string &s3, const std::string &s4);
+    void               parse_error(Token T, const std::string &s1, const std::string &s2, const std::string &s3);
+    void               remove_junk();
+    void               scan_eqno(math_list_type type);
+    void               scan_glue(internal_type level);
+    void               scan_glue(internal_type level, Token T);
+    void               scan_glue(internal_type level, Token T, bool opt);
+    void               list_to_glue(internal_type level, Token t, TokenList &L);
+    void               set_default_language(int v);
+    void               signal_error();
+    void               signal_error(const std::string &s);
+    void               signal_error(Token T, const std::string &s);
+    void               signal_ovf(Token T, String h, long cur, long max);
+    auto               special_expand(TokenList *args) -> TokenList;
+    auto               special_tpa_arg(const std::string &name, const std::string &y, bool par, bool env, bool has_q) -> Xml *;
+    void               T_titlepage_finish(size_t v);
+    auto               tpa_exec(const std::string &cmd) -> Xml *;
+    void               M_tracingall();
+    auto               translate0() -> bool;
+    auto               translate_all() -> bool;
+    void               word_define(size_t a, long c, bool gbl);
+    void               mu_error(String s, int i);
+    void               expand_nct(TokenList &L);
     void               token_for_show(const CmdChr &val);
     [[nodiscard]] auto token_for_show_str(const CmdChr &val) -> std::string;
-    void create_label(const std::string &X, const std::string &S);
-    void LC();
+    void               create_label(const std::string &X, const std::string &S);
+    void               LC();
 
     auto               before_mac_arg() -> bool;
     auto               check_brace(int &b) const -> bool;
@@ -962,7 +962,7 @@ struct Parser {
     static auto ileave_v_mode() -> Xid;
     static auto last_att_list() -> AttList &;
     static void add_bib_marker(bool force);
-    void push_save_stack(SaveAuxBase *v);
+    void        push_save_stack(SaveAuxBase *v);
     static void T_titlepage(size_t v);
 };
 

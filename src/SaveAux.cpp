@@ -4,7 +4,7 @@
 #include <spdlog/spdlog.h>
 
 namespace {
-    Xml *                 the_box_to_end;
+    Xml                  *the_box_to_end;
     std::optional<size_t> the_box_position;
 } // namespace
 

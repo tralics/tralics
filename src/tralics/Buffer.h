@@ -47,9 +47,9 @@ public:
     [[nodiscard]] auto substring() const -> std::string;                   ///< Get the slice [ptrs.a,ptrs.b)
 
     // Mutating methods, affecting the data but not ptrs
-    void    dump_prefix(bool err, bool gbl, symcodes K); ///< Insert def qualifiers (`\global` etc.)
-    auto    lowercase() -> Buffer &;
-    void    remove_last(size_t n); ///< Drop `n` chars, provided size is large enough
+    void dump_prefix(bool err, bool gbl, symcodes K); ///< Insert def qualifiers (`\global` etc.)
+    auto lowercase() -> Buffer &;
+    void remove_last(size_t n); ///< Drop `n` chars, provided size is large enough
 
     // Mutating methods, affecting ptrs but not the data, as intended
     void advance(size_t k = 1) { ptrs.b += k; } ///< Move the read pointer forward

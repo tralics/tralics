@@ -7,7 +7,7 @@ struct XmlAction {
     std::string match;      // the name of the object to match
     recur_type  what;       // the type of the action to perform
     long        int_val{0}; // number of results, or xid
-    Xml *       xml_val{};  // input or output xml value
+    Xml        *xml_val{};  // input or output xml value
     std::string string_val; // name of element ot work on
 
 public:

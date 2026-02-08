@@ -254,7 +254,7 @@ found at http://www.cecill.info.)";
             auto line = lines.get_next(tp_main_buf);
             if (!line) return;
             the_main.init_file_pos = *line;
-            tpa_line k    = tp_main_buf.tp_fetch_something();
+            tpa_line k             = tp_main_buf.tp_fetch_something();
             if (k == tl_empty) continue;
             if (k == tl_end) break;
             int      w0 = tpfl.read();
@@ -280,7 +280,7 @@ void MainClass::get_os() {
 #if defined(__alpha)
     cur_os = st_decalpha;
 #elif defined(__sunsolaris)
-    cur_os   = st_solaris;
+    cur_os = st_solaris;
 #elif defined(__linux)
     cur_os = st_linux;
 #elif defined(__sgi)
@@ -314,7 +314,8 @@ void MainClass::get_os() {
 }
 
 void MainClass::check_for_input() {
-    if (std::none_of(the_main.input_path.begin(), the_main.input_path.end(), [](const auto &s) { return s.empty(); })) the_main.input_path.emplace_back("");
+    if (std::none_of(the_main.input_path.begin(), the_main.input_path.end(), [](const auto &s) { return s.empty(); }))
+        the_main.input_path.emplace_back("");
 
     std::string s  = hack_for_input(infile);
     auto        of = find_in_path(s);
@@ -337,7 +338,7 @@ void MainClass::check_for_input() {
         exit(1);
     }
 
-    auto wc = input_content.encoding;
+    auto               wc = input_content.encoding;
     const std::string &wa = (wc == 0 ? "UTF-8" : wc == 1 ? "ISO-8859-1" : "custom");
     spdlog::trace("++ Input encoding: {} ({}) for the main file", wc, wa);
 }
@@ -364,7 +365,8 @@ void MainClass::open_log() { // \todo spdlog etc
     spdlog::trace("OS: {} running on {}", print_os(cur_os), machine);
     spdlog::trace("Output encoding: {}", print_enc(output_encoding));
     spdlog::trace("Transcript encoding: {}", print_enc(log_encoding));
-    spdlog::trace("Left quote is '{}', right quote is '{}'", to_utf8(char32_t(the_main.leftquote_val)), to_utf8(char32_t(the_main.rightquote_val)));
+    spdlog::trace("Left quote is '{}', right quote is '{}'", to_utf8(char32_t(the_main.leftquote_val)),
+                  to_utf8(char32_t(the_main.rightquote_val)));
     if (trivial_math != 0) spdlog::trace("\\notrivialmath={}", trivial_math);
     if (!default_class.empty()) spdlog::trace("Default class is {}", default_class);
     if (the_main.input_path.size() > 1) {
@@ -940,10 +942,9 @@ void MainClass::run(int argc, char **argv) {
     if (the_parser.seen_enddocument) the_stack.add_nl();
     the_parser.final_checks();
     if (!no_xml) {
-        if (the_parser.get_list_files()) {
-            spdlog::info(" *File List*\n{} ***********", the_main.file_list);
-        }
-        if (the_main.bad_chars != 0) spdlog::warn("Input conversion errors: {} char{}.", the_main.bad_chars, the_main.bad_chars > 1 ? "s" : "");
+        if (the_parser.get_list_files()) { spdlog::info(" *File List*\n{} ***********", the_main.file_list); }
+        if (the_main.bad_chars != 0)
+            spdlog::warn("Input conversion errors: {} char{}.", the_main.bad_chars, the_main.bad_chars > 1 ? "s" : "");
         the_parser.finish_images();
         out_xml();
         if (the_parser.nb_errs == 0)

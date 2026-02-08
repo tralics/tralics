@@ -132,9 +132,7 @@ void Parser::T_titlepage_finish(size_t v) {
 }
 
 void Parser::T_titlepage(size_t v) {
-    if (tracing_commands()) {
-        spdlog::trace("{{\\titlepage {}}}", v);
-    }
+    if (tracing_commands()) { spdlog::trace("{{\\titlepage {}}}", v); }
     if (!Titlepage.is_valid()) {
         spdlog::warn("No title page info, bug?");
         return; // why ?

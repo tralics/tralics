@@ -208,8 +208,8 @@ auto Bibtex::exec_bibitem(const std::string &b) -> std::string {
 void Bibtex::err_in_file(String s, bool last) const {
     the_parser.nb_errs++;
     if (!cur_entry_name.empty())
-        spdlog::error("Error detected at line {} of bibliography file {}\nin entry {} started at line {}\n{}{}",
-                      cur_bib_line, in_lines.file_name, cur_entry_name, last_ok_line, s, last ? "." : "");
+        spdlog::error("Error detected at line {} of bibliography file {}\nin entry {} started at line {}\n{}{}", cur_bib_line,
+                      in_lines.file_name, cur_entry_name, last_ok_line, s, last ? "." : "");
     else
         spdlog::error("Error detected at line {} of bibliography file {}\n{}{}", cur_bib_line, in_lines.file_name, s, last ? "." : "");
 }
@@ -487,7 +487,7 @@ auto Bibtex::parse_one_item() -> bool {
 auto Bibtex::find_entry(const std::string &s, bool create, bib_creator bc) -> BibEntry * {
     CitationKey key(s);
     int         n = 0;
-    BibEntry *  X = find_entry(key);
+    BibEntry   *X = find_entry(key);
     if (X != nullptr) return X;
     X = find_lower_case(key, n);
     if (n > 1) err_in_file("more than one lower case key equivalent", true);
@@ -599,7 +599,7 @@ auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
 // creates entry if not found. This is used by exec_bibitem
 auto Bibtex::find_entry(const std::string &s, bib_creator bc) -> BibEntry * {
     CitationKey key(s);
-    BibEntry *  X = find_entry(key);
+    BibEntry   *X = find_entry(key);
     if (X != nullptr) return X;
     int n = 0;
     X     = find_lower_case(key, n);

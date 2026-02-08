@@ -50,7 +50,7 @@ namespace config_ns {
 // Initial + means append, otherwise replace.
 
 void Buffer::interpret_aux(std::vector<std::string> &bib, std::vector<std::string> &bib2, std::string_view label) {
-    bool        reset   = config_ns::start_interpret(*this, "");
+    bool        reset = config_ns::start_interpret(*this, "");
     std::string log_line(label);
     if (!reset) log_line += "+";
     if (reset) {

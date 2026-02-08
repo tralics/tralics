@@ -84,10 +84,7 @@ namespace {
     }
 
     void trace_scan_expr(String s, const SthInternal &v, char t, Token T) {
-        if (tracing_commands() && t != ' ') {
-        spdlog::trace("+{} so far for {}{} {}",
-                      s, fmt::streamed(T), t, fmt::streamed(v));
-        }
+        if (tracing_commands() && t != ' ') { spdlog::trace("+{} so far for {}{} {}", s, fmt::streamed(T), t, fmt::streamed(v)); }
     }
 
     // Implements \currentgrouptype.
@@ -131,9 +128,7 @@ auto Parser::string_to_write(long chan) -> std::string {
     B << L;
     if (chan < write18_slot) B += "\n";
     auto res = B.convert_to_log_encoding();
-    if (chan == write18_slot) {
-        spdlog::trace("\\write18={}", res);
-    }
+    if (chan == write18_slot) { spdlog::trace("\\write18={}", res); }
     return res;
 }
 
@@ -190,9 +185,7 @@ void Parser::push_input_stack(const std::string &name, bool restore_at, bool re)
     auto *W = new InputStack(name, get_cur_line(), state, cur_file_pos, every_eof, require_eof);
     cur_input_stack.push_back(W);
     auto n = cur_input_stack.size();
-    if (tracing_io()) {
-        spdlog::trace("++ Input stack ++ {} {}", n, W->name);
-    }
+    if (tracing_io()) { spdlog::trace("++ Input stack ++ {} {}", n, W->name); }
     W->set_line_ptr(lines);
     W->line_pos = input_line_pos;
     W->line     = input_line;
@@ -215,9 +208,7 @@ void Parser::push_input_stack(const std::string &name, bool restore_at, bool re)
 void Parser::pop_input_stack(bool vb) {
     auto n = cur_input_stack.size();
     if (n == 0) {
-        if (tracing_io()) {
-            spdlog::trace("++ Input stack empty");
-        }
+        if (tracing_io()) { spdlog::trace("++ Input stack empty"); }
         return;
     }
     auto *W = cur_input_stack.back();
@@ -229,9 +220,7 @@ void Parser::pop_input_stack(bool vb) {
     auto at     = W->at_val;
     if (at >= 0) {
         eqtb_int_table[uchar('@')].val = at;
-        if (tracing_io()) {
-            spdlog::trace("++ Catcode of @ restored to {}", at);
-        }
+        if (tracing_io()) { spdlog::trace("++ Catcode of @ restored to {}", at); }
     }
     input_line.clear();
     input_line.insert(input_line.end(), W->line.begin(), W->line.end());
@@ -242,17 +231,13 @@ void Parser::pop_input_stack(bool vb) {
     every_eof    = W->every_eof;
     spdlog::trace("++ cur_file_pos restored to {}", cur_file_pos);
     cur_input_stack.pop_back();
-    if (tracing_io()) {
-        spdlog::trace("++ Input stack -- {} {}", n, W->name);
-    }
+    if (tracing_io()) { spdlog::trace("++ Input stack -- {} {}", n, W->name); }
     delete W;
 }
 
 // This kills all pending input
 void Parser::close_all() {
-    if (tracing_io()) {
-        spdlog::trace("++ close all files");
-    }
+    if (tracing_io()) { spdlog::trace("++ close all files"); }
     while (!cur_input_stack.empty()) pop_input_stack(true);
     TL.clear();
     input_line.clear();
@@ -309,9 +294,7 @@ void Parser::E_input(subtypes q) {
     }
     if (name_in_progress) {
         insert_relax();
-        if (tracing_commands()) {
-            spdlog::trace("{{insert \\relax for \\input}}");
-        }
+        if (tracing_commands()) { spdlog::trace("{{insert \\relax for \\input}}"); }
         return;
     }
     if (tracing_commands()) spdlog::trace("{{\\{}}}", "input");
@@ -343,9 +326,7 @@ auto Parser::latex_input(subtypes q) -> std::string {
         }
     } else
         file = scan_file_name();
-    if (tracing_commands()) {
-        spdlog::trace("{{\\input {}}}", file);
-    }
+    if (tracing_commands()) { spdlog::trace("{{\\input {}}}", file); }
     return file;
 }
 
@@ -400,9 +381,7 @@ void Parser::T_input(subtypes q) {
         TokenList B = read_arg();
         if (res) open_tex_file(res->string(), seen_star);
         if (A.empty() && B.empty()) return; // optimise
-        if (tracing_commands()) {
-            spdlog::trace("++ {}{{{}}}{{{}}}", (res ? "iftrue" : "iffalse"), fmt::streamed(A), fmt::streamed(B));
-        }
+        if (tracing_commands()) { spdlog::trace("++ {}{{{}}}{{{}}}", (res ? "iftrue" : "iffalse"), fmt::streamed(A), fmt::streamed(B)); }
         one_of_two(A, B, static_cast<bool>(res));
         return;
     }
@@ -817,9 +796,7 @@ void Parser::store_new_line(int n, bool vb) {
     input_buffer.insert_without_crlf(scratch);
     input_line          = codepoints(input_buffer);
     input_buffer.ptrs.b = 0;
-    if (vb) {
-        spdlog::trace("[{}] {}", n, input_buffer.convert_to_log_encoding());
-    }
+    if (vb) { spdlog::trace("[{}] {}", n, input_buffer.convert_to_log_encoding()); }
 }
 
 void Parser::insert_endline_char() {
@@ -883,9 +860,7 @@ auto Parser::get_a_new_line() -> bool {
             every_eof   = false;
             TokenList L = toks_registers[everyeof_code].val;
             if (!L.empty()) {
-                if (tracing_io()) {
-                    spdlog::trace("++ everyeof={}.", fmt::streamed(L));
-                }
+                if (tracing_io()) { spdlog::trace("++ everyeof={}.", fmt::streamed(L)); }
                 back_input(L);
                 return false;
             }
@@ -899,9 +874,7 @@ auto Parser::get_a_new_line() -> bool {
             retval = false;
         }
         if (cur_input_stack.empty()) {
-            if (tracing_io()) {
-                spdlog::trace("++ Input stack empty at end of file");
-            }
+            if (tracing_io()) { spdlog::trace("++ Input stack empty at end of file"); }
             return retval;
         }
         pop_input_stack(true);
@@ -1013,9 +986,7 @@ auto Parser::scan_int(Token T) -> long {
     err_tok       = et;
     if (negative) val = -val;
     cur_val.set_int(val);
-    if (tracing_commands()) {
-        spdlog::trace("+scanint for {}->{}", fmt::streamed(T), fmt::streamed(cur_val));
-    }
+    if (tracing_commands()) { spdlog::trace("+scanint for {}->{}", fmt::streamed(T), fmt::streamed(cur_val)); }
     return val;
 }
 
@@ -1068,9 +1039,7 @@ auto Parser::scan_int(Token t, int n, String s) -> size_t {
 auto Parser::scan_special_int_d(Token T, long d) -> long {
     auto L = read_optarg_nopar().value_or(TokenList{});
     if (L.empty()) {
-        if (tracing_commands()) {
-            spdlog::trace("+scanint for {}->{}", fmt::streamed(T), d);
-        }
+        if (tracing_commands()) { spdlog::trace("+scanint for {}->{}", fmt::streamed(T), d); }
         return d;
     }
     back_input(hash_table.space_token);
@@ -1454,9 +1423,7 @@ void Parser::parshape_aux(subtypes m) {
 
 void Parser::E_the_traced(Token T, subtypes c) {
     TokenList L = E_the(c);
-    if (tracing_commands()) {
-        spdlog::trace("{}->{}.", fmt::streamed(T), fmt::streamed(L));
-    }
+    if (tracing_commands()) { spdlog::trace("{}->{}.", fmt::streamed(T), fmt::streamed(L)); }
     back_input(L);
 }
 
@@ -1475,9 +1442,7 @@ auto Parser::E_the(subtypes c) -> TokenList {
     }
     if (tracing_commands()) spdlog::trace("{{\\{}}}", "the");
     get_x_token();
-    if (tracing_commands()) {
-        spdlog::trace("{{\\the {}}}", fmt::streamed(cur_tok));
-    }
+    if (tracing_commands()) { spdlog::trace("{{\\the {}}}", fmt::streamed(cur_tok)); }
     scan_something_internal(it_tok, false);
     B.clear();
     switch (cur_val.type) {
@@ -1522,9 +1487,7 @@ void Parser::scan_double(RealNumber &res) {
             if (cur_tok.is_singlequote() || cur_tok.is_doublequote()) is_decimal = false;
             val = scan_int_digs();
         }
-        if (tracing_commands()) {
-            spdlog::trace("+scanint for {}->{}", fmt::streamed(err_tok), val);
-        }
+        if (tracing_commands()) { spdlog::trace("+scanint for {}->{}", fmt::streamed(err_tok), val); }
         res.ipart = val;
     }
     if (!(is_decimal && cur_tok.is_dec_separator())) return;
@@ -1548,8 +1511,8 @@ void Parser::scan_double(RealNumber &res) {
 auto Parser::read_unit() -> int { // \todo std::optional<size_t>
     remove_initial_space();
     if (cur_tok.is_a_char()) {
-        auto     c1   = static_cast<char32_t>(std::tolower(static_cast<int>(cur_cmd_chr.char_val())));
-        Token    save = cur_tok;
+        auto  c1   = static_cast<char32_t>(std::tolower(static_cast<int>(cur_cmd_chr.char_val())));
+        Token save = cur_tok;
         get_x_token();
         if (cur_tok.is_a_char()) {
             auto c2 = static_cast<char32_t>(std::tolower(static_cast<int>(cur_cmd_chr.char_val())));
@@ -1777,9 +1740,7 @@ void Parser::scan_glue(internal_type level) {
     }
     cur_val.set_glue_val(q);
     cur_val.type = level;
-    if (tracing_commands()) {
-        spdlog::trace("{{scanglue {}}}", fmt::streamed(cur_val));
-    }
+    if (tracing_commands()) { spdlog::trace("{{scanglue {}}}", fmt::streamed(cur_val)); }
 }
 
 // interface to scan_glue. If opt is true reads an optional argument
@@ -2045,7 +2006,7 @@ void Parser::token_show(int what, Buffer &B) {
         }
     }
     if (get_token_o()) { return; }
-    bool lg = what == 0;
+    bool        lg = what == 0;
     std::string prefix;
     if (lg && !cur_tok.not_a_cmd()) prefix = fmt::format("{}=", fmt::streamed(cur_tok));
     token_for_show(lg, cur_cmd_chr, B);
@@ -2199,9 +2160,7 @@ void Parser::E_convert() {
     default:;
     }
     TokenList L = B.str_toks(nlt_space); // SPACE
-    if (tracing_commands()) {
-        spdlog::trace("{}->{}", fmt::streamed(T), fmt::streamed(L));
-    }
+    if (tracing_commands()) { spdlog::trace("{}->{}", fmt::streamed(T), fmt::streamed(L)); }
     if (c == sanitize_code) {
         new_macro(L, cur_tok);
         return;
@@ -2227,9 +2186,7 @@ void Parser::scan_expr(subtypes m) {
         parse_error(T, "Arithmetic overflow");
         cur_val.kill();
     }
-    if (tracing_commands()) {
-        spdlog::trace("+scan for {}= {}", fmt::streamed(T), fmt::streamed(cur_val));
-    }
+    if (tracing_commands()) { spdlog::trace("+scan for {}= {}", fmt::streamed(T), fmt::streamed(cur_val)); }
 }
 
 // This finds the operator, or reads a terminating \relax

@@ -116,7 +116,7 @@ void LineList::normalise_final_cr() {
         }
         if (special) {
             if (prev == end()) {
-                prev                       = C;
+                prev = C;
                 prev->std::string::operator=(normal);
             }
         } else
@@ -287,7 +287,7 @@ void LineList::find_all_types(std::vector<std::string> &res) {
     Buffer &B = local_buf;
     for (auto C = cbegin(); C != cend(); C = skip_env(C, B)) {
         the_main.init_file_pos = C->number;
-        B             = *C;
+        B                      = *C;
         find_one_type(*C, res);
     }
 }
@@ -318,7 +318,7 @@ void LineList::parse_and_extract_clean(const std::string &s) {
         if (b < 0) {
             b = 0;
             continue;
-        }                           // ignore bogus lines
+        } // ignore bogus lines
         if (b == 0 && open == -1) { // cur env has closed
             keep = true;
             continue;
@@ -353,7 +353,7 @@ auto LineList::parse_and_extract(String s) const -> LineList {
         if (b < 0) {
             b = 0;
             continue;
-        }                          // ignore bogus lines
+        } // ignore bogus lines
         if (b == 1 && open == 1) { // something new started
             if (local_buf.is_begin_something(s) == 4) keep = true;
             continue;
@@ -368,7 +368,7 @@ void LineList::parse_conf_toplevel() const {
     int    b = 0;
     Buffer B;
     for (const auto &C : *this) {
-        B             = C;
+        B                      = C;
         the_main.init_file_pos = C.number;
         b += B.see_config_env();
         if (b == 0) see_main_a(B, local_buf);
@@ -424,8 +424,8 @@ void LineList::read(const std::string &x, int spec) { // \todo take a std::files
     }
 
     std::ifstream fp(x);
-    std::string   old_name = the_parser.cur_file_name;
-    the_parser.cur_file_name          = x;
+    std::string   old_name   = the_parser.cur_file_name;
+    the_parser.cur_file_name = x;
     Buffer B;
     encoding       = the_main.input_encoding;
     bool converted = spec < 2;

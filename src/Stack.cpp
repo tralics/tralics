@@ -244,9 +244,7 @@ void Stack::push_trace() {
     if (tracing_stack()) {
         auto        ptr = size() - 1;
         std::string fr  = at(ptr).frame;
-        if (fr != " ") {
-            spdlog::trace("{{Push {} {}}}", fr, ptr);
-        }
+        if (fr != " ") { spdlog::trace("{{Push {} {}}}", fr, ptr); }
     }
 }
 
@@ -311,7 +309,7 @@ void Stack::dump() {
 
 // Like Stack::dump, less verbose.
 auto Stack::trace_stack() const -> std::string {
-    auto l = size();
+    auto        l = size();
     std::string res;
     for (size_t i = 0; i < l; i++) res += at(i).dump();
     return res;
@@ -393,7 +391,7 @@ void Stack::check_font() {
         }
         if (nonempty) {
             auto     a           = std::string(aux);
-            Xml *    res         = new Xml(the_names["hi"], nullptr);
+            Xml     *res         = new Xml(the_names["hi"], nullptr);
             AttList &W           = res->id.get_att();
             W[the_names["rend"]] = a;
             push(std::string(" "), res);
@@ -409,7 +407,7 @@ void Stack::check_font() {
         if (s != "cst_empty") fonts0(s);
     }
     if (auto c = the_parser.cur_font.color; !c.empty()) {
-        Xml *    res          = new Xml(the_names["hi"], nullptr);
+        Xml     *res          = new Xml(the_names["hi"], nullptr);
         AttList &W            = res->id.get_att();
         W[the_names["color"]] = c;
         push(std::string(" "), res);

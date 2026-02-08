@@ -149,9 +149,7 @@ void Parser::extended_chars(size_t c) {
     LC();
     if (c < 1 << 16)
         process_char(char32_t(c));
-    else {
-        unprocessed_xml.format("&#x{:X};", c);
-    }
+    else { unprocessed_xml.format("&#x{:X};", c); }
 }
 
 // Translate current character.
@@ -284,7 +282,7 @@ void Parser::T_cst2(subtypes c) {
     if (c == Numero_code) process_string("N");
     flush_buffer();
     {
-        Xml *  res = fonts1("sup");
+        Xml   *res = fonts1("sup");
         String s   = "o";
         if (c == ier_code)
             s = "er";
@@ -634,8 +632,7 @@ void Parser::T_xmlenv_end(subtypes c) {
     flush_buffer();
     if (c == 1)
         leave_h_mode();
-    else if (c == 2) {
-    }
+    else if (c == 2) {}
     the_stack.pop_if_frame(the_names["cst_p"]);
     the_stack.pop(the_names["ELT"]);
 }
@@ -742,9 +739,7 @@ auto Parser::T_begindocument() -> bool {
     if (!pop_level(bt_env)) return false;
     cur_level = 1; // this is the outer level...
     if (the_main.dverbose) M_tracingall();
-    if (tracing_commands()) {
-        spdlog::trace("+stack: level set to 1");
-    }
+    if (tracing_commands()) { spdlog::trace("+stack: level set to 1"); }
     the_bibtex.bootagain();
     hash_table.eval_let("AtBeginDocument", "@firstofone");
     {
@@ -763,9 +758,7 @@ auto Parser::T_begindocument() -> bool {
     flush_buffer();
     bool begin = x == begin_cmd;
     auto S     = fetch_name0();
-    if (tracing_commands()) {
-        spdlog::trace("{{\\{} {}}}", (begin ? "begin" : "end"), S);
-    }
+    if (tracing_commands()) { spdlog::trace("{{\\{} {}}}", (begin ? "begin" : "end"), S); }
     return begin ? T_begin(S) : T_end(S);
 }
 

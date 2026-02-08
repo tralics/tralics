@@ -6,7 +6,7 @@ public:
     std::string               bib_style{"plain"}; // The bibliography style
     std::string               cmd;                // The bibliography command
     std::vector<CitationItem> citation_table;
-    Xml *                     location{nullptr}; // location of biblio in the XML tree
+    Xml                      *location{nullptr}; // location of biblio in the XML tree
 
 private:
     std::vector<std::string> biblio_src;              // database file names

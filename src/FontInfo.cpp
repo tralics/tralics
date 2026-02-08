@@ -1,7 +1,7 @@
 #include "tralics/FontInfo.h"
 #include "tralics/MainClass.h"
-#include <spdlog/spdlog.h>
 #include <ostream>
+#include <spdlog/spdlog.h>
 
 // This returns the position of the name of a font attribute
 // for use as an XML attribute.

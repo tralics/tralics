@@ -18,8 +18,8 @@ struct BibtexName {
 class BibEntry {
     friend class Bibtex;
 
-    BibEntry *                          crossref{nullptr};      // In case of a crossref
-    BibEntry *                          crossref_from{nullptr}; // reverse crossref
+    BibEntry                           *crossref{nullptr};      // In case of a crossref
+    BibEntry                           *crossref_from{nullptr}; // reverse crossref
     entry_type                          type_int{type_unknown}; // the type of the entry
     CitationKey                         cite_key;               // the cite_key structure
     bib_creator                         why_me{};               // reason why this entry is considered

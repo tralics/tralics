@@ -20,7 +20,7 @@ class XmlIO {
     std::vector<char32_t>   reread_list;   // current line
     char32_t                cur_char{' '}; // current character in some cases
 
-    Xml *                  cur_xml{};
+    Xml                   *cur_xml{};
     std::vector<Xml *>     cur_stack;
     size_t                 cur_line_len{};
     size_t                 input_line_pos{};

@@ -4,7 +4,7 @@
 class SaveState {
     TokenList &LL;
     TokenList  L;
-    bool &     bb;
+    bool      &bb;
     bool       b{true};
 
 public:

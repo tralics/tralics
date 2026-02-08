@@ -88,7 +88,7 @@ public:
 inline Xml *the_page_xml;
 
 struct XmlAndType {
-    Xml *      value;
+    Xml       *value;
     math_types type;
 };
 

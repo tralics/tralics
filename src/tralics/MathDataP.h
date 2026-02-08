@@ -19,7 +19,7 @@ class MathDataP : public std::vector<Math> {
     Token                                                 nomathsw1; // says next token is for normal mode only
 public:
     std::array<std::array<std::string, 15>, 128> math_chars{};
-    std::array<Xml *, last_math_loc> built_in_table_alt{}; // the static math table
+    std::array<Xml *, last_math_loc>             built_in_table_alt{}; // the static math table
 private:
     void boot_table();
     void boot2();

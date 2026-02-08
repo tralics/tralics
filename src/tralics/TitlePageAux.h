@@ -26,15 +26,15 @@ struct TitlePageAux {
     [[nodiscard]] auto find_UR(const std::string &s, size_t n) const -> size_t;
     [[nodiscard]] auto find_cmd(const std::string &s) const -> bool;
 
-    auto classify(tpi_vals w, int &state) -> bool;
-    auto convert(int i) -> Xml *;
-    auto convert(int i, Xml *r) -> Xml *;
-    auto convert(int i, const std::string &s) -> Xml *;
-    void dump(size_t k) const;
-    void exec_start(size_t k);
-    void exec_post() const;
-    void exec(size_t v, bool vb);
-    auto increment_flag() -> bool;
+    auto               classify(tpi_vals w, int &state) -> bool;
+    auto               convert(int i) -> Xml *;
+    auto               convert(int i, Xml *r) -> Xml *;
+    auto               convert(int i, const std::string &s) -> Xml *;
+    void               dump(size_t k) const;
+    void               exec_start(size_t k);
+    void               exec_post() const;
+    void               exec(size_t v, bool vb);
+    auto               increment_flag() -> bool;
     [[nodiscard]] auto decode_flags() const -> std::string;
 
     void move_T1T2(std::string x) {

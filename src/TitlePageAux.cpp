@@ -144,9 +144,7 @@ void TitlePageAux::exec_post() const {
 
 // This is executed when the user asks for a titlepage command.
 void TitlePageAux::exec(size_t v, bool vb) {
-    if (vb) {
-        spdlog::trace("{{\\titlepage {}=\\{}}}", v, fmt::streamed(T1));
-    }
+    if (vb) { spdlog::trace("{{\\titlepage {}=\\{}}}", v, fmt::streamed(T1)); }
     if (type == tpi_rt_tp) {
         the_parser.T_titlepage_finish(v);
         return;
@@ -280,7 +278,7 @@ auto TitlePageAux::convert(int i) -> Xml * {
 // Converts one of the strings into a XML element containing R.
 auto TitlePageAux::convert(int i, Xml *r) -> Xml * {
     std::string s   = i == 1 ? T1 : i == 2 ? T2 : i == 3 ? T3 : T4;
-    Xml *       res = new Xml(tp_local_buf.xml_and_attrib(s));
+    Xml        *res = new Xml(tp_local_buf.xml_and_attrib(s));
     res->push_back_unless_nullptr(r);
     return res;
 }

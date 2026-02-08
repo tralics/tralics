@@ -1,8 +1,8 @@
 #include "tralics/NewArray.h"
 #include "tralics/Parser.h"
+#include "tralics/globals.h"
 #include <spdlog/spdlog.h>
 #include <sstream>
-#include "tralics/globals.h"
 
 namespace {
     char char_for_error = 'c';

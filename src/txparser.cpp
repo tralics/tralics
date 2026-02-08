@@ -1172,7 +1172,7 @@ void Parser::M_declare_math_operator() {
     bool  see_star = remove_initial_star();
     Token name     = get_r_token(true);
     if (tracing_commands()) spdlog::trace("{{\\DeclareMathOperator {}}}", fmt::streamed(name));
-    auto *     X = new Macro;
+    auto      *X = new Macro;
     TokenList &L = X->body;
     read_mac_body(L, false, 0);
     L.brace_me();
@@ -2067,7 +2067,7 @@ void Parser::new_macro(TokenList &L, Token name) {
 void Parser::new_macro(const std::string &s, Token name) {
     Thbuf1      = s;
     TokenList L = Thbuf1.str_toks11(false);
-    auto *    X = new Macro(L);
+    auto     *X = new Macro(L);
     mac_define(name, X, false, rd_always, user_cmd);
 }
 
@@ -2273,9 +2273,7 @@ void Parser::E_all_of_one(Token T, subtypes c) {
         break;
     default: s = " #1->#1 "; n = 1;
     }
-    if (vb) {
-        spdlog::trace("{}{}", fmt::streamed(T), s);
-    }
+    if (vb) { spdlog::trace("{}{}", fmt::streamed(T), s); }
     TokenList L = read_arg();
     if (vb) spdlog::trace("#1<-{}", fmt::streamed(L));
     if (n == 1) {
@@ -2425,7 +2423,7 @@ void Parser::E_expandafter() {
 // \mathversion{otherwise} is the same as \@mathversion0\relax
 void Parser::E_mathversion() {
     TokenList arg = read_arg();
-    Buffer &  B   = Thbuf1;
+    Buffer   &B   = Thbuf1;
     B.clear();
     if (list_to_string(arg, B)) {
         parse_error(err_tok, "bad \\mathversion");
@@ -2506,8 +2504,7 @@ void Parser::E_first_of_three(bool vb, subtypes c) {
 }
 
 void Parser::E_first_of_four(bool vb, subtypes c) {
-    if (vb)
-        spdlog::trace("{}#1#2#3#4->#{}", fmt::streamed(cur_tok), (c == 1 ? "1" : (c == 2 ? "2" : (c == 3 ? "3" : "4"))));
+    if (vb) spdlog::trace("{}#1#2#3#4->#{}", fmt::streamed(cur_tok), (c == 1 ? "1" : (c == 2 ? "2" : (c == 3 ? "3" : "4"))));
     TokenList L1 = read_arg();
     TokenList L2 = read_arg();
     TokenList L3 = read_arg();
@@ -2972,8 +2969,8 @@ void Parser::M_let(Token A, bool global, bool redef) {
     auto pos = A.eqtb_loc();
     if (tracing_assigns()) {
         String action = global ? "globally " : "";
-        auto before = token_for_show_str(Hashtab::the_eqtb()[pos].val);
-        auto after  = token_for_show_str(cur_cmd_chr);
+        auto   before = token_for_show_str(Hashtab::the_eqtb()[pos].val);
+        auto   after  = token_for_show_str(cur_cmd_chr);
         spdlog::trace("{{{}changing {}={}}}\n{{into {}={}}}", action, fmt::streamed(A), before, fmt::streamed(A), after);
     }
     eq_define(pos, cur_cmd_chr, global);
@@ -3024,12 +3021,8 @@ void Parser::M_let(subtypes chr, bool gbl) {
             T = hash_table.locate(fetch_name_res);
         } else
             T = get_r_token(true); // \cs_undefine:N
-        if (tracing_commands()) {
-            spdlog::trace("{{\\let {}=\\undef}}", fmt::streamed(T));
-        }
-        if (tracing_assigns()) {
-            spdlog::trace("{{globally killing {}}}", fmt::streamed(T));
-        }
+        if (tracing_commands()) { spdlog::trace("{{\\let {}=\\undef}}", fmt::streamed(T)); }
+        if (tracing_assigns()) { spdlog::trace("{{globally killing {}}}", fmt::streamed(T)); }
         eq_define(T.eqtb_loc(), CmdChr(undef_cmd, zero_code), true);
     } else {               // cs_set_eq:NN and variants
         gbl       = false; // ignore \globaldefs
@@ -3138,32 +3131,15 @@ auto Parser::read_latex_macro() -> Macro * {
 // \long \protected flags are integrated in w
 auto Parser::define_something(subtypes chr, bool gbl, symcodes w) -> bool {
     switch (chr) {
-    case def_code:
-        M_def(false, gbl, w, rd_always);
-        return true; // hack
-    case newcommand_code:
-        M_newcommand(rd_if_undef);
-        return true;
-    case checkcommand_code:
-        M_newcommand(rd_never);
-        return true;
-    case newthm_code:
-        return M_new_thm();
-    case newenv_code:
-        M_new_env(rd_if_undef);
-        return true;
-    case renewenv_code:
-        M_new_env(rd_if_defined);
-        return true;
-    case renew_code:
-        M_newcommand(rd_if_defined);
-        return true;
-    case provide_code:
-        M_newcommand(rd_skip);
-        return true;
-    case declare_math_operator_code:
-        M_declare_math_operator();
-        return true;
+    case def_code: M_def(false, gbl, w, rd_always); return true; // hack
+    case newcommand_code: M_newcommand(rd_if_undef); return true;
+    case checkcommand_code: M_newcommand(rd_never); return true;
+    case newthm_code: return M_new_thm();
+    case newenv_code: M_new_env(rd_if_undef); return true;
+    case renewenv_code: M_new_env(rd_if_defined); return true;
+    case renew_code: M_newcommand(rd_if_defined); return true;
+    case provide_code: M_newcommand(rd_skip); return true;
+    case declare_math_operator_code: M_declare_math_operator(); return true;
     default:;
     }
     bool csname = false;
@@ -3940,7 +3916,7 @@ void Parser::box_end(Xml *res, size_t pos) {
         the_xmlB = res;
     else if (pos == leaders_location || pos == cleaders_location || pos == xleaders_location) {
         const auto *p = pos == leaders_location ? "leaders" : pos == cleaders_location ? "cleaders" : "xleaders";
-        Xml *       Y = new Xml(the_names[p], res);
+        Xml        *Y = new Xml(the_names[p], res);
         flush_buffer();
         the_stack.add_last(Y);
 
@@ -3957,7 +3933,7 @@ void Parser::box_end(Xml *res, size_t pos) {
 
 void Parser::begin_box(size_t src, subtypes c) {
     Token T = cur_tok;
-    Xml * cur_box{nullptr};
+    Xml  *cur_box{nullptr};
     if (c == usebox_code) { // a variant of \copy with an argument
         leave_v_mode();
         TokenList L = read_arg();
@@ -4043,7 +4019,7 @@ void Parser::begin_box(size_t src, subtypes c) {
         }
         back_input(L);
     }
-    Xml *        cur_boxa = the_stack.push_hbox(box_name);
+    Xml         *cur_boxa = the_stack.push_hbox(box_name);
     SaveAuxBase *x        = new SaveAuxBoxend(src, cur_boxa);
     push_save_stack(x);
     the_stack.set_arg_mode();
@@ -4143,8 +4119,7 @@ void Parser::M_prefixed() {
         M_let(cur_cmd_chr.chr, b_global);
     else if (C == def_cmd) {
         if (!define_something(cur_cmd_chr.chr, b_global, K)) throw EndOfData();
-    }
-    else
+    } else
         M_prefixed_aux(b_global);
     Token aat = get_after_ass_tok();
     if (!aat.is_null()) {

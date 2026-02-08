@@ -58,7 +58,7 @@ public:
 // data structure fopr restoring a box
 class SaveAuxBox : public SaveAuxBase {
     size_t pos; // the position in box_table to be restored
-    Xml *  val; // the value to be restored
+    Xml   *val; // the value to be restored
 public:
     SaveAuxBox(long l, size_t a, Xml *b) : SaveAuxBase(st_box, l), pos(a), val(b) {}
     ~SaveAuxBox() override;
@@ -67,7 +67,7 @@ public:
 // case of \setbox0=\hbox{...} , remember the number and the box
 class SaveAuxBoxend : public SaveAuxBase {
     size_t pos; // the box number
-    Xml *  val; // the value of the box
+    Xml   *val; // the value of the box
 public:
     SaveAuxBoxend(size_t a, Xml *b) : SaveAuxBase(st_box_end, 0), pos(a), val(b) {}
     ~SaveAuxBoxend() override;

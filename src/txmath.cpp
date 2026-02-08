@@ -22,7 +22,6 @@
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 #include <spdlog/spdlog.h>
-#include <fmt/ostream.h>
 
 namespace {
     Buffer             math_buffer;
@@ -266,7 +265,7 @@ auto math_env_needs_display_style(subtypes sname) -> bool {
 
 auto Math::duplicate(bool nomath) const -> subtypes {
     subtypes k  = math_data.find_math_location(type, sname, saved);
-    Math &   cp = math_data.get_list(k);
+    Math    &cp = math_data.get_list(k);
     int      sp = 0, sm = 0;
     bool     skipping = false;
     for (auto C = begin(); C != end(); ++C) {
@@ -298,11 +297,11 @@ auto Math::duplicate(bool nomath) const -> subtypes {
         }
         if (skip_next) {
         } else if (C->cmd == math_list_cmd) {
-            Math &   v  = C->get_list();
+            Math    &v  = C->get_list();
             subtypes k1 = v.duplicate(nomath);
             cp.push_back_list(k1, C->get_lcmd());
         } else if (C->cmd == special_math_cmd) {
-            Math &   v  = C->get_list();
+            Math    &v  = C->get_list();
             subtypes k1 = v.duplicate(nomath);
             cp.push_back(CmdChr(special_math_cmd, k1), C->get_font());
         } else
@@ -792,7 +791,7 @@ void Parser::after_math(bool is_inline) {
 
 // This is called if no MathML should be generated.
 void Parser::finish_no_mathml(bool is_inline, size_t vp) {
-    Math &      u  = math_data.get_list(vp);
+    Math       &u  = math_data.get_list(vp);
     Xid         id = cmi.cur_math_id;
     std::string S  = u.get_name();
     auto        s  = std::string(S);
@@ -810,9 +809,7 @@ void Parser::finish_no_mathml(bool is_inline, size_t vp) {
 // Case of a trivial math formula that translates to res
 // Always inline
 void Parser::finish_trivial_math(Xml *res) {
-    if (tracing_math()) {
-        spdlog::trace("formula was math");
-    }
+    if (tracing_math()) { spdlog::trace("formula was math"); }
     leave_v_mode();
     math_data.finish_math_mem();
     the_stack.top_stack()->add_tmp(gsl::not_null{res});
@@ -857,7 +854,7 @@ auto Parser::T_math(subtypes type) -> bool {
             return true;
         }
     }
-    Xml *       alter{nullptr};
+    Xml        *alter{nullptr};
     std::string textype = math_data.get_list(0).get_name();
     if (nm == -3) {
         Math &w   = math_data.get_list(loc_of_cp);
@@ -1053,7 +1050,7 @@ auto Parser::scan_math(size_t res, math_list_type type) -> bool {
                     if (!r1) return false;
                     auto r2 = math_argument(0, ct); // should be a
                     if (!r2) return false;
-                    Math &   u  = math_data.get_list(k);
+                    Math &u = math_data.get_list(k);
                     u.push_back_list(*r1, math_argument_cd);
                     u.push_back_list(*r2, math_argument_cd);
                     math_data.push_back(res, W, subtypes(u.get_type()));
@@ -1207,9 +1204,7 @@ auto Parser::scan_math_endcell(Token t) -> bool {
     if (the_stack.is_frame("cell") && !the_stack.is_omit_cell()) {
         TokenList L = the_stack.get_u_or_v(false);
         if (!L.empty()) {
-            if (tracing_commands()) {
-                spdlog::trace("{{template v-part {}}}", fmt::streamed(L));
-            }
+            if (tracing_commands()) { spdlog::trace("{{template v-part {}}}", fmt::streamed(L)); }
             back_input(t);
             back_input(L);
             the_stack.mark_omit_cell();
@@ -1246,9 +1241,7 @@ auto Parser::scan_math_env(size_t res, math_list_type type) -> bool {
         if (the_stack.is_frame("cell") && !the_stack.is_omit_cell()) {
             TokenList L = the_stack.get_u_or_v(false);
             if (!L.empty()) {
-                if (tracing_commands()) {
-                    spdlog::trace("{{template v-part {}}}", fmt::streamed(L));
-                }
+                if (tracing_commands()) { spdlog::trace("{{template v-part {}}}", fmt::streamed(L)); }
                 back_input(cur_tok);
                 back_input(L);
                 the_stack.mark_omit_cell();
@@ -1346,9 +1339,7 @@ auto Parser::scan_math_dollar(size_t res, math_list_type type) -> bool {
         // it's a math formula inside a formula
         TokenList everymath = toks_registers[everymath_code].val;
         if (!everymath.empty()) {
-            if (tracing_commands()) {
-                spdlog::trace("{{<everymath> {}}}", fmt::streamed(everymath));
-            }
+            if (tracing_commands()) { spdlog::trace("{{<everymath> {}}}", fmt::streamed(everymath)); }
             back_input(everymath);
         }
         select_math_font();
@@ -1499,9 +1490,7 @@ auto Parser::scan_math_hbox(size_t res, subtypes c) -> bool {
     if (!L.empty()) {
         if (before_mac_arg()) back_input(hash_table.CB_token);
         ;
-        if (tracing_commands()) {
-            spdlog::trace("{{<everyhbox> {}}}", fmt::streamed(L));
-        }
+        if (tracing_commands()) { spdlog::trace("{{<everyhbox> {}}}", fmt::streamed(L)); }
         back_input(L);
         back_input(hash_table.OB_token);
     }
@@ -1591,7 +1580,7 @@ auto Parser::interpret_genfrac_cmd(size_t res, subtypes k, CmdChr W) -> bool {
     if (!r1) return false;
     auto r2 = math_argument(0, ct);
     if (!r2) return false;
-    Math &   u  = math_data.get_list(k);
+    Math &u = math_data.get_list(k);
     u.push_back(CmdChr(left_cmd, subtypes(k1)), zero_code);
     u.push_back(CmdChr(right_cmd, subtypes(k2)), zero_code);
     u.push_back(CmdChr(right_cmd, subtypes()), zero_code, payload);
@@ -1624,12 +1613,12 @@ auto Parser::scan_math_mi(size_t res, subtypes c, subtypes k, CmdChr W) -> bool 
         if (!r1) return false;
         T.emplace_back(CmdChr(math_list_cmd, *r1), subtypes(math_argument_cd));
     }
-    auto n      = T.size();
-    n           = n / 2;
-    n           = n + n; // Ignore last if odd
+    auto n  = T.size();
+    n       = n / 2;
+    n       = n + n; // Ignore last if odd
     auto r1 = math_argument(0, ct);
     if (!r1) return false;
-    Math &   u  = math_data.get_list(k);
+    Math &u = math_data.get_list(k);
     // \todo this is weird, store a string instead of a type
     if (c == mathbox_code) u.saved = s;
     u.push_back_list(*r1, math_argument_cd);
@@ -1640,8 +1629,8 @@ auto Parser::scan_math_mi(size_t res, subtypes c, subtypes k, CmdChr W) -> bool 
 
 // Case of \mathchoice{}{}{}{}
 auto Parser::interpret_mathchoice_cmd(size_t res, subtypes k, CmdChr W) -> bool {
-    Token    ct = cur_tok;
-    auto r1 = math_argument(1, ct);
+    Token ct = cur_tok;
+    auto  r1 = math_argument(1, ct);
     if (!r1) return false;
     auto r2 = math_argument(1, ct);
     if (!r2) return false;
@@ -1649,7 +1638,7 @@ auto Parser::interpret_mathchoice_cmd(size_t res, subtypes k, CmdChr W) -> bool 
     if (!r3) return false;
     auto r4 = math_argument(1, ct);
     if (!r4) return false;
-    Math &   u  = math_data.get_list(k);
+    Math &u = math_data.get_list(k);
     u.push_back_list(*r1, math_argument_cd);
     u.push_back_list(*r2, math_argument_cd);
     u.push_back_list(*r3, math_argument_cd);
@@ -1710,18 +1699,15 @@ auto Parser::interpret_math_cmd(size_t res, subtypes c) -> bool {
     if (c == cfrac_code || c == qopname_code || c == multicolumn_code) {
         auto r2_opt = math_argument(0, ct);
         if (!r2_opt) return false;
-        r2 = *r2_opt;
+        r2          = *r2_opt;
         auto r3_opt = math_argument(0, ct);
         if (!r3_opt) return false;
         r3 = *r3_opt;
-    } else if (c <= last_marg_code || c > last_maccent_code)
-    {
+    } else if (c <= last_marg_code || c > last_maccent_code) {
         auto r2_opt = math_argument(0, ct);
         if (!r2_opt) return false;
         r2 = *r2_opt;
-    }
-    else if (c == xleftarrow_code || c == xrightarrow_code || c == smash_code)
-    {
+    } else if (c == xleftarrow_code || c == xrightarrow_code || c == smash_code) {
         auto r2_opt = math_argument(0, ct);
         if (!r2_opt) return false;
         r2 = *r2_opt;
@@ -1831,17 +1817,17 @@ auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) ->
 
 // Converts an array.
 auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool numbered) -> Xml * {
-    Math cell;
-    bool is_multline = sname == multline_code || sname == multline_star_code;
-    bool needs_dp    = math_env_needs_display_style(sname);
-    size_t n         = 0;                       // index of cell in row.
-    Xml *  res       = new Xml(the_names["mtable"], nullptr);
-    Xml *  row       = new Xml(the_names["mtr"], nullptr);
-    Xid    rid       = cmi.cur_row_id; // old rid, to be restored at the end
-    Xid    cid       = cmi.cur_cell_id;
-    Xid    taid      = cmi.cur_table_id;
-    cmi.cur_table_id = res->id;
-    cmi.cur_row_id   = row->id;
+    Math   cell;
+    bool   is_multline = sname == multline_code || sname == multline_star_code;
+    bool   needs_dp    = math_env_needs_display_style(sname);
+    size_t n           = 0; // index of cell in row.
+    Xml   *res         = new Xml(the_names["mtable"], nullptr);
+    Xml   *row         = new Xml(the_names["mtr"], nullptr);
+    Xid    rid         = cmi.cur_row_id; // old rid, to be restored at the end
+    Xid    cid         = cmi.cur_cell_id;
+    Xid    taid        = cmi.cur_table_id;
+    cmi.cur_table_id   = res->id;
+    cmi.cur_row_id     = row->id;
     if (needs_dp) W = ms_D;
     res->push_back_unless_nullptr(row);
     bool first_cell = is_multline;
@@ -2003,7 +1989,7 @@ auto Math::trivial_math(long action) -> Xml * {
         if (L != end()) len = 3;
     }
     symcodes cmd = front().cmd;
-    Xml *    res{nullptr};
+    Xml     *res{nullptr};
     if (((action & 4) != 0) && len == 2 && (cmd == underscore_catcode || cmd == hat_catcode)) res = trivial_math_index(cmd);
     if (res != nullptr) return res;
     if ((action & 1) != 0) res = special1();
@@ -2065,7 +2051,7 @@ auto MathElt::cv_char() const -> MathElt {
 // This converts a constant.
 auto MathElt::cv_cst() const -> MathElt {
     subtypes   c  = chr;
-    Xml *      s  = math_constants(c);
+    Xml       *s  = math_constants(c);
     math_types mt = math_space_code(c) ? mt_flag_space : mt_flag_small;
     return {s, mt};
 }
@@ -2083,7 +2069,7 @@ auto MathElt::cv_list(math_style cms, bool ph) -> MathElt {
         X.pop_front();
         X.pop_back();
         XmlAndType res  = X.M_cv(cms, 0);
-        Xml *      res2 = math_data.make_mfenced(a, b, gsl::not_null{res.value});
+        Xml       *res2 = math_data.make_mfenced(a, b, gsl::not_null{res.value});
         return {res2, mt_flag_big};
     }
     if (get_lcmd() == math_env_cd) // case \begin{array}...
@@ -2114,11 +2100,11 @@ auto Math::check_align() -> int {
 
 // Create <mi>...</mi> and friends
 auto MathElt::cv_mi(math_style cms) const -> MathElt {
-    Math &   L = get_list();
+    Math    &L = get_list();
     subtypes c = get_fml_subtype();
     auto     X = L.begin();
     auto     Y = L.end();
-    Xml *    res{nullptr};
+    Xml     *res{nullptr};
     if (c == mathbox_code) {
         Xml *xs = X->get_list().M_cv(cms, 0).value; // OK
         res     = new Xml(L.saved, xs);             // OK
@@ -2128,7 +2114,7 @@ auto MathElt::cv_mi(math_style cms) const -> MathElt {
         res     = new Xml(w, xs);
     } else {
         std::string s  = X->get_list().convert_this_to_string(math_buffer);
-        Xml *       xs = new Xml(std::string(s));
+        Xml        *xs = new Xml(std::string(s));
         auto        w  = the_names.mi(c - mathmi_code);
         res            = new Xml(w, xs);
     }
@@ -2152,7 +2138,7 @@ auto MathElt::cv_mi(math_style cms) const -> MathElt {
 //  This converts commands.
 auto MathElt::cv_special(math_style cms) -> MathElt {
     subtypes c = get_fml_subtype();
-    Math &   L = get_list();
+    Math    &L = get_list();
     switch (c) {
     case mathchoice_code: {
         std::array<Math, 4> table;
@@ -2178,8 +2164,8 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
     case operatorname_code:
     case operatornamestar_code: {
         std::string s   = L.get_arg1().convert_opname();
-        Xml *       xs  = new Xml(std::string(s));
-        Xml *       res = new Xml(the_names["mo"], xs);
+        Xml        *xs  = new Xml(std::string(s));
+        Xml        *res = new Xml(the_names["mo"], xs);
         res->add_att(the_names["form"], the_names["prefix"]);
         return {res, c == operatornamestar_code ? mt_flag_opD : mt_flag_opN};
     }
@@ -2187,8 +2173,8 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         // arg 1 is currently ignored
         std::string s   = L.get_arg3().convert_opname();
         std::string o   = L.get_arg2().convert_opname();
-        Xml *       xs  = new Xml(std::string(s));
-        Xml *       res = new Xml(the_names["mo"], xs);
+        Xml        *xs  = new Xml(std::string(s));
+        Xml        *res = new Xml(the_names["mo"], xs);
         res->add_att(the_names["form"], the_names["prefix"]);
         return {res, (o == "o") ? mt_flag_opN : mt_flag_opD};
     }
@@ -2220,7 +2206,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
     case mathlabel_code: {
         std::string s1  = L.get_arg1().convert_this_to_string(math_buffer);
         std::string s2  = L.get_arg2().convert_this_to_string(math_buffer);
-        Xml *       x   = new Xml(the_names["mrow"], nullptr);
+        Xml        *x   = new Xml(the_names["mrow"], nullptr);
         std::string id  = next_label_id();
         Xid         xid = x->id;
         the_stack.create_new_anchor(xid, id, std::string(s1));
@@ -2268,7 +2254,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
 auto MathElt::cv_special1(math_style cms) const -> MathElt {
     subtypes c        = get_fml_subtype();
     int      numalign = 0, denalign = 0;
-    Math &   L = get_list();
+    Math    &L = get_list();
     if (c == cfrac_code) {
         L.get_arg1().convert_this_to_string(math_buffer);
         L.pop_front();
@@ -2325,7 +2311,7 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
     if (numalign == 0) numalign = k;
     Xml *A1 = tmp.convert_math(cms);
     if (c == sqrt_code) return {new Xml(the_names["msqrt"], A1), mt_flag_big};
-    Xml *       A2{nullptr};
+    Xml        *A2{nullptr};
     auto        ns          = cv_special_string(c);
     std::string s           = the_names[ns];
     bool        is_fraction = ns == "mfrac";
@@ -2426,9 +2412,7 @@ auto MathElt::cv1(math_style cms, bool ph) -> MathElt {
     }
 }
 
-void MathElt::dump_for_err() const {
-    spdlog::trace("{} - {} - {}", int(cmd), int(chr), int(get_font()));
-}
+void MathElt::dump_for_err() const { spdlog::trace("{} - {} - {}", int(cmd), int(chr), int(get_font())); }
 
 void MathElt::cv1_err() {
     dump_for_err();
@@ -2661,7 +2645,7 @@ auto Math::M_ref() -> Xml * {
     Math w = front().get_list();
     pop_front();
     std::string label = w.convert_opname();
-    Xml *       X     = new Xml(the_names["mref"], nullptr);
+    Xml        *X     = new Xml(the_names["mref"], nullptr);
     X->id.add_ref(label);
     return X;
 }

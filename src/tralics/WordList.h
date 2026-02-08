@@ -4,7 +4,7 @@
 
 // A class to count words... \todo where is that used? \todo chained list???
 struct WordList {
-    WordList *  next;
+    WordList   *next;
     std::string name;
     size_t      hash;
     int         freq{1};

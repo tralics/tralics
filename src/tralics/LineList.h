@@ -2,11 +2,11 @@
 #include "Line.h"
 #include <optional>
 
-struct LineList : public std::list<Line> { // \todo use a vector instead
-    int         cur_line{0};               // current line number
-    std::string file_name;                 // file name associated to the lines
-    size_t      encoding{1};               // current file encoding
-    static std::vector<LineList> file_pool; // pool managed by filecontents
+struct LineList : public std::list<Line> {           // \todo use a vector instead
+    int                                 cur_line{0}; // current line number
+    std::string                         file_name;   // file name associated to the lines
+    size_t                              encoding{1}; // current file encoding
+    static std::vector<LineList>        file_pool;   // pool managed by filecontents
     static inline std::optional<size_t> pool_position{};
 
     [[nodiscard]] auto dump_name() const -> std::string;
