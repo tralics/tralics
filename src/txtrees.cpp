@@ -399,12 +399,12 @@ auto Parser::get_counter(Token T) -> long { // \todo rewrite properly
 }
 
 // Reads three counter names; return true if OK
-auto Parser::scan_date_ctrs() -> bool {
+auto Parser::scan_date_ctrs() -> std::optional<bool> {
     year_ctr  = hash_table.relax_token;
     month_ctr = hash_table.relax_token;
     day_ctr   = hash_table.relax_token;
     auto counter_res = M_counter(false);
-    if (!counter_res) throw EndOfData();
+    if (!counter_res) return std::nullopt;
     bool bad = *counter_res;
     bool ok  = true;
     if (!bad) {
@@ -413,7 +413,7 @@ auto Parser::scan_date_ctrs() -> bool {
     } else
         ok = false;
     counter_res = M_counter(false);
-    if (!counter_res) throw EndOfData();
+    if (!counter_res) return std::nullopt;
     bad = *counter_res;
     if (!bad) {
         get_token();
@@ -421,7 +421,7 @@ auto Parser::scan_date_ctrs() -> bool {
     } else
         ok = false;
     counter_res = M_counter(false);
-    if (!counter_res) throw EndOfData();
+    if (!counter_res) return std::nullopt;
     bad = *counter_res;
     if (!bad) {
         get_token();
@@ -526,7 +526,7 @@ void Parser::datebynumber() {
     Token T     = cur_tok;
     auto  start = scan_braced_int(T);              // start date
     auto  val   = to_unsigned(scan_braced_int(T)); // value to convert
-    scan_date_ctrs();                              // fetch the counters
+    if (!scan_date_ctrs()) throw EndOfData();      // fetch the counters
     auto   year = start;
     size_t c    = 1;
     for (;;) {
@@ -577,7 +577,7 @@ void date_ns::next_date(long &year, size_t &month, size_t &day) {
 }
 
 void Parser::next_date() {
-    scan_date_ctrs(); // fetch the counters
+    if (!scan_date_ctrs()) throw EndOfData(); // fetch the counters
     long   year  = 0;
     size_t month = 0;
     size_t day   = 0;
@@ -588,7 +588,7 @@ void Parser::next_date() {
 }
 
 void Parser::prev_date() {
-    scan_date_ctrs(); // fetch the counters
+    if (!scan_date_ctrs()) throw EndOfData(); // fetch the counters
     long   year  = 0;
     size_t month = 0;
     size_t day   = 0;

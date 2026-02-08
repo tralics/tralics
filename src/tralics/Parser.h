@@ -301,7 +301,7 @@ struct Parser {
     auto               scan_braced_int(Token T) -> long;
     auto               scan_char_num() -> size_t;
     auto               scan_color(const std::string &opt, const std::string &name) -> std::string;
-    auto               scan_date_ctrs() -> bool;
+    auto               scan_date_ctrs() -> std::optional<bool>;
     auto               scan_dim_helper(bool mu, bool allow_int) -> bool;
     auto               scan_dim2(RealNumber &R, bool mu) -> bool;
     auto               scan_dimen1(bool mu, bool inf, glue_spec &co, bool shortcut) -> bool;
