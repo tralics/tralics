@@ -947,7 +947,7 @@ struct Parser {
     void l3_token_check(subtypes c);
     void L3_user_split_next_name(bool base);
     void T_scantokens(const TokenList &L);
-    void tl_set_rescan(subtypes c);
+    bool tl_set_rescan(subtypes c);
     void Tl3_gen_from_ac(subtypes c);
 
     // general methods and variables used from packages and boot helpers

@@ -247,7 +247,9 @@ void Dispatcher::boot() {
     register_action_plain(l3_gen_from_ac_cmd, &Parser::Tl3_gen_from_ac);
     register_action_plain(l3_gen_from_sig_cmd, &Parser::generate_from_sig);
     register_action_plain(l3_generate_variant_cmd, &Parser::l3_generate_variant);
-    register_action_plain(l3_rescan_cmd, &Parser::tl_set_rescan);
+    register_action_plain(l3_rescan_cmd, [](subtypes c) {
+        if (!the_parser.tl_set_rescan(c)) throw EndOfData();
+    });
     register_action_plain(l3_set_cat_cmd, &Parser::L3_set_cat_code);
     register_action_plain(l3_set_num_cmd, &Parser::L3_set_num_code);
     register_action_plain(label_cmd, [](subtypes c) { the_parser.flush_buffer(), the_parser.T_label(c); });

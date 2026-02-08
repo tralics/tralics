@@ -642,7 +642,7 @@ void Parser::l3_tl_put_left(subtypes c) {
 }
 
 // set rescan and variant 12 variants + 1
-void Parser::tl_set_rescan(subtypes c) {
+auto Parser::tl_set_rescan(subtypes c) -> bool {
     bool special = false;
     if (c == 12) {
         special = true;
@@ -681,11 +681,12 @@ void Parser::tl_set_rescan(subtypes c) {
     back_input(hash_table.OB_token);
     res = read_arg();
     get_token();
-    if (!pop_level(bt_brace)) throw EndOfData();
+    if (!pop_level(bt_brace)) return false;
     if (special)
         back_input(res);
     else
         new_macro(res, name, gbl);
+    return true;
 }
 
 // --------------------------------------------------
