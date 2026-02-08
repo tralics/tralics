@@ -1772,7 +1772,9 @@ auto Parser::M_counter(bool def) -> bool {
     if (counter_check(b, def)) return true;
     back_input();
     if (!def) return false;
-    return counter_aux(b.substr(2), nullptr, T);
+    auto res = counter_aux(b.substr(2), nullptr, T);
+    if (!res) throw EndOfData();
+    return *res;
 }
 
 // Used by the bootstrap phase to define a dependent counter
@@ -1782,7 +1784,8 @@ void Parser::counter_boot(const std::string &s, String aux) {
     b         = "c@" + s;
     if (counter_check(b, true)) return; // should not happen
     back_input();
-    counter_aux(s, aux, T);
+    auto res = counter_aux(s, aux, T);
+    if (!res) throw EndOfData();
 }
 
 // Given c@foo in the buffer b, creates the token \c@foo
@@ -1828,7 +1831,7 @@ auto Parser::counter_read_opt(String s) -> int {
 
 // This defines a new counter, named name; second arg is for counter_read_opt
 // cur_tok (o be read again) holds the token \c@foo
-auto Parser::counter_aux(const std::string &name, String opt, Token T) -> bool {
+auto Parser::counter_aux(const std::string &name, String opt, Token T) -> std::optional<bool> {
     Buffer &b = Thbuf1;
     // We are defining a counter now
     // We construct a macro without argument that expands to \number\c@foo
@@ -1856,7 +1859,7 @@ auto Parser::counter_aux(const std::string &name, String opt, Token T) -> bool {
     TokenList foo_list = token_ns::string_to_list(name, true);
     Token     cl_token = cur_tok; // \cl@bar
     get_token();                  // get the \cl@bar token
-    if (!M_cons(cl_token, foo_list)) throw EndOfData();
+    if (!M_cons(cl_token, foo_list)) return std::nullopt;
     return false;
 }
 

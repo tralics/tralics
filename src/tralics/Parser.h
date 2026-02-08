@@ -220,7 +220,7 @@ struct Parser {
     auto               check_brace(int &b) const -> bool;
     auto               check_builtin_pack(const std::string &pack) -> bool;
     auto               check_if_redef(const std::string &s) -> bool;
-    auto               counter_aux(const std::string &name, String opt, Token T) -> bool;
+    auto               counter_aux(const std::string &name, String opt, Token T) -> std::optional<bool>;
     auto               counter_check(const Buffer &b, bool def) -> bool;
     auto               counter_read_opt(String s) -> int;
     auto               cs_from_input() -> Token;
