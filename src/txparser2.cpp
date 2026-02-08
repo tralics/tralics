@@ -333,7 +333,7 @@ void Parser::T_unimplemented_font(subtypes c) {
 
 // raisebox{1cm}[2cm][3cm]{a box}
 
-void Parser::T_raisebox() {
+auto Parser::T_raisebox() -> bool {
     std::string A = nT_arg_nopar();
     auto        B = nT_optarg_nopar();
     auto        C = nT_optarg_nopar();
@@ -343,8 +343,9 @@ void Parser::T_raisebox() {
     cur[the_names["val"]] = A;
     if (B) cur[the_names["height"]] = *B;
     if (C) cur[the_names["depth"]] = *C;
-    if (!T_arg_local()) throw EndOfData();
+    if (!T_arg_local()) return false;
     the_stack.pop(the_names["raisebox"]);
+    return true;
 }
 
 // Implements \in@ , evaluates \in@false or \in@true

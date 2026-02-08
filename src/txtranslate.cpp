@@ -1324,7 +1324,7 @@ void Parser::T_fbox(subtypes cc) {
     Token T = cur_tok;
     flush_buffer();
     if (cc == raisebox_code) {
-        T_raisebox();
+        if (!T_raisebox()) throw EndOfData();
         return;
     }
     std::string                iscale;

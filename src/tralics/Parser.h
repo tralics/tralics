@@ -832,7 +832,7 @@ struct Parser {
     void               T_provides_package(bool c);
     void               T_put(subtypes c);
     void               T_ra_startdoc();
-    void               T_raisebox();
+    bool               T_raisebox();
     void               T_reevaluate();
     void               T_ref(bool is_ref);
     void               T_remove_element();
