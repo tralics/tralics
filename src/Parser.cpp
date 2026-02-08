@@ -2561,7 +2561,7 @@ void Parser::T_endv() {
         flush_buffer();
         the_stack.finish_cell(-1);
         the_stack.push_pop_cell(pop_only);
-        pop_level(bt_cell);
+        if (!pop_level(bt_cell)) throw EndOfData();
         start_a_cell(false);
     } else
         parse_error("Bad endv token");
@@ -2578,7 +2578,7 @@ void Parser::T_cr() {
     }
     the_stack.finish_cell(0);
     the_stack.push_pop_cell(pop_only);
-    pop_level(bt_cell);
+    if (!pop_level(bt_cell)) throw EndOfData();
     the_stack.pop(the_names["row"]);
     start_a_row(0, s);
 }

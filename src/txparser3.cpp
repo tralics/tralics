@@ -290,7 +290,7 @@ void Parser::dump_save_stack() const {
 // The function called when we see a closing brace or \endgroup.
 // \end{foo} expands to \endfoo\endenv\endfoo, the last \endfoo is in cur_tok
 // there should be an \endfoo token in cur_tok
-void Parser::pop_level(boundary_type v) {
+auto Parser::pop_level(boundary_type v) -> bool {
     bool must_throw = false;
     auto w          = first_boundary();
     if (w == bt_impossible) {
@@ -300,7 +300,7 @@ void Parser::pop_level(boundary_type v) {
             parse_error(err_tok, "Extra \\endgroup");
         else
             parse_error(err_tok, "Empty save stack");
-        return;
+        return true;
     }
     if (v != w) {
         if (v == bt_brace && w == bt_tpa)
@@ -309,7 +309,7 @@ void Parser::pop_level(boundary_type v) {
             if (v == bt_semisimple) v = bt_esemisimple;
             err_buf = fmt::format("Extra {} found in unclosed environment {}", bt_to_string(v), cur_env_name);
             signal_error(err_tok, "extra brace");
-            return;
+            return true;
         } else {
             if (w == bt_semisimple) w = bt_esemisimple;
             if (v == bt_semisimple) v = bt_esemisimple;
@@ -328,7 +328,7 @@ void Parser::pop_level(boundary_type v) {
     for (;;) {
         if (save_stack.empty()) {
             parse_error(err_tok, "Internal error: empty save stack");
-            return;
+            return true;
         }
         auto p = std::move(save_stack.back());
         save_stack.pop_back();
@@ -336,16 +336,16 @@ void Parser::pop_level(boundary_type v) {
         if (p->type != st_boundary) continue;
         if (must_throw) {
             cur_level++;
-            throw EndOfData();
+            return false;
         }
-        return;
+        return true;
     }
 }
 
 // Signals error for unclosed environments and braces
 void Parser::pop_all_levels() {
     cur_tok.kill();
-    pop_level(bt_env); // pop the end document
+    if (!pop_level(bt_env)) throw EndOfData(); // pop the end document
     bool        started = false;
     std::string ename;
     Buffer &    B = err_buf;

@@ -936,7 +936,7 @@ auto Parser::T_math(subtypes type) -> bool {
         if (tracing_math()) cmi.dump_labels();
         cmi.ml_check_labels();
     }
-    pop_level(aux);
+    if (!pop_level(aux)) throw EndOfData();
     the_stack.set_mode(om);
     fct_caller = xfct_caller;
     return true;
@@ -1071,7 +1071,7 @@ auto Parser::scan_math(size_t res, math_list_type type) -> bool {
             if (c == 0)
                 push_level(bt_semisimple);
             else
-                pop_level(bt_semisimple);
+                if (!pop_level(bt_semisimple)) throw EndOfData();
             continue;
         case begin_cmd:
         case end_cmd:
@@ -1225,7 +1225,7 @@ void Parser::scan_math_endcell_ok(size_t res) {
             cmi.insert_special_tag(the_parser.eqtb_string_table[0].val);
         }
     }
-    pop_level(bt_cell); // start-end a group for the next cell
+    if (!pop_level(bt_cell)) throw EndOfData(); // start-end a group for the next cell
     push_level(bt_cell);
 }
 
@@ -1529,7 +1529,7 @@ auto Parser::math_argument(int w, Token t) -> subtypes {
     auto     aux = bt_brace;
     push_level(aux);
     if (!scan_math(k, math_argument_cd)) throw EndOfData();
-    pop_level(aux);
+    if (!pop_level(aux)) throw EndOfData();
     fct_caller = xfct_caller;
     return k;
 }

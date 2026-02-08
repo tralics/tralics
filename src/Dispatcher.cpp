@@ -131,7 +131,9 @@ void Dispatcher::boot() {
     register_action_plain(cite_cmd, &Parser::T_cite);
     register_action_plain(cite_one_cmd, &Parser::T_cite_one);
     register_action_plain(cititem_cmd, &Parser::T_cititem);
-    register_action_plain(close_catcode, [] { the_parser.pop_level(bt_brace); });
+    register_action_plain(close_catcode, [] {
+        if (!the_parser.pop_level(bt_brace)) throw EndOfData();
+    });
     register_action_plain(color_cmd, &Parser::T_color);
     register_action_plain(cons_cmd, &Parser::M_cons);
     register_action_plain(cr_cmd, &Parser::T_cr);
@@ -400,13 +402,13 @@ void Dispatcher::boot() {
 
     register_action_plain(begingroup_cmd, [](subtypes c) {
         the_parser.flush_buffer();
-        if (c == 0)
+        if (c == 0) {
             the_parser.push_level(bt_semisimple);
-        else if (c == 1)
-            the_parser.pop_level(bt_semisimple);
-        else {
+        } else if (c == 1) {
+            if (!the_parser.pop_level(bt_semisimple)) throw EndOfData();
+        } else {
             the_parser.get_token();
-            the_parser.pop_level(bt_env);
+            if (!the_parser.pop_level(bt_env)) throw EndOfData();
         }
     });
 
@@ -550,7 +552,7 @@ void Dispatcher::boot() {
 
     register_action_plain(math_env_cmd, [](subtypes c) {
         the_parser.cur_tok.kill();
-        the_parser.pop_level(bt_env);
+        if (!the_parser.pop_level(bt_env)) throw EndOfData();
         return the_parser.T_math(c);
     });
 

@@ -614,7 +614,7 @@ void Parser::M_cons(Token cmd, TokenList &L) {
     M_let_fast(E, hash_table.relax_token, false);
     auto guard = SaveErrTok(cmd);
     read_toks_edef(L);
-    pop_level(bt_brace);
+    if (!pop_level(bt_brace)) throw EndOfData();
     new_macro(L, cmd, true);
 }
 

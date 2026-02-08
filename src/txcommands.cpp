@@ -739,7 +739,7 @@ void Parser::T_begindocument() {
     the_parser.seen_document = true;
     if (!Titlepage.is_valid()) add_language_att();
     cur_tok.kill();
-    pop_level(bt_env);
+    if (!pop_level(bt_env)) throw EndOfData();
     cur_level = 1; // this is the outer level...
     if (the_main.dverbose) M_tracingall();
     if (tracing_commands()) {

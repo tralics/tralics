@@ -249,7 +249,7 @@ void Parser::T_filecontents(subtypes spec) {
     }
     kill_line(); // who knows
     cur_tok.kill();
-    pop_level(bt_env);
+    if (!pop_level(bt_env)) throw EndOfData();
 }
 
 // \todo the next three function are kind of misleadingly named

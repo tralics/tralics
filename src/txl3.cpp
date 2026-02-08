@@ -681,7 +681,7 @@ void Parser::tl_set_rescan(subtypes c) {
     back_input(hash_table.OB_token);
     res = read_arg();
     get_token();
-    pop_level(bt_brace);
+    if (!pop_level(bt_brace)) throw EndOfData();
     if (special)
         back_input(res);
     else

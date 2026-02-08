@@ -184,7 +184,7 @@ void Parser::T_arg_local() {
     push_level(bt_local);
     TokenList L = read_arg();
     T_translate(L);
-    pop_level(bt_local);
+    if (!pop_level(bt_local)) throw EndOfData();
 }
 
 // translates [foo]
@@ -1214,7 +1214,7 @@ void Parser::T_cap_or_note(bool cap) {
     }
     the_stack.pop(the_names[name]);
     if (opt != nullptr) the_stack.add_last(new Xml(the_names["alt_caption"], opt));
-    pop_level(bt_local);
+    if (!pop_level(bt_local)) throw EndOfData();
     if (the_main.footnote_hack) note->remove_par_bal_if_ok();
 }
 
@@ -1420,7 +1420,7 @@ void Parser::T_url() {
 auto Parser::T_hanl_text() -> Xml * {
     push_level(bt_local);
     Xml *val = xT_arg_nopar();
-    pop_level(bt_local);
+    if (!pop_level(bt_local)) throw EndOfData();
     return val;
 }
 
@@ -1572,7 +1572,7 @@ void Parser::T_reevaluate() {
             return;
         }
         cur_tok.kill();
-        pop_level(bt_env); // closes current env
+        if (!pop_level(bt_env)) throw EndOfData(); // closes current env
     }
     Tbuf.clear();
     L1.reevaluate0(in_env);
@@ -1612,7 +1612,7 @@ void Parser::T_case_shift(subtypes c) {
             new_macro(LL, table[2 * i]);
         }
         read_toks_edef(L);
-        pop_level(bt_brace);
+        if (!pop_level(bt_brace)) throw EndOfData();
     }
     if (tracing_commands()) {
         spdlog::trace("{{{}(a)->{}}}", fmt::streamed(T), fmt::streamed(L));

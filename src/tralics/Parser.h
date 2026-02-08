@@ -628,7 +628,7 @@ struct Parser {
     void               pass_text(Token Tfe);
     void               pop_all_levels();
     void               pop_input_stack(bool vb);
-    void               pop_level(boundary_type v);
+    auto               pop_level(boundary_type v) -> bool;
     void               prefix_error(bool b_global, symcodes K);
     void               prev_date();
     void               print_token(std::ostream &fp, Token x);

@@ -697,7 +697,7 @@ void Parser::T_verbatim(int my_number, Token style, Token pre, Token post) {
     eqtb_int_table[endlinechar_code].val = cc; // restore
     // pop save stack
     cur_tok.kill();
-    pop_level(bt_env);
+    if (!pop_level(bt_env)) throw EndOfData();
     if (style != hash_table.relax_token) res.push_front(style);
     if (pre != hash_table.relax_token) res.push_front(pre);
     if (post != hash_table.relax_token) res.push_back(post);
@@ -883,7 +883,7 @@ auto Parser::T_raw_env(bool want_result) -> std::string {
     if (!TL.empty()) {
         parse_error(err_tok, "Verbatim-like environment in argument : ", get_cur_env_name(), "Verbatim-like environment in argument");
         cur_tok.kill();
-        pop_level(bt_env);
+        if (!pop_level(bt_env)) throw EndOfData();
         return "";
     }
     mac_buffer.clear();
@@ -901,7 +901,7 @@ auto Parser::T_raw_env(bool want_result) -> std::string {
         kill_line();
     }
     cur_tok.kill();
-    pop_level(bt_env);
+    if (!pop_level(bt_env)) throw EndOfData();
     return want_result ? static_cast<std::string>(mac_buffer) : "";
 }
 
@@ -2176,9 +2176,9 @@ auto Parser::env_helper(const std::string &s) -> SaveAuxEnv * {
         return true;
     }
     if (first_boundary() == bt_tpa) {
-        pop_level(bt_tpa);
+        if (!pop_level(bt_tpa)) throw EndOfData();
         cur_tok.kill();
-        pop_level(bt_env);
+        if (!pop_level(bt_env)) throw EndOfData();
         cur_level++;
         return false;
     }
