@@ -562,8 +562,8 @@ struct Parser {
     void               leave_h_mode();
     void               leave_v_mode();
     void               lost_if(Token T, int L);
-    void               M_cons();
-    void               M_cons(Token cmd, TokenList &L);
+    auto               M_cons() -> bool;
+    auto               M_cons(Token cmd, TokenList &L) -> bool;
     void               M_declare_math_operator();
     void               M_def(bool edef, bool gbl, symcodes what, rd_flag fl);
     void               M_extension(subtypes cc);

@@ -1855,7 +1855,7 @@ auto Parser::counter_aux(const std::string &name, String opt, Token T) -> bool {
     TokenList foo_list = token_ns::string_to_list(name, true);
     Token     cl_token = cur_tok; // \cl@bar
     get_token();                  // get the \cl@bar token
-    M_cons(cl_token, foo_list);
+    if (!M_cons(cl_token, foo_list)) throw EndOfData();
     return false;
 }
 
@@ -1870,7 +1870,7 @@ void Parser::E_addtoreset() {
     if (my_csname("cl@", "", L, "\\@addtoreset")) return;
     Token cl_token = cur_tok; // \cl@bar
     get_token();              // get the \cl@bar token
-    M_cons(cl_token, foo_list);
+    if (!M_cons(cl_token, foo_list)) throw EndOfData();
 }
 
 //  Implements \newcount etc.

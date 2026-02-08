@@ -595,18 +595,18 @@ void Parser::T_xkv_for(subtypes c) {
 
 // Implementation of \@cons
 // Read a token T and a list L, calls the function below
-void Parser::M_cons() {
+auto Parser::M_cons() -> bool {
     Token     cmd = get_r_token();
     TokenList L   = read_arg();
     if (tracing_commands()) {
         spdlog::trace("{{\\@cons {} + {}}}", fmt::streamed(cmd), fmt::streamed(L));
     }
-    M_cons(cmd, L);
+    return M_cons(cmd, L);
 }
 
 // \@cons\T{L} is \edef\T{\T\@elt L}, with \let\@elt\relax in a group
 // Question: latex has \xdef, is a \edef useful ?
-void Parser::M_cons(Token cmd, TokenList &L) {
+auto Parser::M_cons(Token cmd, TokenList &L) -> bool {
     Token E = hash_table.elt_token;
     L.push_front(E);
     L.push_front(cmd);
@@ -614,8 +614,9 @@ void Parser::M_cons(Token cmd, TokenList &L) {
     M_let_fast(E, hash_table.relax_token, false);
     auto guard = SaveErrTok(cmd);
     read_toks_edef(L);
-    if (!pop_level(bt_brace)) throw EndOfData();
+    if (!pop_level(bt_brace)) return false;
     new_macro(L, cmd, true);
+    return true;
 }
 
 // Implements \@testopt \A B as: if bracket, then \A, else \A[{B}]
@@ -1082,7 +1083,7 @@ void Parser::numberwithin() {
     Token clbar_token = hash_table.locate(b);
     A.brace_me();
     TokenList B = A;
-    M_cons(clbar_token, B);
+    if (!M_cons(clbar_token, B)) throw EndOfData();
     b            = "the" + barname;
     Token thebar = hash_table.locate(b);
     b            = "the" + fooname;

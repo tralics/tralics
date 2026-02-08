@@ -135,7 +135,9 @@ void Dispatcher::boot() {
         if (!the_parser.pop_level(bt_brace)) throw EndOfData();
     });
     register_action_plain(color_cmd, &Parser::T_color);
-    register_action_plain(cons_cmd, &Parser::M_cons);
+    register_action_plain(cons_cmd, [] {
+        if (!the_parser.M_cons()) throw EndOfData();
+    });
     register_action_plain(cr_cmd, [] {
         if (!the_parser.T_cr()) throw EndOfData();
     });
