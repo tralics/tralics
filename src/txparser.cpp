@@ -2181,9 +2181,9 @@ auto Parser::env_helper(const std::string &s) -> SaveAuxEnv * {
         return true;
     }
     if (first_boundary() == bt_tpa) {
-        if (!pop_level(bt_tpa)) throw EndOfData();
+        if (!pop_level(bt_tpa)) return false;
         cur_tok.kill();
-        if (!pop_level(bt_env)) throw EndOfData();
+        if (!pop_level(bt_env)) return false;
         cur_level++;
         return false;
     }
