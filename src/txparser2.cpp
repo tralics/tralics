@@ -343,7 +343,7 @@ void Parser::T_raisebox() {
     cur[the_names["val"]] = A;
     if (B) cur[the_names["height"]] = *B;
     if (C) cur[the_names["depth"]] = *C;
-    T_arg_local();
+    if (!T_arg_local()) throw EndOfData();
     the_stack.pop(the_names["raisebox"]);
 }
 
@@ -400,7 +400,7 @@ void Parser::T_line(subtypes c) {
     the_stack.push1(the_names["lineC"]);
     AttList &cur           = last_att_list();
     cur[the_names["rend"]] = the_names[k];
-    T_arg_local();
+    if (!T_arg_local()) throw EndOfData();
     the_stack.pop(the_names["lineC"]);
 }
 

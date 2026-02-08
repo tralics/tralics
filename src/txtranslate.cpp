@@ -180,11 +180,12 @@ void Parser::T_arg() {
 }
 
 // translates {foo} in a group
-void Parser::T_arg_local() {
+auto Parser::T_arg_local() -> bool {
     push_level(bt_local);
     TokenList L = read_arg();
     T_translate(L);
-    if (!pop_level(bt_local)) throw EndOfData();
+    if (!pop_level(bt_local)) return false;
+    return true;
 }
 
 // translates [foo]
@@ -1229,7 +1230,7 @@ void Parser::T_makebox(bool framed, Token C) {
     if (!oarg.empty()) cur[the_names["box_pos"]] = oarg;
     cur[the_names["height"]] = B;
     cur[the_names["width"]]  = A;
-    T_arg_local();
+    if (!T_arg_local()) throw EndOfData();
     the_stack.pop(the_names["box"]);
 }
 
@@ -1302,7 +1303,7 @@ void Parser::T_fbox_dash_box() {
     cur_id.add_attribute(the_names["height"], C);
     cur_id.add_attribute(the_names["width"], B);
     cur_id.add_attribute(the_names["dashdim"], A);
-    T_arg_local();
+    if (!T_arg_local()) throw EndOfData();
     the_stack.pop(the_names["pic-dashbox"]);
 }
 
@@ -1312,7 +1313,7 @@ void Parser::T_fbox_rotate_box() {
     leave_v_mode();
     the_stack.push1(the_names["rotatebox"]);
     the_stack.get_top_id().add_attribute(the_names["rotate_angle"], val);
-    T_arg_local();
+    if (!T_arg_local()) throw EndOfData();
     the_stack.pop(the_names["rotatebox"]);
 }
 
@@ -1347,7 +1348,7 @@ void Parser::T_fbox(subtypes cc) {
     leave_v_mode();
     the_stack.push1(the_names[cc == scalebox_code ? "scalebox" : "fbox"]);
     Xml *cur = the_stack.top_stack(); // will contain the argument.
-    T_arg_local();
+    if (!T_arg_local()) throw EndOfData();
     the_stack.pop(the_names[cc == scalebox_code ? "scalebox" : "fbox"]);
     Xml *    aux = cur->single_non_empty();
     AttList &AL  = cur->id.get_att();

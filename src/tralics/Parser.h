@@ -709,7 +709,7 @@ struct Parser {
     void               T_addtomacro(bool exp);
     void               T_aftergroup();
     void               T_ampersand();
-    void               T_arg_local();
+    bool               T_arg_local();
     void               T_arg();
     void               T_arg1(const std::string &y);
     void               T_at_end_of_class();
