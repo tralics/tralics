@@ -936,7 +936,7 @@ auto Parser::T_math(subtypes type) -> bool {
         if (tracing_math()) cmi.dump_labels();
         cmi.ml_check_labels();
     }
-    if (!pop_level(aux)) throw EndOfData();
+    if (!pop_level(aux)) return false;
     the_stack.set_mode(om);
     fct_caller = xfct_caller;
     return true;
@@ -1070,8 +1070,8 @@ auto Parser::scan_math(size_t res, math_list_type type) -> bool {
         case begingroup_cmd:
             if (c == 0)
                 push_level(bt_semisimple);
-            else
-                if (!pop_level(bt_semisimple)) throw EndOfData();
+            else if (!pop_level(bt_semisimple))
+                return false;
             continue;
         case begin_cmd:
         case end_cmd:
@@ -1268,7 +1268,7 @@ auto Parser::scan_math_env(size_t res, math_list_type type) -> bool {
                 back_input(eenv);
             } else {
                 // End a user-defined environment outside of math-env nesting.
-                if (!T_end(s)) throw EndOfData();
+                if (!T_end(s)) return false;
                 return false;
             }
         }
@@ -1284,7 +1284,7 @@ auto Parser::scan_math_env(size_t res, math_list_type type) -> bool {
             parse_error(err_tok, B, "bad env");
         }
         if ((math_env_props(et) & 16) != 0) ignore_optarg();
-        if (!new_math_list(res, math_env_cd, et)) throw EndOfData();
+        if (!new_math_list(res, math_env_cd, et)) return false;
         return false;
     }
     // Case \end{foo}
@@ -1346,7 +1346,7 @@ auto Parser::scan_math_dollar(size_t res, math_list_type type) -> bool {
             back_input(everymath);
         }
         select_math_font();
-        if (!new_math_list(res, math_dollar_cd, nomathenv_code)) throw EndOfData();
+        if (!new_math_list(res, math_dollar_cd, nomathenv_code)) return false;
         return false;
     }
     case math_LR_cd:
