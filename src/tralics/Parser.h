@@ -737,7 +737,7 @@ struct Parser {
     void               T_cititem();
     void               T_class_error(subtypes c);
     void               T_color(subtypes c);
-    void               T_cr();
+    auto               T_cr() -> bool;
     void               T_cst1(subtypes c);
     void               T_cst2(subtypes c);
     void               T_curves(subtypes c);

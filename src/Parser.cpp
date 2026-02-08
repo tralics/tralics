@@ -2570,19 +2570,20 @@ auto Parser::T_endv() -> bool {
 }
 
 // This is done when we see a \\.
-void Parser::T_cr() {
+auto Parser::T_cr() -> bool {
     flush_buffer();
     std::string s;
     if (cur_cmd_chr.chr == crwithargs_code) s = saved_dim;
     if (!the_stack.is_frame("cell")) {
         parse_error("bad \\cr");
-        return;
+        return true;
     }
     the_stack.finish_cell(0);
     the_stack.push_pop_cell(pop_only);
-    if (!pop_level(bt_cell)) throw EndOfData();
+    if (!pop_level(bt_cell)) return false;
     the_stack.pop(the_names["row"]);
     start_a_row(0, s);
+    return true;
 }
 
 // Case of \multispan; fully expandable
