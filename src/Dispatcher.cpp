@@ -303,7 +303,9 @@ void Dispatcher::boot() {
     register_action_plain(relax_cmd, [] {});
     register_action_plain(removeelement_cmd, &Parser::T_remove_element);
     register_action_plain(rule_cmd, &Parser::scan_rule);
-    register_action_plain(save_box_cmd, [](subtypes c) { the_parser.T_save_box(c == 0); });
+    register_action_plain(save_box_cmd, [](subtypes c) {
+        if (!the_parser.T_save_box(c == 0)) throw EndOfData();
+    });
     register_action_plain(saveverb_cmd, &Parser::T_saveverb);
     register_action_plain(scan_glue_cmd, &Parser::T_scan_glue);
     register_action_plain(section_cmd, &Parser::T_paras);

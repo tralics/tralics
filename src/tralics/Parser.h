@@ -836,7 +836,7 @@ struct Parser {
     void               T_reevaluate();
     void               T_ref(bool is_ref);
     void               T_remove_element();
-    void               T_save_box(bool simple);
+    bool               T_save_box(bool simple);
     void               T_saveverb();
     void               T_scan_glue(subtypes c);
     void               T_setmode();

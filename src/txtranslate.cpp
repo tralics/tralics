@@ -1238,7 +1238,7 @@ auto Parser::T_makebox(bool framed, Token C) -> bool {
 }
 
 // Implements \sbox and \savebox
-void Parser::T_save_box(bool simple) {
+auto Parser::T_save_box(bool simple) -> bool {
     Token     T = cur_tok;
     TokenList L = read_arg();
     back_input(hash_table.equals_token);
@@ -1249,7 +1249,7 @@ void Parser::T_save_box(bool simple) {
     //  leave_v_mode();
     flush_buffer();
     if (!simple && cur_tok.is_open_paren()) {
-        if (!T_makebox(false, T)) throw EndOfData();
+        if (!T_makebox(false, T)) return false;
     } else {
         std::optional<std::string> ipos;
         std::optional<std::string> iwidth;
@@ -1271,6 +1271,7 @@ void Parser::T_save_box(bool simple) {
         if (iwidth) mbox->id.add_attribute(the_names["box_width"], *iwidth);
     }
     box_end(the_stack.remove_last(), i);
+    return true;
 }
 
 void Parser::T_picture() {
