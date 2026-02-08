@@ -137,10 +137,10 @@ auto XmlIO::next_line() -> bool {
 
 // Characters can come from back of readlist, or head of input_line
 // This leaves the character where it is
-auto XmlIO::peek_char() -> char32_t {
+auto XmlIO::peek_char() -> std::optional<char32_t> {
     if (!reread_list.empty()) return reread_list.back();
     if (at_eol()) {
-        if (!next_line()) throw EndOfData();
+        if (!next_line()) return std::nullopt;
     }
     return input_line[input_line_pos];
 }
@@ -155,15 +155,18 @@ void XmlIO::skip_char() {
 
 // This returns the next character
 auto XmlIO::next_char() -> char32_t {
-    char32_t res = peek_char();
+    auto res = peek_char();
+    if (!res) throw EndOfData();
     skip_char();
-    return res;
+    return *res;
 }
 
 // Skip over spaces; unread char is in cur_char
 void XmlIO::skip_space() {
     for (;;) {
-        cur_char = peek_char();
+        auto c = peek_char();
+        if (!c) throw EndOfData();
+        cur_char = *c;
         if (!is_spacer(cur_char)) return;
         skip_char();
     }
@@ -179,18 +182,20 @@ void XmlIO::flush_buffer() {
 // Scans a Name with a simplified syntax
 void XmlIO::scan_name() {
     B.clear();
-    char32_t x = peek_char();
+    auto x = peek_char();
+    if (!x) throw EndOfData();
     // x should be Letter underscore colon
-    B.push_back(x);
+    B.push_back(*x);
     skip_char();
     for (;;) {
-        char32_t xx = peek_char();
-        if (xx < 128) {
-            x_type w = Type[xx];
+        auto xx = peek_char();
+        if (!xx) throw EndOfData();
+        if (*xx < 128) {
+            x_type w = Type[*xx];
             if (w == xt_space || w == xt_invalid) return;
         }
         skip_char();
-        B.push_back(xx);
+        B.push_back(*xx);
     }
 }
 
@@ -199,10 +204,11 @@ void XmlIO::scan_name() {
 void XmlIO::scan_name(uchar c) {
     B.clear();
     for (;;) {
-        char32_t x = peek_char();
-        if (x == c || is_spacer(x)) return;
+        auto x = peek_char();
+        if (!x) throw EndOfData();
+        if (*x == c || is_spacer(*x)) return;
         skip_char();
-        B.push_back(x);
+        B.push_back(*x);
     }
 }
 
@@ -210,10 +216,11 @@ void XmlIO::scan_name(uchar c) {
 void XmlIO::scan_name(uchar c1, uchar c2) {
     B.clear();
     for (;;) {
-        char32_t x = peek_char();
-        if (x == c1 || x == c2 || is_spacer(x)) return;
+        auto x = peek_char();
+        if (!x) throw EndOfData();
+        if (*x == c1 || *x == c2 || is_spacer(*x)) return;
         skip_char();
-        B.push_back(x);
+        B.push_back(*x);
     }
 }
 
@@ -309,7 +316,9 @@ void XmlIO::parse_attributes() {
         // handle the case <foo/>
         if (cur_char == '/') {
             skip_char();
-            cur_char = peek_char();
+            auto c = peek_char();
+            if (!c) throw EndOfData();
+            cur_char = *c;
             pop_this();
             return;
         }
@@ -364,7 +373,9 @@ void XmlIO::parse_pi() {
         for (;;) {
             char32_t c = next_char();
             if (c == '?') {
-                cur_char = peek_char();
+                auto pc = peek_char();
+                if (!pc) throw EndOfData();
+                cur_char = *pc;
                 if (cur_char == '>') {
                     skip_char();
                     break;
@@ -381,19 +392,20 @@ void XmlIO::parse_pi() {
 // Scans a declaration. We test the first or second letter
 void XmlIO::parse_dec() {
     cur_char   = next_char();
-    char32_t c = peek_char();
+    auto c = peek_char();
+    if (!c) throw EndOfData();
     reread_list.push_back(cur_char);
-    if (c == '-')
+    if (*c == '-')
         parse_dec_comment();
-    else if (c == 'N')
+    else if (*c == 'N')
         parse_dec_entity();
-    else if (c == 'L')
+    else if (*c == 'L')
         parse_dec_element();
     else if (cur_char == 'A')
         parse_dec_attlist();
     else if (cur_char == 'D')
         parse_dec_doctype();
-    else if (c == 'C')
+    else if (*c == 'C')
         parse_dec_cdata();
     else if (cur_char == '[')
         parse_dec_conditional();
@@ -456,14 +468,18 @@ void XmlIO::parse_dec_conditional() {
     B.append("<![");
     bool keep = false;
     skip_space();
-    char32_t c = peek_char();
+    auto pc1 = peek_char();
+    if (!pc1) throw EndOfData();
+    char32_t c = *pc1;
     if (c == '%') {
         skip_char();
         expand_PEReference();
     }
     c = next_char();
     if (c != 'I') error("expected INCLUDE or IGNORE");
-    c = peek_char();
+    auto pc2 = peek_char();
+    if (!pc2) throw EndOfData();
+    c = *pc2;
     if (c == 'N') {
         expect("NCLUDE");
         keep = true;
@@ -688,7 +704,9 @@ void XmlIO::parse_dec_doctype() {
                     if (c != ']') error("Expected ]]>");
                     B.append("]");
                     flush_buffer();
-                    cur_char = peek_char();
+                    auto pc = peek_char();
+                    if (!pc) throw EndOfData();
+                    cur_char = *pc;
                     pop_this();
                     nb_cond--;
                     continue;

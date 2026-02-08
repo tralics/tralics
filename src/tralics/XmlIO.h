@@ -1,6 +1,7 @@
 #pragma once
 #include "Buffer.h"
 #include "LineList.h"
+#include <optional>
 #include <string_view>
 
 class XmlIO {
@@ -31,7 +32,7 @@ class XmlIO {
     bool                   eof_ok{};
 
 private:
-    auto               peek_char() -> char32_t;
+    auto               peek_char() -> std::optional<char32_t>;
     void               skip_char();
     auto               next_char() -> char32_t;
     void               skip_space();
