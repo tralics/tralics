@@ -192,7 +192,9 @@ void Dispatcher::boot() {
     register_action_plain(fancy_cmd, &Parser::T_fancy);
     register_action_plain(figure_cmd, [](symcodes x, subtypes c) { the_parser.T_figure_table(x, c); });
     register_action_plain(file_cmd, &Parser::T_input);
-    register_action_plain(filecontents_env_cmd, &Parser::T_filecontents);
+    register_action_plain(filecontents_env_cmd, [](subtypes c) {
+        if (!the_parser.T_filecontents(c)) throw EndOfData();
+    });
     register_action_plain(float_cmd, &Parser::T_float);
     register_action_plain(fnhack_cmd, &Parser::fnhack);
     register_action_plain(fontsize_cmd, &Parser::translate_font_size);

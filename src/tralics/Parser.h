@@ -765,7 +765,7 @@ struct Parser {
     void               T_fbox(subtypes cc);
     void               T_figure_table_end(bool is_fig);
     void               T_figure_table(symcodes x, subtypes c);
-    void               T_filecontents(subtypes spec);
+    bool               T_filecontents(subtypes spec);
     void               T_float(subtypes c);
     void               T_fonts(subtypes c);
     void               T_glo();

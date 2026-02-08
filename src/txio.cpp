@@ -200,7 +200,7 @@ auto open_file(const std::string &name, bool fatal) -> std::ofstream {
 // This implements the filecontent environment.
 // \begin{filecontents}{name} some lines of code \end{filecontents}
 // spec=0 normal, =1 star, =2 plus
-void Parser::T_filecontents(subtypes spec) {
+auto Parser::T_filecontents(subtypes spec) -> bool {
     std::string filename;
     {
         flush_buffer();
@@ -249,7 +249,8 @@ void Parser::T_filecontents(subtypes spec) {
     }
     kill_line(); // who knows
     cur_tok.kill();
-    if (!pop_level(bt_env)) throw EndOfData();
+    if (!pop_level(bt_env)) return false;
+    return true;
 }
 
 // \todo the next three function are kind of misleadingly named
