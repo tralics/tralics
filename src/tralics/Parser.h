@@ -412,12 +412,12 @@ struct Parser {
     void               check_module_title(TokenList &L);
     void               check_outer_validity();
     void               close_all();
-    void               count_days();
+    bool               count_days();
     void               counter_boot(const std::string &s, String aux);
     void               counter_overflow(Token T, long n, int nmax);
     void               csname_arg();
-    void               date_commands(subtypes c);
-    void               datebynumber();
+    bool               date_commands(subtypes c);
+    bool               datebynumber();
     void               dbl_arg();
     void               declaretopics();
     void               default_bp(Buffer &B, Token T, TokenList &val);
@@ -612,7 +612,7 @@ struct Parser {
     void               new_prim(Token, Token);
     void               new_primx(String a, String b);
     void               new_xref(Xml *val, std::string v, bool err);
-    void               next_date();
+    bool               next_date();
     void               next_day();
     void               next_from_list();
     void               no_arg_font();
@@ -630,7 +630,7 @@ struct Parser {
     void               pop_input_stack(bool vb);
     auto               pop_level(boundary_type v) -> bool;
     void               prefix_error(bool b_global, symcodes K);
-    void               prev_date();
+    bool               prev_date();
     void               print_token(std::ostream &fp, Token x);
     void               process_char(char32_t c);
     void               process_char(int s);

@@ -369,17 +369,18 @@ void Parser::T_etex() { parse_error(cur_tok, "Unimplemented e-TeX extension ", c
 // DATES
 
 // Dispatcher function
-void Parser::date_commands(subtypes c) {
+auto Parser::date_commands(subtypes c) -> bool {
     if (c == 0)
         is_date_valid();
     else if (c == 1)
-        count_days();
+        return count_days();
     else if (c == 2)
-        next_date();
+        return next_date();
     else if (c == 3)
-        prev_date();
+        return prev_date();
     else if (c == 4)
-        datebynumber();
+        return datebynumber();
+    return true;
 }
 
 // Stores the value c in the counter T if possible
@@ -500,10 +501,10 @@ auto date_ns::check_date(long y, size_t m, size_t d) -> bool {
 }
 
 // Returns the number of days between start/01/01 and cur/month/day
-void Parser::count_days() {
+auto Parser::count_days() -> bool {
     Token T   = cur_tok;
     auto res = M_counter(false);
-    if (!res) throw EndOfData();
+    if (!res) return false;
     bool bad = *res;
     if (!bad) get_token();
     Token ctr   = cur_tok;
@@ -511,7 +512,7 @@ void Parser::count_days() {
     auto  cur   = scan_braced_int(T);
     auto  month = to_unsigned(scan_braced_int(T));
     auto  day   = scan_braced_int(T);
-    if (bad) return;
+    if (bad) return true;
     long                       c           = 0;
     static std::array<int, 13> month_table = {0, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};
     for (auto y = start; y < cur; y++) c += to_signed(date_ns::year_length(y));
@@ -520,13 +521,14 @@ void Parser::count_days() {
     if (cur == 1582 && (month > 10 || (month == 10 && day > 14))) c -= 10;
     c += day;
     set_counter(ctr, c);
+    return true;
 }
 
-void Parser::datebynumber() {
+auto Parser::datebynumber() -> bool {
     Token T     = cur_tok;
     auto  start = scan_braced_int(T);              // start date
     auto  val   = to_unsigned(scan_braced_int(T)); // value to convert
-    if (!scan_date_ctrs()) throw EndOfData();      // fetch the counters
+    if (!scan_date_ctrs()) return false;      // fetch the counters
     auto   year = start;
     size_t c    = 1;
     for (;;) {
@@ -548,6 +550,7 @@ void Parser::datebynumber() {
     }
     size_t day = 1 + val - c;
     set_date_ctrs(year, month, day);
+    return true;
 }
 
 // gives date of yesterday
@@ -576,8 +579,8 @@ void date_ns::next_date(long &year, size_t &month, size_t &day) {
     ++year;
 }
 
-void Parser::next_date() {
-    if (!scan_date_ctrs()) throw EndOfData(); // fetch the counters
+auto Parser::next_date() -> bool {
+    if (!scan_date_ctrs()) return false; // fetch the counters
     long   year  = 0;
     size_t month = 0;
     size_t day   = 0;
@@ -585,10 +588,11 @@ void Parser::next_date() {
     date_ns::check_date(year, month, day);
     date_ns::next_date(year, month, day);
     set_date_ctrs(year, month, day);
+    return true;
 }
 
-void Parser::prev_date() {
-    if (!scan_date_ctrs()) throw EndOfData(); // fetch the counters
+auto Parser::prev_date() -> bool {
+    if (!scan_date_ctrs()) return false; // fetch the counters
     long   year  = 0;
     size_t month = 0;
     size_t day   = 0;
@@ -596,6 +600,7 @@ void Parser::prev_date() {
     date_ns::check_date(year, month, day);
     date_ns::prev_date(year, month, day);
     set_date_ctrs(year, month, day);
+    return true;
 }
 
 void Parser::is_date_valid() {

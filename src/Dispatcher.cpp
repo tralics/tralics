@@ -126,7 +126,7 @@ void Dispatcher::boot() {
     register_action_plain(change_element_name_cmd, &Parser::T_change_element_name);
     register_action_plain(char_given_cmd, [](subtypes c) { the_parser.extended_chars(size_t(c)); });
     register_action_plain(char_num_cmd, [] { the_parser.extended_chars(the_parser.scan_27bit_int()); });
-    register_action_plain(check_date_cmd, &Parser::date_commands);
+    register_action(check_date_cmd, &Parser::date_commands);
     register_action_plain(citation_cmd, [] { the_parser.T_citation(), the_stack.add_nl(); });
     register_action_plain(cite_cmd, &Parser::T_cite);
     register_action_plain(cite_one_cmd, &Parser::T_cite_one);
