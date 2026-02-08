@@ -2556,15 +2556,17 @@ void Parser::T_end_tabular(subtypes c) {
 }
 
 //
-void Parser::T_endv() {
+auto Parser::T_endv() -> bool {
     if (the_stack.is_frame("cell")) {
         flush_buffer();
         the_stack.finish_cell(-1);
         the_stack.push_pop_cell(pop_only);
-        if (!pop_level(bt_cell)) throw EndOfData();
+        if (!pop_level(bt_cell)) return false;
         start_a_cell(false);
+        return true;
     } else
         parse_error("Bad endv token");
+    return true;
 }
 
 // This is done when we see a \\.

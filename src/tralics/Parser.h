@@ -753,7 +753,7 @@ struct Parser {
     void               T_end_theorem();
     [[nodiscard]] auto T_end(const std::string &s) -> bool;
     void               T_enddocument(subtypes c);
-    void               T_endv();
+    auto               T_endv() -> bool;
     void               T_epsfbox();
     void               T_error();
     void               T_etex();

@@ -173,7 +173,9 @@ void Dispatcher::boot() {
     register_action_plain(end_thebibliography_cmd, &Parser::T_end_the_biblio);
     register_action_plain(end_xmlelement_env_cmd, &Parser::T_xmlenv_end);
     register_action_plain(endcsname_cmd, [] { the_parser.parse_error("Extra \\endcsname"); });
-    register_action_plain(endv_cmd, &Parser::T_endv);
+    register_action_plain(endv_cmd, [] {
+        if (!the_parser.T_endv()) throw EndOfData();
+    });
     register_action_plain(enumerate_cmd, &Parser::T_listenv);
     register_action_plain(eof_marker_cmd, [] {});
     register_action_plain(epsfbox_cmd, &Parser::T_epsfbox);
