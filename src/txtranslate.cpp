@@ -1442,7 +1442,7 @@ auto Parser::T_hanl_url() -> Xml * {
 
 // Translates \href or \htmladdnormallink
 // c is 0 for \htmladdnormallink, 2 for \href
-void Parser::T_hanl(subtypes c) {
+auto Parser::T_hanl(subtypes c) -> bool {
     leave_v_mode();
     the_stack.push(the_names["hanl"], nullptr);
     the_stack.hack_for_hanl();
@@ -1451,12 +1451,12 @@ void Parser::T_hanl(subtypes c) {
     if (c == 2) {
         B   = T_hanl_url();
         auto text = T_hanl_text();
-        if (!text) throw EndOfData();
+        if (!text) return false;
         val = *text;
     } else {
         ignore_optarg();
         auto text = T_hanl_text();
-        if (!text) throw EndOfData();
+        if (!text) return false;
         val = *text;
         B   = T_hanl_url();
     }
@@ -1468,6 +1468,7 @@ void Parser::T_hanl(subtypes c) {
     if (unexpected_seen_hi && failed)
         spdlog::warn("you should perhaps use \\Href{{\\url{{x}}}}{{y}}\n  instead of \\Href{{y}}{{\\url{{x}}}}");
     new_xref(val, b, !failed);
+    return true;
 }
 
 // This should work, whatever the mode...

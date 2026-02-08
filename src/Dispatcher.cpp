@@ -208,7 +208,9 @@ void Dispatcher::boot() {
     register_action_plain(gloss_cmd, [](subtypes c) { the_parser.T_gloss(c == 0); });
     register_action_plain(glossaire_cmd, &Parser::T_glossaire);
     register_action_plain(grabenv_cmd, &Parser::T_grabenv);
-    register_action_plain(hanl_cmd, &Parser::T_hanl);
+    register_action_plain(hanl_cmd, [](subtypes c) {
+        if (!the_parser.T_hanl(c)) throw EndOfData();
+    });
     register_action_plain(hfill_cmd, [](subtypes c) { the_parser.leave_v_mode(), the_stack.add_newid0(hfill_to_np(c)); });
     register_action_plain(hline_cmd, [](subtypes c) { the_parser.T_hline(c); });
     register_action_plain(hspace_cmd, &Parser::T_hspace);

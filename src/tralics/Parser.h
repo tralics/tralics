@@ -773,7 +773,7 @@ struct Parser {
     void               T_glossaire_end();
     void               T_glossaire();
     void               T_grabenv();
-    void               T_hanl(subtypes c);
+    bool               T_hanl(subtypes c);
     void               T_hline(subtypes c);
     void               T_hspace(subtypes c);
     void               T_if_package_later(bool c);
