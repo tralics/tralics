@@ -626,7 +626,7 @@ struct Parser {
     void               out_warning(Buffer &B, msg_type what);
     void               parshape_aux(subtypes m);
     void               pass_text(Token Tfe);
-    void               pop_all_levels();
+    bool               pop_all_levels();
     void               pop_input_stack(bool vb);
     auto               pop_level(boundary_type v) -> bool;
     void               prefix_error(bool b_global, symcodes K);

@@ -343,9 +343,9 @@ auto Parser::pop_level(boundary_type v) -> bool {
 }
 
 // Signals error for unclosed environments and braces
-void Parser::pop_all_levels() {
+auto Parser::pop_all_levels() -> bool {
     cur_tok.kill();
-    if (!pop_level(bt_env)) throw EndOfData(); // pop the end document
+    if (!pop_level(bt_env)) return false; // pop the end document
     bool        started = false;
     std::string ename;
     Buffer &    B = err_buf;
@@ -378,6 +378,7 @@ void Parser::pop_all_levels() {
         out_warning(B, mt_none); // insert a warning in the XML if desired
     }
     push_level(bt_env);
+    return true;
 }
 
 // This is done when all is finished.

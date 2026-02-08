@@ -285,7 +285,9 @@ void Dispatcher::boot() {
     register_action_plain(par_cmd, &Parser::T_par1);
     register_action_plain(pass_options_cmd, [](subtypes c) { the_parser.T_pass_options(c == 0); });
     register_action_plain(picture_env_cmd, &Parser::T_picture);
-    register_action_plain(pop_stack_cmd, &Parser::pop_all_levels);
+    register_action_plain(pop_stack_cmd, [] {
+        if (!the_parser.pop_all_levels()) throw EndOfData();
+    });
     register_action_plain(popmodule_cmd, [] { the_stack.end_module(); });
     register_action_plain(prefix_cmd, &Parser::M_prefixed);
     register_action_plain(process_options_cmd, &Parser::T_process_options);
