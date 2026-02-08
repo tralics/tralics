@@ -580,7 +580,7 @@ struct Parser {
     void               M_newif_aux(Token T, const std::string &s, bool b);
     void               M_newif();
     void               M_prefixed_aux(bool gbl);
-    void               M_prefixed();
+    [[nodiscard]] bool M_prefixed();
     void               M_shorthand_define(subtypes cmd, bool gbl);
     void               M_shortverb(subtypes x);
     void               M_xray(subtypes c);

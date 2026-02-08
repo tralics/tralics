@@ -4086,7 +4086,7 @@ void Parser::E_useverb() {
 
 // Code of \long, \def, etc.  Handles \globaldefs
 // This is called an assignment, so \afterassignment is completed here
-void Parser::M_prefixed() {
+auto Parser::M_prefixed() -> bool {
     unsigned flags = 0;
     while (cur_cmd_chr.cmd == prefix_cmd) {
         flags |= cur_cmd_chr.chr;
@@ -4102,7 +4102,7 @@ void Parser::M_prefixed() {
     if (C <= max_non_prefixed_command) {
         if (b_global || (flags != 0)) prefix_error(b_global, K);
         if (cur_tok.is_valid()) back_input(); // case of prefix at end of list
-        return;
+        return true;
     }
     if (C != def_cmd && (flags != 0)) prefix_error(b_global, K);
     // look at \globaldefs
@@ -4118,7 +4118,7 @@ void Parser::M_prefixed() {
     if (C == let_cmd)
         M_let(cur_cmd_chr.chr, b_global);
     else if (C == def_cmd) {
-        if (!define_something(cur_cmd_chr.chr, b_global, K)) throw EndOfData();
+        if (!define_something(cur_cmd_chr.chr, b_global, K)) return false;
     } else
         M_prefixed_aux(b_global);
     Token aat = get_after_ass_tok();
@@ -4126,4 +4126,5 @@ void Parser::M_prefixed() {
         back_input(aat);
         if (tracing_commands()) spdlog::trace("{{after assignment: {}}}", fmt::streamed(aat));
     }
+    return true;
 }
