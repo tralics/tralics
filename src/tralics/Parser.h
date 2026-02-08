@@ -348,7 +348,7 @@ struct Parser {
     auto               sT_translate(TokenList &L) -> std::string;
     auto               start_scan_math(Math &u, subtypes type) -> bool;
     auto               string_to_write(long chan) -> std::string;
-    auto               T_hanl_text() -> Xml *;
+    auto               T_hanl_text() -> std::optional<Xml *>;
     auto               T_hanl_url() -> Xml *;
     auto               T_hline_parse(subtypes c) -> int;
     auto               T_ifthenelse_inner(Token T) -> bool;

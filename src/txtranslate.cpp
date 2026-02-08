@@ -1425,10 +1425,10 @@ void Parser::T_url() {
 
 // Grabs the text of the URL. This does nothing special with ~.
 // Argument is translated in a group.
-auto Parser::T_hanl_text() -> Xml * {
+auto Parser::T_hanl_text() -> std::optional<Xml *> {
     push_level(bt_local);
     Xml *val = xT_arg_nopar();
-    if (!pop_level(bt_local)) throw EndOfData();
+    if (!pop_level(bt_local)) return std::nullopt;
     return val;
 }
 
@@ -1450,10 +1450,14 @@ void Parser::T_hanl(subtypes c) {
     Xml *val{nullptr};
     if (c == 2) {
         B   = T_hanl_url();
-        val = T_hanl_text();
+        auto text = T_hanl_text();
+        if (!text) throw EndOfData();
+        val = *text;
     } else {
         ignore_optarg();
-        val = T_hanl_text();
+        auto text = T_hanl_text();
+        if (!text) throw EndOfData();
+        val = *text;
         B   = T_hanl_url();
     }
     the_stack.pop(the_names["hanl"]);
