@@ -863,8 +863,8 @@ struct Parser {
     void               T_usefont();
     void               T_usepackage();
     void               T_verb(char32_t t);
-    void               T_verbatim();
-    void               T_verbatim(int my_number, Token style, Token pre, Token post);
+    bool               T_verbatim();
+    bool               T_verbatim(int my_number, Token style, Token pre, Token post);
     void               T_whiledo();
     void               T_xfancy();
     void               T_xkv_for(subtypes c);

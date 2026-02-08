@@ -361,7 +361,9 @@ void Dispatcher::boot() {
     register_action_plain(usecounter_cmd, &Parser::T_use_counter);
     register_action_plain(usefont_cmd, &Parser::T_usefont);
     register_action_plain(verb_cmd, [](subtypes c) { the_parser.T_verb(c != 0U ? the_parser.verb_saved_char : char32_t(0U)); });
-    register_action_plain(verbatim_env_cmd, &Parser::T_verbatim);
+    register_action_plain(verbatim_env_cmd, [] {
+        if (!the_parser.T_verbatim()) throw EndOfData();
+    });
     register_action_plain(vfill_cmd, [](subtypes c) { the_parser.leave_h_mode(), the_stack.add_newid0(vfill_to_np(c)); });
     register_action_plain(whiledo_cmd, &Parser::T_whiledo);
     register_action_plain(xfancy_cmd, &Parser::T_xfancy);

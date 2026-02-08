@@ -657,7 +657,7 @@ auto Parser::vb_tokens(char32_t test, TokenList &L, bool before) -> bool {
 
 // Case of \begin{verbatim} and variants.
 // Locally sets \endlinechar to CR, and reads each line via vb_tokens
-void Parser::T_verbatim(int my_number, Token style, Token pre, Token post) {
+auto Parser::T_verbatim(int my_number, Token style, Token pre, Token post) -> bool {
     TokenList res;
     kill_line();
     Token par                            = hash_table.par_token;
@@ -697,7 +697,7 @@ void Parser::T_verbatim(int my_number, Token style, Token pre, Token post) {
     eqtb_int_table[endlinechar_code].val = cc; // restore
     // pop save stack
     cur_tok.kill();
-    if (!pop_level(bt_env)) throw EndOfData();
+    if (!pop_level(bt_env)) return false;
     if (style != hash_table.relax_token) res.push_front(style);
     if (pre != hash_table.relax_token) res.push_front(pre);
     if (post != hash_table.relax_token) res.push_back(post);
@@ -708,12 +708,13 @@ void Parser::T_verbatim(int my_number, Token style, Token pre, Token post) {
     }
     if (tracing_commands()) spdlog::trace("{{Verbatim tokens: {}}}", fmt::streamed(res));
     back_input(res);
+    return true;
 }
 
 // Caller of the previous. There could be an optional argument, a list to be
 // interpreted. Needs to be completed.
 
-void Parser::T_verbatim() {
+auto Parser::T_verbatim() -> bool {
     bool extended = cur_cmd_chr.chr == one_code;
     bool noparse  = cur_cmd_chr.chr == two_code;
     bool optional = false;
@@ -743,8 +744,7 @@ void Parser::T_verbatim() {
         Token t2 = hash_table.locate("FV@style@lst");
         Token t3 = hash_table.locate("FV@pre@lst");
         Token t4 = hash_table.locate("FV@post@lst");
-        T_verbatim(-1, t2, t3, t4);
-        return;
+        return T_verbatim(-1, t2, t3, t4);
     }
     TokenList lopt = get_mac_value(hook);
     largs.push_back(hash_table.comma_token);
@@ -784,7 +784,7 @@ void Parser::T_verbatim() {
     if (!w2.empty()) t2 = hash_table.locate("FV@style@" + w2);
     if (!w3.empty()) t3 = hash_table.locate("FV@pre@" + w3);
     if (!w3.empty()) t4 = hash_table.locate("FV@post@" + w3);
-    T_verbatim(reg_number, t2, t3, t4);
+    return T_verbatim(reg_number, t2, t3, t4);
 }
 
 // Still incomplete
