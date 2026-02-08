@@ -1049,11 +1049,13 @@ auto Parser::scan_math(size_t res, math_list_type type) -> bool {
                     subtypes       k  = math_data.find_math_location(cc, nomathenv_code, "");
                     CmdChr         W  = CmdChr(special_math_cmd, k);
                     math_data.set_type(k, cc);
-                    subtypes r1 = math_argument(0, ct); // should be s
-                    subtypes r2 = math_argument(0, ct); // should be a
+                    auto r1 = math_argument(0, ct); // should be s
+                    if (!r1) return false;
+                    auto r2 = math_argument(0, ct); // should be a
+                    if (!r2) return false;
                     Math &   u  = math_data.get_list(k);
-                    u.push_back_list(r1, math_argument_cd);
-                    u.push_back_list(r2, math_argument_cd);
+                    u.push_back_list(*r1, math_argument_cd);
+                    u.push_back_list(*r2, math_argument_cd);
                     math_data.push_back(res, W, subtypes(u.get_type()));
                 } else {
                     cmi.tag = s;
@@ -1098,8 +1100,12 @@ auto Parser::scan_math(size_t res, math_list_type type) -> bool {
             parse_error("Unexpected \\right");
             continue;
         }
-        case special_math_cmd: interpret_math_cmd(res, c); continue;
-        case multicolumn_cmd: interpret_math_cmd(res, multicolumn_code); continue;
+        case special_math_cmd:
+            if (!interpret_math_cmd(res, c)) return false;
+            continue;
+        case multicolumn_cmd:
+            if (!interpret_math_cmd(res, multicolumn_code)) return false;
+            continue;
         case make_box_cmd:
             if (c == hbox_code) {
                 if (!scan_math_hbox(res, hbox_S_code)) return false;
@@ -1518,7 +1524,7 @@ auto Parser::scan_hbox(size_t ptr, subtypes c) -> bool {
 // case w=1 or w = 3: scans a relax
 // Same command with relax hacking
 // Changes in 2.10.9: always create a scope
-auto Parser::math_argument(int w, Token t) -> subtypes {
+auto Parser::math_argument(int w, Token t) -> std::optional<subtypes> {
     Token xfct_caller = fct_caller;
     fct_caller        = t;
     if ((w & 1) != 0) {
@@ -1530,8 +1536,8 @@ auto Parser::math_argument(int w, Token t) -> subtypes {
     subtypes k   = math_data.find_math_location(math_argument_cd, nomathenv_code, "");
     auto     aux = bt_brace;
     push_level(aux);
-    if (!scan_math(k, math_argument_cd)) throw EndOfData();
-    if (!pop_level(aux)) throw EndOfData();
+    if (!scan_math(k, math_argument_cd)) return std::nullopt;
+    if (!pop_level(aux)) return std::nullopt;
     fct_caller = xfct_caller;
     return k;
 }
@@ -1552,7 +1558,7 @@ auto Parser::scan_style() -> Token {
 
 // This parses something like
 // \genfrac (){0pt}3{foo}{bar}
-void Parser::interpret_genfrac_cmd(size_t res, subtypes k, CmdChr W) {
+auto Parser::interpret_genfrac_cmd(size_t res, subtypes k, CmdChr W) -> bool {
     Token     ct = cur_tok;
     del_pos   k1{}, k2{};
     TokenList L1 = read_arg();
@@ -1581,8 +1587,10 @@ void Parser::interpret_genfrac_cmd(size_t res, subtypes k, CmdChr W) {
     }
     Token m = scan_style();
     add_to_trace(m);
-    subtypes r1 = math_argument(0, ct);
-    subtypes r2 = math_argument(0, ct);
+    auto r1 = math_argument(0, ct);
+    if (!r1) return false;
+    auto r2 = math_argument(0, ct);
+    if (!r2) return false;
     Math &   u  = math_data.get_list(k);
     u.push_back(CmdChr(left_cmd, subtypes(k1)), zero_code);
     u.push_back(CmdChr(right_cmd, subtypes(k2)), zero_code);
@@ -1591,13 +1599,14 @@ void Parser::interpret_genfrac_cmd(size_t res, subtypes k, CmdChr W) {
     token_from_list(m);
     cur_tok = m;
     u.push_back(cur_cmd_chr, subtypes(cur_tok.val));
-    u.push_back_list(r1, math_argument_cd);
-    u.push_back_list(r2, math_argument_cd);
+    u.push_back_list(*r1, math_argument_cd);
+    u.push_back_list(*r2, math_argument_cd);
     math_data.push_back(res, W, subtypes(u.get_type()));
+    return true;
 }
 
 // Handles \mathmi[foo][bar][a][b]{etc} and friends
-void Parser::scan_math_mi(size_t res, subtypes c, subtypes k, CmdChr W) {
+auto Parser::scan_math_mi(size_t res, subtypes c, subtypes k, CmdChr W) -> bool {
     Token       ct = cur_tok;
     std::string s;
     if (c == mathbox_code) {
@@ -1611,34 +1620,42 @@ void Parser::scan_math_mi(size_t res, subtypes c, subtypes k, CmdChr W) {
         auto L = read_optarg_nopar().value_or(TokenList{});
         L.brace_me();
         back_input(L);
-        subtypes r1 = math_argument(0, ct);
-        T.emplace_back(CmdChr(math_list_cmd, r1), subtypes(math_argument_cd));
+        auto r1 = math_argument(0, ct);
+        if (!r1) return false;
+        T.emplace_back(CmdChr(math_list_cmd, *r1), subtypes(math_argument_cd));
     }
     auto n      = T.size();
     n           = n / 2;
     n           = n + n; // Ignore last if odd
-    subtypes r1 = math_argument(0, ct);
+    auto r1 = math_argument(0, ct);
+    if (!r1) return false;
     Math &   u  = math_data.get_list(k);
     // \todo this is weird, store a string instead of a type
     if (c == mathbox_code) u.saved = s;
-    u.push_back_list(r1, math_argument_cd);
+    u.push_back_list(*r1, math_argument_cd);
     for (size_t i = 0; i < n; i++) u.push_back(T[i]);
     math_data.push_back(res, W, subtypes(u.get_type()));
+    return true;
 }
 
 // Case of \mathchoice{}{}{}{}
-void Parser::interpret_mathchoice_cmd(size_t res, subtypes k, CmdChr W) {
+auto Parser::interpret_mathchoice_cmd(size_t res, subtypes k, CmdChr W) -> bool {
     Token    ct = cur_tok;
-    subtypes r1 = math_argument(1, ct);
-    subtypes r2 = math_argument(1, ct);
-    subtypes r3 = math_argument(1, ct);
-    subtypes r4 = math_argument(1, ct);
+    auto r1 = math_argument(1, ct);
+    if (!r1) return false;
+    auto r2 = math_argument(1, ct);
+    if (!r2) return false;
+    auto r3 = math_argument(1, ct);
+    if (!r3) return false;
+    auto r4 = math_argument(1, ct);
+    if (!r4) return false;
     Math &   u  = math_data.get_list(k);
-    u.push_back_list(r1, math_argument_cd);
-    u.push_back_list(r2, math_argument_cd);
-    u.push_back_list(r3, math_argument_cd);
-    u.push_back_list(r4, math_argument_cd);
+    u.push_back_list(*r1, math_argument_cd);
+    u.push_back_list(*r2, math_argument_cd);
+    u.push_back_list(*r3, math_argument_cd);
+    u.push_back_list(*r4, math_argument_cd);
     math_data.push_back(res, W, subtypes(u.get_type()));
+    return true;
 }
 
 // This replaces [foo] by {foo}
@@ -1649,13 +1666,13 @@ void Parser::opt_to_mandatory() {
 }
 
 // Scans a command with some arguments.
-void Parser::interpret_math_cmd(size_t res, subtypes c) {
+auto Parser::interpret_math_cmd(size_t res, subtypes c) -> bool {
     Token    ct = cur_tok;
     subtypes k  = math_data.find_math_location(sub_to_math(c), nomathenv_code, "");
     CmdChr   W  = CmdChr(special_math_cmd, k);
     switch (c) {
-    case genfrac_code: interpret_genfrac_cmd(res, k, W); return;
-    case mathchoice_code: interpret_mathchoice_cmd(res, k, W); return;
+    case genfrac_code: return interpret_genfrac_cmd(res, k, W);
+    case mathchoice_code: return interpret_mathchoice_cmd(res, k, W);
     case sqrt_code:
         remove_initial_space_and_back_input();
         if (cur_tok.is_open_bracket()) {
@@ -1675,7 +1692,7 @@ void Parser::interpret_math_cmd(size_t res, subtypes c) {
     case mathcn_code:
     case mathcsymbol_code:
     case multiscripts_code:
-    case mathbox_code: scan_math_mi(res, c, k, W); return;
+    case mathbox_code: return scan_math_mi(res, c, k, W);
     case operatorname_code:
         if (remove_initial_star()) c = operatornamestar_code;
         break;
@@ -1686,21 +1703,35 @@ void Parser::interpret_math_cmd(size_t res, subtypes c) {
     // int first_spec = is_math_accent?1:0;
     // if(c==sqrt_code) first_spec = 1;
     //  subtypes r1 = math_argument(first_spec,ct);
-    subtypes r1 = math_argument(0, ct);
+    auto r1 = math_argument(0, ct);
+    if (!r1) return false;
     subtypes r2 = zero_code;
     subtypes r3 = zero_code;
     if (c == cfrac_code || c == qopname_code || c == multicolumn_code) {
-        r2 = math_argument(0, ct);
-        r3 = math_argument(0, ct);
+        auto r2_opt = math_argument(0, ct);
+        if (!r2_opt) return false;
+        r2 = *r2_opt;
+        auto r3_opt = math_argument(0, ct);
+        if (!r3_opt) return false;
+        r3 = *r3_opt;
     } else if (c <= last_marg_code || c > last_maccent_code)
-        r2 = math_argument(0, ct);
+    {
+        auto r2_opt = math_argument(0, ct);
+        if (!r2_opt) return false;
+        r2 = *r2_opt;
+    }
     else if (c == xleftarrow_code || c == xrightarrow_code || c == smash_code)
-        r2 = math_argument(0, ct);
+    {
+        auto r2_opt = math_argument(0, ct);
+        if (!r2_opt) return false;
+        r2 = *r2_opt;
+    }
     Math &u = math_data.get_list(k);
-    u.push_back_list(r1, math_argument_cd);
+    u.push_back_list(*r1, math_argument_cd);
     if (r2 != 0U) u.push_back_list(r2, math_argument_cd);
     if (r3 != 0U) u.push_back_list(r3, math_argument_cd);
     math_data.push_back(res, W, subtypes(u.get_type()));
+    return true;
 }
 
 // --------------------------

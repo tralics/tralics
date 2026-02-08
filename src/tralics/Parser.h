@@ -267,7 +267,7 @@ struct Parser {
     auto               latex_input(subtypes q) -> std::string;
     auto               M_counter(bool def) -> std::optional<bool>;
     auto               make_label_inner(const std::string &name) -> std::string;
-    auto               math_argument(int w, Token T) -> subtypes;
+    auto               math_argument(int w, Token T) -> std::optional<subtypes>;
     auto               math_dimen_attrib(Token C, String s) -> int;
     auto               math_lr_value() -> del_pos;
     auto               my_csname(String s1, String s2, TokenList &L, String s) -> bool;
@@ -545,9 +545,9 @@ struct Parser {
     void               insert_every_bib();
     void               insert_hook(long n);
     void               insert_relax();
-    void               interpret_genfrac_cmd(size_t res, subtypes k, CmdChr W);
-    void               interpret_math_cmd(size_t res, subtypes c);
-    void               interpret_mathchoice_cmd(size_t res, subtypes k, CmdChr W);
+    bool               interpret_genfrac_cmd(size_t res, subtypes k, CmdChr W);
+    bool               interpret_math_cmd(size_t res, subtypes c);
+    bool               interpret_mathchoice_cmd(size_t res, subtypes k, CmdChr W);
     void               invalid_key(Token T, const std::string &key, const TokenList &val);
     void               is_date_valid();
     void               kvo_bool_key();
@@ -671,7 +671,7 @@ struct Parser {
     void               scan_left_brace();
     auto               scan_math_endcell_ok(size_t res) -> bool;
     auto               scan_math_hbox(size_t res, subtypes c) -> bool;
-    void               scan_math_mi(size_t res, subtypes c, subtypes k, CmdChr W);
+    bool               scan_math_mi(size_t res, subtypes c, subtypes k, CmdChr W);
     void               scan_math_rel(subtypes c, size_t res);
     void               scan_math_tag(subtypes c);
     auto               scan_math(size_t res, math_list_type type) -> bool;
