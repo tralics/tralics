@@ -878,13 +878,13 @@ void Parser::T_saveverb() {
 // we make sure that reading is not from a token list
 // Ignores everything, until end of environment.
 // or take it verbatim
-auto Parser::T_raw_env(bool want_result) -> std::string {
+auto Parser::T_raw_env(bool want_result) -> std::optional<std::string> {
     kill_line();
     if (!TL.empty()) {
         parse_error(err_tok, "Verbatim-like environment in argument : ", get_cur_env_name(), "Verbatim-like environment in argument");
         cur_tok.kill();
-        if (!pop_level(bt_env)) throw EndOfData();
-        return "";
+        if (!pop_level(bt_env)) return std::nullopt;
+        return std::string();
     }
     mac_buffer.clear();
     int cl = get_cur_line();
@@ -901,8 +901,9 @@ auto Parser::T_raw_env(bool want_result) -> std::string {
         kill_line();
     }
     cur_tok.kill();
-    if (!pop_level(bt_env)) throw EndOfData();
-    return want_result ? static_cast<std::string>(mac_buffer) : "";
+    if (!pop_level(bt_env)) return std::nullopt;
+    if (!want_result) return std::string();
+    return static_cast<std::string>(mac_buffer);
 }
 
 // --------------------------------------------------

@@ -355,7 +355,7 @@ struct Parser {
     auto               T_ifthenelse(TokenList &A) -> bool;
     auto               T_item_label(unsigned c) -> std::string;
     auto               T_optarg_nopar() -> std::string;
-    auto               T_raw_env(bool want_result) -> std::string;
+    auto               T_raw_env(bool want_result) -> std::optional<std::string>;
     auto               T_xmllatex() -> std::string;
     auto               to_stringE(TokenList &L) -> std::string;
     auto               token_list_to_att(TokenList &a, Token C, bool spec) -> std::string;

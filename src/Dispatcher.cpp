@@ -225,7 +225,9 @@ void Dispatcher::boot() {
     register_action_plain(ifnextchar_cmd, [](subtypes c) { the_parser.T_ifnextchar(c == 0); });
     register_action_plain(ifstar_cmd, &Parser::T_ifstar);
     register_action_plain(ifthenelse_cmd, &Parser::T_ifthenelse);
-    register_action_plain(ignore_content_cmd, [] { the_parser.T_raw_env(false); });
+    register_action_plain(ignore_content_cmd, [] {
+        if (!the_parser.T_raw_env(false)) throw EndOfData();
+    });
     register_action_plain(ignore_env_cmd, [] {});
     register_action_plain(ignore_two_argument_cmd, [] { the_parser.ignore_arg(), the_parser.ignore_arg(); });
     register_action_plain(ignoreA_cmd, [] { the_parser.T_ignoreA(); });
@@ -302,7 +304,11 @@ void Dispatcher::boot() {
     register_action_plain(provides_package_cmd, [](subtypes c) { the_parser.T_provides_package(c == 0); });
     register_action_plain(pushmodule_cmd, &Parser::push_module);
     register_action_plain(put_cmd, &Parser::T_put);
-    register_action_plain(raw_env_cmd, [] { the_stack.add_last(new Xml(std::string(the_parser.T_raw_env(true)))); });
+    register_action_plain(raw_env_cmd, [] {
+        auto res = the_parser.T_raw_env(true);
+        if (!res) throw EndOfData();
+        the_stack.add_last(new Xml(std::string(*res)));
+    });
     register_action_plain(read_to_cs_cmd, &Parser::M_prefixed);
     register_action_plain(reevaluate_cmd, &Parser::T_reevaluate);
     register_action_plain(ref_cmd, [](subtypes c) { the_parser.leave_v_mode(), the_parser.T_ref(c == 0); });
