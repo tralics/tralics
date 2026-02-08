@@ -1653,5 +1653,5 @@ void Parser::L3_load(bool preload) {
     }
     push_input_stack("latex3 code", false, true);
     init(L);
-    if (preload) translate0();
+    if (preload && !translate0()) throw EndOfData();
 }

@@ -1577,7 +1577,7 @@ void Parser::load_latex() {
     if (!the_parser.everyjob_string.empty()) L.insert(the_parser.everyjob_string, true); // is this converted ?
     L.insert("%% End bootstrap commands for latex");
     init(L);
-    translate0();
+    if (!translate0()) throw EndOfData();
 
     eqtb_int_table[uchar('@')].val = 12; // this is \makeatother
     TokenList ejob                 = toks_registers[everyjob_code].val;
@@ -1980,7 +1980,7 @@ void Parser::after_main_text() {
         the_stack.push1(the_names["biblio"]);
         AttList &L = the_stack.get_att_list(3);
         the_stack.cur_xid().add_attribute(L, true);
-        translate0();
+        if (!translate0()) throw EndOfData();
         the_stack.pop(the_names["biblio"]);
         the_stack.pop(the_names["argument"]);
         the_stack.document_element()->insert_bib(res, the_bibliography.location);

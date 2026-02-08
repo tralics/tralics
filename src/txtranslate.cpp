@@ -96,9 +96,10 @@ auto Parser::translate_all() -> bool {
 // Same, with a test that unprocessed_xml is empty
 // In general, the loop in translate_all will stop because
 // restricted is true, and token list is exhausted
-void Parser::translate0() {
+auto Parser::translate0() -> bool {
     if (!unprocessed_xml.empty()) missing_flush();
-    if (!translate_all()) throw EndOfData();
+    if (!translate_all()) return false;
+    return true;
 }
 
 // Main function: translates a token list.
