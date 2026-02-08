@@ -177,7 +177,7 @@ struct Parser {
     auto fp_read_value() -> FpNum;
     void fp_send_one_arg(TokenList &res);
     void init_all(const std::string &doc_elt);
-    void load_latex();
+    bool load_latex();
     auto read_arg() -> TokenList;
     auto read_arg_nopar() -> TokenList;
     auto nct_aux(Token T, TokenList &body) -> std::optional<size_t>;
@@ -413,7 +413,7 @@ struct Parser {
     void               check_outer_validity();
     void               close_all();
     bool               count_days();
-    void               counter_boot(const std::string &s, String aux);
+    bool               counter_boot(const std::string &s, String aux);
     void               counter_overflow(Token T, long n, int nmax);
     void               csname_arg();
     bool               date_commands(subtypes c);

@@ -887,7 +887,7 @@ void MainClass::trans0() {
     if (dualmath) the_parser.word_define(nomath_code, -3, false);
     the_parser.word_define(notrivialmath_code, trivial_math, false);
     if (verbose) the_parser.M_tracingall();
-    the_parser.load_latex();
+    if (!the_parser.load_latex()) throw EndOfData();
     if (load_l3 && !the_parser.L3_load(true)) throw EndOfData();
     Titlepage.start_thing(verbose);
 }

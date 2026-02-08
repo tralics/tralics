@@ -1149,7 +1149,7 @@ void Parser::boot_uclc() {
 // This function is called after all primitives are constructed.
 // We add some new macros.
 
-void Parser::load_latex() {
+auto Parser::load_latex() -> bool {
     make_uclc_table();
     TokenList body;
     new_prim("@empty", body);
@@ -1372,43 +1372,44 @@ void Parser::load_latex() {
     new_constant(newlength_code);
     // commands like \newcounter\foo
     shorthand_gdefine(count_def_code, "m@ne", 20);
-    counter_boot("FancyVerbLine", ""); // hard-coded 21
-    counter_boot("enumi", "");
-    counter_boot("enumii", "");
-    counter_boot("enumiii", "");
-    counter_boot("enumiv", "");
-    counter_boot("enumv", "");
-    counter_boot("enumvi", "");
-    counter_boot("enumvii", "");
-    counter_boot("enumviii", "");
-    counter_boot("enumix", "");
-    counter_boot("enumx", "");
-    counter_boot("Enumi", "");
-    counter_boot("Enumii", "");
-    counter_boot("Enumiii", "");
-    counter_boot("Enumiv", "");
-    counter_boot("Enumv", "");
-    counter_boot("Enumvi", "");
-    counter_boot("Enumvii", "");
-    counter_boot("Enumviii", "");
-    counter_boot("Enumix", "");
-    counter_boot("Enumx", "");
-    counter_boot("tocdepth", ""); // This is 42 ...
-    counter_boot("footnote", "");
-    counter_boot("part", "");
-    counter_boot("chapter", "");
-    counter_boot("section", "chapter");
-    counter_boot("subsection", "section");
-    counter_boot("subsubsection", "subsection");
-    counter_boot("paragraph", "subsubsection");
-    counter_boot("subparagraph", "paragraph");
-    counter_boot("mpfootnote", "");
-    counter_boot("table", "");
-    counter_boot("figure", "");
-    counter_boot("subfigure", "figure");
-    counter_boot("equation", "");
+    auto add_counter = [this](const std::string &name, String aux) { return counter_boot(name, aux); };
+    if (!add_counter("FancyVerbLine", "")) return false; // hard-coded 21
+    if (!add_counter("enumi", "")) return false;
+    if (!add_counter("enumii", "")) return false;
+    if (!add_counter("enumiii", "")) return false;
+    if (!add_counter("enumiv", "")) return false;
+    if (!add_counter("enumv", "")) return false;
+    if (!add_counter("enumvi", "")) return false;
+    if (!add_counter("enumvii", "")) return false;
+    if (!add_counter("enumviii", "")) return false;
+    if (!add_counter("enumix", "")) return false;
+    if (!add_counter("enumx", "")) return false;
+    if (!add_counter("Enumi", "")) return false;
+    if (!add_counter("Enumii", "")) return false;
+    if (!add_counter("Enumiii", "")) return false;
+    if (!add_counter("Enumiv", "")) return false;
+    if (!add_counter("Enumv", "")) return false;
+    if (!add_counter("Enumvi", "")) return false;
+    if (!add_counter("Enumvii", "")) return false;
+    if (!add_counter("Enumviii", "")) return false;
+    if (!add_counter("Enumix", "")) return false;
+    if (!add_counter("Enumx", "")) return false;
+    if (!add_counter("tocdepth", "")) return false; // This is 42 ...
+    if (!add_counter("footnote", "")) return false;
+    if (!add_counter("part", "")) return false;
+    if (!add_counter("chapter", "")) return false;
+    if (!add_counter("section", "chapter")) return false;
+    if (!add_counter("subsection", "section")) return false;
+    if (!add_counter("subsubsection", "subsection")) return false;
+    if (!add_counter("paragraph", "subsubsection")) return false;
+    if (!add_counter("subparagraph", "paragraph")) return false;
+    if (!add_counter("mpfootnote", "")) return false;
+    if (!add_counter("table", "")) return false;
+    if (!add_counter("figure", "")) return false;
+    if (!add_counter("subfigure", "figure")) return false;
+    if (!add_counter("equation", "")) return false;
     equation_ctr_pos = allocation_table[newcount_code] + count_reg_offset;
-    counter_boot("parentequation", "");
+    if (!add_counter("parentequation", "")) return false;
 
     // \newcount
     make_token("c@bottomnumber");
@@ -1577,11 +1578,12 @@ void Parser::load_latex() {
     if (!the_parser.everyjob_string.empty()) L.insert(the_parser.everyjob_string, true); // is this converted ?
     L.insert("%% End bootstrap commands for latex");
     init(L);
-    if (!translate0()) throw EndOfData();
+    if (!translate0()) return false;
 
     eqtb_int_table[uchar('@')].val = 12; // this is \makeatother
     TokenList ejob                 = toks_registers[everyjob_code].val;
     back_input(ejob);
+    return true;
 }
 
 void Parser::more_bootstrap() {

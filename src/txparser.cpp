@@ -1781,14 +1781,15 @@ auto Parser::M_counter(bool def) -> std::optional<bool> {
 }
 
 // Used by the bootstrap phase to define a dependent counter
-void Parser::counter_boot(const std::string &s, String aux) {
+auto Parser::counter_boot(const std::string &s, String aux) -> bool {
     Token   T = hash_table.relax_token;
     Buffer &b = Thbuf2;
     b         = "c@" + s;
-    if (counter_check(b, true)) return; // should not happen
+    if (counter_check(b, true)) return true; // should not happen
     back_input();
     auto res = counter_aux(s, aux, T);
-    if (!res) throw EndOfData();
+    if (!res) return false;
+    return true;
 }
 
 // Given c@foo in the buffer b, creates the token \c@foo
