@@ -150,7 +150,7 @@ struct Parser {
     }
     void set_job_name(std::string s) { job_name = std::move(s); }
     void unexpected_font() { unexpected_seen_hi = true; }
-    void L3_load(bool preload);
+    auto L3_load(bool preload) -> bool;
 
     Parser();
     ~Parser();

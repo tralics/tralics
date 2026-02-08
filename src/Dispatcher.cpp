@@ -250,7 +250,9 @@ void Dispatcher::boot() {
     register_action_plain(list_cmd, &Parser::T_listenv);
     register_action_plain(listfiles_cmd, [] { the_parser.list_files_p = true; });
     register_action_plain(load_with_options_cmd, [](subtypes c) { the_parser.T_load_with_options(c == 0); });
-    register_action_plain(loadlatex3_cmd, [] { the_parser.L3_load(false); });
+    register_action_plain(loadlatex3_cmd, [] {
+        if (!the_parser.L3_load(false)) throw EndOfData();
+    });
     register_action_plain(make_box_cmd, [](subtypes c) { the_parser.begin_box(makebox_location, c); });
     register_action_plain(makeatletter_cmd, [] { the_parser.word_define('@', letter_catcode, false); });
     register_action_plain(makeatother_cmd, [] { the_parser.word_define('@', other_catcode, false); });

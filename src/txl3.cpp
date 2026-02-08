@@ -1572,9 +1572,9 @@ void Parser::E_l3expand_base(subtypes c) {
 }
 
 //
-void Parser::L3_load(bool preload) {
+auto Parser::L3_load(bool preload) -> bool {
     static bool loaded = false;
-    if (loaded) return;
+    if (loaded) return true;
     loaded = true;
     spdlog::trace("Loading latex3...$Date: 2015/11/25 07:38:28 $");
     {
@@ -1653,5 +1653,6 @@ void Parser::L3_load(bool preload) {
     }
     push_input_stack("latex3 code", false, true);
     init(L);
-    if (preload && !translate0()) throw EndOfData();
+    if (preload && !translate0()) return false;
+    return true;
 }
