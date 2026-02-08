@@ -1162,7 +1162,7 @@ void Parser::T_mbox(subtypes c) {
         flush_buffer();
         skip_initial_space_and_back_input();
         if (cur_tok.is_open_paren()) {
-            T_makebox(false, T);
+            if (!T_makebox(false, T)) throw EndOfData();
             return;
         }
         iwidth = get_opt_dim(T);
@@ -1220,7 +1220,7 @@ auto Parser::T_cap_or_note(bool cap) -> bool {
     return true;
 }
 
-void Parser::T_makebox(bool framed, Token C) {
+auto Parser::T_makebox(bool framed, Token C) -> bool {
     std::string A, B;
     T_twodims(A, B, C);
     std::string oarg = sT_optarg_nopar();
@@ -1231,8 +1231,9 @@ void Parser::T_makebox(bool framed, Token C) {
     if (!oarg.empty()) cur[the_names["box_pos"]] = oarg;
     cur[the_names["height"]] = B;
     cur[the_names["width"]]  = A;
-    if (!T_arg_local()) throw EndOfData();
+    if (!T_arg_local()) return false;
     the_stack.pop(the_names["box"]);
+    return true;
 }
 
 // Implements \sbox and \savebox
@@ -1247,7 +1248,7 @@ void Parser::T_save_box(bool simple) {
     //  leave_v_mode();
     flush_buffer();
     if (!simple && cur_tok.is_open_paren()) {
-        T_makebox(false, T);
+        if (!T_makebox(false, T)) throw EndOfData();
     } else {
         std::optional<std::string> ipos;
         std::optional<std::string> iwidth;
@@ -1334,7 +1335,7 @@ void Parser::T_fbox(subtypes cc) {
     if (cc == framebox_code) { // case of \framebox
         skip_initial_space_and_back_input();
         if (cur_tok.is_open_paren()) {
-            T_makebox(true, T);
+            if (!T_makebox(true, T)) throw EndOfData();
             return;
         }
         iwidth = get_opt_dim(T);

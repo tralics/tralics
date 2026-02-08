@@ -796,7 +796,7 @@ struct Parser {
     void               T_listenv_end();
     void               T_listenv(symcodes x);
     void               T_load_with_options(bool c);
-    void               T_makebox(bool framed, Token C);
+    bool               T_makebox(bool framed, Token C);
     void               T_mark(subtypes c);
     auto               T_math(subtypes type) -> bool;
     void               T_matter(subtypes c);
