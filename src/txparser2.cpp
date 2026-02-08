@@ -385,7 +385,7 @@ void Parser::T_ignoreA() {
     flush_buffer();
 }
 
-void Parser::T_line(subtypes c) {
+auto Parser::T_line(subtypes c) -> bool {
     std::string k = "np_center";
     switch (c) {
     case leftline_code: k = "left"; break;
@@ -395,14 +395,15 @@ void Parser::T_line(subtypes c) {
     default:;
     }
     if (c == leftline_code || c == centerline_code || c == rightline_code) {
-        if (the_stack.is_float()) return;
+        if (the_stack.is_float()) return true;
         leave_v_mode();
     }
     the_stack.push1(the_names["lineC"]);
     AttList &cur           = last_att_list();
     cur[the_names["rend"]] = the_names[k];
-    if (!T_arg_local()) throw EndOfData();
+    if (!T_arg_local()) return false;
     the_stack.pop(the_names["lineC"]);
+    return true;
 }
 
 // Implements \typein[\foo]{bar},  or \typein{bar}. In the first case

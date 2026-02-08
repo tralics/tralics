@@ -247,7 +247,9 @@ void Dispatcher::boot() {
     register_action_plain(leave_v_mode_cmd, &Parser::leave_v_mode);
     register_action_plain(let_cmd, &Parser::M_prefixed);
     register_action_plain(letter_catcode, &Parser::translate_char);
-    register_action_plain(line_cmd, &Parser::T_line);
+    register_action_plain(line_cmd, [](subtypes c) {
+        if (!the_parser.T_line(c)) throw EndOfData();
+    });
     register_action_plain(linebreak_cmd, &Parser::ignore_optarg);
     register_action_plain(list_cmd, &Parser::T_listenv);
     register_action_plain(listfiles_cmd, [] { the_parser.list_files_p = true; });

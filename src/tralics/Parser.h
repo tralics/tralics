@@ -791,7 +791,7 @@ struct Parser {
     void               T_item(subtypes c);
     void               T_keywords();
     void               T_label(subtypes c);
-    void               T_line(subtypes c);
+    bool               T_line(subtypes c);
     void               T_linethickness(subtypes c);
     void               T_listenv_end();
     void               T_listenv(symcodes x);
