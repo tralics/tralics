@@ -1968,7 +1968,7 @@ void Parser::T_biblio() {
     }
 }
 
-void Parser::after_main_text() {
+auto Parser::after_main_text() -> bool {
     the_bibliography.stats();
     if (the_bibliography.has_cmd())
         create_aux_file_and_run_pgm();
@@ -1982,7 +1982,7 @@ void Parser::after_main_text() {
         the_stack.push1(the_names["biblio"]);
         AttList &L = the_stack.get_att_list(3);
         the_stack.cur_xid().add_attribute(L, true);
-        if (!translate0()) throw EndOfData();
+        if (!translate0()) return false;
         the_stack.pop(the_names["biblio"]);
         the_stack.pop(the_names["argument"]);
         the_stack.document_element()->insert_bib(res, the_bibliography.location);
@@ -1990,6 +1990,7 @@ void Parser::after_main_text() {
     finish_color();
     finish_index();
     check_all_ids();
+    return true;
 }
 
 // Translation of \end{thebibliography}

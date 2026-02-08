@@ -157,7 +157,7 @@ struct Parser {
 
     void add_buffer_to_document_hook(const Buffer &b, const std::string &name);
     void add_language_att() const;
-    void after_main_text();
+    bool after_main_text();
     void boot();
     void box_end(Xml *res, size_t pos);
     auto list_to_string0(Buffer &b) -> bool;

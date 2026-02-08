@@ -117,7 +117,7 @@ private:
     auto find_document_type() -> bool;                               ///< Massage the output of get_doc_type
     auto find_opt_field(String info) -> bool;
     auto get_a_new_line() -> bool;
-    void after_main_text();
+    bool after_main_text();
     void append_non_eof_line(String, int);
     void bad_mod(int a, std::string b, Buffer &c);
     void boot_bibtex();

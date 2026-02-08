@@ -936,7 +936,7 @@ void MainClass::run(int argc, char **argv) {
     trans0();
     the_parser.init(input_content);
     if (!the_parser.translate_all()) throw EndOfData();
-    the_parser.after_main_text();
+    if (!the_parser.after_main_text()) throw EndOfData();
     if (the_parser.seen_enddocument) the_stack.add_nl();
     the_parser.final_checks();
     if (!no_xml) {
