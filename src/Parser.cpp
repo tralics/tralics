@@ -2011,23 +2011,24 @@ void Parser::T_start_the_biblio() {
 // If the command with the funny name is undefined then translation is
 // <foo>bar</foo>
 // Command has to be in Bib mode, argument translated in Arg mode.
-void Parser::T_cititem() {
+auto Parser::T_cititem() -> bool {
     auto a = fetch_name0_nopar();
     finish_csname("cititem-" + a);
     see_cs_token();
     if (cur_cmd_chr.cmd != relax_cmd) {
         back_input();
-        return;
+        return true;
     }
     mode m = the_stack.get_mode();
     need_bib_mode();
     the_stack.set_arg_mode();
     auto name = std::string(a);
     the_stack.push(name, new Xml(name, nullptr));
-    if (!T_arg()) throw EndOfData();
+    if (!T_arg()) return false;
     the_stack.pop(name);
     the_stack.set_mode(m);
     the_stack.add_nl();
+    return true;
 }
 
 // case of \omitcite{foo}. reads an argument, puts it in the omit mist

@@ -339,15 +339,16 @@ void Parser::arg_font(subtypes c) {
 }
 
 // \textsuperscript, \textsubscript, etc.
-void Parser::T_fonts(const std::string &x) {
+auto Parser::T_fonts(const std::string &x) -> bool {
     leave_v_mode();
     Xml *res = fonts1(x);
     the_stack.push(the_names["fonts"], res);
-    if (!T_arg()) throw EndOfData();
+    if (!T_arg()) return false;
     the_stack.pop(the_names["fonts"]);
+    return true;
 }
 
-void Parser::T_fonts(subtypes c) { T_fonts(list[c]); }
+auto Parser::T_fonts(subtypes c) -> bool { return T_fonts(list[c]); }
 
 // \indent or \noindent. If we are in a <p>,  and the <p> is empty, then we
 // add noindent=true or noindent=false, unless there is already a noindent
@@ -411,7 +412,7 @@ void Parser::T_par1(const std::string &u) {
 
 // User function that adds some element. Is leave_v_mode necessary ?
 // if w generates <foo/> otherwise <foo>...</foo>
-void Parser::T_xmlelt(subtypes w) {
+auto Parser::T_xmlelt(subtypes w) -> bool {
     flush_buffer();
     std::string s   = sT_arg_nopar();
     Xml        *res = new Xml(std::string(s), nullptr);
@@ -419,13 +420,14 @@ void Parser::T_xmlelt(subtypes w) {
         if (w == two_code) res->id = size_t(-1); // XML comment
         flush_buffer();
         the_stack.add_last(res);
-        return;
+        return true;
     }
     leave_v_mode();
     auto name = std::string("xmlelt");
     the_stack.push(name, res);
-    if (!T_arg()) throw EndOfData();
+    if (!T_arg()) return false;
     the_stack.pop(name);
+    return true;
 }
 auto Parser::T_arg1(const std::string &y) -> bool {
     the_stack.push1(y);
@@ -458,7 +460,7 @@ auto Parser::T_item_label(unsigned c) -> std::string {
     bool      opt = cur_tok.is_open_bracket();
     if (opt) L = read_optarg_nopar().value_or(TokenList{});
     std::string list_ctr = the_parser.eqtb_string_table[1].val;
-    if (!list_ctr.empty()) refstepcounter(list_ctr, false);
+    if (!list_ctr.empty()) if (!refstepcounter(list_ctr, false)) throw EndOfData();
     if (!opt) {
         Token t = hash_table.itemlabel_token;
         token_from_list(t);
@@ -480,17 +482,18 @@ auto Parser::T_item_label(unsigned c) -> std::string {
 }
 
 // Case of \glo{item}{some text} inside an glossaire env.
-void Parser::T_glo() {
+auto Parser::T_glo() -> bool {
     leave_h_mode(); // mode should be no_mode now.
     mode w = the_stack.get_mode();
     the_stack.set_arg_mode();
-    if (!T_arg1(the_names["gloitem"])) throw EndOfData();
+    if (!T_arg1(the_names["gloitem"])) return false;
     the_stack.push1(the_names["item"]);
     the_stack.set_v_mode();
-    if (!T_arg()) throw EndOfData();
+    if (!T_arg()) return false;
     leave_h_mode();
     the_stack.pop(the_names["item"]);
     the_stack.set_mode(w);
+    return true;
 }
 
 // Case of \chapter, \section, etc. Here Y is the title, and y the index
@@ -558,7 +561,7 @@ void Parser::T_matter(subtypes c) {
 }
 
 // Translates \section, \chapter, etc.
-void Parser::T_paras(subtypes x) {
+auto Parser::T_paras(subtypes x) -> bool {
     if (x == toplevel_sec_code) {
         TokenList L = read_arg();
         if (!L.empty()) {
@@ -568,7 +571,7 @@ void Parser::T_paras(subtypes x) {
             if (sectionning_offset == chapter_code) Xid(1).add_attribute(the_names["chapters"], the_names["true"]);
             if (sectionning_offset == part_code) Xid(1).add_attribute(the_names["part"], the_names["true"]);
         }
-        return;
+        return true;
     }
     int y = int(x) - int(sectionning_offset);
     if (x == endsec_code) {
@@ -585,31 +588,32 @@ void Parser::T_paras(subtypes x) {
     leave_h_mode();
     the_stack.para_aux(y); // this pops the stack...
     the_stack.add_nl();
-    if (x == endsec_code) return;
+    if (x == endsec_code) return true;
     the_stack.push1(Y, the_names.npdiv(to_unsigned(y)));
     bool star = remove_initial_star();
     if (chapter_has_star && x == chapter_code) star = true;
     if (star)
         last_att_list()[the_names["rend"]] = the_names["nonumber"];
     else {
-        if (x == part_code)
-            refstepcounter("part", false);
-        else if (x == chapter_code)
-            refstepcounter("chapter", false);
-        else if (x == section_code)
-            refstepcounter("section", false);
-        else if (x == subsection_code)
-            refstepcounter("subsection", false);
-        else if (x == subsubsection_code)
-            refstepcounter("subsubsection", false);
-        else if (x == paragraph_code)
-            refstepcounter("paragraph", false);
-        else if (x == subparagraph_code)
-            refstepcounter("subparagraph", false);
-        else
+        if (x == part_code) {
+            if (!refstepcounter("part", false)) return false;
+        } else if (x == chapter_code) {
+            if (!refstepcounter("chapter", false)) return false;
+        } else if (x == section_code) {
+            if (!refstepcounter("section", false)) return false;
+        } else if (x == subsection_code) {
+            if (!refstepcounter("subsection", false)) return false;
+        } else if (x == subsubsection_code) {
+            if (!refstepcounter("subsubsection", false)) return false;
+        } else if (x == paragraph_code) {
+            if (!refstepcounter("paragraph", false)) return false;
+        } else if (x == subparagraph_code) {
+            if (!refstepcounter("subparagraph", false)) return false;
+        } else
             star = true;
     }
-    if (!start_paras(y, Y, star)) throw EndOfData();
+    if (!start_paras(y, Y, star)) return false;
+    return true;
 }
 void Parser::T_ref(bool is_ref) {
     std::string a = special_next_arg();
@@ -647,7 +651,7 @@ void Parser::T_subequations(bool start) {
         T_at_theparentequation = hash_table.locate("@@theequation");
     }
     the_stack.add_newid0("anchor");
-    refstepcounter("equation", true);
+    if (!refstepcounter("equation", true)) throw EndOfData();
     back_input(hash_table.CB_token);
     back_input(T_theequation);
     back_input(hash_table.OB_token);
@@ -711,7 +715,7 @@ void Parser::T_float(subtypes c) {
         expand_no_arg(B);
         opt = nT_arg_nopar();
         the_stack.add_att_to_last(the_names["name"], *opt);
-        refstepcounter(sarg, true);
+        if (!refstepcounter(sarg, true)) throw EndOfData();
         B = "@float@every@" + sarg;
         back_input(hash_table.locate(B));
         back_input(hash_table.locate("the"));
@@ -732,19 +736,20 @@ void Parser::T_float(subtypes c) {
 }
 
 // Subfigure. Should appear only in a figure env.
-void Parser::T_subfigure() {
+auto Parser::T_subfigure() -> bool {
     leave_v_mode();
     the_stack.push1(the_names["subfigure"]);
-    refstepcounter("subfigure", true);
+    if (!refstepcounter("subfigure", true)) return false;
     the_stack.set_arg_mode();
     the_stack.push1(the_names["leg"]);
-    if (!T_optarg()) throw EndOfData();
+    if (!T_optarg()) return false;
     the_stack.pop(the_names["leg"]);
     {
         auto guard = SaveCatcode('_', 13); // allow underscore in the file name (needed ?)
-        if (!T_arg1(the_names["texte"])) throw EndOfData();
+        if (!T_arg1(the_names["texte"])) return false;
     }
     the_stack.pop(the_names["subfigure"]);
+    return true;
 }
 
 // Case of &. Works only inside a table (math code is elsewhere).
@@ -1195,7 +1200,7 @@ auto Parser::T_cap_or_note(bool cap) -> bool {
     } else {             // case of footnote, locally redefines fonts
         ignore_optarg(); // is this OK ?
         the_stack.add_att_to_last(the_names["place"], the_names["foot_position"]);
-        refstepcounter("footnote", true);
+        if (!refstepcounter("footnote", true)) return false;
         note        = the_stack.top_stack();
         FontInfo sv = cur_font;
         cur_font.kill();
@@ -1750,7 +1755,7 @@ void Parser::T_bezier(subtypes c) {
 }
 
 // put \line \vector \oval
-void Parser::T_put(subtypes c) {
+auto Parser::T_put(subtypes c) -> bool {
     Token C = cur_tok;
     flush_buffer();
     std::string A, B, D;
@@ -1769,14 +1774,14 @@ void Parser::T_put(subtypes c) {
     if (c == frame_code) {
         the_stack.push1(the_names[x0]);
         the_stack.set_arg_mode();
-        if (!T_arg()) throw EndOfData();
+        if (!T_arg()) return false;
         the_stack.pop(the_names[x0]);
-        return;
+        return true;
     }
     if (c == multiput_code && star) {
-        T_multiput();
+        if (!T_multiput()) return false;
         remove_initial_space_and_back_input();
-        return;
+        return true;
     }
     if (c == put_code || c == oval_code || c == multiput_code || c == scaleput_code)
         T_twodims(A, B, C);
@@ -1788,7 +1793,7 @@ void Parser::T_put(subtypes c) {
         if (specs) val[the_names["specs"]] = *specs;
         val[the_names["ypos"]] = B;
         val[the_names["xpos"]] = A;
-        return;
+        return true;
     }
     if (c != put_code && c != multiput_code && c != scaleput_code) { // line vector
         TokenList L            = read_arg();
@@ -1797,7 +1802,7 @@ void Parser::T_put(subtypes c) {
         AL[the_names["width"]] = D;
         AL[the_names["ydir"]]  = B;
         AL[the_names["xdir"]]  = A;
-        return;
+        return true;
     }
     // Case of \put or \multiput \scaleput
     the_stack.push1(the_names[x0]);
@@ -1821,9 +1826,10 @@ void Parser::T_put(subtypes c) {
     }
     cur_id.add_attribute(the_names["ypos"], B);
     cur_id.add_attribute(the_names["xpos"], A);
-    if (!T_arg()) throw EndOfData();
+    if (!T_arg()) return false;
     the_stack.pop(the_names[x0]);
     if (c == put_code || c == multiput_code) remove_initial_space_and_back_input();
+    return true;
 }
 
 void Parser::T_linethickness(subtypes c) {
@@ -1874,7 +1880,7 @@ auto Parser::T_curves(subtypes c) -> bool {
     return true;
 }
 
-void Parser::T_multiput() {
+auto Parser::T_multiput() -> bool {
     Token     C = cur_tok;
     TokenList xpos, ypos;
     T_twoints(xpos, ypos);
@@ -1898,13 +1904,14 @@ void Parser::T_multiput() {
         AttList &AL           = last_att_list();
         AL[the_names["ypos"]] = dimen_attrib(Y);
         AL[the_names["xpos"]] = dimen_attrib(X);
-        if (!T_arg()) throw EndOfData();
+        if (!T_arg()) return false;
         the_stack.pop(the_names["put"]);
         the_stack.add_nl();
         r--;
         X += Dx;
         Y += Dy;
     }
+    return true;
 }
 
 void Parser::T_dashline(subtypes c) {

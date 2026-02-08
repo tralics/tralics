@@ -32,7 +32,7 @@ struct TitlePageAux {
     auto               convert(int i, const std::string &s) -> Xml *;
     void               dump(size_t k) const;
     void               exec_start(size_t k);
-    void               exec_post() const;
+    auto               exec_post() const -> bool;
     void               exec(size_t v, bool vb);
     auto               increment_flag() -> bool;
     [[nodiscard]] auto decode_flags() const -> std::string;

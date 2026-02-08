@@ -101,7 +101,7 @@ void Dispatcher::boot() {
     register_action(advance_cmd, &Parser::M_prefixed);
     register_action_plain(aftergroup_cmd, &Parser::T_aftergroup);
     register_action_plain(alignment_catcode, &Parser::T_ampersand);
-    register_action_plain(arg_font_cmd, [] { the_parser.T_fonts("font_sc"); });
+    register_action(arg_font_cmd, [] { return the_parser.T_fonts("font_sc"); });
     register_action_plain(argfont_cmd, &Parser::arg_font);
     register_action(assign_dimen_cmd, &Parser::M_prefixed);
     register_action(assign_enc_char_cmd, &Parser::M_prefixed);
@@ -114,7 +114,7 @@ void Dispatcher::boot() {
     register_action_plain(at_end_of_class_cmd, &Parser::T_at_end_of_class);
     register_action_plain(atdocument_cmd, &Parser::T_atdocument);
     register_action_plain(bezier_cmd, &Parser::T_bezier);
-    register_action_plain(bib_cmd, &Parser::T_bauteursediteurs);
+    register_action(bib_cmd, &Parser::T_bauteursediteurs);
     register_action_plain(bibitem_cmd, [](subtypes c) { c == 1 ? the_parser.T_empty_bibitem() : the_parser.T_bibitem(); });
     register_action_plain(biblio_cmd, &Parser::T_biblio);
     register_action_plain(bibliographystyle_cmd, &Parser::T_bibliostyle);
@@ -134,7 +134,7 @@ void Dispatcher::boot() {
     register_action_plain(citation_cmd, [] { the_parser.T_citation(), the_stack.add_nl(); });
     register_action_plain(cite_cmd, &Parser::T_cite);
     register_action_plain(cite_one_cmd, &Parser::T_cite_one);
-    register_action_plain(cititem_cmd, &Parser::T_cititem);
+    register_action(cititem_cmd, &Parser::T_cititem);
     register_action(close_catcode, [] { return the_parser.pop_level(bt_brace); });
     register_action_plain(color_cmd, &Parser::T_color);
     register_action(cons_cmd, [] { return the_parser.M_cons(); });
@@ -204,7 +204,7 @@ void Dispatcher::boot() {
     register_action_plain(fvset_cmd, &Parser::special_fvset);
     register_action_plain(GetIdInfo_cmd, &Parser::L3_getid);
     register_action_plain(GetIdInfoLog_cmd, &Parser::L3_logid);
-    register_action_plain(glo_cmd, &Parser::T_glo);
+    register_action(glo_cmd, &Parser::T_glo);
     register_action_plain(gloss_cmd, [](subtypes c) { the_parser.T_gloss(c == 0); });
     register_action_plain(glossaire_cmd, &Parser::T_glossaire);
     register_action_plain(grabenv_cmd, &Parser::T_grabenv);
@@ -290,8 +290,8 @@ void Dispatcher::boot() {
     register_action(prefix_cmd, &Parser::M_prefixed);
     register_action_plain(process_options_cmd, &Parser::T_process_options);
     register_action_plain(provides_package_cmd, [](subtypes c) { the_parser.T_provides_package(c == 0); });
-    register_action_plain(pushmodule_cmd, &Parser::push_module);
-    register_action_plain(put_cmd, &Parser::T_put);
+    register_action(pushmodule_cmd, &Parser::push_module);
+    register_action(put_cmd, &Parser::T_put);
     register_action(raw_env_cmd, [] {
         auto res = the_parser.T_raw_env(true);
         if (!res) return false;
@@ -310,7 +310,7 @@ void Dispatcher::boot() {
     });
     register_action_plain(saveverb_cmd, &Parser::T_saveverb);
     register_action_plain(scan_glue_cmd, &Parser::T_scan_glue);
-    register_action_plain(section_cmd, &Parser::T_paras);
+    register_action(section_cmd, &Parser::T_paras);
     register_action_plain(selectfont_cmd, &Parser::font_has_changed);
     register_action_plain(selective_sanitize_cmd, &Parser::selective_sanitize);
     register_action_plain(self_insert_cmd, [] { the_parser.LC(), the_parser.unprocessed_xml.push_back(the_parser.cur_tok); });
@@ -331,12 +331,12 @@ void Dispatcher::boot() {
     register_action(shorthand_def_cmd, &Parser::M_prefixed);
     register_action_plain(shortverb_cmd, &Parser::M_shortverb);
     register_action_plain(solvecite_cmd, [] { the_parser.solve_cite(false); });
-    register_action_plain(soul_cmd, &Parser::T_fonts);
+    register_action(soul_cmd, &Parser::T_fonts);
     register_action_plain(specimp_cmd, &Parser::T_specimp);
     register_action_plain(start_par_cmd, &Parser::implicit_par);
-    register_action_plain(sub_cmd, &Parser::T_fonts);
+    register_action(sub_cmd, &Parser::T_fonts);
     register_action_plain(subequations_cmd, [] { the_parser.T_subequations(true); });
-    register_action_plain(subfigure_cmd, &Parser::T_subfigure);
+    register_action(subfigure_cmd, &Parser::T_subfigure);
     register_action_plain(table_cmd, [](symcodes x, subtypes c) { the_parser.T_figure_table(x, c); });
     register_action_plain(tabular_env_cmd, &Parser::T_start_tabular);
     register_action_plain(testopt_cmd, &Parser::T_testopt);
@@ -344,8 +344,8 @@ void Dispatcher::boot() {
     register_action_plain(thickness_cmd, &Parser::T_linethickness);
     register_action_plain(tl_basic_cmd, &Parser::l3_new_token_list);
     register_action_plain(tl_concat_cmd, &Parser::l3_tl_concat);
-    register_action_plain(tl_put_left_cmd, &Parser::l3_tl_put_left);
-    register_action_plain(tl_set_cmd, &Parser::l3_tl_set);
+    register_action(tl_put_left_cmd, &Parser::l3_tl_put_left);
+    register_action(tl_set_cmd, &Parser::l3_tl_set);
     register_action(toks_register_cmd, &Parser::M_prefixed);
     register_action_plain(tracingall_cmd, &Parser::M_tracingall);
     register_action_plain(trees_cmd, &Parser::T_trees);
@@ -361,12 +361,12 @@ void Dispatcher::boot() {
     register_action(verbatim_env_cmd, [] { return the_parser.T_verbatim(); });
     register_action_plain(vfill_cmd, [](subtypes c) { the_parser.leave_h_mode(), the_stack.add_newid0(vfill_to_np(c)); });
     register_action_plain(whiledo_cmd, &Parser::T_whiledo);
-    register_action_plain(xfancy_cmd, &Parser::T_xfancy);
+    register_action(xfancy_cmd, &Parser::T_xfancy);
     register_action_plain(XML_fetch_cmd, &Parser::user_XML_fetch);
     register_action_plain(XML_modify_cmd, &Parser::user_XML_modify);
     register_action_plain(XML_swap_cmd, &Parser::user_XML_swap);
     register_action_plain(xmlelement_env_cmd, &Parser::T_xmlenv);
-    register_action_plain(xmlelt_cmd, &Parser::T_xmlelt);
+    register_action(xmlelt_cmd, &Parser::T_xmlelt);
     register_action_plain(xray_cmd, &Parser::M_xray);
     register_action_plain(xthepage_cmd, [] { the_parser.flush_buffer(), the_stack.add_last(the_page_xml); });
 

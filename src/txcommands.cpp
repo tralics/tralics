@@ -693,7 +693,7 @@ void Parser::T_figure_table(symcodes x, subtypes c) {
         if (opt && !opt->empty()) the_stack.add_att_to_last(the_names["place"], *opt);
         if (c == 1) the_stack.add_att_to_last(the_names["starred"], the_names["true"]);
     }
-    refstepcounter(x == figure_cmd ? "figure" : "table", true);
+    if (!refstepcounter(x == figure_cmd ? "figure" : "table", true)) throw EndOfData();
     the_stack.set_v_mode();
 }
 
@@ -791,13 +791,14 @@ void Parser::T_scan_glue(subtypes c) {
 }
 
 // Translates \bauthors{...} or \beditors{...}
-void Parser::T_bauteursediteurs(subtypes c) {
+auto Parser::T_bauteursediteurs(subtypes c) -> bool {
     mode m = the_stack.get_mode();
     need_bib_mode();
     flush_buffer();
-    if (!T_arg1(the_names[c == 0 ? "bauteurs"s : "bediteur"s])) throw EndOfData();
+    if (!T_arg1(the_names[c == 0 ? "bauteurs"s : "bediteur"s])) return false;
     the_stack.set_mode(m);
     the_stack.add_nl();
+    return true;
 }
 
 // Translates \unhbox, \unhcopy \unvbox \unvcopy

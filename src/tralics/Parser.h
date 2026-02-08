@@ -437,7 +437,7 @@ struct Parser {
     bool               E_counter(subtypes c);
     void               E_csname();
     void               E_ensuremath();
-    void               E_expandafter();
+    auto               E_expandafter() -> bool;
     void               E_fi_or_else();
     void               E_first_of_four(bool vb, subtypes c);
     void               E_first_of_three(bool vb, subtypes c);
@@ -483,7 +483,7 @@ struct Parser {
     void               expand_twoargs();
     void               expand_verb(unsigned char t);
     void               expand_verb1(TokenList &);
-    void               expand_when_ok(bool allow_undef);
+    auto               expand_when_ok(bool allow_undef) -> bool;
     [[nodiscard]] bool expand();
     void               extra_close_brace(int cl);
     void               extra_fi_or_else();
@@ -639,8 +639,8 @@ struct Parser {
     void               process_string(String s);
     void               push_input_stack(const std::string &name, bool restore_at, bool re);
     void               push_level(boundary_type v);
-    void               push_module();
-    void               push_module(const std::string &aux);
+    auto               push_module() -> bool;
+    auto               push_module(const std::string &aux) -> bool;
     void               push_tpa();
     void               ratio_evaluate(TokenList &A, TokenList &B, SthInternal &res);
     void               read_into(TokenList &X);
@@ -648,9 +648,9 @@ struct Parser {
     void               read_one_space();
     void               read_toks_edef(TokenList &L);
     [[nodiscard]] bool refstepcounter_inner(TokenList &L, bool star);
-    void               refstepcounter();
-    void               refstepcounter(const std::string &s, bool star);
-    void               refstepcounter(TokenList &L, bool star);
+    auto               refstepcounter() -> bool;
+    auto               refstepcounter(const std::string &s, bool star) -> bool;
+    auto               refstepcounter(TokenList &L, bool star) -> bool;
     void               remove_element(TokenList &A, TokenList &B, Token C);
     void               remove_initial_space_and_back_input();
     void               remove_initial_space_relax();
@@ -716,7 +716,7 @@ struct Parser {
     void               T_atdocument(subtypes c);
     void               T_backslash();
     void               T_barnodeconnect(const std::string &W);
-    void               T_bauteursediteurs(subtypes c);
+    auto               T_bauteursediteurs(subtypes c) -> bool;
     [[nodiscard]] auto T_begin(const std::string &s) -> bool;
     bool               T_begindocument();
     [[nodiscard]] auto T_beginend(symcodes x) -> bool;
@@ -734,7 +734,7 @@ struct Parser {
     void               T_cite_type();
     void               T_cite(subtypes sw, TokenList &prenote, std::string &type);
     void               T_cite(subtypes sw);
-    void               T_cititem();
+    auto               T_cititem() -> bool;
     void               T_class_error(subtypes c);
     void               T_color(subtypes c);
     auto               T_cr() -> bool;
@@ -767,8 +767,8 @@ struct Parser {
     void               T_figure_table(symcodes x, subtypes c);
     bool               T_filecontents(subtypes spec);
     void               T_float(subtypes c);
-    void               T_fonts(subtypes c);
-    void               T_glo();
+    auto               T_fonts(subtypes c) -> bool;
+    auto               T_glo() -> bool;
     void               T_gloss(bool c);
     void               T_glossaire_end();
     void               T_glossaire();
@@ -804,11 +804,11 @@ struct Parser {
     void               T_minipage();
     void               T_moreinfo_end();
     void               T_multicolumn();
-    void               T_multiput();
+    auto               T_multiput() -> bool;
     void               T_newcolumn_type();
     void               T_newline();
     void               T_newthheorem();
-    void               T_node();
+    auto               T_node() -> bool;
     void               T_nodebox(const std::string &W);
     void               T_nodecircle(const std::string &W);
     void               T_nodeconnect(const std::string &W);
@@ -820,7 +820,7 @@ struct Parser {
     void               T_option_not_used();
     void               T_par1();
     void               T_par1(const std::string &u);
-    void               T_paras(subtypes x);
+    auto               T_paras(subtypes x) -> bool;
     void               T_participants_end();
     void               T_participants(subtypes x);
     void               T_pass_options(bool c);
@@ -830,7 +830,7 @@ struct Parser {
     void               T_process_options_aux(TokenList &action);
     void               T_process_options();
     void               T_provides_package(bool c);
-    void               T_put(subtypes c);
+    auto               T_put(subtypes c) -> bool;
     void               T_ra_startdoc();
     bool               T_raisebox();
     [[nodiscard]] bool T_reevaluate();
@@ -846,7 +846,7 @@ struct Parser {
     [[nodiscard]] bool T_start_theorem(subtypes c);
     void               T_startprojet(String proj, String loc);
     void               T_subequations(bool start);
-    void               T_subfigure();
+    auto               T_subfigure() -> bool;
     void               T_testopt();
     [[nodiscard]] bool T_translate(TokenList &X);
     void               T_trees(subtypes c);
@@ -866,10 +866,10 @@ struct Parser {
     bool               T_verbatim();
     bool               T_verbatim(int my_number, Token style, Token pre, Token post);
     void               T_whiledo();
-    void               T_xfancy();
+    auto               T_xfancy() -> bool;
     void               T_xkv_for(subtypes c);
     void               T_xmladdatt(subtypes c);
-    void               T_xmlelt(subtypes w);
+    auto               T_xmlelt(subtypes w) -> bool;
     void               T_xmlenv_end(subtypes c);
     void               T_xmlenv(subtypes c);
     void               TM_fonts();
@@ -907,14 +907,14 @@ struct Parser {
     auto l3_parms_from_ac(long n, Token T, bool s) -> TokenList;
     auto l3_read_int(Token T) -> long;
     auto L3_split_next_name() -> bool;
-    auto l3_to_string(subtypes c, TokenList &L) -> std::string;
+    auto l3_to_string(subtypes c, TokenList &L) -> std::optional<std::string>;
     void define_definer(String base, String nsig, String osig);
     void define_definer(String base);
     void E_cat_ifeq(subtypes c);
     void E_l3_ifx(subtypes c);
-    void E_l3expand_aux(subtypes c);
-    void E_l3expand_base(subtypes c);
-    void E_l3noexpand(subtypes c);
+    auto E_l3expand_aux(subtypes c) -> bool;
+    auto E_l3expand_base(subtypes c) -> bool;
+    auto E_l3noexpand(subtypes c) -> bool;
     void E_l3str_case(subtypes c);
     void E_l3str_ifeq(subtypes c);
     void E_pdfstrcmp();
@@ -942,8 +942,8 @@ struct Parser {
     void L3_set_cat_code(subtypes c);
     void L3_set_num_code(subtypes c);
     void l3_tl_concat(subtypes c);
-    void l3_tl_put_left(subtypes c);
-    void l3_tl_set(subtypes c);
+    auto l3_tl_put_left(subtypes c) -> bool;
+    auto l3_tl_set(subtypes c) -> bool;
     void l3_token_check(subtypes c);
     void L3_user_split_next_name(bool base);
     void T_scantokens(const TokenList &L);
@@ -955,7 +955,7 @@ struct Parser {
     Token  cur_tok;
     void   extended_chars(size_t c);
     auto   get_token() -> bool;
-    void   T_fonts(const std::string &x);
+    auto   T_fonts(const std::string &x) -> bool;
 
     // \todo specific methods used in packages, belong there
     // \todo static methods that would fit better elsewhere

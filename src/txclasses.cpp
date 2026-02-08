@@ -1165,7 +1165,7 @@ void Parser::kvo_family_etc(subtypes k) {
         back_input(res);
     } else {
         back_input(T);
-        expand_when_ok(true);
+        if (!expand_when_ok(true)) throw EndOfData();
     }
 }
 

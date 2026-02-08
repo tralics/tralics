@@ -397,16 +397,16 @@ void Parser::E_l3_ifx(subtypes c) {
 // There is a variant \str_if_eq_x:nn with with full expansion
 // and two variants v and o (for each argument).
 
-auto Parser::l3_to_string(subtypes c, TokenList &L) -> std::string {
+auto Parser::l3_to_string(subtypes c, TokenList &L) -> std::optional<std::string> {
     switch (c) {
     case l3expx_code: read_toks_edef(L); break;
     case l3expo_code: l3_reexpand_o(L); break;
-    case l3expV_code: if (!l3_expand_Vv(L, false)) throw EndOfData(); break;
+    case l3expV_code: if (!l3_expand_Vv(L, false)) return std::nullopt; break;
     default:;
     }
     group_buffer.clear();
     group_buffer << L;
-    return group_buffer;
+    return std::string(group_buffer);
 }
 
 void Parser::E_l3str_ifeq(subtypes c) {
@@ -435,11 +435,13 @@ void Parser::E_l3str_ifeq(subtypes c) {
         c    = subtypes(c - 4);
     }
 
-    TokenList   a1 = read_arg();
-    TokenList   a2 = read_arg();
-    std::string s1 = l3_to_string(exp1, a1);
-    std::string s2 = l3_to_string(exp2, a2);
-    l3_after_cond(caller, s1 == s2, c);
+    TokenList   a1  = read_arg();
+    TokenList   a2  = read_arg();
+    auto        os1 = l3_to_string(exp1, a1);
+    if (!os1) throw EndOfData();
+    auto os2 = l3_to_string(exp2, a2);
+    if (!os2) throw EndOfData();
+    l3_after_cond(caller, *os1 == *os2, c);
 }
 
 // Args: string to compare, case a-list, plus additional args
@@ -460,7 +462,9 @@ void Parser::E_l3str_case(subtypes c) {
     if (c == l3_TF_code || c == l3_T_code) true_res = read_arg();
     if (c == l3_TF_code || c == l3_F_code) false_res = read_arg();
     bool        match = false;
-    std::string s1    = l3_to_string(exp, as1);
+    auto        os1   = l3_to_string(exp, as1);
+    if (!os1) throw EndOfData();
+    std::string s1 = *os1;
     if (exp == l3expo_code) exp = l3expn_code;
     if (tracing_macros()) { spdlog::trace("{} compares {}", fmt::streamed(caller), s1); }
     for (;;) {
@@ -468,9 +472,10 @@ void Parser::E_l3str_case(subtypes c) {
         if (clauses.empty()) break;
         TokenList as2 = clauses.get_a_param();
         // should we check for bad termination?
-        TokenList   code = clauses.get_a_param();
-        std::string s2   = l3_to_string(exp, as2);
-        if (s1 == s2) {
+        TokenList code = clauses.get_a_param();
+        auto      os2  = l3_to_string(exp, as2);
+        if (!os2) throw EndOfData();
+        if (s1 == *os2) {
             match = true;
             res   = code;
             break;
@@ -544,7 +549,7 @@ void Parser::l3_new_token_list(subtypes c) {
 
 // \tl_set:Nn and variants. Second argument is (by default) expanded once
 // There are 24 variants; missing Npc
-void Parser::l3_tl_set(subtypes c) {
+auto Parser::l3_tl_set(subtypes c) -> bool {
     bool gbl   = false;
     bool c_arg = false;
     if (c >= 18) {
@@ -564,16 +569,17 @@ void Parser::l3_tl_set(subtypes c) {
     case l3expx_code: l3_expand_x(res); break;
     case l3expv_code:
         csname_arg();
-        if (!l3_expand_Vv(res, true)) throw EndOfData();
+        if (!l3_expand_Vv(res, true)) return false;
         break;
     case l3expV_code:
         res = read_arg();
-        if (!l3_expand_Vv(res, false)) throw EndOfData();
+        if (!l3_expand_Vv(res, false)) return false;
         break;
     case l3expf_code: l3_expand_f(res); break;
-    default: parse_error(err_tok, "internal error unimplemented", err_tok, "", "internal error"); return;
+    default: parse_error(err_tok, "internal error unimplemented", err_tok, "", "internal error"); return true;
     }
     new_macro(res, name, gbl);
+    return true;
 }
 
 // \tl_concat:NNN \tl_concat:ccc and global version.
@@ -593,7 +599,7 @@ void Parser::l3_tl_concat(subtypes c) {
 
 // \tl_put_left:Nn and variants. Second argument is (by default) expanded once
 // There are 16 variants: nVox
-void Parser::l3_tl_put_left(subtypes c) {
+auto Parser::l3_tl_put_left(subtypes c) -> bool {
     bool gbl      = false;
     bool c_arg    = false;
     bool put_left = true;
@@ -618,9 +624,9 @@ void Parser::l3_tl_put_left(subtypes c) {
     case l3expx_code: l3_expand_x(res); break;
     case l3expV_code:
         res = read_arg();
-        if (!l3_expand_Vv(res, false)) throw EndOfData();
+        if (!l3_expand_Vv(res, false)) return false;
         break;
-    default: parse_error(err_tok, "internal error unimplemented ", err_tok, "", "internal error"); return;
+    default: parse_error(err_tok, "internal error unimplemented ", err_tok, "", "internal error"); return true;
     }
     TokenList cur = get_mac_value(name);
     if (put_left)
@@ -628,6 +634,7 @@ void Parser::l3_tl_put_left(subtypes c) {
     else
         cur.splice(cur.end(), res);
     new_macro(cur, name, gbl);
+    return true;
 }
 
 // set rescan and variant 12 variants + 1
@@ -1089,7 +1096,7 @@ void Parser::l3_generate_variant(const std::string &var, bool prot, Token orig) 
 // #2 is function to call, #3 arg to handle, #1 more things to do
 // NOTE: Case of last_unbraced variant. here #1 should be empty
 // Expansion is #2{#3} in case #1 is empty.
-void Parser::E_l3expand_aux(subtypes c) {
+auto Parser::E_l3expand_aux(subtypes c) -> bool {
     Token     T = cur_tok;
     TokenList L1, L2, L3, res;
     if (tracing_macros()) { spdlog::trace("{} is expanded", fmt::streamed(T)); }
@@ -1125,11 +1132,11 @@ void Parser::E_l3expand_aux(subtypes c) {
         break;
     case l3expV_code: // \::V case of a list
     case l3expv_code: // \::v case of a csname unread
-        if (!l3_expand_Vv(L3, c == l3expv_code)) throw EndOfData();
+        if (!l3_expand_Vv(L3, c == l3expv_code)) return false;
         L3.brace_me();
         break;
     case l3expVu_code: // \::v_unbraced idem, unbraced
-    case l3expvu_code: if (!l3_expand_Vv(L3, c == l3expvu_code)) throw EndOfData(); break;
+    case l3expvu_code: if (!l3_expand_Vv(L3, c == l3expvu_code)) return false; break;
     default: // \::N \::p there is nothing to do; idem for other unbraced variants
         break;
     }
@@ -1144,12 +1151,13 @@ void Parser::E_l3expand_aux(subtypes c) {
     res.splice(res.end(), L2);
     if (tracing_macros()) { spdlog::trace("{}->{}", fmt::streamed(T), fmt::streamed(res)); }
     back_input(res);
+    return true;
 }
 
 // Case of \exp_not:c and variant. Expands according to the variant,
 // and prevents further expansion (via \unexpanded in general).
 
-void Parser::E_l3noexpand(subtypes c) {
+auto Parser::E_l3noexpand(subtypes c) -> bool {
     Token     T = cur_tok;
     bool      b = tracing_macros();
     TokenList L3, res;
@@ -1159,14 +1167,14 @@ void Parser::E_l3noexpand(subtypes c) {
         csname_arg(); // optimise, there is a single token
         back_input(T_exp_notN);
         if (b) { spdlog::trace("{}->\\noexpand {}", fmt::streamed(T), fmt::streamed(cur_tok)); }
-        return;
+        return true;
     case l3expv_code:
         csname_arg();
-        if (!l3_expand_Vv(L3, true)) throw EndOfData();
+        if (!l3_expand_Vv(L3, true)) return false;
         break;
     case l3expV_code:
         L3 = read_arg();
-        if (!l3_expand_Vv(L3, false)) throw EndOfData();
+        if (!l3_expand_Vv(L3, false)) return false;
         break;
     case l3expo_code: l3_expand_o(L3); break;
     case l3expf_code:
@@ -1176,13 +1184,14 @@ void Parser::E_l3noexpand(subtypes c) {
         //  case l3expp_code: no need to noexpand something  like #1#2
         //  case l3expn_code: this is \unexpanded
         //  case l3expx_code: not needed, everything is expanded
-    default: return; // should not happen
+    default: return true; // should not happen
     }
     L3.brace_me();
     res.push_back(T_exp_notn);
     res.splice(res.end(), L3);
     if (b) { spdlog::trace("{}->{}", fmt::streamed(T), fmt::streamed(res)); }
     back_input(res);
+    return true;
 }
 
 // This is "o" conversion of latex3. Corresponds to \expandafter{#1}
@@ -1191,7 +1200,7 @@ void Parser::E_l3noexpand(subtypes c) {
 
 void Parser::l3_expand_o(TokenList &L) {
     if (before_mac_arg()) return; // case of error
-    expand_when_ok(false);
+    if (!expand_when_ok(false)) throw EndOfData();
     back_input(hash_table.OB_token);
     L = read_arg();
 }
@@ -1273,19 +1282,19 @@ auto Parser::l3_expand_Vv(TokenList &L, bool spec) -> bool {
     INSERT
 #define EXPAND_V                                                                                                                           \
     L = read_arg();                                                                                                                        \
-    if (!l3_expand_Vv(L, false)) throw EndOfData();                                                                                        \
+    if (!l3_expand_Vv(L, false)) return false;                                                                                             \
     INSERT_B
 #define EXPAND_Vu                                                                                                                          \
     L = read_arg();                                                                                                                        \
-    if (!l3_expand_Vv(L, false)) throw EndOfData();                                                                                        \
+    if (!l3_expand_Vv(L, false)) return false;                                                                                             \
     INSERT
 #define EXPAND_v                                                                                                                           \
     csname_arg();                                                                                                                          \
-    if (!l3_expand_Vv(L, true)) throw EndOfData();                                                                                         \
+    if (!l3_expand_Vv(L, true)) return false;                                                                                              \
     INSERT_B
 #define EXPAND_vu                                                                                                                          \
     csname_arg();                                                                                                                          \
-    if (!l3_expand_Vv(L, true)) throw EndOfData();                                                                                         \
+    if (!l3_expand_Vv(L, true)) return false;                                                                                              \
     INSERT
 #define EXPAND_n                                                                                                                           \
     L = read_arg();                                                                                                                        \
@@ -1294,7 +1303,7 @@ auto Parser::l3_expand_Vv(TokenList &L, bool spec) -> bool {
     L = read_arg();                                                                                                                        \
     INSERT
 
-void Parser::E_l3expand_base(subtypes c) {
+auto Parser::E_l3expand_base(subtypes c) -> bool {
     TokenList L, res;
     Token     T = cur_tok;
     if (tracing_macros()) { spdlog::trace("{} is expanded", fmt::streamed(T)); }
@@ -1544,6 +1553,7 @@ void Parser::E_l3expand_base(subtypes c) {
     }
     if (tracing_macros()) { spdlog::trace("{}->{}", fmt::streamed(T), fmt::streamed(res)); }
     back_input(res);
+    return true;
 }
 
 //

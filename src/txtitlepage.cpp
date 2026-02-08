@@ -96,7 +96,7 @@ auto tpage_ns::scan_item(Buffer &in, Buffer &out, char del) -> bool {
 void Parser::T_titlepage_finish(size_t v) {
     Buffer B;
     auto   kmax = Titlepage.bigtable.size();
-    for (size_t k = 0; k < kmax; k++) Titlepage.bigtable[k].exec_post();
+    for (size_t k = 0; k < kmax; k++) if (!Titlepage.bigtable[k].exec_post()) throw EndOfData();
     add_language_att();
     TitlePageAux &tpa      = Titlepage.bigtable[v];
     std::string   tmp      = tpa.T4;

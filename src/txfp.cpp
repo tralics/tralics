@@ -1635,7 +1635,7 @@ void Parser::fp_special_expand(TokenList &B) {
         my_csname("", "", B, "FPprint");
     else
         back_input(B);
-    expand_when_ok(false);
+    if (!expand_when_ok(false)) throw EndOfData();
 }
 
 void Parser::fp_print() {

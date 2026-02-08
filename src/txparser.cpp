@@ -1294,7 +1294,7 @@ auto Parser::T_start_theorem(subtypes c) -> bool {
     the_stack.set_v_mode();
     bool noref = ctr.empty();
     if (!noref) {
-        refstepcounter(mecounter, true);
+        if (!refstepcounter(mecounter, true)) return false;
         if (!T_translate(mecounter)) return false;
     }
     if (c == 0) {
@@ -2223,17 +2223,18 @@ void Parser::expand_no_arg(const std::string &s) {
     Token t = hash_table.locate(s);
     back_input(hash_table.CB_token);
     back_input(t);
-    expand_when_ok(true);
+    if (!expand_when_ok(true)) throw EndOfData();
     back_input(hash_table.OB_token);
 }
 
-void Parser::expand_when_ok(bool allow_undef) {
+auto Parser::expand_when_ok(bool allow_undef) -> bool {
     get_token();
     if (allow_undef && cur_cmd_chr.is_undef()) {
     } else if (cur_cmd_chr.is_expandable()) {
-        if (!expand()) throw EndOfData();
+        if (!expand()) return false;
     } else
         back_input();
+    return true;
 }
 
 // Returns the value of the macro \foo;
@@ -2410,16 +2411,17 @@ void Parser::E_sideset() {
 }
 
 // \expandafter\foo\bar
-void Parser::E_expandafter() {
+auto Parser::E_expandafter() -> bool {
     get_token();
     Token T = cur_tok;
     get_token();
     if (tracing_macros()) spdlog::trace("{{\\expandafter {} {}}}", fmt::streamed(T), fmt::streamed(cur_tok));
     if (cur_cmd_chr.is_expandable()) {
-        if (!expand()) throw EndOfData();
+        if (!expand()) return false;
     } else
         back_input();
     back_input(T);
+    return true;
 }
 
 // \mathversion{bold} is the same as \@mathversion1\relax
@@ -2575,7 +2577,7 @@ auto Parser::expand() -> bool {
     case ifundefined_cmd: E_ifundefined(c != 0); return true;
     case car_cmd: E_car(c == zero_code); return true;
     case all_of_one_cmd: E_all_of_one(cur_tok, c); return true;
-    case refstepcounter_cmd: refstepcounter(); return true;
+    case refstepcounter_cmd: return refstepcounter();
     case month_day_cmd: month_day(c); return true;
     case scan_up_down_cmd: E_scan_up_down(); return true;
     case sideset_cmd: E_sideset(); return true;
@@ -2614,11 +2616,11 @@ auto Parser::expand() -> bool {
         if (c != 0U)
             E_unless();
         else
-            E_expandafter();
+            return E_expandafter();
         return true;
-    case l3expand_aux_cmd: E_l3expand_aux(c); return true;
-    case l3expand_base_cmd: E_l3expand_base(c); return true;
-    case l3noexpand_cmd: E_l3noexpand(c); return true;
+    case l3expand_aux_cmd: return E_l3expand_aux(c);
+    case l3expand_base_cmd: return E_l3expand_base(c);
+    case l3noexpand_cmd: return E_l3noexpand(c);
     case l3E_set_num_cmd: L3_set_num_code(c); return true;
     case l3_ifx_cmd: E_l3_ifx(c); return true;
     case l3str_ifeq_cmd: E_l3str_ifeq(c); return true;

@@ -923,11 +923,11 @@ auto Parser::T_math(subtypes type) -> bool {
             aux = bt_brace;
     }
     push_level(aux);
-    if (m == 0 && cmi.eqnum_status == 3) refstepcounter("equation", false);
+    if (m == 0 && cmi.eqnum_status == 3) if (!refstepcounter("equation", false)) return false;
     if (!scan_math(x, t)) return false;
     if (m == 0 && (cmi.eqnum_status == 2 || cmi.eqnum_status == 1)) {
         if (!cmi.end_of_row()) {
-            refstepcounter("equation", false);
+            if (!refstepcounter("equation", false)) return false;
             cmi.insert_special_tag(the_parser.eqtb_string_table[0].val);
         }
         if (tracing_math()) cmi.dump_labels();
@@ -1222,7 +1222,7 @@ auto Parser::scan_math_endcell_ok(size_t res) -> bool {
     if (cur_cmd_chr.cmd == backslash_cmd && res == 0 && cmi.eqnum_status == 2) {
         bool w = cmi.end_of_row();
         if (!w) {
-            refstepcounter("equation", false);
+            if (!refstepcounter("equation", false)) return false;
             cmi.insert_special_tag(the_parser.eqtb_string_table[0].val);
         }
     }

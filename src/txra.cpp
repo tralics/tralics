@@ -42,13 +42,14 @@ void Parser::fnhack() {
     new_macro(Lb, B, false);
 }
 
-void Parser::push_module() { push_module(sT_arg_nopar()); }
+auto Parser::push_module() -> bool { return push_module(sT_arg_nopar()); }
 
-void Parser::push_module(const std::string &aux) {
+auto Parser::push_module(const std::string &aux) -> bool {
     if (the_stack.in_h_mode()) { parse_error("Invalid \\begin{module} in a paragraph"); }
     leave_h_mode();
     the_stack.add_nl();
     the_stack.push1(the_names["module"]);
     //  refstepcounter("module",false); Assume done by the package
-    if (!start_paras(8, aux, false)) throw EndOfData();
+    if (!start_paras(8, aux, false)) return false;
+    return true;
 }

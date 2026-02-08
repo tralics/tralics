@@ -64,14 +64,15 @@ void Parser::E_zapspace() {
 }
 
 // \fancyinternal
-void Parser::T_xfancy() {
+auto Parser::T_xfancy() -> bool {
     std::string s = nT_arg_nopar();
     the_stack.push1(the_names["headings"]);
     the_stack.add_att_to_last(the_names["type"], s);
     the_stack.set_arg_mode();
-    if (!T_arg()) throw EndOfData();
+    if (!T_arg()) return false;
     flush_buffer();
     the_stack.pop(the_names["headings"]);
+    return true;
 }
 
 // Stuff for fancyheadings
@@ -440,13 +441,12 @@ auto Parser::read_for_variable() -> Token {
 void Parser::expand_first(TokenList &L) {
     back_input(hash_table.CB_token);
     back_input(L);
-    expand_when_ok(true);
+    if (!expand_when_ok(true)) throw EndOfData();
     back_input(hash_table.OB_token);
     TokenList res = read_arg();
     L.swap(res);
 }
 
-// Implementation of some loops
 // should be expand rather than translate
 void Parser::T_xkv_for(subtypes c) {
     Token     comma    = hash_table.comma_token;
@@ -1119,32 +1119,33 @@ auto Parser::refstepcounter_inner(TokenList &L, bool star) -> bool {
 }
 
 // takes a string as argument and translates the thing
-void Parser::refstepcounter(const std::string &S, bool star) {
+auto Parser::refstepcounter(const std::string &S, bool star) -> bool {
     Buffer &b = txparser2_local_buf;
     b.clear();
     b.append(S);
     TokenList L = b.str_toks11(true);
-    refstepcounter(L, star);
+    return refstepcounter(L, star);
 }
 
 // user function: read an argument and back_input
-void Parser::refstepcounter() {
+auto Parser::refstepcounter() -> bool {
     bool      star = remove_initial_star();
     TokenList L    = read_arg();
     flush_buffer();
-    refstepcounter(L, star);
+    return refstepcounter(L, star);
 }
 
 // Case where the nale of the label is in L
-void Parser::refstepcounter(TokenList &L, bool star) {
+auto Parser::refstepcounter(TokenList &L, bool star) -> bool {
     Buffer &b = txparser2_local_buf;
     b.clear();
     TokenList L1 = L;
     if (list_to_string(L1, b)) {
         bad_counter0();
-        return;
+        return true;
     }
-    if (!refstepcounter_inner(L, star)) throw EndOfData();
+    if (!refstepcounter_inner(L, star)) return false;
+    return true;
 }
 // remembers locally the name.
 void Parser::T_use_counter(const std::string &s) {

@@ -176,9 +176,9 @@ void Parser::T_index(subtypes c) {
 // Commands from tree-dvips.sty
 void Parser::T_trees(subtypes c) {
     flush_buffer();
-    if (c == node_code)
-        T_node();
-    else if (c == nodepoint_code)
+    if (c == node_code) {
+        if (!T_node()) throw EndOfData();
+    } else if (c == nodepoint_code)
         T_nodepoint();
     else if (c == nodeconnect_code)
         T_nodeconnect(the_names["nodeconnect"]);
@@ -208,14 +208,15 @@ void Parser::T_trees(subtypes c) {
 
 // Initial code uses nodemargin=2pt (value from \nodemargin)
 // and nodemargin=2pt for nodepoint below
-void Parser::T_node() {
+auto Parser::T_node() -> bool {
     std::string A = nT_arg_nopar();
     leave_v_mode();
     the_stack.push1(the_names["node"]);
     AttList &cur           = last_att_list();
     cur[the_names["name"]] = A;
-    if (!T_arg()) throw EndOfData();
+    if (!T_arg()) return false;
     the_stack.pop(the_names["node"]);
+    return true;
 }
 
 // A node of 0pt width and height
