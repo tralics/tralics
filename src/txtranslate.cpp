@@ -1325,12 +1325,12 @@ auto Parser::T_fbox_rotate_box() -> bool {
 
 // \fbox{\includegraphics{...}} is special.
 // This implements \fbox, \framebox and \scalebox
-void Parser::T_fbox(subtypes cc) {
+auto Parser::T_fbox(subtypes cc) -> bool {
     Token T = cur_tok;
     flush_buffer();
     if (cc == raisebox_code) {
-        if (!T_raisebox()) throw EndOfData();
-        return;
+        if (!T_raisebox()) return false;
+        return true;
     }
     std::string                iscale;
     std::optional<std::string> ipos;
@@ -1339,8 +1339,8 @@ void Parser::T_fbox(subtypes cc) {
     if (cc == framebox_code) { // case of \framebox
         skip_initial_space_and_back_input();
         if (cur_tok.is_open_paren()) {
-            if (!T_makebox(true, T)) throw EndOfData();
-            return;
+            if (!T_makebox(true, T)) return false;
+            return true;
         }
         iwidth = get_opt_dim(T);
         auto x = get_ctb_opt();
@@ -1354,7 +1354,7 @@ void Parser::T_fbox(subtypes cc) {
     leave_v_mode();
     the_stack.push1(the_names[cc == scalebox_code ? "scalebox" : "fbox"]);
     Xml *cur = the_stack.top_stack(); // will contain the argument.
-    if (!T_arg_local()) throw EndOfData();
+    if (!T_arg_local()) return false;
     the_stack.pop(the_names[cc == scalebox_code ? "scalebox" : "fbox"]);
     Xml *    aux = cur->single_non_empty();
     AttList &AL  = cur->id.get_att();
@@ -1367,7 +1367,7 @@ void Parser::T_fbox(subtypes cc) {
             AL[the_names["box_scale"]] = iscale;
             if (iwidth) AL["vscale"] = *iwidth; // \toto perhaps the_names for consistency
         }
-        return;
+        return true;
     }
     if (iwidth && iwidth->empty()) iwidth.reset(); // \todo That is ugly
     if (ipos && ipos->empty()) ipos.reset();       // \todo That is ugly
@@ -1379,6 +1379,7 @@ void Parser::T_fbox(subtypes cc) {
         if (ipos) AL[the_names["box_pos"]] = *ipos;
         if (iwidth) AL[the_names["box_width"]] = *iwidth;
     }
+    return true;
 }
 
 // Returns <xref url='v'>val</xref>

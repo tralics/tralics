@@ -518,8 +518,9 @@ void Dispatcher::boot() {
         else if (c == rotatebox_code) {
             if (!the_parser.T_fbox_rotate_box()) throw EndOfData();
         }
-        else
-            the_parser.T_fbox(c);
+        else {
+            if (!the_parser.T_fbox(c)) throw EndOfData();
+        }
     });
 
     register_action_plain(only_preamble_cmd, [] {

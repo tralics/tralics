@@ -762,7 +762,7 @@ struct Parser {
     void               T_fancy(String s, const TokenList &L);
     bool               T_fbox_dash_box();
     bool               T_fbox_rotate_box();
-    void               T_fbox(subtypes cc);
+    bool               T_fbox(subtypes cc);
     void               T_figure_table_end(bool is_fig);
     void               T_figure_table(symcodes x, subtypes c);
     bool               T_filecontents(subtypes spec);
