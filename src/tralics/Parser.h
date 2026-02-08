@@ -449,7 +449,7 @@ struct Parser {
     void               E_ignore_n_args(bool vb, subtypes c);
     void               E_input(subtypes q);
     void               E_iwhile(subtypes cc);
-    void               E_latex_ctr();
+    bool               E_latex_ctr();
     void               E_loop();
     void               E_mathversion();
     void               E_multispan();

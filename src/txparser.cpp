@@ -2599,7 +2599,9 @@ void Parser::expand() {
     case ensuremath_cmd: E_ensuremath(); return;
     case while_cmd: E_while(c); return;
     case iwhile_cmd: E_iwhile(c); return;
-    case latex_ctr_cmd: E_latex_ctr(); return;
+    case latex_ctr_cmd:
+        if (!E_latex_ctr()) throw EndOfData();
+        return;
     case undef_cmd: undefined_mac(); return;
     case mathversion_cmd: E_mathversion(); return;
     case get_config_cmd: E_get_config(c); return;
@@ -3433,14 +3435,14 @@ void Parser::M_tracingall() {
 }
 
 // This implements \arabic, \@arabic, etc
-void Parser::E_latex_ctr() {
+auto Parser::E_latex_ctr() -> bool {
     auto      t = cur_cmd_chr.chr;
     Token     T = cur_tok;
     long      n = 0;
     TokenList res;
     if (t < at_number_code) {
         auto counter_res = M_counter(false);
-        if (!counter_res) throw EndOfData();
+        if (!counter_res) return false;
         get_token();
         res.push_back(cur_tok);
     } else
@@ -3473,6 +3475,7 @@ void Parser::E_latex_ctr() {
     }
     if (tracing_commands()) spdlog::trace("{}->{}", fmt::streamed(T), fmt::streamed(res));
     back_input(res);
+    return true;
 }
 
 // Implementation of \ifthenelse ------------------------------
