@@ -4,8 +4,7 @@
 #include <type_traits>
 
 using uchar  = unsigned char;
-using String = const char *;
-using Digit  = size_t;
+using Digit = size_t;
 
 class [[deprecated]] EndOfData {};
 

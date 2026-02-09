@@ -115,10 +115,8 @@ private:
     auto check_line_aux(Buffer &) -> bool;
     auto find_config_file() -> std::optional<std::filesystem::path>; // \todo static in MainClass.cpp
     auto find_document_type() -> bool;                               ///< Massage the output of get_doc_type
-    auto find_opt_field(String info) -> bool;
     auto get_a_new_line() -> bool;
     bool after_main_text();
-    void append_non_eof_line(String, int);
     void bad_mod(int a, std::string b, Buffer &c);
     void boot_bibtex();
     void call_dvips(std::string);
@@ -137,12 +135,10 @@ private:
     void end_env(std::string);
     void end_mod();
     void find_dtd(); ///< Finds the DTD, create default if nothing given
-    void find_field(String a);
     void finish_xml();
     void get_doc_type();         ///< Determine document type from various sources
     void get_os();               ///< Sets cur_os to the current OS as a symbolic string
     void get_type_from_config(); ///< Extracts a type from the configuration file
-    void handle_latex2init(String file_name);
     void ignore_text();
     void make_perl_script();
     void merge_bib();

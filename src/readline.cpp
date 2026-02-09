@@ -100,7 +100,7 @@ namespace readline_ns {
     void reset_termio();
     void my_exit();
     void tybeep();
-    auto skip_over_letters(String buf, size_t j) -> size_t;
+    auto skip_over_letters(const char * buf, size_t j) -> size_t;
     void tycleol();
     void right_fill();
     void shift_string(char *S, size_t len, size_t source, size_t target);
@@ -134,7 +134,7 @@ class Slined { // \todo this should vanish at some point in refactoring
     std::array<char, buf_size> g_buffer{};
 
 public:
-    Slined(size_t sz, String P) {
+    Slined(size_t sz, const char * P) {
         std::fill(m_buffer.begin(), m_buffer.end(), ' ');
         if (sz != 0) {
             m_inbuf_storage = std::make_unique<char[]>(sz);
@@ -151,7 +151,7 @@ public:
     auto operator=(const Slined &) -> Slined & = delete;
 
     auto newpos(size_t x, size_t n) -> long;
-    auto copystring(String string, size_t s, size_t inpos, bool sw) -> unsigned;
+    auto copystring(const char * string, size_t s, size_t inpos, bool sw) -> unsigned;
     void redisplay();
     void redisplay0();
     void redisplay1(size_t x);
@@ -166,8 +166,8 @@ public:
     void rl_delete(bool sw);
     void toggle_char();
     void delete_string(int sw, size_t deb, size_t fn);
-    void fast_ins(size_t n, String s, size_t l);
-    void insert_substring(size_t n, String s, size_t l);
+    void fast_ins(size_t n, const char * s, size_t l);
+    void insert_substring(size_t n, const char * s, size_t l);
     void Hshow();
     auto Hfind(size_t n) -> bool;
     void Hfirst();
@@ -246,7 +246,7 @@ void readline_ns::tybeep() { std::cerr.put(7); }
 // the number of chars put in the buffer. If character at position
 // inpos is copied, its location will be in m_pos.
 
-auto Slined::copystring(String string, size_t s, size_t inpos, bool sw) -> unsigned {
+auto Slined::copystring(const char * string, size_t s, size_t inpos, bool sw) -> unsigned {
     unsigned j   = 0;
     char    *buf = sw ? m_buffer.data() : g_buffer.data();
     for (size_t i = 0; i < s; i++) {
@@ -526,7 +526,7 @@ void Slined::delete_string(int sw, size_t deb, size_t fn) {
 }
 
 // inserts  a  string n times
-void Slined::insert_substring(size_t n, String s, size_t l) {
+void Slined::insert_substring(size_t n, const char * s, size_t l) {
     if (m_inmax + n * l >= buf_size - 1)
         tybeep();
     else if (n * l > 10)
@@ -538,7 +538,7 @@ void Slined::insert_substring(size_t n, String s, size_t l) {
 }
 
 // insert in the buffer then redisplay all
-void Slined::fast_ins(size_t n, String s, size_t l) {
+void Slined::fast_ins(size_t n, const char * s, size_t l) {
     auto  pos    = m_inpos;
     auto  size   = m_inmax;
     char *buffer = m_inbuf;
@@ -656,7 +656,7 @@ void Slined::Hnext(size_t n) {
     m_hpos = n;
 }
 
-auto readline_ns::skip_over_letters(String buf, size_t j) -> size_t {
+auto readline_ns::skip_over_letters(const char * buf, size_t j) -> size_t {
     for (;;) {
         if (std::isalpha(buf[j]) == 0) return j;
         j++;

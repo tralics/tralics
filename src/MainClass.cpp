@@ -118,7 +118,7 @@ found at http://www.cecill.info.)";
             return argv[p];
         }
         ++p;
-        String a = argv[p];
+        const char *a = argv[p];
         if (*a == ' ') ++a;
         return a;
     }
@@ -220,7 +220,7 @@ found at http://www.cecill.info.)";
         }
     }
 
-    auto split_one_arg(String a, int &p) -> std::string {
+    auto split_one_arg(const char *a, int &p) -> std::string {
         Buffer B;
         p     = 0;
         int i = 0;
