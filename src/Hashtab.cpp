@@ -22,11 +22,11 @@ auto Hashtab::the_eqtb() -> std::unordered_map<size_t, EqtbCmdChr> & {
     return m;
 }
 
-auto Hashtab::locate(const std::string &s) -> Token {
+auto Hashtab::locate(std::string_view s) -> Token {
     if (s.empty()) return Token(null_tok_val);
     if (s.size() == 1) return Token(uchar(s[0]) + single_offset);
-    if (auto c = single_char(s)) return Token(*c + single_offset);
-    return Token(hash_find(s) + hash_offset);
+    if (auto c = single_char(std::string(s))) return Token(*c + single_offset);
+    return Token(hash_find(std::string(s)) + hash_offset);
 }
 
 // Returns the hash location of the name in the buffer.

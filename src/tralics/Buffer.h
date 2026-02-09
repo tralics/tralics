@@ -123,7 +123,7 @@ public:
     void push_back_xml_char(char c);
     void remove_last_space();
     void remove_space_at_end();
-    void show_uncomplete(String m);
+    void show_uncomplete(std::string_view m);
     void skip_letter_dig();
     void skip_letter();
     void skip_over_brace();

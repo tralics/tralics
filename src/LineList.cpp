@@ -341,7 +341,7 @@ void LineList::parse_and_extract_clean(const std::string &s) {
 }
 
 // Returns all line in a begin/end block named s
-auto LineList::parse_and_extract(String s) const -> LineList {
+auto LineList::parse_and_extract(std::string_view s) const -> LineList {
     LineList res;
     int      b    = 0;
     bool     keep = false;
@@ -355,7 +355,7 @@ auto LineList::parse_and_extract(String s) const -> LineList {
             continue;
         } // ignore bogus lines
         if (b == 1 && open == 1) { // something new started
-            if (local_buf.is_begin_something(s) == 4) keep = true;
+            if (local_buf.is_begin_something(std::string(s)) == 4) keep = true;
             continue;
         }
         if (keep) res.push_back(C);

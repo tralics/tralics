@@ -31,7 +31,7 @@ std::array<Xml *, 128> single_chars{};
 
 auto math_ns::get_builtin_alt(size_t p) -> Xml * { return math_data.get_builtin_alt(p); } // \todo Why a global function?
 
-inline void eval_let(String a, String b) { hash_table.eval_let(a, b); }
+inline void eval_let(std::string_view a, std::string_view b) { hash_table.eval_let(std::string(a), std::string(b)); }
 void        math_ns::fill_single_char() {
     for (uchar x = 'a'; x <= 'z'; x++) { single_chars[x] = new Xml(std::string(1, char(x))); }
     for (uchar x = 'A'; x <= 'Z'; x++) { single_chars[x] = new Xml(std::string(1, char(x))); }
@@ -1012,7 +1012,7 @@ auto math_ns::mk_space(const std::string &a) -> Xml * {
     return b;
 }
 
-auto MathDataP::mk_mo(String a) -> gsl::not_null<Xml *> {
+auto MathDataP::mk_mo(std::string_view a) -> gsl::not_null<Xml *> {
     Xml *x = new Xml(std::string(a));
     return gsl::not_null{new Xml(the_names["mo"], x)};
 }
@@ -1132,15 +1132,15 @@ auto MathDataP::init_builtin(const std::string &name, math_loc pos, Xml *x, symc
 // $\alpha$ translates to &alpha;) If no entity names are desired
 // then ent2 is used instead of ent, so that \alpha gives &#x3B1;
 
-auto MathDataP::mk_gen(String name, String ent, String ent2, math_loc pos, const std::string &bl, symcodes t, bool hack) -> Token {
+auto MathDataP::mk_gen(std::string_view name, std::string_view ent, std::string_view ent2, math_loc pos, const std::string &bl, symcodes t, bool hack) -> Token {
     Xml *x = new Xml(std::string(no_ent_names ? ent2 : ent));
     if (hack) built_in_table_alt[pos] = x;
     x = new Xml(the_names[bl], x);
-    return init_builtin(name, pos, x, t);
+    return init_builtin(std::string(name), pos, x, t);
 }
 
 // Special case where a bold variant exists
-auto MathDataP::mk_gen(String name, String ent, String ent2, math_loc pos, math_loc pos2, const std::string &bl, symcodes t, bool hack)
+auto MathDataP::mk_gen(std::string_view name, std::string_view ent, std::string_view ent2, math_loc pos, math_loc pos2, const std::string &bl, symcodes t, bool hack)
     -> Token {
     Xml *x = new Xml(std::string(no_ent_names ? ent2 : ent));
     if (hack) built_in_table_alt[pos] = x;
@@ -1148,12 +1148,12 @@ auto MathDataP::mk_gen(String name, String ent, String ent2, math_loc pos, math_
     bold->add_att(the_names["mathvariant"], the_names["bold"]);
     init_builtin(pos2, bold);
     x = new Xml(the_names[bl], x);
-    return init_builtin(name, pos, x, t);
+    return init_builtin(std::string(name), pos, x, t);
 }
 
 // This defines name to be a math ord command.
 // the value is <mo>ent</mo> , with form=prefix, movable_limits = maybe
-void MathDataP::mk_moo(String name, String ent, math_loc pos) {
+void MathDataP::mk_moo(std::string_view name, std::string_view ent, math_loc pos) {
     Xml *x = mk_mo(ent);
     x->add_att(the_names["form"], the_names["prefix"]);
     symcodes T = mathopn_cmd;
@@ -1161,16 +1161,16 @@ void MathDataP::mk_moo(String name, String ent, math_loc pos) {
         T = mathop_cmd;
         x->add_att(the_names["movablelimits"], the_names["true"]);
     }
-    init_builtin(name, pos, x, T);
+    init_builtin(std::string(name), pos, x, T);
 }
 
 // This associates to the command name, a <mi> element with value ent/ent2
 // with internal code pos. It is an Ordinary object.
 // hack true
-void MathDataP::mk_ic(String name, String ent, String ent2, math_loc pos) { mk_gen(name, ent, ent2, pos, "mi", mathord_cmd, true); }
+void MathDataP::mk_ic(std::string_view name, std::string_view ent, std::string_view ent2, math_loc pos) { mk_gen(name, ent, ent2, pos, "mi", mathord_cmd, true); }
 
 // Case where the symbol has a bold variant
-void MathDataP::mk_icb(String name, String ent, String ent2, math_loc pos) {
+void MathDataP::mk_icb(std::string_view name, std::string_view ent, std::string_view ent2, math_loc pos) {
     auto pos2 = math_loc(pos - alpha_code + alpha_bcode);
     mk_gen(name, ent, ent2, pos, pos2, "mi", mathord_cmd, true);
 }
@@ -1178,23 +1178,23 @@ void MathDataP::mk_icb(String name, String ent, String ent2, math_loc pos) {
 // This associates to the command named name, a <mo> element with value ent
 // with internal code pos. It is an Ordinary object.
 // these are hacked
-void MathDataP::mk_oc(String name, String ent, String ent2, math_loc pos) { mk_gen(name, ent, ent2, pos, "mo", mathord_cmd, true); }
+void MathDataP::mk_oc(std::string_view name, std::string_view ent, std::string_view ent2, math_loc pos) { mk_gen(name, ent, ent2, pos, "mo", mathord_cmd, true); }
 // Op no limits
-void MathDataP::mk_oco(String name, String ent, String ent2, math_loc pos) { mk_gen(name, ent, ent2, pos, "mo", mathopn_cmd, true); }
+void MathDataP::mk_oco(std::string_view name, std::string_view ent, std::string_view ent2, math_loc pos) { mk_gen(name, ent, ent2, pos, "mo", mathopn_cmd, true); }
 // Op display limits
-void MathDataP::mk_ocol(String name, String ent, String ent2, math_loc pos) { mk_gen(name, ent, ent2, pos, "mo", mathop_cmd, true); }
-void MathDataP::mk_ocb(String name, String ent, String ent2, math_loc pos) { mk_gen(name, ent, ent2, pos, "mo", mathbin_cmd, true); }
-void MathDataP::mk_ocr(String name, String ent, String ent2, math_loc pos) { mk_gen(name, ent, ent2, pos, "mo", mathrel_cmd, true); }
+void MathDataP::mk_ocol(std::string_view name, std::string_view ent, std::string_view ent2, math_loc pos) { mk_gen(name, ent, ent2, pos, "mo", mathop_cmd, true); }
+void MathDataP::mk_ocb(std::string_view name, std::string_view ent, std::string_view ent2, math_loc pos) { mk_gen(name, ent, ent2, pos, "mo", mathbin_cmd, true); }
+void MathDataP::mk_ocr(std::string_view name, std::string_view ent, std::string_view ent2, math_loc pos) { mk_gen(name, ent, ent2, pos, "mo", mathrel_cmd, true); }
 
 // This associates to the command named A, a <mo> element with value B
 // with internal code pos. It is of type T.
-void MathDataP::mk_oc(String name, String ent, String ent2, math_loc pos, symcodes t, bool hack) {
+void MathDataP::mk_oc(std::string_view name, std::string_view ent, std::string_view ent2, math_loc pos, symcodes t, bool hack) {
     mk_gen(name, ent, ent2, pos, "mo", t, hack);
 }
 
 // This is for a character: the single character in A
 // is defined to be <mo> with value b.
-void MathDataP::TM_mk(String a, String b, math_types c) {
+void MathDataP::TM_mk(std::string_view a, std::string_view b, math_types c) {
     auto A = uchar(a[0]);
     init_builtin(A + math_c_loc, mk_mo(b));
     math_char_type[A] = c;
@@ -1203,8 +1203,8 @@ void MathDataP::TM_mk(String a, String b, math_types c) {
 // For a command like \enspace.
 void mk_space(const std::string &name, int b) { hash_table.primitive(name, mathspace_cmd, subtypes(b)); }
 
-void        MathDataP::fill_lr(size_t a, String b, String c) { xml_lr_ptable[a] = std::string(no_ent_names ? c : b); }
-inline void MathDataP::fill_lr(size_t a, String b) { xml_lr_ptable[a] = std::string(b); }
+void        MathDataP::fill_lr(size_t a, std::string_view b, std::string_view c) { xml_lr_ptable[a] = std::string(no_ent_names ? c : b); }
+inline void MathDataP::fill_lr(size_t a, std::string_view b) { xml_lr_ptable[a] = std::string(b); }
 
 // This assumes that nb_mathchars is 128
 void MathDataP::boot_xml_lr_tables() {

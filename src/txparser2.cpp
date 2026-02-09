@@ -76,7 +76,7 @@ auto Parser::T_xfancy() -> bool {
 }
 
 // Stuff for fancyheadings
-void Parser::T_fancy(String s, const TokenList &L) {
+void Parser::T_fancy(std::string_view s, const TokenList &L) {
     flush_buffer();
     push_level(bt_brace);
     hash_table.eval_let("thepage", "inert@thepage");
@@ -84,7 +84,7 @@ void Parser::T_fancy(String s, const TokenList &L) {
     TokenList tmp = L; // make a copy of the list
     tmp.brace_me();
     back_input(tmp);
-    TokenList sl = token_ns::string_to_list(s, true);
+    TokenList sl = token_ns::string_to_list(std::string(s), true);
     back_input(sl);
     back_input(hash_table.locate("fancyinternal"));
 }

@@ -51,11 +51,11 @@ namespace {
 namespace classes_ns {
     auto parse_version(const std::string &s) -> int;
     auto is_in_vector(const OptionList &V, const std::string &s, bool X) -> std::optional<size_t>;
-    auto is_raw_option(const OptionList &V, String s) -> bool;
+    auto is_raw_option(const OptionList &V, std::string_view s) -> bool;
     auto is_in_option(const OptionList &V, const KeyAndVal &s) -> bool;
     auto make_options(TokenList &L) -> OptionList;
     auto compare_options(const OptionList &A, const OptionList &B) -> bool;
-    void dump_options(const OptionList &A, String x);
+    void dump_options(const OptionList &A, std::string_view x);
     auto cur_options(bool star, TokenList &spec, bool normal) -> TokenList;
     auto make_keyval(TokenList &L) -> KeyAndVal;
     void register_key(const std::string &Key);
@@ -105,7 +105,7 @@ auto classes_ns::make_options(TokenList &L) -> OptionList {
 }
 
 // Prints the options list on log and tty
-void classes_ns::dump_options(const OptionList &A, String x) {
+void classes_ns::dump_options(const OptionList &A, std::string_view x) {
     Buffer &B = txclasses_local_buf;
     B.clear();
     auto n = A.size();
@@ -123,7 +123,7 @@ void LatexPackage::add_options(const OptionList &L) {
 }
 
 // Returns true if S is in the option list (for check_builtin_class)
-auto classes_ns::is_raw_option(const OptionList &V, String s) -> bool {
+auto classes_ns::is_raw_option(const OptionList &V, std::string_view s) -> bool {
     return std::any_of(V.begin(), V.end(), [&s](const auto &i) { return i.name == s; });
 }
 
@@ -607,7 +607,7 @@ void Parser::use_a_package(const std::string &name, bool type, const std::string
     cur->checked = true;
     cur->add_options(cur_opt_list);
     cur->req_date                      = date;
-    String T                           = type ? "Class" : "Package";
+    std::string_view T                 = type ? "Class" : "Package";
     auto   res                         = find_in_confdir(name + (type ? ".clt"s : ".plt"s));
     the_class_data.using_default_class = false;
     if (!res) {

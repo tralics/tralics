@@ -13,7 +13,7 @@
 #include <fmt/format.h>
 
 namespace arith_ns {
-    void start_err(String s);
+    void start_err(std::optional<std::string_view> s);
     void end_err();
 } // namespace arith_ns
 
@@ -21,9 +21,9 @@ using arith_ns::end_err;
 using arith_ns::start_err;
 
 // This prepares for an arithmetic error.
-void arith_ns::start_err(String s) {
+void arith_ns::start_err(std::optional<std::string_view> s) {
     err_buf = "Arithmetic overflow";
-    if (s != nullptr) err_buf += fmt::format(", threshold={}", s);
+    if (s) err_buf += fmt::format(", threshold={}", *s);
 }
 
 // Signals the error in the buffer.
@@ -194,7 +194,7 @@ void SthInternal::add(const SthInternal &r) {
         int_val = ScaledInt{x + y};
         return;
     }
-    start_err(static_cast<String>(type == it_int ? "2^{31}" : "2^{30}"));
+    start_err(std::string_view(type == it_int ? "2^{31}" : "2^{30}"));
     err_buf.format("\nin {}+{}", x, y);
     end_err();
     int_val = ScaledInt{mx};

@@ -25,18 +25,18 @@ private:
     void boot2();
     void boot_chars();
     void boot_xml_lr_tables();
-    auto mk_gen(String name, String ent, String ent2, math_loc pos, math_loc pos2, const std::string &bl, symcodes t, bool hack) -> Token;
-    void mk_ic(String name, String ent, String ent2, math_loc pos);
-    void mk_icb(String name, String ent, String ent2, math_loc pos);
-    void mk_oc(String name, String ent, String ent2, math_loc pos);
-    void mk_oco(String name, String ent, String ent2, math_loc pos);
-    void mk_ocol(String name, String ent, String ent2, math_loc pos);
-    void mk_ocb(String name, String ent, String ent2, math_loc pos);
-    void mk_ocr(String name, String ent, String ent2, math_loc pos);
-    void mk_oc(String name, String ent, String ent2, math_loc pos, symcodes t, bool hack);
-    void mk_moo(String name, String ent, math_loc pos);
-    void fill_lr(size_t a, String b, String c);
-    void fill_lr(size_t a, String b);
+    auto mk_gen(std::string_view name, std::string_view ent, std::string_view ent2, math_loc pos, math_loc pos2, const std::string &bl, symcodes t, bool hack) -> Token;
+    void mk_ic(std::string_view name, std::string_view ent, std::string_view ent2, math_loc pos);
+    void mk_icb(std::string_view name, std::string_view ent, std::string_view ent2, math_loc pos);
+    void mk_oc(std::string_view name, std::string_view ent, std::string_view ent2, math_loc pos);
+    void mk_oco(std::string_view name, std::string_view ent, std::string_view ent2, math_loc pos);
+    void mk_ocol(std::string_view name, std::string_view ent, std::string_view ent2, math_loc pos);
+    void mk_ocb(std::string_view name, std::string_view ent, std::string_view ent2, math_loc pos);
+    void mk_ocr(std::string_view name, std::string_view ent, std::string_view ent2, math_loc pos);
+    void mk_oc(std::string_view name, std::string_view ent, std::string_view ent2, math_loc pos, symcodes t, bool hack);
+    void mk_moo(std::string_view name, std::string_view ent, math_loc pos);
+    void fill_lr(size_t a, std::string_view b, std::string_view c);
+    void fill_lr(size_t a, std::string_view b);
 
 public:
     void boot();
@@ -47,7 +47,7 @@ public:
     auto find_xml_location() -> subtypes;
     auto find_xml_location(Xml *y) -> subtypes;
     auto make_mfenced(size_t open, size_t close, gsl::not_null<Xml *> val) -> gsl::not_null<Xml *>;
-    void TM_mk(String a, String b, math_types c);
+    void TM_mk(std::string_view a, std::string_view b, math_types c);
     void finish_math_mem();
     auto get_mc_table(size_t i) { return gsl::not_null{mc_table[i]}; }
     auto get_builtin(size_t p) { return gsl::not_null{built_in_table[p]}; }
@@ -66,8 +66,8 @@ public:
     auto get_math_char_type(size_t i) -> math_types { return math_char_type[i]; }
     void set_type(size_t k, math_list_type c);
 
-    static auto mk_mo(String a) -> gsl::not_null<Xml *>;
-    auto        mk_gen(String name, String ent, String ent2, math_loc pos, const std::string &bl, symcodes t, bool hack) -> Token;
+    static auto mk_mo(std::string_view a) -> gsl::not_null<Xml *>;
+    auto        mk_gen(std::string_view name, std::string_view ent, std::string_view ent2, math_loc pos, const std::string &bl, symcodes t, bool hack) -> Token;
 };
 
 inline MathDataP math_data; // \todo unique instance, should we use static stuff?

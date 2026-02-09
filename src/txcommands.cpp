@@ -46,7 +46,7 @@ void Parser::init_all(const std::string &doc_elt) {
 
 // This assumes that the string is plain ASCII, no special XML characters
 // Note: never use process_char('&'),
-void Parser::process_string(String s) { unprocessed_xml.append(s); }
+void Parser::process_string(std::string_view s) { unprocessed_xml.append(s); }
 
 // This is useful for German unlaut. It translates two normal characters.
 void Parser::translate_char(uchar c1, uchar c2) {
@@ -283,7 +283,7 @@ void Parser::T_cst2(subtypes c) {
     flush_buffer();
     {
         Xml   *res = fonts1("sup");
-        String s   = "o";
+        std::string_view s   = "o";
         if (c == ier_code)
             s = "er";
         else if (c == iers_code)

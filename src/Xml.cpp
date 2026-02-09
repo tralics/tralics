@@ -176,7 +176,7 @@ namespace {
     }
 
     // This removes the object S, together with the label n
-    void remove_label(String s, const std::string &n) {
+    void remove_label(std::string_view s, const std::string &n) {
         for (auto &i : the_parser.ref_list) {
             std::string V  = i.second;
             auto       *li = labinfo(V);
@@ -189,7 +189,7 @@ namespace {
             std::string j = defined_label.first;
             LabelInfo  *V = defined_label.second;
             if (j == n && V->defined && !V->used) {
-                the_parser.removed_labels.emplace_back(s, n);
+                the_parser.removed_labels.emplace_back(std::string(s), n);
                 V->defined = false;
             }
         }

@@ -2,7 +2,7 @@
 #include "tralics/Buffer.h"
 
 namespace arith_ns {
-    void start_err(String s);
+    void start_err(std::optional<std::string_view> s);
     void end_err();
 } // namespace arith_ns
 
@@ -26,7 +26,7 @@ void Glue::scale(long n, long d) {
 
 void Glue::divide(long n) {
     if (n == 0) {
-        start_err(nullptr);
+        start_err(std::nullopt);
         err_buf += ", division by 0";
         end_err();
         return;

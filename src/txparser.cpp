@@ -1483,11 +1483,11 @@ auto Parser::csname_ctr(TokenList &L, Buffer &b) -> bool {
 }
 
 // Signals an error; returns the string or bad
-auto Parser::list_to_string_c(TokenList &x, String msg) -> std::string {
+auto Parser::list_to_string_c(TokenList &x, std::string_view msg) -> std::string {
     Buffer &B = Thbuf1;
     B.clear();
     if (list_to_string(x, B)) {
-        parse_error(err_tok, msg, x);
+        parse_error(err_tok, std::string(msg), x);
         B = "bad";
     }
     return B;
@@ -1507,17 +1507,17 @@ auto Parser::list_to_string_c(TokenList &x, const std::string &s1, const std::st
 
 // This is like \csname s1 L s2 \endcsname
 // It returns true and signals in case of error.
-auto Parser::my_csname(String s1, String s2, TokenList &L, String s) -> bool {
-    if (tracing_commands()) spdlog::trace("{{{}}}", s ? s : "");
+auto Parser::my_csname(std::string_view s1, std::string_view s2, TokenList &L, std::optional<std::string_view> s) -> bool {
+    if (tracing_commands()) spdlog::trace("{{{}}}", s ? *s : "");
     Buffer b;
     b.append(s1);
     bool r = list_to_string(L, b);
     b.append(s2);
     if (r) {
-        bad_csname(s != nullptr);
+        bad_csname(s.has_value());
         return true;
     }
-    finish_csname(b, s);
+    finish_csname(b, s ? std::string(*s) : std::string{});
     return false;
 }
 
@@ -1777,13 +1777,13 @@ auto Parser::M_counter(bool def) -> std::optional<bool> {
     if (counter_check(b, def)) return true;
     back_input();
     if (!def) return false;
-    auto res = counter_aux(b.substr(2), nullptr, T);
+    auto res = counter_aux(b.substr(2), std::nullopt, T);
     if (!res) return std::nullopt;
     return *res;
 }
 
 // Used by the bootstrap phase to define a dependent counter
-auto Parser::counter_boot(const std::string &s, String aux) -> bool {
+auto Parser::counter_boot(const std::string &s, std::optional<std::string_view> aux) -> bool {
     Token   T = hash_table.relax_token;
     Buffer &b = Thbuf2;
     b         = "c@" + s;
@@ -1819,11 +1819,11 @@ auto Parser::counter_check(const Buffer &b, bool def) -> bool {
 // Return 0 if no opt argument, 1 if error, 2 if OK
 // If s is a valid string, it contains the optional argument
 
-auto Parser::counter_read_opt(String s) -> int {
-    if (s != nullptr) {
-        if (s[0] == 0) return 0; // s empty says no opt arg
+auto Parser::counter_read_opt(std::optional<std::string_view> s) -> int {
+    if (s) {
+        if (s->empty()) return 0;
         Buffer &b = Thbuf2;
-        b         = fmt::format("cl@{}", s);
+        b         = fmt::format("cl@{}", *s);
         finish_csname(b, "newcounter");
         return 2;
     }
@@ -1837,7 +1837,7 @@ auto Parser::counter_read_opt(String s) -> int {
 
 // This defines a new counter, named name; second arg is for counter_read_opt
 // cur_tok (o be read again) holds the token \c@foo
-auto Parser::counter_aux(const std::string &name, String opt, Token T) -> std::optional<bool> {
+auto Parser::counter_aux(const std::string &name, std::optional<std::string_view> opt, Token T) -> std::optional<bool> {
     Buffer &b = Thbuf1;
     // We are defining a counter now
     // We construct a macro without argument that expands to \number\c@foo
@@ -1904,7 +1904,7 @@ void Parser::new_constant(subtypes c) {
 // and a symcode like char_given_cmd
 // allocates registter number k whose value at the table at position alloc_pos
 // (plus an offset, maybe)
-void Parser::new_constant(String /*name*/, size_t max_val, subtypes alloc_pos, symcodes c) {
+void Parser::new_constant(std::string_view /*name*/, size_t max_val, subtypes alloc_pos, symcodes c) {
     Token T = cur_tok;
     get_r_token(true);
     auto k = allocation_table[alloc_pos];
@@ -2048,7 +2048,7 @@ void Parser::M_newboolean(subtypes c) {
 }
 
 // Used for bootstrap
-void Parser::make_token(String s) {
+void Parser::make_token(std::string_view s) {
     Buffer &b = Thbuf1;
     b.clear();
     b.append(s);
@@ -2084,19 +2084,19 @@ void Parser::new_prim(Token name, TokenList &L) {
     eq_define(name.eqtb_loc(), CmdChr(user_cmd, B), true);
 }
 
-void Parser::new_prim(String a, TokenList &b) { new_prim(hash_table.locate(a), b); }
+void Parser::new_prim(std::string_view a, TokenList &b) { new_prim(hash_table.locate(a), b); }
 
 // new_primx("@nnil","@nil"); implements \def\@nnil{\@nil}
-void Parser::new_primx(String a, String b) {
+void Parser::new_primx(std::string_view a, std::string_view b) {
     TokenList L;
     L.push_back(hash_table.locate(b));
     new_prim(hash_table.locate(a), L);
 }
 
 // new_prim("@plus","plus"); implements \def\@plus{plus}
-void Parser::new_prim(String a, String b) {
+void Parser::new_prim(std::string_view a, std::string_view b) {
     TokenList L;
-    auto      n = strlen(b);
+    auto      n = b.size();
     for (size_t i = 0; i < n; i++) {
         auto c = b[i];
         if (uchar(c) > 128) {
@@ -2257,7 +2257,7 @@ auto Parser::get_mac_value(Token t) -> TokenList {
 
 // c is the number of arguments, c=0 is the same as 1, 5 is 12of3
 void Parser::E_all_of_one(Token T, subtypes c) {
-    String s{nullptr};
+    std::string_view s;
     int    n  = 0;
     bool   vb = tracing_macros();
     switch (c) {
@@ -2546,11 +2546,11 @@ void Parser::E_ignore_n_args(bool vb, subtypes c) {
 
 // If the tokens that follows are that of the string S (upper or lower case)
 // then they are read. Initial spaces are read. Full expansion.
-auto Parser::scan_keyword(String s) -> bool {
+auto Parser::scan_keyword(std::string_view s) -> bool {
     size_t    k = 0;
     TokenList L;
     for (;;) {
-        if (s[k] == 0) return true;
+        if (k >= s.size()) return true;
         get_x_token();
         if (cur_tok.not_a_cmd() && (cur_cmd_chr.char_val() == uchar(s[k]) || cur_cmd_chr.char_val() == uchar(s[k] + 'A' - 'a'))) {
             L.push_back(cur_tok);
@@ -2975,7 +2975,7 @@ void Parser::M_let(Token A, bool global, bool redef) {
     if (redef && !ok_to_define(A, rd_if_undef)) return;
     auto pos = A.eqtb_loc();
     if (tracing_assigns()) {
-        String action = global ? "globally " : "";
+        std::string_view action = global ? "globally " : "";
         auto   before = token_for_show_str(Hashtab::the_eqtb()[pos].val);
         auto   after  = token_for_show_str(cur_cmd_chr);
         spdlog::trace("{{{}changing {}={}}}\n{{into {}={}}}", action, fmt::streamed(A), before, fmt::streamed(A), after);
@@ -3271,7 +3271,7 @@ void Parser::M_shorthand_define(subtypes cmd, bool gbl) {
 }
 
 // For bootstrap; always traced
-auto Parser::shorthand_gdefine(subtypes cmd, String sh, unsigned k) -> Token {
+auto Parser::shorthand_gdefine(subtypes cmd, std::string_view sh, unsigned k) -> Token {
     Token    T = hash_table.locate(sh);
     auto     p = T.eqtb_loc(); // return value
     symcodes ncmd{};
@@ -3469,7 +3469,7 @@ void Parser::set_boolean() {
     Token     T = cur_tok;
     TokenList A = read_arg();
     TokenList B = read_arg();
-    String    s = "";
+    std::string_view    s = "";
     Buffer    b;
     list_to_string_cv(B, b);
     if (b == "true")
@@ -3847,7 +3847,7 @@ void Parser::exec_calc() {
     else
         p = it_glue; // ok ? should add a test here....
     if (tracing_commands()) {
-        String s = p == it_int ? "integer" : (p == it_dimen ? " dimension" : "glue");
+        std::string_view s = p == it_int ? "integer" : (p == it_dimen ? " dimension" : "glue");
         spdlog::trace("{{calc modifying {} at position {}}}", s, to_signed(l));
     }
     SthInternal res;
@@ -4017,7 +4017,7 @@ void Parser::begin_box(size_t src, subtypes c) {
         L = toks_registers[everyhbox_code].val;
     if (!L.empty()) {
         if (tracing_commands()) {
-            String name = "<everyvbox> ";
+            std::string_view name = "<everyvbox> ";
             if (c == xbox_code)
                 name = "<everyxbox> ";
             else if (c == hbox_code)

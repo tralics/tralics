@@ -322,7 +322,7 @@ void Parser::verb_error(Token T, int msg) {
 }
 
 void Parser::missing_equals(Token T) {
-    String s = "Missing = inserted for comparison ";
+    const std::string s = "Missing = inserted for comparison ";
     parse_error(T, s, cur_tok, "", s);
     back_input(cur_tok);
 }
@@ -377,8 +377,8 @@ void Parser::missing_flush() {
     signal_error(Token(), "non-empty buffer");
 }
 
-void Parser::signal_ovf(Token T, String h, long cur, long max) {
-    if (h != nullptr) err_buf = h;
+void Parser::signal_ovf(Token T, std::optional<std::string_view> h, long cur, long max) {
+    if (h) err_buf = std::string(*h);
     err_buf.format("{} wants 0<=N<={}, with N={}", fmt::streamed(T), max, cur);
     signal_error(T, "number too big");
 }
@@ -405,8 +405,9 @@ void Parser::missing_number() {
 }
 
 // Error signaled for bad mu
-void Parser::mu_error(String s, int i) {
-    err_buf = "Incompatible glue units in " + err_tok.tok_to_str() + "\n" + s;
+void Parser::mu_error(std::string_view s, int i) {
+    err_buf = "Incompatible glue units in " + err_tok.tok_to_str() + "\n";
+    err_buf += s;
     switch (i) {
     case it_int: err_buf += "integer"; break;
     case it_dimen: err_buf += "dimension"; break;

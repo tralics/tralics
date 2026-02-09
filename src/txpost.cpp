@@ -21,7 +21,7 @@ namespace {
 } // namespace
 
 namespace post_ns {
-    void print_no_title(int i, String s);
+    void print_no_title(int i, std::string_view s);
 } // namespace post_ns
 
 void Parser::user_XML_swap(subtypes c) {

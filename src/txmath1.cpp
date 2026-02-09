@@ -880,11 +880,11 @@ void MathElt::cv_noMLt() {
         return;
     }
     case hspace_cmd: {
-        String name = chr == 1 || chr == 3 ? "vspace" : "hspace";
+        std::string_view name = chr == 1 || chr == 3 ? "vspace" : "hspace";
         if (chr >= 2) att_buffer = " star='true'";
-        mathml_buffer.push_back_math_tag(name, chr < 2 ? pbm_start : pbm_att);
+        mathml_buffer.push_back_math_tag(std::string(name), chr < 2 ? pbm_start : pbm_att);
         mathml_buffer.push_back(ScaledInt(get_font()), glue_spec_pt);
-        mathml_buffer.push_back_math_tag(name, pbm_end);
+        mathml_buffer.push_back_math_tag(std::string(name), pbm_end);
         return;
     }
     default: mathml_buffer.push_back_math_tag(*this, pbm_empty); return;
@@ -1074,8 +1074,8 @@ auto Math::chars_to_mb3() -> std::string {
 }
 
 // Procedure called in case of errors
-void Buffer::show_uncomplete(String m) {
-    the_parser.signal_error(m);
+void Buffer::show_uncomplete(std::string_view m) {
+    the_parser.signal_error(std::string(m));
     if (empty())
         spdlog::error("No character found");
     else

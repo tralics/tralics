@@ -101,7 +101,7 @@ struct Parser {
     Xml                                             *the_xmlA{nullptr}, *the_xmlB{nullptr}; // for XML tree manipulations
     std::vector<std::pair<size_t, std::string>>      ref_list;                              // list of all \ref
     std::vector<std::pair<std::string, LabelInfo *>> defined_labels;                        // list of all \label
-    std::vector<std::pair<String, std::string>>      removed_labels;                        // list of all \label removed
+    std::vector<std::pair<std::string, std::string>>      removed_labels;                        // list of all \label removed
 
     [[nodiscard]] auto at_eol() const -> bool { return input_line_pos >= input_line.size(); }
     auto               get_next_char() -> char32_t { return input_line[input_line_pos++]; }
@@ -164,8 +164,7 @@ struct Parser {
     auto               list_to_string(TokenList &L, Buffer &b) -> bool;
     auto               list_to_string_cv(TokenList &L, Buffer &b) -> bool;
     auto               list_to_string_c(TokenList &x, const std::string &s1, const std::string &s2, const std::string &msg) -> Buffer;
-    auto               list_to_string_c(TokenList &x, String msg) -> std::string;
-    auto               csname_aux(String s1, String s2, TokenList &L, bool cs, Buffer &b) -> bool;
+    auto               list_to_string_c(TokenList &x, std::string_view msg) -> std::string;
     auto               csname_aux(TokenList &L, bool cs, Buffer &b) -> bool;
     auto               csname_ctr(TokenList &L, Buffer &b) -> bool;
     void               eq_define(size_t a, CmdChr bc, bool gbl);
@@ -200,7 +199,7 @@ struct Parser {
     void               signal_error();
     void               signal_error(const std::string &s);
     void               signal_error(Token T, const std::string &s);
-    void               signal_ovf(Token T, String h, long cur, long max);
+    void               signal_ovf(Token T, std::optional<std::string_view> h, long cur, long max);
     auto               special_expand(TokenList *args) -> TokenList;
     auto               special_tpa_arg(const std::string &name, const std::string &y, bool par, bool env, bool has_q) -> Xml *;
     bool               T_titlepage_finish(size_t v);
@@ -209,7 +208,7 @@ struct Parser {
     auto               translate0() -> bool;
     auto               translate_all() -> bool;
     void               word_define(size_t a, long c, bool gbl);
-    void               mu_error(String s, int i);
+    void               mu_error(std::string_view s, int i);
     void               expand_nct(TokenList &L);
     void               token_for_show(const CmdChr &val);
     [[nodiscard]] auto token_for_show_str(const CmdChr &val) -> std::string;
@@ -220,9 +219,9 @@ struct Parser {
     auto               check_brace(int &b) const -> bool;
     auto               check_builtin_pack(const std::string &pack) -> bool;
     auto               check_if_redef(const std::string &s) -> bool;
-    auto               counter_aux(const std::string &name, String opt, Token T) -> std::optional<bool>;
+    auto               counter_aux(const std::string &name, std::optional<std::string_view> opt, Token T) -> std::optional<bool>;
     auto               counter_check(const Buffer &b, bool def) -> bool;
-    auto               counter_read_opt(String s) -> int;
+    auto               counter_read_opt(std::optional<std::string_view> s) -> int;
     auto               cs_from_input() -> Token;
     auto               delimiter_for_saveverb() -> char32_t;
     auto               delimiter_for_verb(bool &special_space) -> char32_t;
@@ -268,9 +267,9 @@ struct Parser {
     auto               M_counter(bool def) -> std::optional<bool>;
     auto               make_label_inner(const std::string &name) -> std::string;
     auto               math_argument(int w, Token T) -> std::optional<subtypes>;
-    auto               math_dimen_attrib(Token C, String s) -> int;
+    auto               math_dimen_attrib(Token C, std::string_view s) -> int;
     auto               math_lr_value() -> del_pos;
-    auto               my_csname(String s1, String s2, TokenList &L, String s) -> bool;
+    auto               my_csname(std::string_view s1, std::string_view s2, TokenList &L, std::optional<std::string_view> s) -> bool;
     auto               new_line_for_read(bool spec) -> bool;
     [[nodiscard]] auto new_math_list(size_t cur_math, math_list_type c, subtypes s) -> std::optional<subtypes>;
     auto               next_from_line() -> bool;
@@ -321,10 +320,10 @@ struct Parser {
     auto               scan_group2(TokenList &L) -> bool;
     auto               scan_int_digs() -> long;
     auto               scan_int_internal() -> long;
-    auto               scan_int(Token T, int n, String s) -> size_t;
+    auto               scan_int(Token T, int n, std::string_view s) -> size_t;
     auto               scan_int(Token T) -> long;
     auto               scan_int(TokenList &L, Token T) -> long;
-    auto               scan_keyword(String s) -> bool;
+    auto               scan_keyword(std::string_view s) -> bool;
     auto               scan_math_dollar(size_t res, math_list_type type) -> bool;
     auto               scan_math_endcell(Token t) -> bool;
     auto               scan_math_env(size_t res, math_list_type type) -> bool;
@@ -340,7 +339,7 @@ struct Parser {
     auto               sE_arg_nopar() -> std::string;
     auto               sE_arg() -> std::string;
     auto               sE_optarg_nopar() -> std::string;
-    auto               shorthand_gdefine(subtypes cmd, String sh, unsigned k) -> Token;
+    auto               shorthand_gdefine(subtypes cmd, std::string_view sh, unsigned k) -> Token;
     auto               skip_prefix(const TokenList &L) -> bool;
     auto               special_next_arg() -> std::string;
     auto               sT_arg_nopar() -> std::string;
@@ -413,7 +412,7 @@ struct Parser {
     void               check_outer_validity();
     void               close_all();
     bool               count_days();
-    bool               counter_boot(const std::string &s, String aux);
+    bool               counter_boot(const std::string &s, std::optional<std::string_view> aux);
     void               counter_overflow(Token T, long n, int nmax);
     void               csname_arg();
     bool               date_commands(subtypes c);
@@ -586,7 +585,7 @@ struct Parser {
     void               M_xray(subtypes c);
     void               mac_define(Token a, Macro *b, bool gbl, rd_flag redef, symcodes what);
     void               make_catcodes();
-    void               make_token(String s);
+    void               make_token(std::string_view s);
     void               makelabel();
     void               minus_sign(CmdChr X);
     void               missing_argument();
@@ -600,17 +599,17 @@ struct Parser {
     void               multiple_label(const std::string &name, int L, const std::string &f);
     void               multiply_dim(RealNumber val, long v);
     void               need_bib_mode();
-    void               new_constant(String name, size_t max_val, subtypes alloc_pos, symcodes c);
+    void               new_constant(std::string_view name, size_t max_val, subtypes alloc_pos, symcodes c);
     void               new_constant(subtypes c);
     void               new_font();
     void               new_macro(const std::string &s, Token name);
     void               new_macro(TokenList &L, Token name, bool gbl);
     void               new_macro(TokenList &L, Token name);
-    void               new_prim(String a, String b);
-    void               new_prim(String a, TokenList &b);
+    void               new_prim(std::string_view a, std::string_view b);
+    void               new_prim(std::string_view a, TokenList &b);
     void               new_prim(Token name, TokenList &L);
     void               new_prim(Token, Token);
-    void               new_primx(String a, String b);
+    void               new_primx(std::string_view a, std::string_view b);
     void               new_xref(Xml *val, std::string v, bool err);
     bool               next_date();
     void               next_day();
@@ -636,7 +635,7 @@ struct Parser {
     void               process_char(int s);
     void               process_char(size_t c);
     void               process_char(uchar c);
-    void               process_string(String s);
+    void               process_string(std::string_view s);
     void               push_input_stack(const std::string &name, bool restore_at, bool re);
     void               push_level(boundary_type v);
     auto               push_module() -> bool;
@@ -759,7 +758,7 @@ struct Parser {
     void               T_etex();
     void               T_execute_options();
     void               T_fancy();
-    void               T_fancy(String s, const TokenList &L);
+    void               T_fancy(std::string_view s, const TokenList &L);
     bool               T_fbox_dash_box();
     bool               T_fbox_rotate_box();
     bool               T_fbox(subtypes cc);
@@ -844,7 +843,7 @@ struct Parser {
     void               T_start_tabular(subtypes c);
     void               T_start_the_biblio();
     [[nodiscard]] bool T_start_theorem(subtypes c);
-    void               T_startprojet(String proj, String loc);
+    void               T_startprojet(std::string_view proj, std::string_view loc);
     bool               T_subequations(bool start);
     auto               T_subfigure() -> bool;
     void               T_testopt();
@@ -908,8 +907,8 @@ struct Parser {
     auto l3_read_int(Token T) -> long;
     auto L3_split_next_name() -> bool;
     auto l3_to_string(subtypes c, TokenList &L) -> std::optional<std::string>;
-    void define_definer(String base, String nsig, String osig);
-    void define_definer(String base);
+    void define_definer(std::string_view base, std::string_view nsig, std::string_view osig);
+    void define_definer(std::string_view base);
     void E_cat_ifeq(subtypes c);
     void E_l3_ifx(subtypes c);
     auto E_l3expand_aux(subtypes c) -> bool;
@@ -931,7 +930,7 @@ struct Parser {
     void L3_generate_form(subtypes c, TokenList parms, TokenList body, subtypes s);
     void l3_generate_variant();
     void l3_generate_variant(const std::string &var, bool prot, Token orig);
-    void l3_generate_variant(String orig, String var);
+    void l3_generate_variant(std::string_view orig, std::string_view var);
     void L3_getid();
     void L3_logid();
     void L3_new_conditional_aux(const TokenList &arg_spec, subtypes s);

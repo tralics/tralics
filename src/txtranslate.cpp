@@ -887,8 +887,8 @@ void Parser::default_bp(Buffer &B, Token T, TokenList &val) {
 // chr =0 for \includegraphics, 1 for \psfig
 void Parser::includegraphics(subtypes C) {
     bool   ic   = C == 0;
-    String bkey = "Bad key in argument of of includegraphics";
-    String bval = "Bad value in argument of includegraphics";
+    std::string_view bkey = "Bad key in argument of of includegraphics";
+    std::string_view bval = "Bad value in argument of includegraphics";
     Token  T    = cur_tok;
     remove_initial_star();
     Token       comma  = hash_table.comma_token;

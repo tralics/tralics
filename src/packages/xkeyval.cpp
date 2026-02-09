@@ -45,7 +45,7 @@ namespace {
 
     public:
         void run(bool c);
-        void check_preset(String s);
+        void check_preset(std::string_view s);
         void special_fams();
         void fetch_keys(bool c);
         void check_action(const XkvToken &cur);
@@ -241,10 +241,10 @@ namespace {
         token_ns::remove_first_last_space(value);
     }
 
-    void XkvSetkeys::check_preset(String s) {
+    void XkvSetkeys::check_preset(std::string_view s) {
         auto N = Fams.size();
         for (size_t i = 0; i < N; i++) {
-            auto xkv_local_buf = "XKV@" + xkv_makehd_s(Fams[i]) + s;
+            auto xkv_local_buf = "XKV@" + xkv_makehd_s(Fams[i]) + std::string(s);
             if (hash_table.is_defined(xkv_local_buf)) {
                 Token     T = hash_table.locate(xkv_local_buf);
                 TokenList W = the_parser.get_mac_value(T);

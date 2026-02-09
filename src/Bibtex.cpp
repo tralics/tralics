@@ -11,7 +11,7 @@
 namespace {
     bool start_comma = true; // should we scan for an initial comma ?
 
-    const std::array<String, 9> scan_msgs{
+    const std::array<std::string_view, 9> scan_msgs{
         "bad syntax for a field type",
         "bad syntax for an entry type",
         "bad syntax for a string name",
@@ -138,20 +138,20 @@ auto Bibtex::look_for_macro(const std::string &name) -> std::optional<size_t> {
 // the macro is initialised to val.
 // [ if xname true, we define a system macro,
 //   otherwise we define/redefine user one]
-auto Bibtex::find_a_macro(Buffer &name, bool insert, String xname, String val) -> std::optional<size_t> {
-    if (xname != nullptr) name = xname;
+auto Bibtex::find_a_macro(Buffer &name, bool insert, std::optional<std::string_view> xname, std::string_view val) -> std::optional<size_t> {
+    if (xname) name = std::string(*xname);
     auto lfm = look_for_macro(name);
     if (lfm || !insert) return lfm;
     auto res = all_macros.size();
-    if (xname != nullptr)
-        all_macros.emplace_back(xname, val);
+    if (xname)
+        all_macros.emplace_back(std::string(*xname), std::string(val));
     else
         all_macros.emplace_back(name);
     return res;
 }
 
 // This defines a system macro.
-void Bibtex::define_a_macro(String name, String value) {
+void Bibtex::define_a_macro(std::string_view name, std::string_view value) {
     Buffer B;
     find_a_macro(B, true, name, value);
 }
@@ -205,7 +205,7 @@ auto Bibtex::exec_bibitem(const std::string &b) -> std::string {
 
 // Signals an error while reading the file.
 // We do not use parse_error here
-void Bibtex::err_in_file(String s, bool last) const {
+void Bibtex::err_in_file(std::string_view s, bool last) const {
     the_parser.nb_errs++;
     if (!cur_entry_name.empty())
         spdlog::error("Error detected at line {} of bibliography file {}\nin entry {} started at line {}\n{}{}", cur_bib_line,
@@ -214,7 +214,7 @@ void Bibtex::err_in_file(String s, bool last) const {
         spdlog::error("Error detected at line {} of bibliography file {}\n{}{}", cur_bib_line, in_lines.file_name, s, last ? "." : "");
 }
 
-void Bibtex::err_in_entry(String a) {
+void Bibtex::err_in_entry(std::string_view a) {
     the_parser.nb_errs++;
     if (the_bibtex.cur_entry_line >= 0)
         spdlog::error("Error signaled while handling entry {} (line {})\n{}", the_bibtex.cur_entry_name, the_bibtex.cur_entry_line, a);
@@ -450,7 +450,7 @@ auto Bibtex::parse_one_item() -> bool {
         if (!res) return false;
         k = *res;
         if (k) return true;
-        auto X = *find_a_macro(token_buf, true, nullptr, nullptr);
+        auto X = *find_a_macro(token_buf, true, std::nullopt, "");
         mac_def_val(X);
         if (!read_field(true)) return false;
         mac_set_val(X, field_buf.special_convert(false));
@@ -584,7 +584,7 @@ auto Bibtex::see_new_entry(entry_type cn, int lineno) -> BibEntry * {
         if (!res) return false;
         bool k = *res;
         if (store && !k) {
-            auto macro = find_a_macro(token_buf, false, nullptr, nullptr);
+            auto macro = find_a_macro(token_buf, false, std::nullopt, "");
             if (!macro) {
                 err_in_file("", false);
                 spdlog::error("undefined macro {}.", fmt::streamed(token_buf));

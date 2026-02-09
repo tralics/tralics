@@ -64,7 +64,7 @@ namespace {
         return "csnameendcsname";
     }
 
-    void err_in_name(String a, long i) {
+    void err_in_name(std::string_view a, long i) {
         Bibtex::err_in_entry(a);
         spdlog::error("\nbad syntax in author or editor name\n");
         spdlog::error("error occurred at character position {} in the string\n{}.", i, fmt::streamed(name_buffer));
@@ -291,7 +291,7 @@ void Buffer::push_back(const ScaledInt &V, glue_spec unit) {
         delta = delta * 10;
         if (s <= delta) break;
     }
-    constexpr std::array<String, 6> gptable{"pt", "fil", "fill", "filll", "", "mu"};
+    constexpr std::array<std::string_view, 6> gptable{"pt", "fil", "fill", "filll", "", "mu"};
     append(gptable[unit]);
 }
 

@@ -962,7 +962,7 @@ void Parser::Tl3_gen_from_ac(subtypes c) {
 
 // if args are set, Nn, Npn, this is
 //  \def\cs_set:Nn{\__cs_generate_from_signature:NNn \cs_set:Npn}
-void Parser::define_definer(String base, String nsig, String osig) {
+void Parser::define_definer(std::string_view base, std::string_view nsig, std::string_view osig) {
     Token     nt = hash_table.locate(fmt::format("cs_{}:{}", base, nsig));
     Token     ot = hash_table.locate(fmt::format("cs_{}:{}", base, osig));
     TokenList L;
@@ -975,7 +975,7 @@ void Parser::define_definer(String base, String nsig, String osig) {
 // Example: if base is "set", this is
 //  \protected\def\cs_set:Nn{\exp_args:Nc \cs_set:Nn}
 //  \protected\def\cs_set:Nx{\exp_args:Nc \cs_set:Nx}
-void Parser::define_definer(String base) {
+void Parser::define_definer(std::string_view base) {
     Token     nt = hash_table.locate(fmt::format("cs_{}:cn", base));
     Token     ot = hash_table.locate(fmt::format("cs_{}:Nn", base));
     TokenList L;
@@ -1015,7 +1015,7 @@ void Parser::l3_generate_variant() {
 
 // This one is used by the bootstrap code.
 // The original macro need not be defined yet.
-void Parser::l3_generate_variant(String orig, String var) {
+void Parser::l3_generate_variant(std::string_view orig, std::string_view var) {
     Token   T = hash_table.locate(orig);
     Buffer &B = local_buffer;
     B         = orig;
@@ -1027,7 +1027,7 @@ void Parser::l3_generate_variant(String orig, String var) {
         tok_base = B;
         tok_sig  = "";
     }
-    l3_generate_variant(var, false, T);
+    l3_generate_variant(std::string(var), false, T);
 }
 
 // This produces a single variant;

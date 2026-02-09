@@ -83,7 +83,7 @@ namespace {
         return {};
     }
 
-    void trace_scan_expr(String s, const SthInternal &v, char t, Token T) {
+    void trace_scan_expr(std::string_view s, const SthInternal &v, char t, Token T) {
         if (tracing_commands() && t != ' ') { spdlog::trace("+{} so far for {}{} {}", s, fmt::streamed(T), t, fmt::streamed(v)); }
     }
 
@@ -1024,11 +1024,11 @@ auto Parser::scan_int(TokenList &L, Token T) -> long {
 
 // This function calls scan_int for the token t,
 // and checks that the result is between 0 and n (inclusive).
-auto Parser::scan_int(Token t, int n, String s) -> size_t {
+auto Parser::scan_int(Token t, int n, std::string_view s) -> size_t {
     auto N = scan_int(t);
     if (N < 0 || N > n) {
         err_buf = fmt::format("Bad {} replaced by 0\n", s);
-        signal_ovf(t, nullptr, N, n);
+        signal_ovf(t, std::nullopt, N, n);
         cur_val.int_val = ScaledInt{0};
         return 0;
     }

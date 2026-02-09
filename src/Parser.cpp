@@ -1371,7 +1371,7 @@ auto Parser::load_latex() -> bool {
     new_constant(newlength_code);
     // commands like \newcounter\foo
     shorthand_gdefine(count_def_code, "m@ne", 20);
-    auto add_counter = [this](const std::string &name, String aux) { return counter_boot(name, aux); };
+    auto add_counter = [this](const std::string &name, std::optional<std::string_view> aux) { return counter_boot(name, aux); };
     if (!add_counter("FancyVerbLine", "")) return false; // hard-coded 21
     if (!add_counter("enumi", "")) return false;
     if (!add_counter("enumii", "")) return false;
@@ -1642,7 +1642,7 @@ void Parser::more_bootstrap() {
     TokenList L1;
     Token     w;
 
-    auto ADD_TO_BOTH = [&](String s) {
+    auto ADD_TO_BOTH = [&](std::string_view s) {
         w = hash_table.locate(s);
         L.push_back(T);
         L.push_back(w);
@@ -1760,8 +1760,8 @@ void Parser::E_accent() {
         back_input(Token(other_t_offset, '~'));
         return;
     }
-    String msg1 = "Error in accent, command = ";
-    String msg2 = "bad accent";
+    const char *msg1 = "Error in accent, command = ";
+    const char *msg2 = "bad accent";
     Token  tfe  = cur_tok;
     // Fetch the accent
     TokenList y = read_arg();

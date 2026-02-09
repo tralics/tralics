@@ -57,7 +57,7 @@ private:
     void sort_author(bool au);
     void sort_editor();
     void sort_organization();
-    void sort_check(String);
+    void sort_check(std::string_view);
     void presort(long serial);
     void sort_key();
     void format_author(bool au);

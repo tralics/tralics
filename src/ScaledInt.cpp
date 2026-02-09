@@ -2,7 +2,7 @@
 #include "tralics/Buffer.h"
 
 namespace arith_ns {
-    void start_err(String s);
+    void start_err(std::optional<std::string_view> s);
     void end_err();
 } // namespace arith_ns
 
@@ -24,7 +24,7 @@ auto operator<<(std::ostream &fp, const ScaledInt &x) -> std::ostream & {
 // This makes sure that n fits on 30 bits
 void ScaledInt::ovf30() {
     if (value > max_dimension || -value > max_dimension) {
-        start_err(nullptr);
+        start_err(std::nullopt);
         err_buf.format(", threshold={}, cur val=", max_dimension, value);
         end_err();
         value = max_dimension;
@@ -35,7 +35,7 @@ void ScaledInt::ovf30() {
 // On a 32 bit machine, only -(max_integer+1) can overflow
 void ScaledInt::ovf31() {
     if (value > max_integer || value < -max_integer) {
-        start_err(nullptr);
+        start_err(std::nullopt);
         err_buf.format(", threshold={}, cur val={}", max_integer, value);
         end_err();
         value = 0;
@@ -49,7 +49,7 @@ void ScaledInt::divide(long n) {
     auto x = value;
     if (n == 0) {
         // value = 0;
-        start_err(nullptr);
+        start_err(std::nullopt);
         err_buf.format(", division by 0\nin {}/0", x);
         end_err();
         return;
@@ -70,7 +70,7 @@ void ScaledInt::scale(long n, long d, long max_answer) {
     auto x        = value;
     bool negative = false;
     if (scale(x, n, d, max_answer, negative)) {
-        start_err(nullptr);
+        start_err(std::nullopt);
         err_buf.format("\nin {}*{}/{}", x, n, d);
         end_err();
     }

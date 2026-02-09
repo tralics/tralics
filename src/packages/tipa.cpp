@@ -16,7 +16,7 @@
  */
 
 namespace {
-    void mk_hi(String x, char c) {
+    void mk_hi(std::string_view x, char c) {
         the_parser.LC();
         the_parser.unprocessed_xml.format("<hi rend='{}'>{}</hi>", x, c);
     }

@@ -19,7 +19,7 @@ namespace config_ns {
     // space, case where s is empty).
     // An initial plus sign means: append the line to the vector, else reset.
 
-    auto start_interpret(Buffer &B, String s) -> bool {
+    auto start_interpret(Buffer &B, std::string_view s) -> bool {
         bool ret_val = false;
         B.append(s);
         B.ptrs.b = 0;
@@ -27,7 +27,7 @@ namespace config_ns {
             B.advance();
         else
             ret_val = true;
-        if ((s[0] != 0) && B.head() == '/') B.advance();
+        if ((!s.empty()) && B.head() == '/') B.advance();
         return ret_val;
     }
 } // namespace config_ns

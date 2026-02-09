@@ -6,8 +6,8 @@ class FpGenList : public TokenList {
 public:
     explicit FpGenList(const TokenList &o) : TokenList(o) {}
 
-    void add_last_space(String S);
-    void add_last_space(TokenList &W, String S);
+    void add_last_space(std::string_view S);
+    void add_last_space(TokenList &W, std::string_view S);
     auto find_str(int &n) const -> Token;
     void fp_gen_add();
     void fp_gen_app();

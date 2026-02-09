@@ -63,8 +63,8 @@ private:
     auto               check_entry_end(int k) -> std::optional<int>;
     auto               check_field_end(size_t what) -> std::optional<int>;
     auto               cur_char() -> char32_t { return input_line[input_line_pos]; }
-    void               define_a_macro(String name, String value);
-    auto               find_a_macro(Buffer &name, bool insert, String xname, String val) -> std::optional<size_t>;
+    void               define_a_macro(std::string_view name, std::string_view value);
+    auto               find_a_macro(Buffer &name, bool insert, std::optional<std::string_view> xname, std::string_view val) -> std::optional<size_t>;
     auto               find_lower_case(const CitationKey &s, int &n) -> BibEntry *;
     void               forward_pass();
     auto               get_class(char32_t c) -> id_type { return id_class[c]; }
@@ -92,15 +92,15 @@ private:
 public:
     auto get_an_entry(size_t i) { return all_entries[i]; }
     auto exec_bibitem(const std::string &b) -> std::string;
-    auto implement_cit(String x, std::string w) -> int;
+    auto implement_cit(std::string_view x, std::string w) -> int;
     void work();
     void read_bib_file(const std::string &s);
-    void err_in_file(String s, bool last) const;
+    void err_in_file(std::string_view s, bool last) const;
     void boot(std::string S);
     void enter_in_table(BibEntry *x) { all_entries_table.push_back(x); }
     void bootagain();
 
-    static void err_in_entry(String a);
+    static void err_in_entry(std::string_view a);
 };
 
 inline Bibtex the_bibtex;

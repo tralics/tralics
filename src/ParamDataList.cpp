@@ -2,7 +2,7 @@
 #include "tralics/ConfigData.h"
 
 namespace config_ns {
-    auto start_interpret(Buffer &B, String s) -> bool;
+    auto start_interpret(Buffer &B, std::string_view s) -> bool;
 } // namespace config_ns
 
 void ParamDataList::interpret(const std::string &b) {

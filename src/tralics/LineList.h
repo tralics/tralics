@@ -30,7 +30,7 @@ struct LineList : public std::list<Line> {           // \todo use a vector inste
     void normalise_final_cr();
     void parse_and_extract_clean(const std::string &s);
     void parse_conf_toplevel() const;
-    auto parse_and_extract(String s) const -> LineList;
+    auto parse_and_extract(std::string_view s) const -> LineList;
     void print(std::ostream &outfile);
     void read(const std::string &x, int spec);
     void register_file();

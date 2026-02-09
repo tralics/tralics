@@ -22,11 +22,10 @@ auto FpGenList::find_str(int &n) const -> Token {
 
 // Adds at the end of *this a space and S (of type letter)
 // Assumes that S is ascii
-void FpGenList::add_last_space(String S) {
+void FpGenList::add_last_space(std::string_view S) {
     push_back(hash_table.space_token);
-    for (size_t i = 0;; i++) {
+    for (size_t i = 0; i < S.size(); i++) {
         auto c = S[i];
-        if (c == 0) return;
         if (static_cast<uchar>(c) > 128) {
             spdlog::critical("Add last space: internal error");
             abort();
@@ -37,7 +36,7 @@ void FpGenList::add_last_space(String S) {
 
 // Adds at the end of *this a space, W, a second space and S (of type letter)
 // Assumes that S is ascii
-void FpGenList::add_last_space(TokenList &W, String S) {
+void FpGenList::add_last_space(TokenList &W, std::string_view S) {
     push_back(hash_table.space_token);
     append(W);
     add_last_space(S);
