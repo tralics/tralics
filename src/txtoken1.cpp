@@ -17,7 +17,7 @@
 // We define functions that return the name of a token;
 
 namespace tralics_ns {
-    auto math_env_name(subtypes c) -> String;
+    auto math_env_name(subtypes c) -> std::optional<std::string_view>;
 } // namespace tralics_ns
 
 namespace {

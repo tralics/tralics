@@ -351,7 +351,7 @@ auto math_ns::get_builtin(size_t p) -> Xml * { return math_data.get_builtin(p); 
 // -----------------------------------------------------------------------
 // Math environments. The following are recognised.
 
-auto tralics_ns::math_env_name(subtypes chr) -> String {
+auto tralics_ns::math_env_name(subtypes chr) -> std::optional<std::string_view> {
     switch (chr) {
     case eqnarray_code: return "endeqnarray";
     case eqnarray_star_code: return "endeqnarray*";
@@ -396,7 +396,7 @@ auto tralics_ns::math_env_name(subtypes chr) -> String {
     case text_S_code: return "endtext";
     case fbox_S_code: return "endfbox";
     case hbox_S_code: return "endhbox";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
@@ -452,8 +452,8 @@ auto tralics_ns::math_env_props(subtypes chr) -> int {
 auto Math::get_name() const -> std::string {
     subtypes w = sname;
     if (w == nomathenv_code) return "";
-    String S = tralics_ns::math_env_name(w);
-    if (S != nullptr) return S + 3;
+    auto S = tralics_ns::math_env_name(w);
+    if (S) return std::string(S->substr(3));
     return "bad";
 }
 

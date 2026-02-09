@@ -209,8 +209,8 @@ auto Buffer::is_begin_something(const std::string &s) -> int {
 // If c is true, stop at white space or comment.
 // Otherwise, just remove trailing space.
 
-auto Buffer::see_config_kw(const std::string &s, bool c) -> String {
-    if (!see_equals(s)) return nullptr;
+auto Buffer::see_config_kw(const std::string &s, bool c) -> std::optional<std::string> {
+    if (!see_equals(s)) return std::nullopt;
     if (c) {
         auto k = ptrs.b;
         while ((*this)[k] != 0 && at(k) != '%' && at(k) != '#') k++;

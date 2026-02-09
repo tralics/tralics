@@ -297,8 +297,8 @@ auto LineList::find_top_val(const std::string &s, bool c) -> std::string {
     Buffer &B = local_buf;
     for (auto C = cbegin(); C != cend(); C = skip_env(C, B)) {
         B          = *C;
-        String res = B.see_config_kw(s, c);
-        if (res != nullptr) return res;
+        auto res = B.see_config_kw(s, c);
+        if (res) return *res;
     }
     return "";
 }
