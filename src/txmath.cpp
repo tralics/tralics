@@ -995,7 +995,7 @@ auto Parser::scan_math1(size_t res) -> int {
 
 // The function that reads a math formula. Read tokens until the end
 // of the current group is seen. Fills the list number res, of type type
-// Return false for EndOfData
+// Return false on failure
 // \todo move the logic to Symcode
 auto Parser::scan_math(size_t res, math_list_type type) -> bool {
     for (;;) {

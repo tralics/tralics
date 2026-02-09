@@ -144,15 +144,15 @@ auto TitlePageAux::exec_post() const -> bool {
 }
 
 // This is executed when the user asks for a titlepage command.
-void TitlePageAux::exec(size_t v, bool vb) {
+auto TitlePageAux::exec(size_t v, bool vb) -> bool {
     if (vb) { spdlog::trace("{{\\titlepage {}=\\{}}}", v, fmt::streamed(T1)); }
     if (type == tpi_rt_tp) {
-        if (!the_parser.T_titlepage_finish(v)) throw EndOfData();
-        return;
+        if (!the_parser.T_titlepage_finish(v)) return false;
+        return true;
     }
     if (type == tpi_rt_ur) { // easy case
         Titlepage[idx]->add_last_nl(convert(2));
-        return;
+        return true;
     }
     Xml *R{nullptr};
     if (type == tpi_rt_normal_def || type == tpi_rt_list_def)
@@ -168,6 +168,7 @@ void TitlePageAux::exec(size_t v, bool vb) {
         Titlepage[idx] = R;
     else
         Titlepage[idx]->add_last_nl(R);
+    return true;
 }
 
 // Finds the real flag to increment.

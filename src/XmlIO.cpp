@@ -6,6 +6,7 @@
 #include <spdlog/spdlog.h>
 
 namespace {
+    struct Eof {};
     inline auto is_spacer(char32_t c) -> bool { return c == ' ' || c == '\t' || c == '\n' || c == '\r'; }
 } // namespace
 
@@ -67,7 +68,7 @@ auto read_xml(const std::string &s) -> Xml * {
 auto XmlIO::prun() -> Xml * {
     try {
         run();
-    } catch (EndOfData) {};
+    } catch (Eof) {};
     return cur_xml;
 }
 
@@ -156,7 +157,7 @@ void XmlIO::skip_char() {
 // This returns the next character
 auto XmlIO::next_char() -> char32_t {
     auto res = peek_char();
-    if (!res) throw EndOfData();
+    if (!res) throw Eof{};
     skip_char();
     return *res;
 }
@@ -165,7 +166,7 @@ auto XmlIO::next_char() -> char32_t {
 void XmlIO::skip_space() {
     for (;;) {
         auto c = peek_char();
-        if (!c) throw EndOfData();
+        if (!c) throw Eof{};
         cur_char = *c;
         if (!is_spacer(cur_char)) return;
         skip_char();
@@ -183,13 +184,13 @@ void XmlIO::flush_buffer() {
 void XmlIO::scan_name() {
     B.clear();
     auto x = peek_char();
-    if (!x) throw EndOfData();
+    if (!x) throw Eof{};
     // x should be Letter underscore colon
     B.push_back(*x);
     skip_char();
     for (;;) {
         auto xx = peek_char();
-        if (!xx) throw EndOfData();
+        if (!xx) throw Eof{};
         if (*xx < 128) {
             x_type w = Type[*xx];
             if (w == xt_space || w == xt_invalid) return;
@@ -205,7 +206,7 @@ void XmlIO::scan_name(uchar c) {
     B.clear();
     for (;;) {
         auto x = peek_char();
-        if (!x) throw EndOfData();
+        if (!x) throw Eof{};
         if (*x == c || is_spacer(*x)) return;
         skip_char();
         B.push_back(*x);
@@ -217,7 +218,7 @@ void XmlIO::scan_name(uchar c1, uchar c2) {
     B.clear();
     for (;;) {
         auto x = peek_char();
-        if (!x) throw EndOfData();
+        if (!x) throw Eof{};
         if (*x == c1 || *x == c2 || is_spacer(*x)) return;
         skip_char();
         B.push_back(*x);
@@ -317,7 +318,7 @@ void XmlIO::parse_attributes() {
         if (cur_char == '/') {
             skip_char();
             auto c = peek_char();
-            if (!c) throw EndOfData();
+            if (!c) throw Eof{};
             cur_char = *c;
             pop_this();
             return;
@@ -374,7 +375,7 @@ void XmlIO::parse_pi() {
             char32_t c = next_char();
             if (c == '?') {
                 auto pc = peek_char();
-                if (!pc) throw EndOfData();
+                if (!pc) throw Eof{};
                 cur_char = *pc;
                 if (cur_char == '>') {
                     skip_char();
@@ -393,7 +394,7 @@ void XmlIO::parse_pi() {
 void XmlIO::parse_dec() {
     cur_char   = next_char();
     auto c = peek_char();
-    if (!c) throw EndOfData();
+    if (!c) throw Eof{};
     reread_list.push_back(cur_char);
     if (*c == '-')
         parse_dec_comment();
@@ -469,7 +470,7 @@ void XmlIO::parse_dec_conditional() {
     bool keep = false;
     skip_space();
     auto pc1 = peek_char();
-    if (!pc1) throw EndOfData();
+    if (!pc1) throw Eof{};
     char32_t c = *pc1;
     if (c == '%') {
         skip_char();
@@ -478,7 +479,7 @@ void XmlIO::parse_dec_conditional() {
     c = next_char();
     if (c != 'I') error("expected INCLUDE or IGNORE");
     auto pc2 = peek_char();
-    if (!pc2) throw EndOfData();
+    if (!pc2) throw Eof{};
     c = *pc2;
     if (c == 'N') {
         expect("NCLUDE");
@@ -705,7 +706,7 @@ void XmlIO::parse_dec_doctype() {
                     B.append("]");
                     flush_buffer();
                     auto pc = peek_char();
-                    if (!pc) throw EndOfData();
+                    if (!pc) throw Eof{};
                     cur_char = *pc;
                     pop_this();
                     nb_cond--;

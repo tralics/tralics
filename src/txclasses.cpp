@@ -332,17 +332,16 @@ void Parser::T_declare_option_star() {
 // This implements \OptionNotUsed
 // This is the default option handler. In the case of a package, ignore,
 // in the case of a class, remove the used flag
-void Parser::T_option_not_used() {
-    if (!the_class_data.cur_pack()->is_class()) return;
+auto Parser::T_option_not_used() -> bool {
+    if (!the_class_data.cur_pack()->is_class()) return true;
     OptionList &GO = the_class_data.global_options;
-    if (!expand_no_arg("CurrentOption")) throw EndOfData();
+    if (!expand_no_arg("CurrentOption")) return false;
     TokenList L = read_arg();
     KeyAndVal s = make_keyval(L);
     auto      j = is_in_vector(GO, s.full_name, true);
     if (j) GO[*j].used = false;
+    return true;
 }
-
-// Case \ProcessOptions* or  \ProcessOptionsX*
 // in a package; we execute global options in order
 void LatexPackage::check_global_options(TokenList &action, bool X) {
     OptionList &GO = the_class_data.global_options; // options of the class
@@ -938,21 +937,21 @@ void Parser::T_change_element_name() {
 // Code for kvoptions
 
 // Common function for all kv macros
-void Parser::kvo_family(subtypes k) {
+auto Parser::kvo_family(subtypes k) -> bool {
     switch (k) {
     case kvo_fam_set_code:
     case kvo_fam_get_code:
     case kvo_pre_set_code:
-    case kvo_pre_get_code: if (!kvo_family_etc(k)) throw EndOfData(); return;
-    case kvo_bool_opt_code: kvo_bool_opt(); return;
-    case kvo_comp_opt_code: kvo_comp_opt(); return;
-    case kvo_boolkey_code: kvo_bool_key(); return;
-    case kvo_voidkey_code: kvo_void_key(); return;
-    case kvo_string_opt_code: kvo_string_opt(); return;
-    case kvo_void_opt_code: kvo_void_opt(); return;
-    case kvo_decdef_code: return;
-    case kvo_process_code: kvo_process(); return;
-    default: return;
+    case kvo_pre_get_code: if (!kvo_family_etc(k)) return false; return true;
+    case kvo_bool_opt_code: kvo_bool_opt(); return true;
+    case kvo_comp_opt_code: kvo_comp_opt(); return true;
+    case kvo_boolkey_code: kvo_bool_key(); return true;
+    case kvo_voidkey_code: kvo_void_key(); return true;
+    case kvo_string_opt_code: kvo_string_opt(); return true;
+    case kvo_void_opt_code: kvo_void_opt(); return true;
+    case kvo_decdef_code: return true;
+    case kvo_process_code: kvo_process(); return true;
+    default: return true;
     }
 }
 
@@ -1023,7 +1022,9 @@ void Parser::kvo_string_opt() {
     std::string arg   = sE_arg_nopar();
     auto        deflt = read_optarg();
     classes_ns::register_key(arg);
-    std::string fam = kvo_getfam();
+    auto fam_opt = kvo_getfam();
+    if (!fam_opt) return;
+    std::string fam = *fam_opt;
     Buffer     &B   = txclasses_local_buf;
     B               = fam + "@" + arg;
     Token T         = hash_table.locate(B);
@@ -1057,7 +1058,7 @@ void Parser::kvo_void_key() {
 
 void Parser::kvo_process() {
     bool        ok  = remove_initial_star();
-    std::string fam = ok ? kvo_getfam() : sE_arg_nopar();
+    std::string fam = ok ? kvo_getfam().value_or("") : sE_arg_nopar();
     TokenList   spec;
     TokenList   L = classes_ns::cur_options(true, spec, true);
     L.brace_me();
@@ -1071,7 +1072,9 @@ void Parser::kvo_process() {
 void Parser::kvo_void_opt() {
     Token       cmd = cur_tok;
     std::string arg = sE_arg_nopar();
-    std::string fam = kvo_getfam();
+    auto fam_opt = kvo_getfam();
+    if (!fam_opt) return;
+    std::string fam = *fam_opt;
     Buffer     &B   = txclasses_local_buf;
     classes_ns::register_key(arg);
     B       = fam + "@" + arg;
@@ -1106,7 +1109,9 @@ void Parser::kvo_bool_opt() {
     // Optional argument must be true or false
     if (!(df.empty() || df == "false" || df == "true")) { spdlog::warn("Bad option {} of {} replaced by false", df, arg); }
     subtypes    v   = df == "true" ? if_true_code : if_false_code;
-    std::string fam = kvo_getfam();
+    auto fam_opt = kvo_getfam();
+    if (!fam_opt) return;
+    std::string fam = *fam_opt;
     std::string s   = fam + '@' + arg;
     if (!check_if_redef(s)) return;
     // This is \newif
@@ -1122,7 +1127,9 @@ void Parser::kvo_comp_opt() {
     Token       cmd  = cur_tok;
     std::string arg  = sE_arg_nopar();
     std::string comp = sE_arg_nopar();
-    std::string fam  = kvo_getfam();
+    auto fam_opt  = kvo_getfam();
+    if (!fam_opt) return;
+    std::string fam  = *fam_opt;
     Buffer     &B    = txclasses_local_buf;
     B                = "if" + fam + '@' + comp;
     Token T          = hash_table.locate(B);
@@ -1171,9 +1178,9 @@ bool Parser::kvo_family_etc(subtypes k) {
 }
 
 // This gets prefix and family
-auto Parser::kvo_getfam() -> std::string {
+auto Parser::kvo_getfam() -> std::optional<std::string> {
     back_input(hash_table.CB_token);
-    if (!kvo_family_etc(kvo_fam_get_code)) throw EndOfData();
+    if (!kvo_family_etc(kvo_fam_get_code)) return std::nullopt;
     back_input(hash_table.OB_token);
     return sE_arg_nopar();
 }

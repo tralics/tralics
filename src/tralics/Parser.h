@@ -262,7 +262,7 @@ struct Parser {
     auto               is_delimiter(const TokenList &L) -> bool;
     auto               is_input_open() -> bool;
     auto               is_verbatim_end() -> bool;
-    auto               kvo_getfam() -> std::string;
+    auto               kvo_getfam() -> std::optional<std::string>;
     auto               latex_input(subtypes q) -> std::string;
     auto               M_counter(bool def) -> std::optional<bool>;
     auto               make_label_inner(const std::string &name) -> std::string;
@@ -472,8 +472,8 @@ struct Parser {
     void               err_one_arg(const TokenList &L);
     void               examine_token(Token T);
     void               exec_calc();
-    void               exec_fp_cmd(subtypes i);
-    void               exec_fpi_cmd(subtypes i);
+    auto               exec_fp_cmd(subtypes i) -> bool;
+    auto               exec_fpi_cmd(subtypes i) -> bool;
     bool               expand_first(TokenList &L);
     void               expand_mac(Macro &X);
     bool               expand_no_arg(const std::string &s);
@@ -517,14 +517,14 @@ struct Parser {
     void               fp_e_pascal();
     void               fp_e_qqsolve();
     void               fp_e_qsolve();
-    void               fp_e_upn();
+    auto               fp_e_upn() -> bool;
     void               fp_eval_lt(subtypes w);
     void               fp_eval_unarytest(subtypes w);
     void               fp_finish(const FpNum &X);
     void               fp_parse_error(Token a, Token b);
     void               fp_prepare();
-    void               fp_print();
-    void               fp_set();
+    auto               fp_print() -> bool;
+    auto               fp_set() -> bool;
     void               fp_setseed();
     bool               fp_special_expand(TokenList &B);
     void               french_punctuation(CmdChr X);
@@ -538,7 +538,7 @@ struct Parser {
     void               ignore_optarg();
     void               implicit_par(subtypes c);
     void               improper_alpha();
-    void               includegraphics(subtypes c);
+    auto               includegraphics(subtypes c) -> bool;
     void               initialise_font();
     void               insert_endline_char();
     void               insert_every_bib();
@@ -553,7 +553,7 @@ struct Parser {
     void               kvo_bool_opt();
     void               kvo_comp_opt();
     bool               kvo_family_etc(subtypes k);
-    void               kvo_family(subtypes k);
+    auto               kvo_family(subtypes k) -> bool;
     void               kvo_process();
     void               kvo_string_opt();
     void               kvo_void_key();
@@ -816,7 +816,7 @@ struct Parser {
     void               T_nodetriangle(const std::string &W);
     void               T_omitcite();
     [[nodiscard]] bool T_optarg();
-    void               T_option_not_used();
+    auto               T_option_not_used() -> bool;
     void               T_par1();
     void               T_par1(const std::string &u);
     auto               T_paras(subtypes x) -> bool;
@@ -866,7 +866,7 @@ struct Parser {
     bool               T_verbatim(int my_number, Token style, Token pre, Token post);
     void               T_whiledo();
     auto               T_xfancy() -> bool;
-    void               T_xkv_for(subtypes c);
+    auto               T_xkv_for(subtypes c) -> bool;
     void               T_xmladdatt(subtypes c);
     auto               T_xmlelt(subtypes w) -> bool;
     void               T_xmlenv_end(subtypes c);
@@ -889,7 +889,7 @@ struct Parser {
     void               undefined_env(const std::string &s);
     void               undefined_mac();
     void               unexpected_close_brace();
-    void               upn_eval(const TokenList &l);
+    auto               upn_eval(const TokenList &l) -> bool;
     void               use_a_package(const std::string &name, bool type, const std::string &date, bool builtin);
     void               user_XML_fetch();
     void               user_XML_modify(subtypes c);
@@ -937,10 +937,10 @@ struct Parser {
     void L3_new_conditional_parm(subtypes s);
     void L3_new_conditional(subtypes s);
     void l3_new_token_list(subtypes c);
-    void l3_reexpand_o(TokenList &L);
+    auto l3_reexpand_o(TokenList &L) -> bool;
     void L3_set_cat_code(subtypes c);
     void L3_set_num_code(subtypes c);
-    void l3_tl_concat(subtypes c);
+    auto l3_tl_concat(subtypes c) -> bool;
     auto l3_tl_put_left(subtypes c) -> bool;
     auto l3_tl_set(subtypes c) -> bool;
     void l3_token_check(subtypes c);
@@ -962,7 +962,7 @@ struct Parser {
     static auto last_att_list() -> AttList &;
     static void add_bib_marker(bool force);
     void        push_save_stack(SaveAuxBase *v);
-    static void T_titlepage(size_t v);
+    static auto        T_titlepage(size_t v) -> bool;
 };
 
 inline Parser the_parser;

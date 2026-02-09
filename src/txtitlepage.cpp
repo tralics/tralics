@@ -132,17 +132,17 @@ bool Parser::T_titlepage_finish(size_t v) {
     return true;
 }
 
-void Parser::T_titlepage(size_t v) {
+auto Parser::T_titlepage(size_t v) -> bool {
     if (tracing_commands()) { spdlog::trace("{{\\titlepage {}}}", v); }
     if (!Titlepage.is_valid()) {
         spdlog::warn("No title page info, bug?");
-        return; // why ?
+        return true;
     }
     if (v >= Titlepage.bigtable.size()) {
         spdlog::critical("T_titlepage strange");
         abort();
     }
-    Titlepage.bigtable[v].exec(v, tracing_commands());
+    return Titlepage.bigtable[v].exec(v, tracing_commands());
 }
 
 // This is executed when the translation begins.

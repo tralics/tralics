@@ -449,7 +449,7 @@ bool Parser::expand_first(TokenList &L) {
 }
 
 // should be expand rather than translate
-void Parser::T_xkv_for(subtypes c) {
+auto Parser::T_xkv_for(subtypes c) -> bool {
     Token     comma    = hash_table.comma_token;
     Token     nil      = hash_table.nil_token;
     Token     doubleat = hash_table.doubleat_token;
@@ -460,7 +460,7 @@ void Parser::T_xkv_for(subtypes c) {
         Token     cmd      = read_for_variable();
         TokenList L        = read_until(hash_table.do_token);
         TokenList function = read_arg();
-        if (!expand_first(L)) throw EndOfData();
+        if (!expand_first(L)) return false;
         if (L.empty()) break;
         function.brace_me();
         res.push_back(hash_table.forloop_token);
@@ -588,6 +588,7 @@ void Parser::T_xkv_for(subtypes c) {
     }
     if (tracing_commands()) { spdlog::trace("{}<- {}", fmt::streamed(T), fmt::streamed(res)); }
     back_input(res);
+    return true;
 }
 
 // Implementation of \@cons

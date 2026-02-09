@@ -195,7 +195,7 @@ auto Parser::edef_aux(TokenList &L) -> bool {
         if (!cur_cmd_chr.is_expandable()) return false;
         if (cur_cmd_chr.is_protected()) return false;
         if (cur_cmd_chr.cmd != the_cmd) {
-            if (!expand()) throw EndOfData();
+            if (!expand()) return true; // signal EOF on expand failure
         } else {
             Token     T = cur_tok;
             TokenList q = E_the(cur_cmd_chr.chr);
@@ -600,7 +600,7 @@ auto Parser::get_x_token() -> bool {
     for (;;) {
         if (get_token()) return true;
         if (cur_cmd_chr.is_expandable()) {
-            if (!expand()) throw EndOfData();
+            if (!expand()) return true; // signal EOF on expand failure
         } else
             return false;
     }

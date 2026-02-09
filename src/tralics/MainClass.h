@@ -156,7 +156,7 @@ private:
     void start_document(Buffer &a);
     void start_env(std::string);
     void start_error();
-    void trans0(); ///< Start the latex to XML translation
+    auto trans0() -> bool; ///< Start the latex to XML translation
 };
 
 inline MainClass the_main;

@@ -196,11 +196,11 @@ void Dispatcher::boot() {
     register_action(footnote_cmd, [] {
         return the_parser.T_cap_or_note(false);
     });
-    register_action_plain(for_cmd, &Parser::T_xkv_for);
+    register_action(for_cmd, &Parser::T_xkv_for);
     register_action_plain(formatdate_cmd, &Parser::formatdate);
-    register_action_plain(fp_cmd, &Parser::exec_fp_cmd);
-    register_action_plain(fpi_cmd, &Parser::exec_fpi_cmd);
-    register_action_plain(fpif_cmd, &Parser::exec_fp_cmd);
+    register_action(fp_cmd, &Parser::exec_fp_cmd);
+    register_action(fpi_cmd, &Parser::exec_fpi_cmd);
+    register_action(fpif_cmd, &Parser::exec_fp_cmd);
     register_action_plain(fvset_cmd, &Parser::special_fvset);
     register_action_plain(GetIdInfo_cmd, &Parser::L3_getid);
     register_action_plain(GetIdInfoLog_cmd, &Parser::L3_logid);
@@ -226,7 +226,7 @@ void Dispatcher::boot() {
     register_action_plain(ignore_two_argument_cmd, [] { the_parser.ignore_arg(), the_parser.ignore_arg(); });
     register_action_plain(ignoreA_cmd, [] { the_parser.T_ignoreA(); });
     register_action_plain(ignorep_cmd, &Parser::T_par1);
-    register_action_plain(includegraphics_cmd, &Parser::includegraphics);
+    register_action(includegraphics_cmd, &Parser::includegraphics);
     register_action_plain(index_cmd, &Parser::T_index);
     register_action_plain(inputclass_cmd, &Parser::T_inputclass);
     register_action_plain(insertbibliohere_cmd, [] { Parser::add_bib_marker(true); });
@@ -235,7 +235,7 @@ void Dispatcher::boot() {
     register_action_plain(itemize_cmd, &Parser::T_listenv);
     register_action_plain(kern_cmd, [](subtypes c) { the_parser.scan_dimen(c == 1, the_parser.cur_tok); });
     register_action(keywords_cmd, &Parser::T_keywords);
-    register_action_plain(kvo_family_cmd, &Parser::kvo_family);
+    register_action(kvo_family_cmd, &Parser::kvo_family);
     register_action_plain(l3_check_cmd, &Parser::L3_check_cmd);
     register_action_plain(l3_gen_cond_Nnn_cmd, &Parser::L3_new_conditional);
     register_action_plain(l3_gen_cond_Npnn_cmd, &Parser::L3_new_conditional_parm);
@@ -280,7 +280,7 @@ void Dispatcher::boot() {
     register_action_plain(oldfont_cmd, &Parser::old_font);
     register_action_plain(omitcite_cmd, &Parser::T_omitcite);
     register_action_plain(open_catcode, [] { the_parser.push_level(bt_brace); });
-    register_action_plain(options_not_used_cmd, &Parser::T_option_not_used);
+    register_action(options_not_used_cmd, &Parser::T_option_not_used);
     register_action_plain(other_catcode, &Parser::translate_char);
     register_action_plain(par_cmd, &Parser::T_par1);
     register_action_plain(pass_options_cmd, [](subtypes c) { the_parser.T_pass_options(c == 0); });
@@ -343,7 +343,7 @@ void Dispatcher::boot() {
     register_action_plain(thebibliography_cmd, &Parser::T_start_the_biblio);
     register_action_plain(thickness_cmd, &Parser::T_linethickness);
     register_action_plain(tl_basic_cmd, &Parser::l3_new_token_list);
-    register_action_plain(tl_concat_cmd, &Parser::l3_tl_concat);
+    register_action(tl_concat_cmd, &Parser::l3_tl_concat);
     register_action(tl_put_left_cmd, &Parser::l3_tl_put_left);
     register_action(tl_set_cmd, &Parser::l3_tl_set);
     register_action(toks_register_cmd, &Parser::M_prefixed);
@@ -496,9 +496,9 @@ void Dispatcher::boot() {
         the_parser.T_scan_glue(c == 0 ? vskip_code : hskip_code);
     });
 
-    register_action_plain(titlepage_cmd, [](subtypes c) {
+    register_action(titlepage_cmd, [](subtypes c) -> bool {
         if (!the_stack.in_v_mode()) the_parser.wrong_mode("Bad titlepage command");
-        Parser::T_titlepage(c);
+        return Parser::T_titlepage(c);
     });
 
     register_action_plain(package_cmd, [] {

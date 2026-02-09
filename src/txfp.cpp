@@ -1639,18 +1639,19 @@ bool Parser::fp_special_expand(TokenList &B) {
     return true;
 }
 
-void Parser::fp_print() {
+auto Parser::fp_print() -> bool {
     TokenList A = read_arg();
-    if (!fp_special_expand(A)) throw EndOfData();
+    if (!fp_special_expand(A)) return false;
+    return true;
 }
 
 // \FPset{foo}{bar} => \def\foo{...} where .. is expansion of \bar
 // error recovery is low.
-void Parser::fp_set() {
+auto Parser::fp_set() -> bool {
     TokenList A = read_arg();
     TokenList B = read_arg();
     back_input(hash_table.CB_token);
-    if (!fp_special_expand(B)) throw EndOfData();
+    if (!fp_special_expand(B)) return false;
     back_input(hash_table.OB_token);
     if (!A.empty()) {
         Token A1 = A.front();
@@ -1662,6 +1663,7 @@ void Parser::fp_set() {
     }
     back_input(A);
     M_def(false, false, user_cmd, rd_always);
+    return true;
 }
 
 void Parser::fp_e_arcsin(subtypes i) {
@@ -1816,7 +1818,7 @@ void Parser::fp_e_qqsolve() {
 }
 
 // upn evaluator. Is a rather big function.
-void Parser::upn_eval(const TokenList &l) {
+auto Parser::upn_eval(const TokenList &l) -> bool {
     FpStack  &S = upn_stack;
     FpGenList L(l);
     L.remove_spaces();
@@ -1824,9 +1826,9 @@ void Parser::upn_eval(const TokenList &l) {
     Token     t2 = hash_table.newline_token;
     TokenList z;
     if (L.split_at(t1, t2, z).val != 0) {
-        upn_eval(z);
-        upn_eval(L);
-        return;
+        if (!upn_eval(z)) return false;
+        if (!upn_eval(L)) return false;
+        return true;
     }
     int                n   = 0;
     Token              x   = L.find_str(n);
@@ -1841,7 +1843,7 @@ void Parser::upn_eval(const TokenList &l) {
         auto aa2 = a1;
         S.push_upn(aa2);
         S.push_upn(a1);
-        return;
+        return true;
     }
     if (n == 4 && (str == "swap")) {
         L.remove_first_n(n);
@@ -1849,12 +1851,12 @@ void Parser::upn_eval(const TokenList &l) {
         S.pop_upn(a2);
         S.push_upn(a1);
         S.push_upn(a2);
-        return;
+        return true;
     }
     if (n == 3 && (str == "pop")) {
         L.remove_first_n(n);
         S.pop_upn(a1);
-        return;
+        return true;
     }
     if (n == 9 && (str == "arctancot")) {
         L.remove_first_n(n);
@@ -1862,21 +1864,21 @@ void Parser::upn_eval(const TokenList &l) {
         fp::arcsincos(x3, x4, x1, fp_arctancot_code);
         S.push_upn(x4);
         S.push_upn(x3);
-        return;
+        return true;
     }
     if (n == 6 && (str == "arccot")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         fp::arcsincos(x3, x4, x1, fp_arccot_code);
         S.push_upn(x3);
-        return;
+        return true;
     }
     if (n == 6 && (str == "arctan")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         fp::arcsincos(x3, x4, x1, fp_arctan_code);
         S.push_upn(x3);
-        return;
+        return true;
     }
     if (n == 9 && (str == "arcsincos")) {
         L.remove_first_n(n);
@@ -1884,21 +1886,21 @@ void Parser::upn_eval(const TokenList &l) {
         fp::arcsincos(x3, x4, x1, fp_arcsincos_code);
         S.push_upn(x4);
         S.push_upn(x3);
-        return;
+        return true;
     }
     if (n == 6 && (str == "arcsin")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         fp::arcsincos(x3, x4, x1, fp_arcsin_code);
         S.push_upn(x3);
-        return;
+        return true;
     }
     if (n == 6 && (str == "arccos")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         fp::arcsincos(x3, x4, x1, fp_arccos_code);
         S.push_upn(x3);
-        return;
+        return true;
     }
     if (n == 6 && (str == "tancot")) {
         L.remove_first_n(n);
@@ -1906,21 +1908,21 @@ void Parser::upn_eval(const TokenList &l) {
         fp::sincos(x3, x4, x1, fp_tancot_code);
         S.push_upn(x4);
         S.push_upn(x3);
-        return;
+        return true;
     }
     if (n == 3 && (str == "cot")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         fp::sincos(x3, x4, x1, fp_cot_code);
         S.push_upn(x3);
-        return;
+        return true;
     }
     if (n == 3 && (str == "tan")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         fp::sincos(x3, x4, x1, fp_tan_code);
         S.push_upn(x3);
-        return;
+        return true;
     }
     if (n == 6 && (str == "sincos")) {
         L.remove_first_n(n);
@@ -1928,38 +1930,38 @@ void Parser::upn_eval(const TokenList &l) {
         fp::sincos(x3, x4, x1, fp_sincos_code);
         S.push_upn(x4);
         S.push_upn(x3);
-        return;
+        return true;
     }
     if (n == 3 && (str == "sin")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         fp::sincos(x3, x4, x1, fp_sin_code);
         S.push_upn(x3);
-        return;
+        return true;
     }
     if (n == 3 && (str == "cos")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         fp::sincos(x3, x4, x1, fp_cos_code);
         S.push_upn(x3);
-        return;
+        return true;
     }
     if (n == 2 && (str == "pi")) {
         L.remove_first_n(n);
         S.push_upn(pi_table[4]);
-        return;
+        return true;
     }
     if (n == 6 && (str == "random")) {
         L.remove_first_n(n);
         x1.random();
         S.push_upn(x1);
-        return;
+        return true;
     }
     if (n == 4 && (str == "seed")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         eqtb_int_table[fpseed_code].val = to_signed(x1.data[1]);
-        return;
+        return true;
     }
     if (n == 4 && (str == "root")) {
         L.remove_first_n(n);
@@ -1967,7 +1969,7 @@ void Parser::upn_eval(const TokenList &l) {
         S.pop_upn(x2);
         x3.pow(x1, x2, fp_root_code);
         S.push_upn(x3);
-        return;
+        return true;
     }
     if (n == 3 && (str == "pow")) {
         L.remove_first_n(n);
@@ -1975,33 +1977,33 @@ void Parser::upn_eval(const TokenList &l) {
         S.pop_upn(x2);
         x3.pow(x1, x2, fp_pow_code);
         S.push_upn(x3);
-        return;
+        return true;
     }
     if (n == 3 && (str == "exp")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         x1.exec_exp();
         S.push_upn(x1);
-        return;
+        return true;
     }
     if (n == 2 && (str == "ln")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         x1.exec_ln();
         S.push_upn(x1);
-        return;
+        return true;
     }
     if (n == 1 && (str == "e")) {
         L.remove_first_n(n);
         x1 = e_powers[1];
         S.push_upn(x1);
-        return;
+        return true;
     }
     if (n == 4 && (str == "clip")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         S.push_upn(x1);
-        return;
+        return true;
     }
     if (n == 5 && (str == "round")) {
         L.remove_first_n(n);
@@ -2010,7 +2012,7 @@ void Parser::upn_eval(const TokenList &l) {
         x1.round(to_signed(x2.data[1]));
         x1.round0();
         S.push_upn(x1);
-        return;
+        return true;
     }
     if (n == 5 && (str == "trunc")) {
         L.remove_first_n(n);
@@ -2018,7 +2020,7 @@ void Parser::upn_eval(const TokenList &l) {
         S.pop_upn(x1);
         x1.truncate(to_signed(x2.data[1]));
         S.push_upn(x1);
-        return;
+        return true;
     }
     if (n == 3 && (str == "min")) {
         L.remove_first_n(n);
@@ -2026,7 +2028,7 @@ void Parser::upn_eval(const TokenList &l) {
         S.pop_upn(x1);
         int res = fp::compare(x2, x1);
         S.push_upn(res > 0 ? x1 : x2);
-        return;
+        return true;
     }
     if (n == 3 && (str == "max")) {
         L.remove_first_n(n);
@@ -2034,28 +2036,28 @@ void Parser::upn_eval(const TokenList &l) {
         S.pop_upn(x1);
         int res = fp::compare(x1, x2);
         S.push_upn(res > 0 ? x1 : x2);
-        return;
+        return true;
     }
     if (n == 3 && (str == "sgn")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         x1.sgn();
         S.push_upn(x1);
-        return;
+        return true;
     }
     if (n == 3 && (str == "neg")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         x1.neg();
         S.push_upn(x1);
-        return;
+        return true;
     }
     if (n == 3 && (str == "abs")) {
         L.remove_first_n(n);
         S.pop_upn(x1);
         x1.sign = true;
         S.push_upn(x1);
-        return;
+        return true;
     }
     if (n == 3 && (str == "add")) {
         L.remove_first_n(n);
@@ -2063,7 +2065,7 @@ void Parser::upn_eval(const TokenList &l) {
         S.pop_upn(x2);
         x1.add(x2);
         S.push_upn(x1);
-        return;
+        return true;
     }
     if (n == 0 && x.is_plus_token()) {
         L.remove_first_n(1);
@@ -2071,7 +2073,7 @@ void Parser::upn_eval(const TokenList &l) {
         S.pop_upn(x2);
         x1.add(x2);
         S.push_upn(x1);
-        return;
+        return true;
     }
     if (n == 3 && (str == "sub")) {
         L.remove_first_n(n);
@@ -2080,7 +2082,7 @@ void Parser::upn_eval(const TokenList &l) {
         x2.neg();
         x1.add(x2);
         S.push_upn(x1);
-        return;
+        return true;
     }
     if (n == 0 && x.is_minus_token()) {
         L.remove_first_n(1);
@@ -2089,7 +2091,7 @@ void Parser::upn_eval(const TokenList &l) {
         x2.neg();
         x1.add(x2);
         S.push_upn(x1);
-        return;
+        return true;
     }
     if (n == 3 && (str == "mul")) {
         L.remove_first_n(n);
@@ -2097,7 +2099,7 @@ void Parser::upn_eval(const TokenList &l) {
         S.pop_upn(x2);
         x1.mul(x1, x2);
         S.push_upn(x1);
-        return;
+        return true;
     }
     if (n == 0 && x.is_star_token()) {
         L.remove_first_n(1);
@@ -2105,7 +2107,7 @@ void Parser::upn_eval(const TokenList &l) {
         S.pop_upn(x2);
         x1.mul(x1, x2);
         S.push_upn(x1);
-        return;
+        return true;
     }
     if (n == 3 && (str == "div")) {
         L.remove_first_n(n);
@@ -2113,7 +2115,7 @@ void Parser::upn_eval(const TokenList &l) {
         S.pop_upn(x1);
         x1.div(x1, x2);
         S.push_upn(x1);
-        return;
+        return true;
     }
     if (n == 0 && x.is_slash_token()) {
         L.remove_first_n(1);
@@ -2121,22 +2123,23 @@ void Parser::upn_eval(const TokenList &l) {
         S.pop_upn(x2);
         x1.div(x1, x2);
         S.push_upn(x1);
-        return;
+        return true;
     }
     back_input(hash_table.CB_token);
-    if (!fp_special_expand(L)) throw EndOfData();
+    if (!fp_special_expand(L)) return false;
     back_input(hash_table.OB_token);
     TokenList w = read_arg();
     S.push_upn(w);
+    return true;
 }
 
 // Top-level upn function.
-void Parser::fp_e_upn() {
+auto Parser::fp_e_upn() -> bool {
     fp_prepare();
     upn_stack.clear();
     TokenList L = read_arg();
     if (L.empty()) L.push_back(hash_table.zero_token);
-    upn_eval(L);
+    if (!upn_eval(L)) return false;
     if (upn_stack.empty()) {
         parse_error("UPN stack empty");
         upn_stack.push_front(hash_table.zero_token);
@@ -2145,6 +2148,7 @@ void Parser::fp_e_upn() {
     upn_stack.pop_upn(x);
     if (!upn_stack.empty()) parse_error("Evaluation results in multiple values");
     fp_finish(x);
+    return true;
 }
 
 // This procedure creates all tokens etc, needed for the fp package.
@@ -2476,13 +2480,13 @@ auto CmdChr::token_fpi_names() const -> std::optional<std::string_view> {
     }
 }
 
-void Parser::exec_fp_cmd(subtypes i) {
+auto Parser::exec_fp_cmd(subtypes i) -> bool {
     fp_name       = cur_tok;
     Token     aux = fps[i];
     TokenList res;
     switch (i) {
-    case fp_print_code: fp_print(); return;
-    case fp_set_code: fp_set(); return;
+    case fp_print_code: return fp_print();
+    case fp_set_code: return fp_set();
     case fp_add_code:
     case fp_sub_code:
     case fp_mul_code:
@@ -2525,7 +2529,7 @@ void Parser::exec_fp_cmd(subtypes i) {
         fp_send_one_arg(L2);
         res.splice(res.end(), L2);
     } break;
-    case fp_upn_code: fp_e_upn(); break;
+    case fp_upn_code: return fp_e_upn();
     case fp_iflt_code:
     case fp_ifgt_code:
     case fp_ifeq_code: {
@@ -2564,11 +2568,11 @@ void Parser::exec_fp_cmd(subtypes i) {
         FpNum X;
         X.random();
         fp_finish(X);
-        return;
+        return true;
     }
-    case fp_seed_code: fp_setseed(); return;
-    case fp_eval_code: fp_e_eval(); return;
-    case fp_pascal_code: fp_e_pascal(); return;
+    case fp_seed_code: fp_setseed(); return true;
+    case fp_eval_code: fp_e_eval(); return true;
+    case fp_pascal_code: fp_e_pascal(); return true;
     case fp_lsolve_code: {
         TokenList L1 = read_arg();
         TokenList L2 = read_arg();
@@ -2647,12 +2651,13 @@ void Parser::exec_fp_cmd(subtypes i) {
         res.splice(res.end(), L9);
         break;
     }
-    default: return;
+    default: return true;
     }
     back_input(res);
+    return true;
 }
 
-void Parser::exec_fpi_cmd(subtypes i) {
+auto Parser::exec_fpi_cmd(subtypes i) -> bool {
     fp_name = cur_tok;
     FpNum X;
     switch (i) {
@@ -2690,7 +2695,7 @@ void Parser::exec_fpi_cmd(subtypes i) {
         int   res = fp::compare(XX, Y);
         if (i == fp_min_code) res = -res;
         fp_finish(res > 0 ? XX : Y);
-        return;
+        return true;
     }
     case fp_div_code: {
         fp_prepare();
@@ -2748,11 +2753,11 @@ void Parser::exec_fpi_cmd(subtypes i) {
     }
     case fp_iflt_code:
     case fp_ifgt_code:
-    case fp_ifeq_code: fp_eval_lt(i); return;
+    case fp_ifeq_code: fp_eval_lt(i); return true;
     case fp_ifneg_code:
     case fp_ifpos_code:
     case fp_ifzero_code:
-    case fp_ifint_code: fp_eval_unarytest(i); return;
+    case fp_ifint_code: fp_eval_unarytest(i); return true;
     case fp_sin_code:
     case fp_cos_code:
     case fp_tan_code:
@@ -2771,19 +2776,20 @@ void Parser::exec_fpi_cmd(subtypes i) {
             fp_finish(b);
         }
     }
-        return;
+        return true;
     case fp_arcsin_code:
     case fp_arccos_code:
     case fp_arctan_code:
     case fp_arccot_code:
     case fp_arcsincos_code:
-    case fp_arctancot_code: fp_e_arcsin(i); return;
-    case fp_lsolve_code: fp_e_lsolve(); return;
-    case fp_csolve_code: fp_e_csolve(); return;
-    case fp_qsolve_code: fp_e_qsolve(); return;
-    case fp_qqsolve_code: fp_e_qqsolve(); return;
-    case fp_upn_code: fp_e_upn(); return;
-    default: return;
+    case fp_arctancot_code: fp_e_arcsin(i); return true;
+    case fp_lsolve_code: fp_e_lsolve(); return true;
+    case fp_csolve_code: fp_e_csolve(); return true;
+    case fp_qsolve_code: fp_e_qsolve(); return true;
+    case fp_qqsolve_code: fp_e_qqsolve(); return true;
+    case fp_upn_code: return fp_e_upn();
+    default: return true;
     }
     fp_finish(X);
+    return true;
 }

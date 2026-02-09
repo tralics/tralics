@@ -881,7 +881,7 @@ void MainClass::see_name(std::filesystem::path s) {
     no_ext = s;
 }
 
-void MainClass::trans0() {
+auto MainClass::trans0() -> bool {
     spdlog::trace("Starting translation");
     the_parser.init_all(dtd);
     if (multi_math_label) the_parser.word_define(multimlabel_code, 1, false);
@@ -889,9 +889,10 @@ void MainClass::trans0() {
     if (dualmath) the_parser.word_define(nomath_code, -3, false);
     the_parser.word_define(notrivialmath_code, trivial_math, false);
     if (verbose) the_parser.M_tracingall();
-    if (!the_parser.load_latex()) throw EndOfData();
-    if (load_l3 && !the_parser.L3_load(true)) throw EndOfData();
+    if (!the_parser.load_latex()) return false;
+    if (load_l3 && !the_parser.L3_load(true)) return false;
     Titlepage.start_thing(verbose);
+    return true;
 }
 
 void MainClass::boot_bibtex() {
@@ -935,10 +936,10 @@ void MainClass::run(int argc, char **argv) {
     spdlog::trace("OK with the configuration file, dealing with the TeX file...");
     show_input_size();
     boot_bibtex();
-    trans0();
+    if (!trans0()) return;
     the_parser.init(input_content);
-    if (!the_parser.translate_all()) throw EndOfData();
-    if (!the_parser.after_main_text()) throw EndOfData();
+    if (!the_parser.translate_all()) return;
+    if (!the_parser.after_main_text()) return;
     if (the_parser.seen_enddocument) the_stack.add_nl();
     the_parser.final_checks();
     if (!no_xml) {

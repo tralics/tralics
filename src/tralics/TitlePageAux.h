@@ -33,7 +33,7 @@ struct TitlePageAux {
     void               dump(size_t k) const;
     void               exec_start(size_t k);
     auto               exec_post() const -> bool;
-    void               exec(size_t v, bool vb);
+    auto               exec(size_t v, bool vb) -> bool;
     auto               increment_flag() -> bool;
     [[nodiscard]] auto decode_flags() const -> std::string;
 

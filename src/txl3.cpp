@@ -400,7 +400,7 @@ void Parser::E_l3_ifx(subtypes c) {
 auto Parser::l3_to_string(subtypes c, TokenList &L) -> std::optional<std::string> {
     switch (c) {
     case l3expx_code: read_toks_edef(L); break;
-    case l3expo_code: l3_reexpand_o(L); break;
+    case l3expo_code: if (!l3_reexpand_o(L)) return std::nullopt; break;
     case l3expV_code: if (!l3_expand_Vv(L, false)) return std::nullopt; break;
     default:;
     }
@@ -586,17 +586,18 @@ auto Parser::l3_tl_set(subtypes c) -> bool {
 
 // \tl_concat:NNN \tl_concat:ccc and global version.
 // Args 2 and 3  are expanded once
-void Parser::l3_tl_concat(subtypes c) {
+auto Parser::l3_tl_concat(subtypes c) -> bool {
     bool  c_flag = (c & 1) != 0;
     Token name   = fetch_csname(c_flag);
     // TODO:  if(check_declaration) check all 3 arg are not undef_or_relax
     TokenList A, B;
     if (c_flag) csname_arg();
-    if (!l3_expand_o(A)) throw EndOfData();
+    if (!l3_expand_o(A)) return false;
     if (c_flag) csname_arg();
-    if (!l3_expand_o(B)) throw EndOfData();
+    if (!l3_expand_o(B)) return false;
     A.splice(A.end(), B);
     new_macro(A, name, (c >= 2));
+    return true;
 }
 
 // \tl_put_left:Nn and variants. Second argument is (by default) expanded once
@@ -1209,10 +1210,11 @@ bool Parser::l3_expand_o(TokenList &L) {
 }
 
 // assumes the list already read
-void Parser::l3_reexpand_o(TokenList &L) {
+auto Parser::l3_reexpand_o(TokenList &L) -> bool {
     back_input_braced(L);
     L.clear();
-    if (!l3_expand_o(L)) throw EndOfData();
+    if (!l3_expand_o(L)) return false;
+    return true;
 }
 
 // \::f is  \expandafter{\romannumeral-`0#1}

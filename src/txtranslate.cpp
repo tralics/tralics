@@ -197,7 +197,7 @@ auto Parser::T_optarg() -> bool {
 // Translates a list of token in argument mode. Returns the value.
 auto Parser::translate_list(TokenList &L) -> Xml * {
     Xml *res = the_stack.temporary();
-    if (!T_translate(L)) throw EndOfData();
+    if (!T_translate(L)) return nullptr;
     the_stack.pop(the_names["argument"]);
     return res;
 }
@@ -885,7 +885,7 @@ void Parser::default_bp(Buffer &B, Token T, TokenList &val) {
 }
 
 // chr =0 for \includegraphics, 1 for \psfig
-void Parser::includegraphics(subtypes C) {
+auto Parser::includegraphics(subtypes C) -> bool {
     bool   ic   = C == 0;
     std::string_view bkey = "Bad key in argument of of includegraphics";
     std::string_view bval = "Bad value in argument of includegraphics";
@@ -904,7 +904,7 @@ void Parser::includegraphics(subtypes C) {
         } else
             W = read_arg();
     }
-    if (!expand_no_arg("Gin@keys")) throw EndOfData();
+    if (!expand_no_arg("Gin@keys")) return false;
     {
         TokenList K = read_arg();
         W.splice(W.begin(), K);
@@ -964,6 +964,7 @@ void Parser::includegraphics(subtypes C) {
             invalid_key(T, skey, val);
     }
     AL[the_names["rend"]] = the_names["inline"];
+    return true;
 }
 
 void Parser::T_epsfbox() {
@@ -1148,7 +1149,7 @@ auto Parser::internal_makebox() -> Xml * {
     Xml      *mbox = the_stack.top_stack();
     TokenList d    = read_arg();
     d.brace_me();
-    if (!T_translate(d)) throw EndOfData();
+    if (!T_translate(d)) return nullptr;
     the_stack.pop(the_names["mbox"]);
     return mbox;
 }
@@ -1544,7 +1545,7 @@ auto Parser::tpa_exec(const std::string &cmd) -> Xml * {
     get_token();
     TokenList L;
     L.push_back(cur_tok);
-    if (!T_translate(L)) throw EndOfData();
+    if (!T_translate(L)) return nullptr;
     the_stack.pop(Y);
     the_stack.set_mode(m);
     return the_stack.remove_last();
