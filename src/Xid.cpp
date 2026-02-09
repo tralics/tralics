@@ -34,7 +34,8 @@ void Xid::add_span(long n) const {
 // This returns the attribute list of this id.
 auto Xid::get_att() const -> AttList & {
     if (xml != nullptr) return xml->att;
-    return the_stack.elt_from_id(value)->att; // fallback for legacy bare Xids
+    auto *elt = the_stack.elt_from_id(value);
+    return elt->att; // fallback for legacy bare Xids (elt must exist)
 }
 
 // Return att value if this id has attribute value n.

@@ -82,12 +82,13 @@ void Stack::T_hline() {
 
 // Increases xid, makes sure that the attribute table is big enough
 auto Stack::next_xid(Xml *elt) -> Xid {
-    auto idx = enames.size();
+    auto idx = next_id++;
     if (elt == nullptr) {
         elt = new Xml("", Xid(idx));
         elt->id.xml = elt;
     }
-    enames.push_back(elt);
+    id_map[idx] = elt;
+    last_xml    = elt;
     return Xid(idx, elt);
 }
 
@@ -102,19 +103,18 @@ Stack::Stack() {
 }
 
 // Returns the element in the table with id n
-// This is at position n in enames
 auto Stack::fetch_by_id(size_t n) -> Xml * {
-    if (enames.size() <= n) return nullptr;
-    return enames[n];
+    if (n >= next_id) return nullptr;
+    return elt_from_id(n);
 }
 
 // returns a parent of x
 auto Stack::find_parent(Xml *x) -> Xml * {
     if (x == nullptr) return nullptr;
-    auto k = enames.size();
-    for (size_t i = xid_boot + 1; i < k; i++) {
-        if (enames[i] == nullptr) continue;
-        if (enames[i]->is_child(x)) return enames[i];
+    for (auto &[id, elt] : id_map) {
+        if (id <= xid_boot) continue;
+        if (elt == nullptr) continue;
+        if (elt->is_child(x)) return elt;
     }
     return nullptr;
 }
@@ -283,9 +283,9 @@ void Stack::init_all(const std::string &a) {
     cur_lid  = std::string("uid1");
     Xml *V   = new Xml(std::string(a), nullptr);
     V->push_back_unless_nullptr(nullptr); // Make a hole for the color pool
-    V->att = std::move(enames[1]->att);
+    V->att = std::move(elt_from_id(1)->att);
     V->id = Xid(1, V);
-    enames[1] = V;
+    id_map[1] = V;
     ipush(the_names["document"], V);
     newline_xml = new Xml("\n");
 }

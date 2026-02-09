@@ -1,6 +1,7 @@
 #pragma once
 #include "ArrayInfo.h"
 #include "Xml.h"
+#include <unordered_map>
 
 class Xml;
 
@@ -19,12 +20,14 @@ struct StackSlot {
 };
 
 class Stack : public std::vector<StackSlot> {
-    size_t                 xid_boot{0};
-    std::string            cur_lid;    // the id to be pushed on uids[]
-    std::vector<Xml *>     enames;     // the main table of element names
-    Buffer                 mybuffer;   // a buffer
-    std::vector<ArrayInfo> AI;         // the attributes for the current TeX arrays
-    mode                   cur_mode{}; // the mode to be pushed on modes[]
+    size_t                                   next_id{0};
+    size_t                                   xid_boot{0};
+    std::string                              cur_lid;    // the id to be pushed on uids[]
+    std::unordered_map<size_t, Xml *>        id_map;     // sparse integer→Xml* lookup for TeX-level commands
+    Xml                                     *last_xml{}; // last allocated Xml (for last_xid)
+    Buffer                                   mybuffer;   // a buffer
+    std::vector<ArrayInfo>                   AI;         // the attributes for the current TeX arrays
+    mode                                     cur_mode{}; // the mode to be pushed on modes[]
 public:
     Xml *newline_xml{};
 
@@ -35,9 +38,9 @@ public:
     [[nodiscard]] auto get_cur_id() const -> std::string { return cur_lid; }
     [[nodiscard]] auto get_cur_par() const -> Xml *;
     [[nodiscard]] auto get_mode() const -> mode { return cur_mode; }
-    [[nodiscard]] auto get_xid() const -> size_t { return enames.size() - 1; }
-    [[nodiscard]] auto last_xid() const -> Xid { return Xid(get_xid(), enames.back()); }
-    [[nodiscard]] auto enames_size() const -> size_t { return enames.size(); }
+    [[nodiscard]] auto get_xid() const -> size_t { return next_id - 1; }
+    [[nodiscard]] auto last_xid() const -> Xid { return Xid(get_xid(), last_xml); }
+    [[nodiscard]] auto enames_size() const -> size_t { return next_id; }
     [[nodiscard]] auto in_v_mode() const -> bool { return get_mode() == mode_v; }
     [[nodiscard]] auto in_h_mode() const -> bool { return get_mode() == mode_h; }
     [[nodiscard]] auto in_no_mode() const -> bool { return get_mode() == mode_none; }
@@ -67,8 +70,8 @@ public:
     void               delete_table_atts();
     void               dump();
     auto               document_element() -> Xml               *{ return at(0).obj; }
-    auto               elt_from_id(size_t n) { return enames[n]; }
-    void               set_elt(size_t n, Xml *p) { enames[n] = p; }
+    auto               elt_from_id(size_t n) -> Xml * { auto it = id_map.find(n); return it != id_map.end() ? it->second : nullptr; }
+    void               set_elt(size_t n, Xml *p) { id_map[n] = p; }
     void               end_module();
     auto               fetch_by_id(size_t n) -> Xml *;
     auto               find_cell_props(Xid id) -> ArrayInfo *;
@@ -77,7 +80,7 @@ public:
     auto               find_parent(Xml *x) -> Xml *;
     void               finish_cell(int w);
     void               fonts0(const std::string &x);
-    auto               get_att_list(size_t k) -> AttList               &{ return enames[k]->att; }
+    auto               get_att_list(size_t k) -> AttList               &{ return elt_from_id(k)->att; }
     auto               get_my_table(Xid &cid) -> ArrayInfo *;
     auto               get_u_or_v(bool u_or_v) -> TokenList;
     void               hack_for_hanl();
@@ -110,7 +113,7 @@ public:
     void               set_mode(mode x) { cur_mode = x; }
     void               set_no_mode() { cur_mode = mode_none; }
     void               set_v_mode() { cur_mode = mode_v; }
-    void               set_xid_boot() { xid_boot = get_xid(); }
+    void               set_xid_boot() { xid_boot = next_id - 1; }
     void               T_ampersand();
     void               T_hline();
     auto               temporary() -> Xml *;
