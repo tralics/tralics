@@ -81,7 +81,7 @@ auto bt_to_string(boundary_type v) -> std::string { // \todo std::optional<std::
     }
 }
 
-auto save_string_name(size_t n) -> String {
+auto save_string_name(size_t n) -> std::string_view {
     if (n == 0) return "current label";
     if (n == 1) return "current counter";
     return "unknown";

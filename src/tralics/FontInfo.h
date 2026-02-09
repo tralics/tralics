@@ -42,7 +42,6 @@ public:
         series = 0;
     }
     void               see_font_change(subtypes c);
-    auto               show_font() -> String;
     [[nodiscard]] auto get_size() const -> long { return size / 2048; }
     void               set_level(long k) { level = k; }
     void               set_packed(long k) { packed = k; }

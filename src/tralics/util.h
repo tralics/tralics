@@ -23,7 +23,7 @@ auto only_digits(const std::string &s) -> bool;
 auto only_space(const std::string &s) -> bool;
 auto open_file(const std::string &name, bool f) -> std::ofstream;
 auto remove_digits(std::string s) -> std::string;
-auto save_string_name(size_t n) -> String;
+auto save_string_name(size_t n) -> std::string_view;
 auto split_assign(std::string s) -> std::pair<std::string, std::string>;
 auto split_commas(const std::string &S) -> std::vector<std::string>;
 auto split_at_colon(const std::string &s) -> std::optional<std::pair<std::string, std::string>>;

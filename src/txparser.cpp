@@ -35,12 +35,12 @@ namespace {
         }
     };
 
-    void trace_if(String a, int k, String b) {
+    void trace_if(std::string_view a, int k, std::string_view b) {
         if (tracing_commands()) spdlog::trace("+{}{} {}", a, k, b);
     }
 
     // same code
-    void trace_if(String a, int k, long b) {
+    void trace_if(std::string_view a, int k, long b) {
         if (tracing_commands()) spdlog::trace("+{}{} {}", a, k, b);
     }
 
@@ -58,7 +58,7 @@ namespace token_ns {
     void strip_pt(TokenList &L);
 } // namespace token_ns
 
-inline auto boolean(bool x) -> String { return x ? "true" : "false"; }
+inline auto boolean(bool x) -> std::string_view { return x ? "true" : "false"; }
 
 // --------------------------------------------------
 // Reading arguments, groups, etc.
@@ -2027,7 +2027,8 @@ void Parser::M_newif_aux(Token T, const std::string &S, bool b) {
     L1.push_front(hash_table.let_token);
     L1.push_back(T);
     L1.push_back(b ? hash_table.iftrue_token : hash_table.iffalse_token);
-    mac_buffer = S + boolean(b);
+    mac_buffer = S;
+    mac_buffer += boolean(b);
     Token res  = hash_table.locate(mac_buffer);
     new_macro(L1, res);
 }
@@ -3497,7 +3498,7 @@ void Parser::skip_over_parens() {
     }
 }
 
-inline auto skip_or_continue(bool s) -> String { return s ? "skipping" : "continuing"; }
+inline auto skip_or_continue(bool s) -> std::string_view { return s ? "skipping" : "continuing"; }
 
 // This is the \ifthenelse function
 void Parser::T_ifthenelse() {

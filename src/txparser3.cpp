@@ -18,7 +18,7 @@
 #include <fmt/ostream.h>
 #include <spdlog/spdlog.h>
 
-auto to_string(save_type v) -> String { // \todo std::string
+auto to_string(save_type v) -> std::string_view {
     switch (v) {
     case st_boundary: return "boundary";
     case st_cmd: return "command";
@@ -36,7 +36,7 @@ auto to_string(save_type v) -> String { // \todo std::string
     }
 }
 
-auto gbl_or_assign(bool gbl, bool re) -> String {
+auto gbl_or_assign(bool gbl, bool re) -> std::string_view {
     if (gbl) return "globally changing ";
     if (re) return "reassigning ";
     return "changing ";

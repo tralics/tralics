@@ -32,7 +32,7 @@ void NewArray::remove_a_type(uchar c) {
 }
 
 // Prints a (ch_class, ch_num) pair for debug.
-auto NewArray::dump_slot() -> String {
+auto NewArray::dump_slot() -> std::string_view {
     switch (ch_class) {
     case chc_cell:
         switch (ch_num) {

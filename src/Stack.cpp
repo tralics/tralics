@@ -10,7 +10,7 @@
 
 namespace {
     // For debug. Returns symbolic name of mode
-    auto mode_to_string(mode x) -> String {
+    auto mode_to_string(mode x) -> std::string_view {
         switch (x) {
         case mode_argument: return "_t";
         case mode_h: return "_h";

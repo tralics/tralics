@@ -60,7 +60,6 @@ struct Token {
     [[nodiscard]] auto is_zero_token() const -> bool { return val == other_t_offset + '0'; }
     [[nodiscard]] auto no_case_letter(char x) const -> bool;
     [[nodiscard]] auto tex_is_digit(unsigned radix) const -> long;
-    [[nodiscard]] auto to_string() const -> String;
     [[nodiscard]] auto tok_to_str() const -> std::string;
     [[nodiscard]] auto val_as_digit() const -> size_t { return val - other_t_offset - '0'; }
     [[nodiscard]] auto val_as_letter() const -> size_t { return val - letter_t_offset; }

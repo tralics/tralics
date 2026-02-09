@@ -41,7 +41,7 @@ class NewArray {
 public:
     [[nodiscard]] auto has_a_nct() const -> bool { return nct_size > 0; }
 
-    auto dump_slot() -> String;
+    auto dump_slot() -> std::string_view;
     void boot(Parser *Q);
     void add_a_type(uchar c, Token t);
     void remove_a_type(uchar c);

@@ -23,7 +23,7 @@ public:
     [[nodiscard]] auto is_class() const -> bool { return name[0] == 'C'; }
     [[nodiscard]] auto real_name() const -> std::string { return name.substr(1); }
     [[nodiscard]] auto full_name() const -> std::string { return name; }
-    [[nodiscard]] auto pack_or_class() const -> String { return is_class() ? "class " : "package "; }
+    [[nodiscard]] auto pack_or_class() const -> std::string_view { return is_class() ? "class " : "package "; }
     [[nodiscard]] auto has_name(const std::string &s) const -> bool { return name == s; }
 
     void add_to_hook(TokenList &L) { hook.splice(hook.end(), L); }
