@@ -618,7 +618,7 @@ auto Parser::T_paras(subtypes x) -> bool {
 void Parser::T_ref(bool is_ref) {
     std::string a = special_next_arg();
     the_stack.add_newid0("ref");
-    Xid X = the_stack.get_xid();
+    Xid X = the_stack.last_xid();
     X.add_ref(a);
     if (!is_ref) X.add_attribute(the_names["rend"], the_names["page"]);
 }

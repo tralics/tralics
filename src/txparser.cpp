@@ -1298,9 +1298,9 @@ auto Parser::T_start_theorem(subtypes c) -> bool {
         if (!T_translate(mecounter)) return false;
     }
     if (c == 0) {
-        Xid id1 = the_stack.get_xid();
+        Xid id1 = the_stack.last_xid();
         leave_v_mode();
-        Xid id2 = the_stack.get_xid();
+        Xid id2 = the_stack.last_xid();
         if (!(id1 == id2) && the_names["np_theorem"].empty()) id2.add_attribute(id1);
 
         if (!noref) name.push_back(hash_table.space_token);

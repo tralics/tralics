@@ -239,8 +239,20 @@ Xml::Xml(std::string N, Xml *z) : name(std::move(N)) {
     if (z != nullptr) add_tmp(gsl::not_null{z});
 }
 
+// Take ownership of a pre-allocated Xid's attributes.
+// Moves attributes from the placeholder Xml to this one, and updates the pointer.
+void Xml::take_id(Xid xid) {
+    if (xid.xml != nullptr && xid.xml != this) {
+        att = std::move(xid.xml->att);
+    }
+    id     = xid;
+    id.xml = this;
+    if (id.value > 0 && id.value < the_stack.enames_size()) the_stack.set_elt(id.value, this);
+}
+
 Xml::Xml(Xml &&other) noexcept
     : std::vector<gsl::not_null<Xml *>>(std::move(other)), id(other.id), name(std::move(other.name)), att(std::move(other.att)) {
+    id.xml = this;
     if (id.value > 0 && id.value < the_stack.enames_size()) the_stack.set_elt(id.value, this);
 }
 
@@ -250,6 +262,7 @@ Xml &Xml::operator=(Xml &&other) noexcept {
         id   = other.id;
         name = std::move(other.name);
         att  = std::move(other.att);
+        id.xml = this;
         if (id.value > 0 && id.value < the_stack.enames_size()) the_stack.set_elt(id.value, this);
     }
     return *this;

@@ -122,7 +122,7 @@ namespace {
                 if (!t.empty()) id.add_attribute(the_names["title"], std::string(t));
             }
             {
-                AttList &L = the_stack.get_att_list(CI.AL);
+                AttList &L = CI.AL.get_att();
                 id.add_attribute(L, true);
             }
             for (size_t i = 0; i < n; i++) {
@@ -2142,7 +2142,7 @@ void Parser::solve_cite(bool user) {
     if (user) {
         implicit_par(zero_code);
         the_stack.add_last(new Xml(the_names["bibitem"], nullptr));
-        if (auto ukey = nT_optarg_nopar()) Xid(the_stack.get_xid()).get_att()[the_names["bibkey"]] = *ukey;
+        if (auto ukey = nT_optarg_nopar()) the_stack.last_xid().get_att()[the_names["bibkey"]] = *ukey;
         n = the_stack.get_xid();
     } else {
         F    = remove_initial_star();
@@ -2410,7 +2410,7 @@ void Parser::T_start_tabular(subtypes c) {
     M_let_fast(hash_table.par_token, hash_table.empty_token, false);
     the_stack.push1(x, the_names["table"]);
     the_stack.add_att_to_last(the_names["rend"], the_names["inline"]);
-    Xid id = the_stack.get_xid();
+    Xid id = the_stack.last_xid();
     if (c != 0) { // case of tabular*
         Token     T         = cur_tok;
         TokenList L         = read_arg();

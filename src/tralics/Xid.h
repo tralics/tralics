@@ -3,14 +3,17 @@
 #include <optional>
 #include <string>
 
+class Xml;
 struct AttList;
 class Buffer;
 
-class Xid { // \todo this is just a size_t with tagged methods
+class Xid {
 public:
     size_t value;
+    Xml   *xml{nullptr}; ///< direct pointer to owning Xml (avoids enames lookup)
 
     Xid(size_t v = 0) : value(v) {}
+    Xid(size_t v, Xml *p) : value(v), xml(p) {}
 
     [[nodiscard]] auto get_att() const -> AttList &;
     [[nodiscard]] auto is_font_change() const -> bool;

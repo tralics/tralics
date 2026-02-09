@@ -36,6 +36,7 @@ public:
     [[nodiscard]] auto get_cur_par() const -> Xml *;
     [[nodiscard]] auto get_mode() const -> mode { return cur_mode; }
     [[nodiscard]] auto get_xid() const -> size_t { return enames.size() - 1; }
+    [[nodiscard]] auto last_xid() const -> Xid { return Xid(get_xid(), enames.back()); }
     [[nodiscard]] auto enames_size() const -> size_t { return enames.size(); }
     [[nodiscard]] auto in_v_mode() const -> bool { return get_mode() == mode_v; }
     [[nodiscard]] auto in_h_mode() const -> bool { return get_mode() == mode_h; }
@@ -44,7 +45,7 @@ public:
     [[nodiscard]] auto in_array_mode() const -> bool { return get_mode() == mode_array; }
     [[nodiscard]] auto is_frame(const std::string &s) const -> bool;
     [[nodiscard]] auto is_frame2(const std::string &S) const -> bool;
-    [[nodiscard]] auto last_att_list() const -> AttList & { return Xid(get_xid()).get_att(); }
+    [[nodiscard]] auto last_att_list() const -> AttList & { return last_xid().get_att(); }
 
     auto               add_anchor(const std::string &s, bool spec) -> std::string;
     void               add_att_to_last(const std::string &A, const std::string &B, bool force);

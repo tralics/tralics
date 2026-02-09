@@ -22,6 +22,6 @@ auto AllIndex::find(const std::string &s) -> OneIndex & {
 
 void AllIndex::insert(const std::string &s, const std::string &title) {
     if (std::any_of(begin(), end(), [&](const auto &i) { return i.name == s; })) return;
-    auto id = the_stack.next_xid(nullptr).value;
+    auto id = the_stack.next_xid(nullptr);
     emplace_back(s, title, id);
 }

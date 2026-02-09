@@ -46,6 +46,7 @@ public:
     auto get_first_env(const std::string &name) -> Xml *;
 
     void add_att(const std::string &a, const std::string &b) const { id.add_attribute(a, b); }
+    void take_id(Xid xid);  // take ownership of a pre-allocated Xid's attributes
     void add_first(Xml *x);
     void add_ref(std::string s);
     void add_tmp(gsl::not_null<Xml *> x);

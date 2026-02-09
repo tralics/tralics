@@ -64,11 +64,11 @@ void Stack::add_border(long a, long b) {
     push1(the_names["row"]);
     push_pop_cell(push_only);
     if (a != 1) {
-        Xid(get_xid()).add_span(a - 1);
+        last_xid().add_span(a - 1);
         push_pop_cell(push_and_pop);
     }
-    Xid(get_xid()).add_span(b);
-    Xid(get_xid()).add_bottom_rule();
+    last_xid().add_span(b);
+    last_xid().add_bottom_rule();
     push_pop_cell(pop_only);
     pop(the_names["row"]);
 }
@@ -82,10 +82,13 @@ void Stack::T_hline() {
 
 // Increases xid, makes sure that the attribute table is big enough
 auto Stack::next_xid(Xml *elt) -> Xid {
-    auto id = Xid(enames.size());
-    if (elt == nullptr) elt = new Xml("", id); // placeholder for bare-Xid attribute bags
+    auto idx = enames.size();
+    if (elt == nullptr) {
+        elt = new Xml("", Xid(idx));
+        elt->id.xml = elt;
+    }
     enames.push_back(elt);
-    return id;
+    return Xid(idx, elt);
 }
 
 Stack::Stack() {
@@ -109,12 +112,6 @@ auto Stack::fetch_by_id(size_t n) -> Xml * {
 auto Stack::find_parent(Xml *x) -> Xml * {
     if (x == nullptr) return nullptr;
     auto k = enames.size();
-    // debug: print all parents
-    // std::cout<< "Search parent of " << x << "\n";
-    // for(int i= 0; i< k; i++) {
-    //   if(enames[i] && enames[i]-> is_child (x))
-    //    std::cout<< "fount at " << enames[i] << "\n";
-    // }
     for (size_t i = xid_boot + 1; i < k; i++) {
         if (enames[i] == nullptr) continue;
         if (enames[i]->is_child(x)) return enames[i];
@@ -123,7 +120,7 @@ auto Stack::find_parent(Xml *x) -> Xml * {
 }
 
 // Add A=B as attribute list to last xid.
-void Stack::add_att_to_last(const std::string &A, const std::string &B) { get_att_list(get_xid())[A] = B; }
+void Stack::add_att_to_last(const std::string &A, const std::string &B) { last_xid().get_att()[A] = B; }
 
 // Add A=B as attribute list to top stack
 void Stack::add_att_to_cur(const std::string &A, const std::string &B) { cur_xid().add_attribute(A, B); }
@@ -131,7 +128,7 @@ void Stack::add_att_to_cur(const std::string &A, const std::string &B) { cur_xid
 // Add A=B as attribute list to last xid
 // (if force is true, ignores old value otherwise new value).
 void Stack::add_att_to_last(const std::string &A, const std::string &B, bool force) {
-    auto &L = get_att_list(get_xid());
+    auto &L = last_xid().get_att();
     if (force)
         L[A] = B;
     else
@@ -158,7 +155,7 @@ void Stack::hack_for_hanl() {
 // returns a reference to the attribute list of the object.
 auto Stack::add_newid0(const std::string &x) -> AttList & {
     top_stack()->push_back_unless_nullptr(new Xml(the_names[x], nullptr));
-    return Xid(get_xid()).get_att();
+    return last_xid().get_att();
 }
 
 // Adds x to the tail of the current list.
@@ -286,7 +283,9 @@ void Stack::init_all(const std::string &a) {
     cur_lid  = std::string("uid1");
     Xml *V   = new Xml(std::string(a), nullptr);
     V->push_back_unless_nullptr(nullptr); // Make a hole for the color pool
-    V->id = 1;
+    V->att = std::move(enames[1]->att);
+    V->id = Xid(1, V);
+    enames[1] = V;
     ipush(the_names["document"], V);
     newline_xml = new Xml("\n");
 }
@@ -555,7 +554,7 @@ void Stack::mark_omit_cell() { back().omit_cell = true; }
 auto Stack::remove_last() -> Xml * { return top_stack()->remove_last(); }
 
 void Stack::create_new_anchor(Xid xid, const std::string &id, const std::string &idtext) {
-    AttList &AL              = get_att_list(xid.value);
+    AttList &AL              = xid.get_att();
     AL[the_names["id"]]      = id;
     AL[the_names["id-text"]] = idtext;
 }
@@ -564,7 +563,7 @@ void Stack::create_new_anchor(Xid xid, const std::string &id, const std::string 
 auto Stack::add_new_anchor() -> std::string {
     std::string id = next_label_id();
     set_cur_id(id);
-    create_new_anchor(get_xid(), id, get_cur_label());
+    create_new_anchor(last_xid(), id, get_cur_label());
     return id;
 }
 
@@ -572,7 +571,7 @@ auto Stack::add_new_anchor_spec() -> std::string {
     static size_t last_top_label_id = 0;
     auto          id                = std::string(fmt::format("cid{}", ++last_top_label_id));
     set_cur_id(id);
-    create_new_anchor(get_xid(), id, get_cur_label());
+    create_new_anchor(last_xid(), id, get_cur_label());
     return id;
 }
 
@@ -583,7 +582,7 @@ auto Stack::add_anchor(const std::string &s, bool spec) -> std::string {
     set_cur_id(id);
     if (!spec) {
         add_newid0("anchor");
-        create_new_anchor(get_xid(), id, std::string(s));
+        create_new_anchor(last_xid(), id, std::string(s));
     } else {
         create_new_anchor(cur_xid(), id, std::string(s));
     }

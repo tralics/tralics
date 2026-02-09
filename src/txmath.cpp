@@ -799,7 +799,7 @@ void Parser::finish_no_mathml(bool is_inline, size_t vp) {
     id.add_attribute(the_names["type"], the_names[cmi.pos_att]);
     id.add_attribute(the_names["textype"], s);
     Xml *res = u.convert_math_noML(eqtb_int_table[nomath_code].val == -2);
-    res->id  = id;
+    res->take_id(id);
     after_math(is_inline);
     the_stack.top_stack()->push_back_unless_nullptr(res);
     if (cmi.has_label()) add_math_label(res);
@@ -859,7 +859,7 @@ auto Parser::T_math(subtypes type) -> bool {
     if (nm == -3) {
         Math &w   = math_data.get_list(loc_of_cp);
         alter     = w.convert_math_noML(false);
-        alter->id = cmi.cur_texmath_id;
+        alter->take_id(cmi.cur_texmath_id);
     }
     loc_of_cp = math_data.get_list(0).duplicate(false);
     Math &u   = math_data.get_list(loc_of_cp);
@@ -883,14 +883,14 @@ auto Parser::T_math(subtypes type) -> bool {
     after_math(is_inline);
     // Insert the result in the tree.
     Xml *x = new Xml(the_names["math"], nullptr);
-    x->id  = cmi.cur_math_id;
+    x->take_id(cmi.cur_math_id);
     x->add_att(the_names["xmlns"], the_names["mathmlns"]);
     x->add_tmp(gsl::not_null{res});
     if (!is_inline) x->add_att(the_names["mode"], the_names["cst_display"]);
     Xml *res1 = new Xml(the_names["formula"], x);
     if (alter != nullptr) res1->push_back_unless_nullptr(alter);
 
-    res1->id = cmi.cur_formula_id;
+    res1->take_id(cmi.cur_formula_id);
     res1->add_att(the_names["type"], the_names[cmi.pos_att]);
     if (!textype.empty()) res1->add_att(the_names["textype"], std::string(textype));
     if (cmi.has_label()) add_math_label(res1);
