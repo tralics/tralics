@@ -32,8 +32,8 @@ void Xid::add_span(long n) const {
 }
 
 // This returns the attribute list of this id.
-// Uses the global variable the_stack.
-auto Xid::get_att() const -> AttList & { return the_stack.get_att_list(value); }
+// Goes through the global enames table to find the Xml object.
+auto Xid::get_att() const -> AttList & { return the_stack.elt_from_id(value)->att; }
 
 // Return att value if this id has attribute value n.
 // Returns null string otherwise

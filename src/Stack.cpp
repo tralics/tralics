@@ -82,9 +82,10 @@ void Stack::T_hline() {
 
 // Increases xid, makes sure that the attribute table is big enough
 auto Stack::next_xid(Xml *elt) -> Xid {
-    attributes.emplace_back();
+    auto id = Xid(enames.size());
+    if (elt == nullptr) elt = new Xml("", id); // placeholder for bare-Xid attribute bags
     enames.push_back(elt);
-    return enames.size() - 1;
+    return id;
 }
 
 Stack::Stack() {

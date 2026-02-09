@@ -239,6 +239,22 @@ Xml::Xml(std::string N, Xml *z) : name(std::move(N)) {
     if (z != nullptr) add_tmp(gsl::not_null{z});
 }
 
+Xml::Xml(Xml &&other) noexcept
+    : std::vector<gsl::not_null<Xml *>>(std::move(other)), id(other.id), name(std::move(other.name)), att(std::move(other.att)) {
+    if (id.value > 0 && id.value < the_stack.enames_size()) the_stack.set_elt(id.value, this);
+}
+
+Xml &Xml::operator=(Xml &&other) noexcept {
+    if (this != &other) {
+        std::vector<gsl::not_null<Xml *>>::operator=(std::move(other));
+        id   = other.id;
+        name = std::move(other.name);
+        att  = std::move(other.att);
+        if (id.value > 0 && id.value < the_stack.enames_size()) the_stack.set_elt(id.value, this);
+    }
+    return *this;
+}
+
 // Case of cline, placed after a row. If action is false, we check whether the
 // row, including the spans of the cells, is adapted to the pattern.
 // If action is true, we do something
@@ -549,12 +565,14 @@ void Xml::print_on(std::ostream &o) const {
         return;
     }
 
+    const auto &a = id.get_att();
+
     if (empty() && !name.empty()) {
-        fmt::print(o, "<{}{}/>", name.c_str(), fmt::streamed(id.get_att()));
+        fmt::print(o, "<{}{}/>", name.c_str(), fmt::streamed(a));
         return;
     }
 
-    if (!name.empty()) fmt::print(o, "<{}{}>", name.c_str(), fmt::streamed(id.get_att()));
+    if (!name.empty()) fmt::print(o, "<{}{}>", name.c_str(), fmt::streamed(a));
     for (const auto &e : *this) o << e;
     if (!name.empty()) fmt::print(o, "</{}>", name.c_str());
 }

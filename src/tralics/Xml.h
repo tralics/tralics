@@ -1,4 +1,5 @@
 #pragma once
+#include "AttList.h"
 #include "Buffer.h"
 #include "NameMapper.h"
 #include "Xid.h"
@@ -8,12 +9,17 @@ struct XmlAction;
 
 class Xml : public std::vector<gsl::not_null<Xml *>> { // \todo value semantics
 public:
-    Xid         id{0}; ///< id of the objet
-    std::string name;  ///< name of the element
+    Xid         id{0};  ///< id of the objet
+    std::string name;   ///< name of the element
+    AttList     att;    ///< attributes of the element
 
     explicit Xml(const std::string &n) : name(std::string(n)) {}
     Xml(const std::string &s, Xid n) : id(n), name(the_names[s]) {}
     Xml(std::string N, Xml *z);
+    Xml(Xml &&other) noexcept;
+    Xml &operator=(Xml &&other) noexcept;
+    Xml(const Xml &) = delete;
+    Xml &operator=(const Xml &) = delete;
 
     [[nodiscard]] auto all_empty() const -> bool;
     [[nodiscard]] auto back_or_nullptr() const -> Xml * { return empty() ? nullptr : back().get(); }

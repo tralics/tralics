@@ -21,7 +21,6 @@ struct StackSlot {
 class Stack : public std::vector<StackSlot> {
     size_t                 xid_boot{0};
     std::string            cur_lid;    // the id to be pushed on uids[]
-    std::vector<AttList>   attributes; // the main table of attributes \todo maybe global variable while we are at it, or static to Xml
     std::vector<Xml *>     enames;     // the main table of element names
     Buffer                 mybuffer;   // a buffer
     std::vector<ArrayInfo> AI;         // the attributes for the current TeX arrays
@@ -37,6 +36,7 @@ public:
     [[nodiscard]] auto get_cur_par() const -> Xml *;
     [[nodiscard]] auto get_mode() const -> mode { return cur_mode; }
     [[nodiscard]] auto get_xid() const -> size_t { return enames.size() - 1; }
+    [[nodiscard]] auto enames_size() const -> size_t { return enames.size(); }
     [[nodiscard]] auto in_v_mode() const -> bool { return get_mode() == mode_v; }
     [[nodiscard]] auto in_h_mode() const -> bool { return get_mode() == mode_h; }
     [[nodiscard]] auto in_no_mode() const -> bool { return get_mode() == mode_none; }
@@ -67,6 +67,7 @@ public:
     void               dump();
     auto               document_element() -> Xml               *{ return at(0).obj; }
     auto               elt_from_id(size_t n) { return enames[n]; }
+    void               set_elt(size_t n, Xml *p) { enames[n] = p; }
     void               end_module();
     auto               fetch_by_id(size_t n) -> Xml *;
     auto               find_cell_props(Xid id) -> ArrayInfo *;
@@ -75,7 +76,7 @@ public:
     auto               find_parent(Xml *x) -> Xml *;
     void               finish_cell(int w);
     void               fonts0(const std::string &x);
-    auto               get_att_list(size_t k) -> AttList               &{ return attributes[k]; }
+    auto               get_att_list(size_t k) -> AttList               &{ return enames[k]->att; }
     auto               get_my_table(Xid &cid) -> ArrayInfo *;
     auto               get_u_or_v(bool u_or_v) -> TokenList;
     void               hack_for_hanl();
