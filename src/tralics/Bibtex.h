@@ -45,7 +45,7 @@ public:
     bool                     raw_bib{false};
     bool                     bib_allow_break{true};
     int                      cur_entry_line{-1};
-    std::array<String, 3>    my_constant_table{};
+    std::array<std::string_view, 3> my_constant_table{};
     std::string              cur_entry_name;
     std::vector<std::string> omitcite_list;
 
