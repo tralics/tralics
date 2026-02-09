@@ -389,11 +389,11 @@ void math_ns::insert_delimiter_t(del_pos k) {
 void Buffer::push_back_math_token(const CmdChr &x, bool space) {
     if (x.cmd > 16) {
         push_back('\\');
-        auto s = x.name();
+        auto s = x.name().value_or("");
         push_back_math_aux(s);
         if (!space) return;
-        if (s[0] == 0) return;
-        if (s[1] == 0 && (std::isalpha(s[0]) == 0)) return;
+        if (s.empty()) return;
+        if (s.size() == 1 && (std::isalpha(s[0]) == 0)) return;
         push_back(' ');
     } else
         append_with_xml_escaping(x.char_val());
@@ -405,7 +405,7 @@ void Buffer::push_back_math_token(const CmdChr &x, bool space) {
 
 void Buffer::push_back_math_tag(const CmdChr &x, int type) {
     if (x.cmd > 16) {
-        auto s = x.name();
+        auto s = x.name().value_or("");
         push_back_math_tag(s, type);
     } else { // Let's hope no tag needed here
         if (type == pbm_end) return;

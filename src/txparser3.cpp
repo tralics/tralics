@@ -135,8 +135,8 @@ void Parser::word_define(size_t a, long c, bool gbl) {
     bool     reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
         CmdChr      tmp(assign_int_cmd, subtypes(a));
-        std::string msg = fmt::format("{{{}\\{}={}", gbl_or_assign(gbl, reassign), tmp.name(), fmt::streamed(W.val));
-        if (!reassign) msg += fmt::format(" into \\{}={}", tmp.name(), c);
+        std::string msg = fmt::format("{{{}\\{}={}", gbl_or_assign(gbl, reassign), tmp.name().value_or(""), fmt::streamed(W.val));
+        if (!reassign) msg += fmt::format(" into \\{}={}", tmp.name().value_or(""), c);
         msg += "}";
         spdlog::trace("{}", msg);
     }
@@ -175,8 +175,8 @@ void Parser::dim_define(size_t a, ScaledInt c, bool gbl) {
     bool     reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
         CmdChr      tmp(assign_dimen_cmd, subtypes(a));
-        std::string msg = fmt::format("{{{}\\{}={}", gbl_or_assign(gbl, reassign), tmp.name(), fmt::streamed(W.val));
-        if (!reassign) msg += fmt::format(" into \\{}={}", tmp.name(), fmt::streamed(c));
+        std::string msg = fmt::format("{{{}\\{}={}", gbl_or_assign(gbl, reassign), tmp.name().value_or(""), fmt::streamed(W.val));
+        if (!reassign) msg += fmt::format(" into \\{}={}", tmp.name().value_or(""), fmt::streamed(c));
         msg += "}";
         spdlog::trace("{}", msg);
     }
@@ -204,12 +204,12 @@ void Parser::glue_define(size_t a, Glue c, bool gbl) {
         Thbuf1.clear();
         Thbuf1 << W.val; // \todo make Glue formattable
         if (a >= thinmuskip_code) Thbuf1.pt_to_mu();
-        std::string msg = fmt::format("{{{}\\{}={}", gbl_or_assign(gbl, reassign), tmp.name(), fmt::streamed(Thbuf1));
+        std::string msg = fmt::format("{{{}\\{}={}", gbl_or_assign(gbl, reassign), tmp.name().value_or(""), fmt::streamed(Thbuf1));
         if (!reassign) {
             Thbuf1.clear();
             Thbuf1 << c;
             if (a >= thinmuskip_code) Thbuf1.pt_to_mu();
-            msg += fmt::format(" into \\{}={}", tmp.name(), fmt::streamed(Thbuf1));
+            msg += fmt::format(" into \\{}={}", tmp.name().value_or(""), fmt::streamed(Thbuf1));
         }
         msg += "}";
         spdlog::trace("{}", msg);
@@ -244,8 +244,8 @@ void Parser::token_list_define(size_t p, const TokenList &c, bool gbl) {
     bool       reassign = !gbl && W.val == c;
     if (tracing_assigns()) {
         CmdChr      tmp(assign_toks_cmd, subtypes(p));
-        std::string msg = fmt::format("{{{}\\{}={}", gbl_or_assign(gbl, reassign), tmp.name(), fmt::streamed(W.val));
-        if (!reassign) msg += fmt::format(" into \\{}={}", tmp.name(), fmt::streamed(c));
+        std::string msg = fmt::format("{{{}\\{}={}", gbl_or_assign(gbl, reassign), tmp.name().value_or(""), fmt::streamed(W.val));
+        if (!reassign) msg += fmt::format(" into \\{}={}", tmp.name().value_or(""), fmt::streamed(c));
         msg += "}";
         spdlog::trace("{}", msg);
     }

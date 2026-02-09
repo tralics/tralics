@@ -26,7 +26,7 @@ namespace {
 
 auto CmdChr::specchar_cmd_name() const -> std::string { return fmt::format("Character U+{:04X}", unsigned(chr)); }
 
-auto CmdChr::token_error_name() const -> String {
+auto CmdChr::token_error_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case classerror_code: return "ClassError";
     case classwarning_code: return "ClassWarning";
@@ -45,11 +45,11 @@ auto CmdChr::token_error_name() const -> String {
     case latexwarningnoline_code: return "@latex@warning@no@line";
     case latexinfo_code: return "@latex@info";
     case latexinfonoline_code: return "@latex@info@no@line";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_monthday_name() const -> String {
+auto CmdChr::token_monthday_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case md_frenchm_code: return "@monthnamefrench";
     case md_frenchd_code: return "@daynamefrench";
@@ -59,7 +59,7 @@ auto CmdChr::token_monthday_name() const -> String {
     case md_germand_code: return "@daynamegerman";
     case md_englishm_code: return "@monthnameenglish";
     case md_englishd_code: return "@daynameenglish";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
@@ -570,7 +570,7 @@ auto token_math_name(subtypes c) -> std::string {
 }
 
 // Aux functions for CmdChr::name() const
-auto CmdChr::token_fancy_name() const -> String {
+auto CmdChr::token_fancy_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case fancy_lhead_code: return "lhead";
     case fancy_chead_code: return "chead";
@@ -581,10 +581,10 @@ auto CmdChr::token_fancy_name() const -> String {
     case fancy_head_code: return "fancyhead";
     case fancy_foot_code: return "fancyfoot";
     case fancy_hf_code: return "fancyhf";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
-auto CmdChr::token_color_name() const -> String {
+auto CmdChr::token_color_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case definecolor_code: return "definecolor";
     case color_code: return "color";
@@ -592,11 +592,11 @@ auto CmdChr::token_color_name() const -> String {
     case pagecolor_code: return "pagecolor";
     case colorbox_code: return "colorbox";
     case fcolorbox_code: return "fcolorbox";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_fbox_name() const -> String {
+auto CmdChr::token_fbox_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case fbox_code: return "fbox";
     case framebox_code: return "framebox";
@@ -604,21 +604,21 @@ auto CmdChr::token_fbox_name() const -> String {
     case scalebox_code: return "scalebox";
     case raisebox_code: return "raisebox";
     case dashbox_code: return "dashbox";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_linebreak_name() const -> String {
+auto CmdChr::token_linebreak_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case pagebreak_code: return "pagebreak";
     case nopagebreak_code: return "nopagebreak";
     case linebreak_code: return "linebreak";
     case nolinebreak_code: return "nolinebreak";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_mark_name() const -> String {
+auto CmdChr::token_mark_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case topmark_code: return "topmark";
     case firstmark_code: return "firstmark";
@@ -630,20 +630,20 @@ auto CmdChr::token_mark_name() const -> String {
     case botmarks_code: return "botmarks";
     case splitfirstmarks_code: return "splitfirstmarks";
     case splitbotmarks_code: return "splitbotmarks";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_fiorelse_name() const -> String {
+auto CmdChr::token_fiorelse_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case fi_code: return "fi";
     case or_code: return "or";
     case else_code: return "else";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_iftest_name() const -> String {
+auto CmdChr::token_iftest_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case if_char_code: return "if";
     case if_cat_code: return "ifcat";
@@ -666,11 +666,11 @@ auto CmdChr::token_iftest_name() const -> String {
     case if_csname_code: return "ifcsname";
     case if_fontchar_code: return "iffontchar";
     case if_leapyear_code: return "ifleapyear";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_counter_name() const -> String {
+auto CmdChr::token_counter_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case killcounter_code: return "@stpelt";
     case stepcounter_code: return "stepcounter";
@@ -678,7 +678,7 @@ auto CmdChr::token_counter_name() const -> String {
     case setcounter_code: return "setcounter";
     case value_code: return "value";
     case addtoreset_code: return "@addtoreset";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
@@ -706,7 +706,7 @@ auto CmdChr::token_accent_name() const -> std::string {
     }
 }
 
-auto CmdChr::token_convert_name() const -> String {
+auto CmdChr::token_convert_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case number_code: return "number";
     case at_arabic_code: return "@arabic";
@@ -722,11 +722,11 @@ auto CmdChr::token_convert_name() const -> String {
     case etexrevision_code: return "eTeXrevision";
     case sanitize_code: return "@onelevel@sanitize";
     case twodigits_code: return "two@digits";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_for_name() const -> String {
+auto CmdChr::token_for_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case xkv_for_n_code: return "tralics@for@n";
     case xkv_for_en_code: return "tralics@for@en";
@@ -740,11 +740,11 @@ auto CmdChr::token_for_name() const -> String {
     case tforloop_code: return "@tforloop";
     case breaktfor_code: return "@break@tfor";
     case xkv_breaktfor_code: return "tralics@for@break";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_lastitem_name() const -> String {
+auto CmdChr::token_lastitem_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case lastpenalty_code: return "lastpenalty";
     case lastkern_code: return "lastkern";
@@ -787,11 +787,11 @@ auto CmdChr::token_lastitem_name() const -> String {
     case glueshrink_code: return "glueshrink";
     case mutoglue_code: return "mutoglue";
     case gluetomu_code: return "gluetomu";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_over_name() const -> String {
+auto CmdChr::token_over_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case above_code: return "above";
     case over_code: return "over";
@@ -799,30 +799,30 @@ auto CmdChr::token_over_name() const -> String {
     case abovewithdelims_code: return "abovewithdelims";
     case overwithdelims_code: return "overwithdelims";
     case atopwithdelims_code: return "atopwithdelims";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_limits_name() const -> String {
+auto CmdChr::token_limits_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case 0: return "displaylimits";
     case 2: return "limits";
     case 1: return "nolimits";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_style_name() const -> String {
+auto CmdChr::token_style_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case displaystyle_code: return "displaystyle";
     case textstyle_code: return "textstyle";
     case scriptstyle_code: return "scriptstyle";
     case scriptscriptstyle_code: return "scriptscriptstyle";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_big_name() const -> String {
+auto CmdChr::token_big_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case big_code: return "big";
     case Big_code: return "Big";
@@ -840,11 +840,11 @@ auto CmdChr::token_big_name() const -> String {
     case Bigm_code: return "Bigm";
     case biggm_code: return "biggm";
     case Biggm_code: return "Biggm";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_mathcomp_name() const -> String {
+auto CmdChr::token_mathcomp_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case ord_noad: return "mathord";
     case op_noad: return "mathop";
@@ -855,40 +855,40 @@ auto CmdChr::token_mathcomp_name() const -> String {
     case punct_noad: return "mathpunct";
     case inner_noad: return "mathinner";
     case between_noad: return "mathbetween";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_eignorec_name() const -> String {
+auto CmdChr::token_eignorec_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case htmlonly_code: return "endhtmlonly";
     case comment_code: return "endcomment";
     case rawhtml_code: return "endrawhtml";
     case LaTeXonly_code: return "endLaTeXonly";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_eignore_name() const -> String {
+auto CmdChr::token_eignore_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case body_code: return "endbody";
     case abstract_code: return "endabstract";
     case latexonly_code: return "endlatexonly";
     case xmlonly_code: return "endxmlonly";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_efigure_name() const -> String {
+auto CmdChr::token_efigure_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case 0: return "endfigure";
     case 1: return "endfigure*";
     case 2: return "endwrapfigure";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_ecenter_name() const -> String {
+auto CmdChr::token_ecenter_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case center_code: return "endcenter";
     case quote_code: return "endquote";
@@ -896,12 +896,12 @@ auto CmdChr::token_ecenter_name() const -> String {
     case flushleft_code: return "endflushleft";
     case flushright_code: return "endflushright";
     case verse_code: return "endverse";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
 // input and friends
-auto CmdChr::token_file_name() const -> String {
+auto CmdChr::token_file_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case ifexists_code: return "IfFileExists";
     case inputifexists_code: return "InputIfFileExists";
@@ -913,21 +913,21 @@ auto CmdChr::token_file_name() const -> String {
     case include_code: return "include";
     case scantokens_code: return "scantokens";
     case readxml_code: return "readxml";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_dashline_name() const -> String {
+auto CmdChr::token_dashline_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case dashline_code: return "dashline";
     case drawline_code: return "drawline";
     case dottedline_code: return "dottedline";
     case circle_code: return "circle";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_put_name() const -> String {
+auto CmdChr::token_put_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case put_code: return "put";
     case line_code: return "line";
@@ -936,11 +936,11 @@ auto CmdChr::token_put_name() const -> String {
     case multiput_code: return "multiput";
     case scaleput_code: return "scaleput";
     case frame_code: return "frame";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_caseshift_name() const -> String {
+auto CmdChr::token_caseshift_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case 0: return "lowercase";
     case 1: return "uppercase";
@@ -950,29 +950,29 @@ auto CmdChr::token_caseshift_name() const -> String {
     case 5: return "MakeTextUppercase";
     case 6: return "tl_to_lowercase";
     case 7: return "tl_to_uppercase";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_centering_name() const -> String {
+auto CmdChr::token_centering_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case center_code: return "centering";
     case flushright_code: return "raggedleft";
     case flushleft_code: return "raggedright";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_box_name() const -> String {
+auto CmdChr::token_box_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case mbox_code: return "mbox";
     case makebox_code: return "makebox";
     case text_code: return "text";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_section_name() const -> String {
+auto CmdChr::token_section_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case part_code: return "part";
     case chapter_code: return "chapter";
@@ -983,21 +983,21 @@ auto CmdChr::token_section_name() const -> String {
     case subparagraph_code: return "subparagraph";
     case endsec_code: return "endsec";
     case toplevel_sec_code: return "toplevelsection";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_cite_name() const -> String {
+auto CmdChr::token_cite_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case cite_code: return "cite";
     case nocite_code: return "nocite";
     case natcite_code: return "natcite";
     case natcite_e_code: return "endnatcite";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_latexctr_name() const -> String {
+auto CmdChr::token_latexctr_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case arabic_code: return "arabic";
     case roman_code: return "roman";
@@ -1008,31 +1008,31 @@ auto CmdChr::token_latexctr_name() const -> String {
     case at_alph_code: return "@alph";
     case at_Alph_code: return "@Alph";
     case at_fnsymbol_code: return "@fnsymbol";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_setinteraction_name() const -> String {
+auto CmdChr::token_setinteraction_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case batchmode_code: return "batchmode";
     case nonstopmode_code: return "nonstopmode";
     case scrollmode_code: return "scrollmode";
     case errorstopmode_code: return "errorstopmode";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_shape_name() const -> String {
+auto CmdChr::token_shape_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case parshape_code: return "parshape";
     case interlinepenalties_code: return "interlinepenalties";
     case clubpenalties_code: return "clubpenalties";
     case widowpenalties_code: return "widowpenalties";
     case displaywidowpenalties_code: return "displaywidowpenalties";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
-auto CmdChr::token_def_name() const -> String {
+auto CmdChr::token_def_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case xdef_code: return "xdef";
     case def_code: return "def";
@@ -1092,11 +1092,11 @@ auto CmdChr::token_def_name() const -> String {
     case provide_code: return "providecommand";
     case checkcommand_code: return "CheckCommand";
     case declare_math_operator_code: return "DeclareMathOperator";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_shorthand_name() const -> String {
+auto CmdChr::token_shorthand_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case char_def_code: return "chardef";
     case math_char_def_code: return "mathchardef";
@@ -1105,40 +1105,40 @@ auto CmdChr::token_shorthand_name() const -> String {
     case skip_def_code: return "skipdef";
     case mu_skip_def_code: return "muskipdef";
     case toks_def_code: return "toksdef";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_prefix_name() const -> String {
+auto CmdChr::token_prefix_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case global_code: return "global";
     case long_code: return "long";
     case outer_code: return "outer";
     case protected_code: return "protected";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_register_name() const -> String {
+auto CmdChr::token_register_name() const -> std::optional<std::string_view> {
     switch (static_cast<internal_type>(chr)) {
     case it_int: return "count";
     case it_dimen: return "dimen";
     case it_glue: return "skip";
     case it_mu: return "muskip";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_deffamily_name() const -> String {
+auto CmdChr::token_deffamily_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case textfont_code: return "textfont";
     case scriptfont_code: return "scriptfont";
     case scriptscriptfont_code: return "scriptscriptfont";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_defcode_name() const -> String {
+auto CmdChr::token_defcode_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case 0: return "catcode";
     case math_code_offset: return "mathcode";
@@ -1146,20 +1146,20 @@ auto CmdChr::token_defcode_name() const -> String {
     case uc_code_offset: return "uccode";
     case sf_code_offset: return "sfcode";
     case del_code_offset: return "delcode";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_setboxdimen_name() const -> String {
+auto CmdChr::token_setboxdimen_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case wd_code: return "wd";
     case ht_code: return "ht";
     case dp_code: return "dp";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_setpagedimen_name() const -> String {
+auto CmdChr::token_setpagedimen_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case pagegoal_code: return "pagegoal";
     case pagetotal_code: return "pagetotal";
@@ -1169,7 +1169,7 @@ auto CmdChr::token_setpagedimen_name() const -> String {
     case pagefilllstretch_code: return "pagefilllstretch";
     case pageshrink_code: return "pageshrink";
     case pagedepth_code: return "pagedepth";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
@@ -1349,16 +1349,16 @@ auto CmdChr::token_assigntoks_name() const -> std::string {
     }
 }
 
-auto CmdChr::token_leader_name() const -> String {
+auto CmdChr::token_leader_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case shipout_code: return "shipout";
     case leaders_code: return "leaders";
     case cleaders_code: return "cleaders";
     case xleaders_code: return "xleaders";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
-auto CmdChr::token_index_name() const -> String {
+auto CmdChr::token_index_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case index_code: return "index";
     case glossary_code: return "glossary";
@@ -1367,10 +1367,10 @@ auto CmdChr::token_index_name() const -> String {
     case makeindex_code: return "makeindex";
     case makeglossary_code: return "makeglossary";
     case newindex_code: return "@newindex";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
-auto CmdChr::token_newcount_name() const -> String {
+auto CmdChr::token_newcount_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case newcount_code: return "newcount";
     case newtoks_code: return "newtoks";
@@ -1381,22 +1381,22 @@ auto CmdChr::token_newcount_name() const -> String {
     case newread_code: return "newread";
     case newwrite_code: return "newwrite";
     case newlanguage_code: return "newlanguage";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_line_name() const -> String {
+auto CmdChr::token_line_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case leftline_code: return "leftline";
     case rightline_code: return "rightline";
     case centerline_code: return "centerline";
     case llap_code: return "llap";
     case rlap_code: return "rlap";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_makebox_name() const -> String {
+auto CmdChr::token_makebox_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case box_code: return "box";
     case copy_code: return "copy";
@@ -1411,21 +1411,21 @@ auto CmdChr::token_makebox_name() const -> String {
     case xbox_code: return "xbox";
     case parbox_code: return "parbox";
     case marginpar_code: return "marginpar";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_move_name() const -> String {
+auto CmdChr::token_move_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case moveleft_code: return "moveleft";
     case moveright_code: return "moveright";
     case raise_code: return "raise";
     case lower_code: return "lower";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_xray_name() const -> String {
+auto CmdChr::token_xray_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case show_code: return "show";
     case showbox_code: return "showbox";
@@ -1438,11 +1438,11 @@ auto CmdChr::token_xray_name() const -> String {
     case showtokens_code: return "showtokens";
     case register_show_code: return "__kernel_register_show:N";
     case registerc_show_code: return "__kernel_register_show:c";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_extension_name() const -> String {
+auto CmdChr::token_extension_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case openout_code: return "openout";
     case write_code: return "write";
@@ -1451,39 +1451,39 @@ auto CmdChr::token_extension_name() const -> String {
     case write_term_code: return "iow_term:x";
     case typeout_code: return "typeout";
     case wlog_code: return "wlog";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_unbox_name() const -> String {
+auto CmdChr::token_unbox_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case unhbox_code: return "unhbox";
     case unhcopy_code: return "unhcopy";
     case unvbox_code: return "unvbox";
     case unvcopy_code: return "unvcopy";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_ltfont_name() const -> String {
+auto CmdChr::token_ltfont_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case fontencoding_code: return "fontencoding";
     case fontfamily_code: return "fontfamily";
     case fontseries_code: return "fontseries";
     case fontshape_code: return "fontshape";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_ign2_name() const -> String {
+auto CmdChr::token_ign2_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case HTMLset_code: return "HTMLset";
     case fontsize_code: return "fontsize";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_ign1_name() const -> String {
+auto CmdChr::token_ign1_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case RAlabel_code: return "RAlabel";
     case hyphenation_code: return "hyphenation";
@@ -1492,11 +1492,11 @@ auto CmdChr::token_ign1_name() const -> String {
     case includeonly_code: return "includeonly";
     case showhyphens_code: return "showhyphens";
 
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_ignore_name() const -> String {
+auto CmdChr::token_ignore_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case protect_code: return "protect";
     case sloppy_code: return "sloppy";
@@ -1548,7 +1548,7 @@ auto CmdChr::token_ignore_name() const -> String {
     }
 }
 
-auto CmdChr::token_fontsize_name() const -> String {
+auto CmdChr::token_fontsize_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case tiny_code: return "tiny";
     case scriptsize_code: return "scriptsize";
@@ -1560,11 +1560,11 @@ auto CmdChr::token_fontsize_name() const -> String {
     case LARGE_code: return "LARGE";
     case huge_code: return "huge";
     case Huge_code: return "Huge";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_argfont_name() const -> String {
+auto CmdChr::token_argfont_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case rm_family_code: return "textrm";
     case sf_family_code: return "textsf";
@@ -1577,11 +1577,11 @@ auto CmdChr::token_argfont_name() const -> String {
     case sc_shape_code: return "textsc";
     case em_code: return "emph";
     case normalfont_code: return "textnormal";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_soul_name() const -> String {
+auto CmdChr::token_soul_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case soul_sup_code: return "textsuperscript";
     case soul_sub_code: return "textsubscript";
@@ -1591,11 +1591,11 @@ auto CmdChr::token_soul_name() const -> String {
     case soul_so_code: return "so";
     case soul_st_code: return "st";
     case soul_ul_code: return "ul";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_oldfont_name() const -> String {
+auto CmdChr::token_oldfont_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case rm_family_code: return "rm";
     case sf_family_code: return "sf";
@@ -1604,11 +1604,11 @@ auto CmdChr::token_oldfont_name() const -> String {
     case it_shape_code: return "it";
     case sc_shape_code: return "sc";
     case sl_shape_code: return "sl";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_noargfont_name() const -> String {
+auto CmdChr::token_noargfont_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case rm_family_code: return "rmfamily";
     case sf_family_code: return "sffamily";
@@ -1621,11 +1621,11 @@ auto CmdChr::token_noargfont_name() const -> String {
     case sc_shape_code: return "scshape";
     case em_code: return "em";
     case normalfont_code: return "normalfont";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_trees_name() const -> String {
+auto CmdChr::token_trees_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case node_code: return "node";
     case nodepoint_code: return "nodepoint";
@@ -1639,11 +1639,11 @@ auto CmdChr::token_trees_name() const -> String {
     case nodecircle_code: return "nodecircle";
     case barnodeconnect_code: return "barnodeconnect";
     case abarnodeconnect_code: return "abarnodeconnect";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_unimp_font_name() const -> String {
+auto CmdChr::token_unimp_font_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case DeclareTextCommand_code: return "DeclareTextCommand";
     case ProvideTextCommand_code: return "ProvideTextCommand";
@@ -1682,11 +1682,11 @@ auto CmdChr::token_unimp_font_name() const -> String {
     case DeclareOldFontCommand_code: return "DeclareOldFontCommand";
     case setsize_code: return "@setsize";
     case setfontsize_code: return "@setfontsize";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_unimp_name() const -> String {
+auto CmdChr::token_unimp_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case accent_code: return "accent";
     case delimiter_code: return "delimiter";
@@ -1718,7 +1718,7 @@ auto CmdChr::token_unimp_name() const -> String {
     case abort_code: return "tralics@abort";
     case sleep_code: return "tralics@sleep";
     case prompt_code: return "tralics@prompt";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
@@ -1778,7 +1778,7 @@ auto CmdChr::token_cst_name() const -> std::string {
     }
 }
 
-auto CmdChr::l3_ifx_name() const -> String {
+auto CmdChr::l3_ifx_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case l3_p_NN_code: return "cs_if_eq_p:NN";
     case l3_TF_NN_code: return "cs_if_eq:NNTF";
@@ -1796,11 +1796,11 @@ auto CmdChr::l3_ifx_name() const -> String {
     case l3_TF_cc_code: return "cs_if_eq:ccTF";
     case l3_T_cc_code: return "cs_if_eq:ccT";
     case l3_F_cc_code: return "cs_if_eq:ccF";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::l3_expand_aux_name() const -> String {
+auto CmdChr::l3_expand_aux_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case l3expn_code: return "::n";
     case l3expN_code: return "::N";
@@ -1816,11 +1816,11 @@ auto CmdChr::l3_expand_aux_name() const -> String {
     case l3expvu_code: return "::v_unbraced";
     case l3expVu_code: return "::V_unbraced";
     case l3expxu_code: return "::x_unbraced";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::l3_expand_base_name() const -> String {
+auto CmdChr::l3_expand_base_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case l3exp_No_code: return "exp_args:No";
     case l3exp_NNo_code: return "exp_args:NNo";
@@ -1884,11 +1884,11 @@ auto CmdChr::l3_expand_base_name() const -> String {
     case l3exp_NnNou_code: return "exp_last_unbraced:NnNo";
     case l3exp_Nxu_code: return "exp_last_unbraced:Nx";
     case l3exp_Nouou_code: return "exp_last_two_unbraced:Noo";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::l3str_ifeq_name() const -> String {
+auto CmdChr::l3str_ifeq_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case l3_p_code: return "str_if_eq_p:nn";
     case l3_TF_code: return "str_if_eq:nnTF";
@@ -1918,11 +1918,11 @@ auto CmdChr::l3str_ifeq_name() const -> String {
     case l3_TF_code + 24: return "str_if_eq:VVTF";
     case l3_T_code + 24: return "str_if_eq:VVT";
     case l3_F_code + 24: return "str_if_eq:VVF";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::l3_set_cat_name() const -> String {
+auto CmdChr::l3_set_cat_name() const -> std::optional<std::string_view> {
     switch (static_cast<symcodes>(chr)) {
     case escape_catcode: return "char_set_catcode_escape:n";
     case open_catcode: return "char_set_catcode_group_begin:n";
@@ -1956,11 +1956,11 @@ auto CmdChr::l3_set_cat_name() const -> String {
     case active_catcode + 16: return "char_set_catcode_active:N";
     case invalid_catcode + 16: return "char_set_catcode_invalid:N";
     case comment_catcode + 16: return "char_set_catcode_comment:N";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::cat_ifeq_name() const -> String {
+auto CmdChr::cat_ifeq_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case open_catcode * 4 + l3_p_code: return "token_if_group_begin_p:N";
     case open_catcode * 4 + l3_TF_code: return "token_if_group_begin:NTF";
@@ -2006,11 +2006,11 @@ auto CmdChr::cat_ifeq_name() const -> String {
     case active_catcode * 4 + l3_TF_code: return "token_if_active:NTF";
     case active_catcode * 4 + l3_T_code: return "token_if_active:NT";
     case active_catcode * 4 + l3_F_code: return "token_active:NF";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::token_if_name() const -> String {
+auto CmdChr::token_if_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case tok_eq_cat_code * 4 + l3_p_code: return "token_if_eq_catcode_p:NN";
     case tok_eq_char_code * 4 + l3_p_code: return "token_if_eq_charcode_p:NN";
@@ -2081,11 +2081,11 @@ auto CmdChr::token_if_name() const -> String {
     case tok_if_toks_code * 4 + l3_F_code: return "token_if_toks_register:NF";
     case tok_if_primitive_code * 4 + l3_F_code: return "token_if_primitive:NF";
 
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::l3_set_num_name() const -> String {
+auto CmdChr::l3_set_num_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case setcat_code: return "char_set_catcode:nn";
     case thecat_code: return "char_value_catcode:n";
@@ -2102,11 +2102,11 @@ auto CmdChr::l3_set_num_name() const -> String {
     case setsf_code: return "char_set_sfcode:nn";
     case thesf_code: return "char_value_sfcode:n";
     case showsf_code: return "char_show_value_sfcode:n";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::l3str_case_name() const -> String {
+auto CmdChr::l3str_case_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case l3_p_code: return "str_case_p:nn";
     case l3_TF_code: return "str_case:nnTF";
@@ -2120,11 +2120,11 @@ auto CmdChr::l3str_case_name() const -> String {
     case l3_TF_code + 8: return "str_case:onTF";
     case l3_T_code + 8: return "str_case:onT";
     case l3_F_code + 8: return "str_case:onF";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::l3_tl_basic_name() const -> String {
+auto CmdChr::l3_tl_basic_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case l3_tl_new_code: return "tl_new:N";
     case l3_tl_clear_code: return "tl_clear:N";
@@ -2140,21 +2140,21 @@ auto CmdChr::l3_tl_basic_name() const -> String {
     case l3_tlx_xconst_code: return "tl_const:cx";
     case l3_tlx_clearnew_code: return "tl_clear_new:c";
     case l3_tlx_gclearnew_code: return "tl_gclear_new:c";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::tl_concat_name() const -> String {
+auto CmdChr::tl_concat_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case 0: return "tl_concat:NNN";
     case 1: return "tl_concat:ccc";
     case 2: return "tl_gconcat:NNN";
     case 3: return "tl_gconcat:ccc";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::tl_set_name() const -> String {
+auto CmdChr::tl_set_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case l3expn_code: return "tl_set:Nn";
     case l3expo_code: return "tl_set:No";
@@ -2180,11 +2180,11 @@ auto CmdChr::tl_set_name() const -> String {
     case l3expx_code + 9 + 18: return "tl_gset:cx";
     case l3expV_code + 9 + 18: return "tl_gset:cV";
     case l3expv_code + 9 + 18: return "tl_gset:cv";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::tl_put_left_name() const -> String {
+auto CmdChr::tl_put_left_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case l3expn_code: return "tl_put_left:Nn";
     case l3expo_code: return "tl_put_left:No";
@@ -2218,11 +2218,11 @@ auto CmdChr::tl_put_left_name() const -> String {
     case l3expo_code + 9 + 18 + 36: return "tl_gput_right:co";
     case l3expx_code + 9 + 18 + 36: return "tl_gput_right:cx";
     case l3expV_code + 9 + 18 + 36: return "tl_gput_right:cV";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::l3_rescan_name() const -> String {
+auto CmdChr::l3_rescan_name() const -> std::optional<std::string_view> {
     switch (chr) {
     case 0: return "tl_set_rescan:Nnn";
     case 1: return "tl_set_rescan:Nno";
@@ -2237,11 +2237,11 @@ auto CmdChr::l3_rescan_name() const -> String {
     case 10: return "tl_gset_rescan:cno";
     case 11: return "tl_gset_rescan:cnx";
     case 12: return "tl_gset_rescan:nn";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }
 
-auto CmdChr::special_name() const -> String {
+auto CmdChr::special_name() const -> std::optional<std::string_view> {
     switch (cmd) {
     case 1: return "begin-group character";
     case 2: return "end-group character";
@@ -2258,6 +2258,6 @@ auto CmdChr::special_name() const -> String {
     case 13: return "impossible (active character)";
     case 14: return "impossible (comment)";
     case 15: return "impossible (ignored)";
-    default: return nullptr;
+    default: return std::nullopt;
     }
 }

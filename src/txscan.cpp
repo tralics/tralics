@@ -2053,12 +2053,11 @@ void Parser::token_for_show(bool lg, const CmdChr &val, Buffer &B) {
         else
             tfonts.full_name(B, val.chr);
     } else if (K > 16) {
-        auto s = val.name();
+        auto s = val.name().value_or("");
         B.insert_escape_char_raw();
         B += s;
     } else {
-        String s = val.special_name();
-        if (s == nullptr) s = "[unknown command code!]";
+        auto s = val.special_name().value_or("[unknown command code!]");
         B += s;
         B += " ";
         B << val.char_val();

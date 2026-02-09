@@ -17,7 +17,7 @@ void CondAux::dump(long i) const {
         oss << "\\unless";
     }
     CmdChr tmp(if_test_cmd, subtypes(T));
-    oss << "\\" << tmp.name();
+    oss << "\\" << tmp.name().value_or("");
     if (if_limit == fi_code) oss << "\\else";
     oss << " entered on line " << if_line;
     spdlog::trace("{}", oss.str());

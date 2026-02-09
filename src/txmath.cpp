@@ -472,7 +472,7 @@ auto operator<<(std::ostream &X, math_list_type y) -> std::ostream & {
     case math_argument_cd: X << "Argument"; break;
     default: {
         CmdChr x(special_math_cmd, math_to_sub(y));
-        X << "Argument list for \\" << x.name();
+        X << "Argument list for \\" << x.name().value_or("");
         break;
     }
     }
@@ -491,7 +491,7 @@ auto operator<<(Buffer &X, math_list_type y) -> Buffer & {
     case math_argument_cd: X += "Argument"; break;
     default: {
         CmdChr x(special_math_cmd, math_to_sub(y));
-        X += "Argument list for \\" + x.name();
+        X += "Argument list for \\" + x.name().value_or("");
         break;
     }
     }
@@ -2713,11 +2713,11 @@ auto Math::M_mbox1(Buffer &B, subtypes &f) -> int {
             math_ns::bad_math_warn(B);
             math_list_type y = old.get_list().type;
             CmdChr         x(special_math_cmd, math_to_sub(y));
-            spdlog::trace("Offending command = \\{}", x.name());
+            spdlog::trace("Offending command = \\{}", x.name().value_or(""));
             return 0;
         } else if (cmd != math_list_cmd) {
             math_ns::bad_math_warn(B);
-            spdlog::trace("Offending command = \\{}", old.name());
+            spdlog::trace("Offending command = \\{}", old.name().value_or(""));
             return 0;
         } else if (old.get_list().type == math_dollar_cd)
             return -int(chr);

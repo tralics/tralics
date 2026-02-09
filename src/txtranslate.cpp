@@ -71,9 +71,9 @@ namespace {
     // used in the case {\let\x\y}, after the closing brace.
     // It it's not a char, it's a command, with a plain ASCII name.
     auto print_cmd_chr(CmdChr X) -> std::string {
-        String a = X.special_name();
-        auto   b = X.name();
-        if (a != nullptr) return fmt::format("\\{} {}", b, a);
+        auto a = X.special_name();
+        auto b = X.name().value_or("");
+        if (a) return fmt::format("\\{} {}", b, *a);
         return fmt::format("\\{}", b);
     }
 } // namespace

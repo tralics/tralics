@@ -1,7 +1,9 @@
 #pragma once
 #include "EQTB.h"
 #include "enums.h"
+#include <optional>
 #include <string>
+#include <string_view>
 
 // cmd, chr pair; The subtype can have 16bits
 class CmdChr {
@@ -48,100 +50,100 @@ public:
     [[nodiscard]] auto is_math_openclosebetween() const -> bool {
         return cmd == mathbetween_cmd || cmd == mathopen_cmd || cmd == mathclose_cmd;
     }
-    [[nodiscard]] auto special_name() const -> String;
-    [[nodiscard]] auto name() const -> std::string;
+    [[nodiscard]] auto special_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto name() const -> std::optional<std::string>;
     [[nodiscard]] auto is_single_quote() const -> bool { return cmd == other_catcode && chr == '\''; }
-    [[nodiscard]] auto token_fiorelse_name() const -> String;
+    [[nodiscard]] auto token_fiorelse_name() const -> std::optional<std::string_view>;
 
 private:
-    [[nodiscard]] auto cat_ifeq_name() const -> String; // \todo return std::string everywhere below (or std::optional)
-    [[nodiscard]] auto cmd_special_name() const -> String;
-    [[nodiscard]] auto l3_expand_aux_name() const -> String;
-    [[nodiscard]] auto l3_expand_base_name() const -> String;
-    [[nodiscard]] auto l3_ifx_name() const -> String;
-    [[nodiscard]] auto l3_rescan_name() const -> String;
-    [[nodiscard]] auto l3_set_cat_name() const -> String;
-    [[nodiscard]] auto l3_set_num_name() const -> String;
-    [[nodiscard]] auto l3_tl_basic_name() const -> String;
-    [[nodiscard]] auto l3str_case_name() const -> String;
-    [[nodiscard]] auto l3str_ifeq_name() const -> String;
+    [[nodiscard]] auto cat_ifeq_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto cmd_special_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto l3_expand_aux_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto l3_expand_base_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto l3_ifx_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto l3_rescan_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto l3_set_cat_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto l3_set_num_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto l3_tl_basic_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto l3str_case_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto l3str_ifeq_name() const -> std::optional<std::string_view>;
     [[nodiscard]] auto specchar_cmd_name() const -> std::string;
-    [[nodiscard]] auto tl_concat_name() const -> String;
-    [[nodiscard]] auto tl_put_left_name() const -> String;
-    [[nodiscard]] auto tl_set_name() const -> String;
+    [[nodiscard]] auto tl_concat_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto tl_put_left_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto tl_set_name() const -> std::optional<std::string_view>;
     [[nodiscard]] auto token_accent_name() const -> std::string;
-    [[nodiscard]] auto token_argfont_name() const -> String;
+    [[nodiscard]] auto token_argfont_name() const -> std::optional<std::string_view>;
     [[nodiscard]] auto token_assigndimen_name() const -> std::string;
     [[nodiscard]] auto token_assignglue_name() const -> std::string;
     [[nodiscard]] auto token_assignint_name() const -> std::string;
     [[nodiscard]] auto token_assignmuglue_name() const -> std::string;
     [[nodiscard]] auto token_assigntoks_name() const -> std::string;
-    [[nodiscard]] auto token_big_name() const -> String;
-    [[nodiscard]] auto token_box_name() const -> String;
-    [[nodiscard]] auto token_caseshift_name() const -> String;
-    [[nodiscard]] auto token_centering_name() const -> String;
-    [[nodiscard]] auto token_cite_name() const -> String;
-    [[nodiscard]] auto token_color_name() const -> String;
-    [[nodiscard]] auto token_convert_name() const -> String;
-    [[nodiscard]] auto token_counter_name() const -> String;
+    [[nodiscard]] auto token_big_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_box_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_caseshift_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_centering_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_cite_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_color_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_convert_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_counter_name() const -> std::optional<std::string_view>;
     [[nodiscard]] auto token_cst_name() const -> std::string;
-    [[nodiscard]] auto token_dashline_name() const -> String;
-    [[nodiscard]] auto token_def_name() const -> String;
-    [[nodiscard]] auto token_defcode_name() const -> String;
-    [[nodiscard]] auto token_deffamily_name() const -> String;
-    [[nodiscard]] auto token_ecenter_name() const -> String;
-    [[nodiscard]] auto token_efigure_name() const -> String;
-    [[nodiscard]] auto token_eignore_name() const -> String;
-    [[nodiscard]] auto token_eignorec_name() const -> String;
-    [[nodiscard]] auto token_emath_name() const -> String;
-    [[nodiscard]] auto token_eparticipant_name() const -> String;
-    [[nodiscard]] auto token_error_name() const -> String;
-    [[nodiscard]] auto token_extension_name() const -> String;
-    [[nodiscard]] auto token_fancy_name() const -> String;
-    [[nodiscard]] auto token_fbox_name() const -> String;
-    [[nodiscard]] auto token_file_name() const -> String;
-    [[nodiscard]] auto token_fontsize_name() const -> String;
-    [[nodiscard]] auto token_for_name() const -> String;
-    [[nodiscard]] auto token_fp_names() const -> String;
-    [[nodiscard]] auto token_fpi_names() const -> String;
-    [[nodiscard]] auto token_if_name() const -> String;
-    [[nodiscard]] auto token_iftest_name() const -> String;
-    [[nodiscard]] auto token_ign1_name() const -> String;
-    [[nodiscard]] auto token_ign2_name() const -> String;
-    [[nodiscard]] auto token_ignore_name() const -> String;
-    [[nodiscard]] auto token_index_name() const -> String;
-    [[nodiscard]] auto token_lastitem_name() const -> String;
-    [[nodiscard]] auto token_latexctr_name() const -> String;
-    [[nodiscard]] auto token_leader_name() const -> String;
-    [[nodiscard]] auto token_limits_name() const -> String;
-    [[nodiscard]] auto token_line_name() const -> String;
-    [[nodiscard]] auto token_linebreak_name() const -> String;
-    [[nodiscard]] auto token_ltfont_name() const -> String;
-    [[nodiscard]] auto token_makebox_name() const -> String;
-    [[nodiscard]] auto token_mark_name() const -> String;
-    [[nodiscard]] auto token_mathcomp_name() const -> String;
-    [[nodiscard]] auto token_monthday_name() const -> String;
-    [[nodiscard]] auto token_move_name() const -> String;
-    [[nodiscard]] auto token_newcount_name() const -> String;
-    [[nodiscard]] auto token_noargfont_name() const -> String;
-    [[nodiscard]] auto token_oldfont_name() const -> String;
-    [[nodiscard]] auto token_over_name() const -> String;
-    [[nodiscard]] auto token_prefix_name() const -> String;
-    [[nodiscard]] auto token_put_name() const -> String;
-    [[nodiscard]] auto token_register_name() const -> String;
-    [[nodiscard]] auto token_section_name() const -> String;
-    [[nodiscard]] auto token_setboxdimen_name() const -> String;
-    [[nodiscard]] auto token_setinteraction_name() const -> String;
-    [[nodiscard]] auto token_setpagedimen_name() const -> String;
-    [[nodiscard]] auto token_shape_name() const -> String;
-    [[nodiscard]] auto token_shorthand_name() const -> String;
-    [[nodiscard]] auto token_soul_name() const -> String;
-    [[nodiscard]] auto token_style_name() const -> String;
-    [[nodiscard]] auto token_trees_name() const -> String;
-    [[nodiscard]] auto token_unbox_name() const -> String;
-    [[nodiscard]] auto token_unimp_font_name() const -> String;
-    [[nodiscard]] auto token_unimp_name() const -> String;
-    [[nodiscard]] auto token_xray_name() const -> String;
+    [[nodiscard]] auto token_dashline_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_def_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_defcode_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_deffamily_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_ecenter_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_efigure_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_eignore_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_eignorec_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_emath_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_eparticipant_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_error_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_extension_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_fancy_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_fbox_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_file_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_fontsize_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_for_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_fp_names() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_fpi_names() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_if_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_iftest_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_ign1_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_ign2_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_ignore_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_index_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_lastitem_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_latexctr_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_leader_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_limits_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_line_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_linebreak_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_ltfont_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_makebox_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_mark_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_mathcomp_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_monthday_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_move_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_newcount_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_noargfont_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_oldfont_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_over_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_prefix_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_put_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_register_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_section_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_setboxdimen_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_setinteraction_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_setpagedimen_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_shape_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_shorthand_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_soul_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_style_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_trees_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_unbox_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_unimp_font_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_unimp_name() const -> std::optional<std::string_view>;
+    [[nodiscard]] auto token_xray_name() const -> std::optional<std::string_view>;
 
 public: // for use in plugins
 };

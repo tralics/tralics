@@ -1,25 +1,32 @@
 #include "tralics/CmdChr.h"
 #include "tralics/Symcode.h"
 #include "tralics/globals.h"
+#include <optional>
+#include <string_view>
 
 namespace {
     auto make_name16(const std::string &x, size_t y) -> std::string { return fmt::format("{}\"{:X}", x, y); }
 
     // This converts `endfoo' to `foo'. It does not check that the
     // string starts with `end', just that is is not zero.
-    auto strip_end(String s) -> String {
-        if (s == nullptr) return nullptr;
-        return s + 3;
+    auto strip_end(std::optional<std::string_view> s) -> std::optional<std::string> {
+        if (!s) return std::nullopt;
+        return std::string(s->substr(3));
+    }
+    // Convert std::optional<std::string_view> to std::optional<std::string>
+    auto opt(std::optional<std::string_view> s) -> std::optional<std::string> {
+        if (s) return std::string(*s);
+        return std::nullopt;
     }
 } // namespace
 
 // This returns the name of a CmdChr pair.
 // The result is a UTF8 string
-auto CmdChr::name() const -> std::string {
+auto CmdChr::name() const -> std::optional<std::string> {
     if (auto res = Symcode::get(cmd).name(chr)) return *res;
 
     switch (cmd) {
-    case section_cmd: return token_section_name();
+    case section_cmd: return opt(token_section_name());
     case label_cmd: return chr == 0 ? "label" : (chr == 1 ? "anchor" : "anchorlabel");
     case ref_cmd: return chr == 0 ? "ref" : "pageref";
     case eqref_cmd: return "XMLref";
@@ -40,7 +47,7 @@ auto CmdChr::name() const -> std::string {
     case cititem_cmd: return "cititem";
     case bibitem_cmd: return "bibitem";
     case cite_one_cmd: return chr == 0 ? "cite@one" : "cite@simple";
-    case cite_cmd: return token_cite_name();
+    case cite_cmd: return opt(token_cite_name());
     case solvecite_cmd: return "XMLsolvecite";
     case bib_cmd: return chr == 0 ? "bauthors" : "beditors";
     case backslash_cmd: return chr == 0 ? "\\" : "newline";
@@ -53,25 +60,25 @@ auto CmdChr::name() const -> std::string {
         if (chr == smallskip_code) return "smallskip";
         if (chr == medskip_code) return "medskip";
         if (chr == bigskip_code) return "bigskip";
-        return nullptr;
+        return std::nullopt;
     case hfill_cmd:
         if (chr == hfil_code) return "hfil";
         if (chr == hfill_code) return "hfill";
         if (chr == hfilneg_code) return "hfilneg";
         if (chr == hss_code) return "hss";
-        return nullptr;
+        return std::nullopt;
     case vfill_cmd:
         if (chr == vfil_code) return "vfil";
         if (chr == vfill_code) return "vfill";
         if (chr == vfilneg_code) return "vfilneg";
         if (chr == vss_code) return "vss";
-        return nullptr;
+        return std::nullopt;
     case soul_cmd:
-    case sub_cmd: return token_soul_name();
-    case oldfont_cmd: return token_oldfont_name();
-    case argfont_cmd: return token_argfont_name();
-    case noargfont_cmd: return token_noargfont_name();
-    case fontsize_cmd: return token_fontsize_name();
+    case sub_cmd: return opt(token_soul_name());
+    case oldfont_cmd: return opt(token_oldfont_name());
+    case argfont_cmd: return opt(token_argfont_name());
+    case noargfont_cmd: return opt(token_noargfont_name());
+    case fontsize_cmd: return opt(token_fontsize_name());
     case item_cmd: return chr == 0 ? "item" : "@item";
     case usecounter_cmd: return "usecounter";
     case get_config_cmd: return chr == 0 ? "tralics@find@config" : "tralics@getd@config";
@@ -90,7 +97,7 @@ auto CmdChr::name() const -> std::string {
         case kvo_disable_code: return "DisableKeyvalOption";
         case kvo_decdef_code: return "DeclareDefaultOption";
         case kvo_process_code: return "ProcessKeyvalOptions";
-        default: return nullptr;
+        default: return std::nullopt;
         }
     case doc_class_cmd: return chr == 0 ? "documentclass" : "LoadClass";
     case package_cmd: return "usepackage";
@@ -113,21 +120,21 @@ auto CmdChr::name() const -> std::string {
         case 1: return "@dblfloat";
         case 2: return "float@end";
         case 3: return "float@dblend";
-        default: return nullptr;
+        default: return std::nullopt;
         }
     case subfigure_cmd: return "subfigure";
     case pop_stack_cmd: return "pop@stack";
-    case box_cmd: return token_box_name();
-    case math_comp_cmd: return token_mathcomp_name();
-    case big_cmd: return token_big_name();
-    case style_cmd: return token_style_name();
-    case limits_cmd: return token_limits_name();
+    case box_cmd: return opt(token_box_name());
+    case math_comp_cmd: return opt(token_mathcomp_name());
+    case big_cmd: return opt(token_big_name());
+    case style_cmd: return opt(token_style_name());
+    case limits_cmd: return opt(token_limits_name());
     case ensuremath_cmd: return "ensuremath";
     case nonumber_cmd: return "nonumber";
     case nonscript_cmd: return "nonscript";
-    case line_cmd: return token_line_name();
-    case linebreak_cmd: return token_linebreak_name();
-    case fancy_cmd: return token_fancy_name();
+    case line_cmd: return opt(token_line_name());
+    case linebreak_cmd: return opt(token_linebreak_name());
+    case fancy_cmd: return opt(token_fancy_name());
     case xfancy_cmd: return "fancyinternal";
     case xthepage_cmd: return "inert@thepage";
     case url_cmd: return "url";
@@ -139,9 +146,9 @@ auto CmdChr::name() const -> std::string {
         case addatt_to_doc_code: return "addattributetodocument";
         case addatt_to_code: return "XMLaddatt";
         case addatt_to_index_code: return "addattributetoindex";
-        default: return nullptr;
+        default: return std::nullopt;
         }
-    case over_cmd: return token_over_name();
+    case over_cmd: return opt(token_over_name());
     case begingroup_cmd: return chr == 0 ? "begingroup" : chr == 1 ? "endgroup" : "endenv";
     case startprojet_cmd: return "RAstartprojet";
     case declaretopics_cmd: return "declaretopic";
@@ -150,10 +157,10 @@ auto CmdChr::name() const -> std::string {
     case pushmodule_cmd: return "tralics@push@module";
     case fnhack_cmd: return "tralics@fnhack";
     case caption_cmd: return "caption";
-    case centering_cmd: return token_centering_name();
+    case centering_cmd: return opt(token_centering_name());
     case save_box_cmd: return chr == 0 ? "sbox" : "savebox";
-    case fbox_cmd: return token_fbox_name();
-    case color_cmd: return token_color_name();
+    case fbox_cmd: return opt(token_fbox_name());
+    case color_cmd: return opt(token_color_name());
     case hspace_cmd:
         switch (chr) {
         case 0: return "hspace";
@@ -167,10 +174,10 @@ auto CmdChr::name() const -> std::string {
     case reevaluate_cmd: return "@reevaluate";
     case xmllatex_cmd: return "xmllatex";
     case specimp_cmd:
-    case unimp_cmd: return token_unimp_name();
-    case unimp_font_cmd: return token_unimp_font_name();
-    case trees_cmd: return token_trees_name();
-    case index_cmd: return token_index_name();
+    case unimp_cmd: return opt(token_unimp_name());
+    case unimp_font_cmd: return opt(token_unimp_font_name());
+    case trees_cmd: return opt(token_trees_name());
+    case index_cmd: return opt(token_index_name());
     case gloss_cmd: return chr == 0 ? "cgloss@gll" : "cgloss@glll";
     case only_preamble_cmd: return "@onlypreamble";
     case toc_cmd: {
@@ -191,7 +198,7 @@ auto CmdChr::name() const -> std::string {
         case mainmatter_code: return "mainmatter";
         case frontmatter_code: return "frontmatter";
         case backmatter_code: return "backmatter";
-        default: return nullptr;
+        default: return std::nullopt;
         }
     case cr_cmd:
         switch (chr) {
@@ -199,15 +206,15 @@ auto CmdChr::name() const -> std::string {
         case mycr_code: return "cr";
         case crcr_code: return "crcr";
         case crwithargs_code: return "cr withargs";
-        default: return nullptr;
+        default: return std::nullopt;
         }
     case scan_glue_cmd:
         if (chr == hskip_code) return "hskip";
         if (chr == vskip_code) return "vskip";
         return "mskip";
-    case case_shift_cmd: return token_caseshift_name();
+    case case_shift_cmd: return opt(token_caseshift_name());
     case kern_cmd: return chr == 0 ? "kern" : "mkern";
-    case make_box_cmd: return token_makebox_name();
+    case make_box_cmd: return opt(token_makebox_name());
     case XML_swap_cmd:
         if (chr == 0) return "XML@moveAB";
         if (chr == 1) return "XML@moveBA";
@@ -222,7 +229,7 @@ auto CmdChr::name() const -> std::string {
         case xml_parent_code: return "XML@parent";
         case xml_setA_code: return "XML@setA";
         case xml_setB_code: return "XML@setB";
-        default: return nullptr;
+        default: return std::nullopt;
         }
     case char_num_cmd: return "char";
     case cst1_cmd:
@@ -231,7 +238,7 @@ auto CmdChr::name() const -> std::string {
     case specchar_cmd: return specchar_cmd_name();
     case nobreakspace_cmd: return "nobreakspace";
     case input_cmd:
-    case file_cmd: return token_file_name();
+    case file_cmd: return opt(token_file_name());
     case xmlelt_cmd: return chr == 0 ? "xmlelt" : (chr == 1 ? "xmlemptyelt" : "xmlcomment");
     case newcolumntype_cmd: return "newcolumntype";
     case arg_font_cmd: return chr == lsc_code ? "lsc" : "fsc";
@@ -250,7 +257,7 @@ auto CmdChr::name() const -> std::string {
     case ignore_env_cmd: return strip_end(token_eignore_name());
     case ignore_content_cmd: return strip_end(token_eignorec_name());
     case raw_env_cmd: return "rawxml";
-    case math_env_cmd: return strip_end(tralics_ns::math_env_name(chr));
+    case math_env_cmd: { auto s = tralics_ns::math_env_name(chr); return s ? std::optional{std::string(s + 3)} : std::nullopt; }
     case tabular_env_cmd: return chr == 0 ? "tabular" : "tabular*";
     case verbatim_env_cmd: return chr == 0 ? "verbatim" : chr == 1 ? "Verbatim" : "@verbatim";
     case minipage_cmd: return "minipage";
@@ -260,18 +267,18 @@ auto CmdChr::name() const -> std::string {
     case filecontents_env_cmd: return chr == 0 ? "filecontents" : chr == 1 ? "filecontents*" : chr == 2 ? "filecontents+" : "filecontents";
     case end_document_cmd: return chr == 0 ? "enddocument" : "real-enddocument";
     case end_keywords_cmd: return "endmotscle";
-    case end_center_cmd: return token_ecenter_name();
-    case end_figure_cmd: return token_efigure_name();
+    case end_center_cmd: return opt(token_ecenter_name());
+    case end_figure_cmd: return opt(token_efigure_name());
     case end_table_cmd: return chr == 0 ? "endtable" : chr == 2 ? "endwraptable" : "endtable*";
     case end_glossaire_cmd: return "endglossaire";
     case end_itemize_cmd: return "enditemize";
     case end_list_cmd: return "endlist";
     case end_enumerate_cmd: return "endenumerate";
     case end_description_cmd: return "enddescription";
-    case end_ignore_env_cmd: return token_eignore_name();
-    case end_ignore_content_cmd: return token_eignorec_name();
+    case end_ignore_env_cmd: return opt(token_eignore_name());
+    case end_ignore_content_cmd: return opt(token_eignorec_name());
     case end_raw_env_cmd: return "endrawxml";
-    case end_math_env_cmd: return tralics_ns::math_env_name(chr);
+    case end_math_env_cmd: { auto s = tralics_ns::math_env_name(chr); return s ? std::optional{std::string(s)} : std::nullopt; }
     case end_tabular_env_cmd: return chr == 0 ? "endtabular" : "endtabular*";
     case end_verbatim_env_cmd: return chr == 0 ? "endverbatim" : chr == 1 ? "endVerbatim" : "end@verbatim";
     case end_minipage_cmd: return "endminipage";
@@ -283,16 +290,16 @@ auto CmdChr::name() const -> std::string {
     case end_cmd: return "end";
     case leave_v_mode_cmd: return "leavevmode";
     case epsfbox_cmd: return "epsfbox";
-    case put_cmd: return token_put_name();
+    case put_cmd: return opt(token_put_name());
     case bezier_cmd: return chr == 0 ? "bezier" : "qbezier";
-    case dashline_cmd: return token_dashline_name();
+    case dashline_cmd: return opt(token_dashline_name());
     case ignore_cmd:
     case ignoreA_cmd:
-    case ignorep_cmd: return token_ignore_name();
+    case ignorep_cmd: return opt(token_ignore_name());
     case relax_cmd: return "relax";
-    case ltfont_cmd: return token_ltfont_name();
-    case ignore_one_argument_cmd: return token_ign1_name();
-    case ignore_two_argument_cmd: return token_ign2_name();
+    case ltfont_cmd: return opt(token_ltfont_name());
+    case ignore_one_argument_cmd: return opt(token_ign1_name());
+    case ignore_two_argument_cmd: return opt(token_ign2_name());
     case defineverbatimenv_cmd: return "DefineVerbatimEnvironment";
     case saveverb_cmd: return "SaveVerb";
     case add_to_macro_cmd: return chr == 1 ? "tralics@addtolist@o" : "tralics@addtolist@n";
@@ -301,18 +308,18 @@ auto CmdChr::name() const -> std::string {
     case numberedverbatim_cmd: return "numberedverbatim";
     case unnumberedverbatim_cmd: return "unnumberedverbatim";
     case after_assignment_cmd: return "afterassignment";
-    case un_box_cmd: return token_unbox_name();
-    case extension_cmd: return token_extension_name();
+    case un_box_cmd: return opt(token_unbox_name());
+    case extension_cmd: return opt(token_extension_name());
     case setlanguage_cmd: return "setlanguage";
-    case xray_cmd: return token_xray_name();
-    case move_cmd: return token_move_name();
-    case leader_ship_cmd: return token_leader_name();
+    case xray_cmd: return opt(token_xray_name());
+    case move_cmd: return opt(token_move_name());
+    case leader_ship_cmd: return opt(token_leader_name());
     case selectfont_cmd: return "selectfont";
     case usefont_cmd: return "usefont";
     case isin_cmd: return "in@";
     case tracingall_cmd: return "tracingall";
     case newif_cmd: return "newif";
-    case newcount_cmd: return token_newcount_name();
+    case newcount_cmd: return opt(token_newcount_name());
     case newboolean_cmd: return chr == 0 ? "newboolean" : "provideboolean";
     case setboolean_cmd: return "setboolean";
     case ifthenelse_cmd: return "ifthenelse";
@@ -322,17 +329,17 @@ auto CmdChr::name() const -> std::string {
     case shortverb_cmd: return chr == 0 ? "DefineShortVerb" : "UndefineShortVerb";
     case newcounter_cmd: return "newcounter";
     case aftergroup_cmd: return "aftergroup";
-    case latex_ctr_cmd: return token_latexctr_name();
+    case latex_ctr_cmd: return opt(token_latexctr_name());
     case ifundefined_cmd: return chr == 0 ? "@ifundefined" : "tralics@ifundefined";
     case ifstar_cmd: return "@ifstar";
     case ifnextchar_cmd: return chr == 0 ? "@ifnextchar" : "@ifnextcharacter";
     case ifempty_cmd: return chr == 0 ? "@iftempty" : "@ifbempty";
-    case for_cmd: return token_for_name();
-    case fp_cmd: return token_fp_names();
-    case fpif_cmd: return token_fp_names();
-    case fpi_cmd: return token_fpi_names();
+    case for_cmd: return opt(token_for_name());
+    case fp_cmd: return opt(token_fp_names());
+    case fpif_cmd: return opt(token_fp_names());
+    case fpi_cmd: return opt(token_fpi_names());
     case verb_cmd: return chr == 0 ? "verb" : " verb";
-    case last_item_cmd: return token_lastitem_name();
+    case last_item_cmd: return opt(token_lastitem_name());
     case toks_register_cmd: return "toks";
     case assign_toks_cmd: return token_assigntoks_name();
     case assign_int_cmd: return token_assignint_name();
@@ -351,31 +358,31 @@ auto CmdChr::name() const -> std::string {
         default: return "input@encoding@default";
         }
     case set_prev_graf_cmd: return "prevgraf";
-    case set_page_dimen_cmd: return token_setpagedimen_name();
+    case set_page_dimen_cmd: return opt(token_setpagedimen_name());
     case set_page_int_cmd:
         if (chr == deadcycles_code) return "deadcycles";
         if (chr == interactionmode_code) return "interactionmode";
         return "insertpenalties";
-    case set_box_dimen_cmd: return token_setboxdimen_name();
+    case set_box_dimen_cmd: return opt(token_setboxdimen_name());
     case thm_aux_cmd:
         if (chr == theorem_style_code) return "theoremstyle";
         if (chr == theorem_bodyfont_code) return "theorembodyfont";
         if (chr == theorem_headerfont_code) return "theoremheaderfont";
-        return nullptr;
+        return std::nullopt;
     case start_thm_cmd: return chr == 2 ? "@endtheorem" : "@begintheorem";
     case setmode_cmd: return "@setmode";
-    case set_shape_cmd: return token_shape_name();
-    case def_code_cmd: return token_defcode_name();
-    case def_family_cmd: return token_deffamily_name();
+    case set_shape_cmd: return opt(token_shape_name());
+    case def_code_cmd: return opt(token_defcode_name());
+    case def_family_cmd: return opt(token_deffamily_name());
     case set_font_cmd: return "nullfont";
     case def_font_cmd: return "font";
     case set_mathprop_cmd: return "mathfontproperty";
     case set_mathchar_cmd: return "setmathchar";
-    case register_cmd: return token_register_name();
+    case register_cmd: return opt(token_register_name());
     case advance_cmd: return "advance";
     case multiply_cmd: return "multiply";
     case divide_cmd: return "divide";
-    case prefix_cmd: return token_prefix_name();
+    case prefix_cmd: return opt(token_prefix_name());
     case let_cmd:
         switch (chr) {
         case let_code: return "let";
@@ -394,13 +401,13 @@ auto CmdChr::name() const -> std::string {
         case nletcc_code: return "cs_new_eq:cc";
         case undef_code: return "cs_undefine:N";
         case undefc_code: return "cs_undefine:c";
-        default: return nullptr;
+        default: return std::nullopt;
         }
-    case shorthand_def_cmd: return token_shorthand_name();
+    case shorthand_def_cmd: return opt(token_shorthand_name());
     case read_to_cs_cmd: return chr == 0 ? "read" : "readline";
-    case def_cmd: return token_def_name();
+    case def_cmd: return opt(token_def_name());
     case set_box_cmd: return "setbox";
-    case set_interaction_cmd: return token_setinteraction_name();
+    case set_interaction_cmd: return opt(token_setinteraction_name());
     case xspace_cmd: return "xspace";
     case strippt_cmd: return "strip@pt";
     case the_cmd:
@@ -410,34 +417,34 @@ auto CmdChr::name() const -> std::string {
             return "unexpanded";
         else
             return "detokenize";
-    case convert_cmd: return token_convert_name();
+    case convert_cmd: return opt(token_convert_name());
     case obracket_cmd: return chr == 0 ? "[" : "]";
     case oparen_cmd: return chr == 0 ? "(" : ")";
     case csname_cmd: return "csname";
     case usename_cmd: return chr == 0 ? "use:c" : (chr == 1 ? "exp_args:Nc" : "exp_args:cc");
-    case l3expand_aux_cmd: return l3_expand_aux_name();
-    case l3expand_base_cmd: return l3_expand_base_name();
-    case l3_ifx_cmd: return l3_ifx_name();
-    case tl_basic_cmd: return l3_tl_basic_name();
-    case tl_concat_cmd: return tl_concat_name();
-    case tl_set_cmd: return tl_set_name();
-    case l3_rescan_cmd: return l3_rescan_name();
-    case tl_put_left_cmd: return tl_put_left_name();
-    case l3str_ifeq_cmd: return l3str_ifeq_name();
-    case l3str_case_cmd: return l3str_case_name();
-    case l3_set_cat_cmd: return l3_set_cat_name();
-    case cat_ifeq_cmd: return cat_ifeq_name();
-    case token_if_cmd: return token_if_name();
+    case l3expand_aux_cmd: return opt(l3_expand_aux_name());
+    case l3expand_base_cmd: return opt(l3_expand_base_name());
+    case l3_ifx_cmd: return opt(l3_ifx_name());
+    case tl_basic_cmd: return opt(l3_tl_basic_name());
+    case tl_concat_cmd: return opt(tl_concat_name());
+    case tl_set_cmd: return opt(tl_set_name());
+    case l3_rescan_cmd: return opt(l3_rescan_name());
+    case tl_put_left_cmd: return opt(tl_put_left_name());
+    case l3str_ifeq_cmd: return opt(l3str_ifeq_name());
+    case l3str_case_cmd: return opt(l3str_case_name());
+    case l3_set_cat_cmd: return opt(l3_set_cat_name());
+    case cat_ifeq_cmd: return opt(cat_ifeq_name());
+    case token_if_cmd: return opt(token_if_name());
     case l3_set_num_cmd:
     case l3E_set_num_cmd: // these two are shared
-        return l3_set_num_name();
+        return opt(l3_set_num_name());
     case l3noexpand_cmd:
         if (chr == l3expc_code) return "exp_not:c";
         if (chr == l3expo_code) return "exp_not:o";
         if (chr == l3expf_code) return "exp_not:f";
         if (chr == l3expv_code) return "exp_not:v";
         if (chr == l3expV_code) return "exp_not:V";
-        return nullptr;
+        return std::nullopt;
     case expandafter_cmd: return chr == 0 ? "expandafter" : "unless";
     case titlepage_cmd: return "titlepage";
     case noexpand_cmd: return "noexpand";
@@ -447,7 +454,7 @@ auto CmdChr::name() const -> std::string {
     case a_cmd: return "a";
     case accent_cmd: return token_accent_name();
     case loop_cmd: return "loop";
-    case counter_cmd: return token_counter_name();
+    case counter_cmd: return opt(token_counter_name());
     case setlength_cmd: return chr == 0 ? "setlength" : "addtolength";
     case useverb_cmd: return "UseVerb";
     case all_of_one_cmd:
@@ -492,7 +499,7 @@ auto CmdChr::name() const -> std::string {
         case 1: return "__chk_if_free_cs:c";
         case 2: return "__chk_if_exist_cs:N";
         case 3: return "__chk_if_exist_cs:c";
-        default: return nullptr;
+        default: return std::nullopt;
         }
     case l3_gen_from_ac_cmd:
         return (chr == 0) ? "cs_generate_from_arg_count:NNnn"
@@ -511,9 +518,9 @@ auto CmdChr::name() const -> std::string {
         case 3: return "use_iii:nnnn";
         default: return "use_iv:nnnn";
         }
-    case if_test_cmd: return token_iftest_name();
-    case fi_or_else_cmd: return token_fiorelse_name();
-    case top_bot_mark_cmd: return token_mark_name();
+    case if_test_cmd: return opt(token_iftest_name());
+    case fi_or_else_cmd: return opt(token_fiorelse_name());
+    case top_bot_mark_cmd: return opt(token_mark_name());
     case char_given_cmd: return make_name16("char", chr);
     case math_given_cmd: return make_name16("mathchar", chr);
     case undef_cmd: return "undefined";
@@ -525,13 +532,13 @@ auto CmdChr::name() const -> std::string {
         if (chr == thicklines_code) return "thicklines";
         if (chr == thinlines_code) return "thinlines";
         if (chr == linethickness_code) return "linethickness";
-        return nullptr;
+        return std::nullopt;
     case bibliographystyle_cmd: return "bibliographystyle";
     case insertbibliohere_cmd: return "insertbibliohere";
     case inhibit_xml_cmd: return "syntaxonly";
     case footcitepre_cmd: return "footcitepre";
     case car_cmd: return chr == 0 ? "@car" : "@cdr";
-    case latex_error_cmd: return token_error_name();
+    case latex_error_cmd: return opt(token_error_name());
     case curves_cmd:
         switch (chr) {
         case arc_code: return "arc";
@@ -539,7 +546,7 @@ auto CmdChr::name() const -> std::string {
         case closecurve_code: return "closecurve";
         case curve_code: return "curve";
         case tagcurve_code: return "tagcurve";
-        default: return nullptr;
+        default: return std::nullopt;
         }
     case check_date_cmd:
         switch (chr) {
@@ -548,10 +555,10 @@ auto CmdChr::name() const -> std::string {
         case 2: return "nextdate";
         case 3: return "prevdate";
         case 4: return "datebynumber";
-        default: return nullptr;
+        default: return std::nullopt;
         }
     case refstepcounter_cmd: return "refstepcounter";
-    case month_day_cmd: return token_monthday_name();
+    case month_day_cmd: return opt(token_monthday_name());
     case change_element_name_cmd: return "ChangeElementName";
     case multispan_cmd: return "multispan";
     case stripprefix_cmd: return "strip@prefix";
@@ -569,6 +576,6 @@ auto CmdChr::name() const -> std::string {
     case ifdefinable_cmd: return "@ifdefinable";
     case dblarg_cmd: return "@dblarg";
     case makelabel_cmd: return "tralics@makelabel";
-    default: return "";
+    default: return std::nullopt;
     }
 }
