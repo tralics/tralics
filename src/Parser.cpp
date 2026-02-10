@@ -172,11 +172,11 @@ namespace {
     // to be solved later. In the case of \footcite[p.25]{Knuth},
     // the arguments of the function are foot and Knuth; the `p.25' will be
     // considered elsewhere.
-    auto make_cit_ref(const std::string &type, const std::string &ref) -> Xml {
+    auto make_cit_ref(const std::string &type, const std::string &ref) -> Xml * {
         auto        n  = *the_bibliography.find_citation_item(type, ref, true);
         std::string id = the_bibliography.citation_table[n].get_id();
-        Xml         res(the_names["ref"], nullptr);
-        res.add_att(the_names["target"], id);
+        auto       *res = new Xml(the_names["ref"], nullptr);
+        res->add_att(the_names["target"], id);
         return res;
     }
 
@@ -988,7 +988,7 @@ namespace {
         Xml *res = new Xml(std::string("colorpool"), nullptr);
         for (auto &color : all_colors)
             if (color.used) {
-                res->push_back_unless_nullptr(&color.xval);
+                res->push_back_unless_nullptr(color.xval);
                 res->add_nl();
             }
         the_stack.document_element()->replace_first(res);
@@ -1902,7 +1902,7 @@ void Parser::T_cite_one() {
         parse_error("Citation after loading biblio?");
         return;
     }
-    auto *res = new Xml(make_cit_ref(type, ref));
+    auto *res = make_cit_ref(type, ref);
     if (is_simple) {
         flush_buffer();
         the_stack.add_last(res);

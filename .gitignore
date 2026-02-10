@@ -1,6 +1,7 @@
 *.bak
 /.vscode
 /build
+/build-asan
 /compile_commands.json
 /docs/_build
 /html

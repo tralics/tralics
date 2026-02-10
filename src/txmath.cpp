@@ -560,11 +560,11 @@ void Parser::add_math_label(Xml *res) {
 }
 
 // Generates <elt>first_arg second_arg</elt>
-auto math_ns::xml2sons(std::string elt, gsl::not_null<Xml *> first_arg, gsl::not_null<Xml *> second_arg) -> Xml {
-    Xml tmp(std::move(elt), nullptr);
-    tmp.add_tmp(first_arg);
-    tmp.push_back_unless_nullptr(new Xml(std::string(" ")));
-    tmp.add_tmp(second_arg);
+auto math_ns::xml2sons(std::string elt, gsl::not_null<Xml *> first_arg, gsl::not_null<Xml *> second_arg) -> Xml * {
+    auto *tmp = new Xml(std::move(elt), nullptr);
+    tmp->add_tmp(first_arg);
+    tmp->push_back_unless_nullptr(new Xml(std::string(" ")));
+    tmp->add_tmp(second_arg);
     return tmp;
 }
 
@@ -1767,13 +1767,13 @@ void Math::fetch_rlc(std::vector<AttList> &table) {
 }
 
 // Converts a cell. Updates n, the index of the cell in the row.
-auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) -> Xml {
-    Xml res(the_names["mtd"], nullptr);
+auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) -> Xml * {
+    auto *res = new Xml(the_names["mtd"], nullptr);
     if (empty()) {
         n++; // empty cell, no atts needed.
         return res;
     }
-    Xid id          = res.id;
+    Xid id          = res->id;
     int tbl_align   = 0;
     cmi.cur_cell_id = id;
     Math args       = *this;
@@ -1811,7 +1811,7 @@ auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) ->
         id.add_attribute(the_names["columnalign"], the_names["right"]);
     else if (tbl_align == 3)
         id.add_attribute(the_names["columnalign"], the_names["np_center"]);
-    res.add_tmp(gsl::not_null{args.convert_math(W)});
+    res->add_tmp(gsl::not_null{args.convert_math(W)});
     return res;
 }
 
@@ -1836,14 +1836,14 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
         symcodes cmd = front().cmd;
         if (cmd == alignment_catcode) { // finish cell
             pop_front();
-            row->push_back(gsl::not_null{new Xml(cell.convert_cell(n, table, W))});
+            row->push_back(gsl::not_null{cell.convert_cell(n, table, W)});
             cmi.cur_cell_id = cid;
             cell.clear();
             first_cell = false;
         } else if (cmd == backslash_cmd) { // finish row and cell
             pop_front();
             remove_opt_arg(true); // optional argument ignored.
-            row->push_back(gsl::not_null{new Xml(cell.convert_cell(n, table, W))});
+            row->push_back(gsl::not_null{cell.convert_cell(n, table, W)});
             if (first_cell) cmi.cur_cell_id.add_attribute(the_names["columnalign"], the_names["left"]);
             cmi.cur_cell_id = cid;
             cell.clear();
@@ -1862,7 +1862,7 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
         }
     }
     if (!cell.empty()) {
-        row->push_back(gsl::not_null{new Xml(cell.convert_cell(n, table, W))});
+        row->push_back(gsl::not_null{cell.convert_cell(n, table, W)});
         if (is_multline) cmi.cur_cell_id.add_attribute(the_names["columnalign"], the_names["right"]);
         cmi.cur_cell_id = cid;
     }

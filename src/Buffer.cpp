@@ -606,11 +606,11 @@ auto Buffer::look_at_space(const std::string &s) -> bool {
 // In the case of "foo" (no space), returns <foo>
 // In the case of space, what follows the spaces is considered as
 // attribute list.
-auto Buffer::xml_and_attrib(const std::string &s) -> Xml {
+auto Buffer::xml_and_attrib(const std::string &s) -> Xml * {
     bool has_spaces = look_at_space(s);
-    if (!has_spaces) return {s, nullptr};
-    Xml res{substr(0, ptrs.b), nullptr};
-    push_back_special_att(res.id);
+    if (!has_spaces) return new Xml(s, nullptr);
+    auto *res = new Xml(substr(0, ptrs.b), nullptr);
+    push_back_special_att(res->id);
     return res;
 }
 

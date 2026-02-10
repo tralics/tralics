@@ -100,7 +100,7 @@ public:
     auto svn_id(std::string &name, std::string &date, std::string &version) -> bool;
     auto tp_fetch_something() -> tpa_line;
     auto tp_next_char(char &res) -> bool;
-    auto xml_and_attrib(const std::string &s) -> Xml;
+    auto xml_and_attrib(const std::string &s) -> Xml *;
 
     void insert_token(Token T, bool sw);
     void interpret_aux(std::vector<std::string> &bib, std::vector<std::string> &bib2, std::string_view label = {});
