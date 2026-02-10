@@ -2,11 +2,12 @@
 #include "AttList.h"
 #include "Buffer.h"
 #include "NameMapper.h"
+#include <cassert>
 #include <gsl/gsl>
 
 struct XmlAction;
 
-class Xml : public std::vector<gsl::not_null<Xml *>> { // \todo value semantics
+class Xml : public std::vector<Xml *> { // \todo value semantics
 public:
     size_t      id{0};  ///< id of the object
     std::string name;   ///< name of the element
@@ -21,7 +22,7 @@ public:
     Xml &operator=(Xml &&)      = delete;
 
     [[nodiscard]] auto all_empty() const -> bool;
-    [[nodiscard]] auto back_or_nullptr() const -> Xml * { return empty() ? nullptr : back().get(); }
+    [[nodiscard]] auto back_or_nullptr() const -> Xml * { return empty() ? nullptr : back(); }
     [[nodiscard]] auto get_cell_span() const -> long;
     [[nodiscard]] auto has_name(const std::string &s) const -> bool { return name == s; }
     [[nodiscard]] auto has_name_of(const std::string &s) const -> bool { return name == the_names[s]; }
@@ -40,7 +41,7 @@ public:
     [[nodiscard]] auto spec_copy() const -> Xml *;
 
     auto convert_to_string() -> std::string;
-    auto deep_copy() -> gsl::not_null<Xml *>;
+    auto deep_copy() -> Xml *;
     auto find_on_tree(Xml *check, Xml *&res) const -> bool;
     auto get_first_env(const std::string &name) -> Xml *;
 
@@ -75,7 +76,7 @@ public:
     void add_special_att(const std::string &S, Buffer &B);
     void take_id(Xml *from);  // take ownership of a pre-allocated element's id and attributes
     void add_first(Xml *x);
-    void add_tmp(gsl::not_null<Xml *> x);
+    void add_tmp(Xml *x);
     void add_last_nl(Xml *x);
     void add_last_string(const std::string &B);
     void add_nl();
@@ -92,7 +93,7 @@ public:
     void one_fig_tab(bool is_fig);
     auto par_is_empty() -> bool;
     void postprocess_fig_table(bool is_fig);
-    auto put_at(long n, gsl::not_null<Xml *> x) -> bool;
+    auto put_at(long n, Xml *x) -> bool;
     void put_in_buffer(Buffer &b);
     void push_back_unless_nullptr(Xml *x);
     void push_back_list(Xml *x);
@@ -113,7 +114,10 @@ public:
     void unbox(Xml *x);
     auto value_at(long n) -> Xml *;
     void replace_first(Xml *x) {
-        if (!empty()) at(0) = gsl::not_null{x};
+        if (!empty()) {
+            assert(x != nullptr);
+            at(0) = x;
+        }
     }
     void bordermatrix();
 };
