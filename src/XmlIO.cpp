@@ -333,7 +333,7 @@ void XmlIO::parse_attributes() {
         auto att_name = std::string(B);
         parse_att_val();
         auto att_val = std::string(B);
-        cur_xml->id.add_attribute(att_name, att_val);
+        cur_xml->add_att(att_name, att_val);
     }
 }
 

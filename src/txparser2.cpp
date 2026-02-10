@@ -721,7 +721,7 @@ void Parser::formatdate() {
     if (!FP.interpret(s, err_tok)) { spdlog::trace("Date to scan was {}", s); }
     Xml *X = new Xml(std::string("date"), nullptr);
     the_stack.add_last(X);
-    AttList &AL = X->id.get_att();
+    AttList &AL = X->att;
     AL["year"]  = std::to_string(FP.year);
     AL["month"] = std::to_string(abs(FP.month));
     AL["day"]   = std::to_string(FP.day);
@@ -1310,7 +1310,7 @@ void Parser::T_listenv(symcodes x) {
     }
     Xml *res = new Xml(the_names["list"], nullptr);
     the_stack.push(the_names["list"], res);
-    res->id.add_attribute(the_names["type"], the_names[np]);
+    res->add_att(the_names["type"], the_names[np]);
 }
 
 // converts T1/ OT2 into a Unicode character (expandable command)

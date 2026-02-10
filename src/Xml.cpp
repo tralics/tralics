@@ -36,7 +36,7 @@ namespace {
             if (texte != nullptr) {
                 texte->change_name("cell");
                 row1->push_back_unless_nullptr(texte);
-                texte->id.add_attribute(sf->id);
+                texte->add_att(sf->id);
             }
             if (leg != nullptr) {
                 leg->change_name("cell");
@@ -50,14 +50,14 @@ namespace {
         from->add_non_empty_to(junk);
         if (nrows == 0) return nullptr;
         Xml *res = new Xml(the_names["table"], nullptr);
-        res->id.add_attribute(the_names["rend"], the_names["inline"]);
+        res->add_att(the_names["rend"], the_names["inline"]);
         res->push_back_unless_nullptr(row1);
         res->push_back_unless_nullptr(row2);
         return new Xml(the_names["cst_p"], res);
     }
 
     void table_subfigure(Xml *from, Xml *to, Xml *junk) {
-        to->id.add_attribute(the_names["rend"], the_names["array"]);
+        to->add_att(the_names["rend"], the_names["array"]);
         int ctr = 'a';
         for (;;) {
             Xml *sf = from->get_first_env("cst_p");
@@ -71,7 +71,7 @@ namespace {
     }
 
     void raw_subfigure(Xml *from, Xml *to, Xml *junk) {
-        to->id.add_attribute(the_names["rend"], the_names["subfigure"]);
+        to->add_att(the_names["rend"], the_names["subfigure"]);
         int         n          = 0;
         static auto parid_name = std::string("parid");
         for (;;) {
@@ -93,7 +93,7 @@ namespace {
                     junk->push_back_unless_nullptr(sf);
                     continue;
                 }
-                sf->id.add_attribute(parid_name, par_id);
+                sf->add_att(parid_name, par_id);
                 Xml *leg   = sf->get_first_env("leg");
                 Xml *texte = sf->get_first_env("texte");
                 sf->add_non_empty_to(junk);
@@ -103,7 +103,7 @@ namespace {
                 }
                 if (texte != nullptr) {
                     Xml *xx = texte->get_first_env("figure");
-                    if (xx != nullptr) { sf->id.add_attribute_but_rend(xx->id); }
+                    if (xx != nullptr) { sf->add_att_but_rend(xx->id); }
                     texte->add_non_empty_to(junk);
                 }
                 to->push_back_unless_nullptr(sf);
@@ -136,20 +136,20 @@ namespace {
         case 0: // a single figure
             X = from->get_first_env("figure");
             if (X != nullptr) { // copy all atributes of X but rend in this
-                to->id.add_attribute_but_rend(X->id);
+                to->add_att_but_rend(X->id);
             }
             return;
         case 1: // a table in the figure, move all tables
             X = new Xml(the_names["cst_p"], nullptr);
             to->push_back_unless_nullptr(X);
             from->move(the_names["table"], X);
-            to->id.add_attribute(the_names["rend"], the_names["array"]);
+            to->add_att(the_names["rend"], the_names["array"]);
             return;
         case 3: // verbatim material in the figure; move all lines
             X = new Xml(the_names["cst_empty"], nullptr);
             to->push_back_unless_nullptr(X);
             from->move(the_names["pre"], X);
-            to->id.add_attribute(the_names["rend"], the_names["pre"]);
+            to->add_att(the_names["rend"], the_names["pre"]);
             return;
         case 2: // a subfigure
             //    T->remove_empty_par();
@@ -205,13 +205,13 @@ namespace {
             Xml *X = new Xml(the_names["cst_p"], nullptr);
             to->push_back_unless_nullptr(X);
             from->move(the_names["table"], X);
-            to->id.add_attribute(the_names["rend"], the_names["array"]);
+            to->add_att(the_names["rend"], the_names["array"]);
             return;
         }
         // Normal case
         from->remove_empty_par();
         from->remove_par_bal_if_ok();
-        to->id.add_attribute(the_names["rend"], the_names["display"]);
+        to->add_att(the_names["rend"], the_names["display"]);
         Xml *C = from->single_non_empty();
         if (C != nullptr && C->is_element()) {
             if (C->has_name_of("figure")) {
@@ -225,7 +225,7 @@ namespace {
                     to->push_back_list(C);
                 else
                     to->push_back_unless_nullptr(C); // This is strange...
-                to->id.add_attribute_but_rend(C->id);
+                to->add_att_but_rend(C->id);
                 from->clear();
                 to->change_name("table");
             }
@@ -288,7 +288,7 @@ auto Xml::try_cline(bool action) -> bool {
         auto c = k->get_cell_span();
         if (c == -1) return false;
         if (c == 0) continue; // ignore null span cells
-        if (a_ok && action) k->id.add_bottom_rule();
+        if (a_ok && action) k->add_bottom_rule();
         a = a - c;
         if (a < 0) return false;
     }
@@ -330,7 +330,7 @@ auto Xml::try_cline_again(bool action) -> bool {
             return false;
         }
         if (at(k)->get_cell_span() != 1) return false;
-        if (!at(k)->id.has_attribute(the_names["cell_topborder"]).empty()) return false;
+        if (!at(k)->has_att(the_names["cell_topborder"]).empty()) return false;
         if (seen_cell) return false;
         if (!at(k)->is_whitespace()) return false;
         seen_cell = true;
@@ -364,7 +364,7 @@ auto Xml::spec_copy() const -> Xml * {
     if (X.find(the_names["movablelimits"]) == X.end()) return nullptr;
     Xml *res                                               = new Xml(name, nullptr);
     static_cast<std::vector<gsl::not_null<Xml *>> &>(*res) = *this;
-    res->id.add_attribute(X, true);
+    res->add_att(X, true);
     return res;
 }
 
@@ -395,7 +395,7 @@ auto Xml::is_child(Xml *x) const -> bool {
 auto Xml::deep_copy() -> gsl::not_null<Xml *> {
     if (!is_element()) return gsl::not_null{this};
     gsl::not_null res{new Xml(name, nullptr)};
-    res->id.add_attribute(id);
+    res->add_att(id);
     for (size_t i = 0; i < size(); i++) { res->push_back_unless_nullptr((*this)[i]->deep_copy()); }
     return res;
 }
@@ -455,7 +455,7 @@ void Xml::recurse(XmlAction &X) {
                 continue;
             case rc_composition: // a module in the comp section
             {
-                std::string an = T->id.has_attribute(the_names["id"]);
+                std::string an = T->has_att(the_names["id"]);
                 if (!an.empty()) remove_label("module in composition", an);
                 erase(begin() + to_signed(k));
                 k--;
@@ -520,7 +520,7 @@ auto Xml::only_hi() const -> bool {
     Xml *x = single_non_empty();
     if (x == nullptr) return false;
     if (!x->is_element()) return false;
-    return x->id.is_font_change();
+    return x->is_font_change();
 }
 
 // Adds the content of x to this. Attributes are lost
@@ -788,7 +788,7 @@ auto Xml::par_is_empty() -> bool {
     if (empty()) return true;
     if (size() > 1) return false;
     if (!at(0)->is_element()) return false;
-    if (!at(0)->id.is_font_change()) return false;
+    if (!at(0)->is_font_change()) return false;
     return at(0)->par_is_empty();
 }
 

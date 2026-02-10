@@ -46,12 +46,12 @@ namespace {
                     if (tot_span != 0) {
                         Xml *x = new Xml(the_names["cell"], nullptr);
                         R->push_back_unless_nullptr(x);
-                        x->id.add_span(tot_span);
+                        x->add_span(tot_span);
                     }
                     Xml *x = new Xml(the_names["cell"], nullptr);
                     R->push_back_unless_nullptr(x);
-                    x->id.add_span(cl_span);
-                    x->id.add_bottom_rule();
+                    x->add_span(cl_span);
+                    x->add_bottom_rule();
                     return;
                 }
             }
@@ -127,7 +127,7 @@ namespace {
             }
             for (size_t i = 0; i < n; i++) {
                 Xml *A = CI.at(i).translation;
-                A->id.add_attribute(the_names["target"], std::string(labels[CI.at(i).iid]));
+                A->add_att(the_names["target"], std::string(labels[CI.at(i).iid]));
             }
             std::sort(CI.begin(), CI.end(), [](const auto &A, const auto &B) { return A.key < B.key; });
             for (size_t i = 0; i < n; i++) {
@@ -176,7 +176,7 @@ namespace {
         auto        n  = *the_bibliography.find_citation_item(type, ref, true);
         std::string id = the_bibliography.citation_table[n].get_id();
         Xml         res(the_names["ref"], nullptr);
-        res.id.add_attribute(the_names["target"], id);
+        res.add_att(the_names["target"], id);
         return res;
     }
 

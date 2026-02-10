@@ -202,7 +202,7 @@ auto Stack::get_cur_par() const -> Xml * {
 void Stack::add_center_to_p() const {
     Xml *x = get_cur_par();
     if (x == nullptr) return;
-    x->id.get_att().emplace(the_names["rend"], the_names.center(cur_centering()));
+    x->att.emplace(the_names["rend"], the_names.center(cur_centering()));
 }
 
 auto Stack::is_frame(const std::string &s) const -> bool { return first_frame() == the_names[s]; }
@@ -354,7 +354,7 @@ auto Stack::push_par(size_t k) -> Xid {
 // Fonts without argument like \it, (still ok ?)
 void Stack::fonts0(const std::string &x) {
     Xml *res                                 = fonts1(x);
-    res->id.get_att()[the_names["'hi_flag"]] = "";
+    res->att[the_names["'hi_flag"]] = "";
     push(std::string(" "), res);
 }
 
@@ -392,7 +392,7 @@ void Stack::check_font() {
         if (nonempty) {
             auto     a           = std::string(aux);
             Xml     *res         = new Xml(the_names["hi"], nullptr);
-            AttList &W           = res->id.get_att();
+            AttList &W           = res->att;
             W[the_names["rend"]] = a;
             push(std::string(" "), res);
         }
@@ -408,7 +408,7 @@ void Stack::check_font() {
     }
     if (auto c = the_parser.cur_font.color; !c.empty()) {
         Xml     *res          = new Xml(the_names["hi"], nullptr);
-        AttList &W            = res->id.get_att();
+        AttList &W            = res->att;
         W[the_names["color"]] = c;
         push(std::string(" "), res);
     }

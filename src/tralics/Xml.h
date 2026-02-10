@@ -45,10 +45,19 @@ public:
     auto find_on_tree(Xml *check, Xml *&res) const -> bool;
     auto get_first_env(const std::string &name) -> Xml *;
 
-    void add_att(const std::string &a, const std::string &b) const { id.add_attribute(a, b); }
+    void add_att(const std::string &a, const std::string &b) { id.add_attribute(a, b); }
+    void add_att(const std::string &a, const std::string &b, bool force) { id.add_attribute(a, b, force); }
+    void add_att(const AttList &L, bool f) { id.add_attribute(L, f); }
+    void add_att(Xid b) { id.add_attribute(b); }
+    void add_att_but_rend(Xid b) { id.add_attribute_but_rend(b); }
+    auto has_att(const std::string &n) -> std::string { return id.has_attribute(n); }
+    void add_special_att(const std::string &S, Buffer &B) { id.add_special_att(S, B); }
+    auto is_font_change() const -> bool { return id.is_font_change(); }
+    void add_span(long n) { id.add_span(n); }
+    void add_bottom_rule() { id.add_bottom_rule(); }
+    void add_ref(const std::string &s) { id.add_ref(s); }
     void take_id(Xid xid);  // take ownership of a pre-allocated Xid's attributes
     void add_first(Xml *x);
-    void add_ref(std::string s);
     void add_tmp(gsl::not_null<Xml *> x);
     void add_last_nl(Xml *x);
     void add_last_string(const std::string &B);

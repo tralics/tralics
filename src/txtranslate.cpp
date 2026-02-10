@@ -153,7 +153,7 @@ void Parser::leave_v_mode() {
 auto Parser::ileave_v_mode() -> Xid {
     Xid res = the_stack.push_par(cur_centering());
     if (unfinished_par != nullptr) {
-        res.add_attribute(unfinished_par->id.get_att(), true);
+        res.add_attribute(unfinished_par->att, true);
         unfinished_par = nullptr;
     }
     return res;
@@ -364,7 +364,7 @@ void Parser::implicit_par(subtypes c) {
             return;
         }
         if (cp->par_is_empty()) {
-            cp->id.add_attribute(the_names["noindent"], st_bool(noindent), false);
+            cp->add_att(the_names["noindent"], st_bool(noindent), false);
             return;
         }
     }
@@ -1082,7 +1082,7 @@ void Parser::T_color(subtypes c) {
         std::string name = sT_arg_nopar();
         std::string C    = scan_color(opt, name);
         Xml        *mbox = internal_makebox();
-        mbox->id.add_attribute(the_names["color"], C);
+        mbox->add_att(the_names["color"], C);
         return;
     }
     if (c == fcolorbox_code) {
@@ -1092,8 +1092,8 @@ void Parser::T_color(subtypes c) {
         std::string C1    = scan_color(opt, name1);
         std::string C2    = scan_color(opt, name2);
         Xml        *mbox  = internal_makebox();
-        mbox->id.add_attribute(the_names["color"], C1);
-        mbox->id.add_attribute(the_names["color2"], C2);
+        mbox->add_att(the_names["color"], C1);
+        mbox->add_att(the_names["color2"], C2);
         return;
     }
     if (c == definecolor_code) {
@@ -1172,8 +1172,8 @@ auto Parser::T_mbox(subtypes c) -> bool {
     }
     Xml *mbox = internal_makebox();
     if (!(ipos.empty() && iwidth.empty())) {
-        if (!ipos.empty()) mbox->id.add_attribute(the_names["box_pos"], ipos);
-        mbox->id.add_attribute(the_names["box_width"], iwidth);
+        if (!ipos.empty()) mbox->add_att(the_names["box_pos"], ipos);
+        mbox->add_att(the_names["box_width"], iwidth);
         return true;
     }
     // Hack the box
@@ -1268,8 +1268,8 @@ auto Parser::T_save_box(bool simple) -> bool {
         the_stack.pop(the_names["mbox"]);
         if (ipos && ipos->empty()) ipos.reset();       // \todo this is ugly
         if (iwidth && iwidth->empty()) iwidth.reset(); // \todo this is ugly
-        if (ipos) mbox->id.add_attribute(the_names["box_pos"], *ipos);
-        if (iwidth) mbox->id.add_attribute(the_names["box_width"], *iwidth);
+        if (ipos) mbox->add_att(the_names["box_pos"], *ipos);
+        if (iwidth) mbox->add_att(the_names["box_width"], *iwidth);
     }
     box_end(the_stack.remove_last(), i);
     return true;
@@ -1358,11 +1358,11 @@ auto Parser::T_fbox(subtypes cc) -> bool {
     if (!T_arg_local()) return false;
     the_stack.pop(the_names[cc == scalebox_code ? "scalebox" : "fbox"]);
     Xml     *aux = cur->single_non_empty();
-    AttList &AL  = cur->id.get_att();
+    AttList &AL  = cur->att;
     if (cc == scalebox_code) {
         if ((aux != nullptr) && aux->has_name(the_names["figure"])) {
-            aux->id.add_attribute(the_names["scale"], iscale, true);
-            if (iwidth) aux->id.add_attribute(std::string("vscale"), *iwidth);
+            aux->add_att(the_names["scale"], iscale, true);
+            if (iwidth) aux->add_att(std::string("vscale"), *iwidth);
             cur->kill_name();
         } else {
             AL[the_names["box_scale"]] = iscale;
@@ -1373,7 +1373,7 @@ auto Parser::T_fbox(subtypes cc) -> bool {
     if (iwidth && iwidth->empty()) iwidth.reset(); // \todo That is ugly
     if (ipos && ipos->empty()) ipos.reset();       // \todo That is ugly
     if ((aux != nullptr) && aux->has_name(the_names["figure"])) {
-        aux->id.add_attribute(the_names["framed"], the_names["true"]);
+        aux->add_att(the_names["framed"], the_names["true"]);
         cur->kill_name();
     } else {
         AL[the_names["fbox_rend"]] = the_names["boxed"];

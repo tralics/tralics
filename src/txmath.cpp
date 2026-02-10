@@ -2646,7 +2646,7 @@ auto Math::M_ref() -> Xml * {
     pop_front();
     std::string label = w.convert_opname();
     Xml        *X     = new Xml(the_names["mref"], nullptr);
-    X->id.add_ref(label);
+    X->add_ref(label);
     return X;
 }
 

@@ -117,8 +117,8 @@ auto Parser::index_aux(TokenList &L, std::optional<size_t> father, OneIndex &g) 
     std::replace(B.begin(), B.end(), '\n', ' ');
     Xml *res = translate_list(L);
     Xml *x   = new Xml(the_names["index"], res);
-    if (!encap.empty()) x->id.add_attribute(the_names["encap"], std::string(encap));
-    x->id.add_attribute(the_names["level"], the_names[std::to_string(level)]);
+    if (!encap.empty()) x->add_att(the_names["encap"], std::string(encap));
+    x->add_att(the_names["level"], the_names[std::to_string(level)]);
     auto &the_index = AllIndex::the_index();
     auto  iid       = the_index.last_iid++;
     IR.push_back({B, aux, x, level, iid});
