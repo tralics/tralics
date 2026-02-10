@@ -3,7 +3,7 @@
 #include "tralics/MainClass.h"
 #include "tralics/NameMapper.h"
 #include "tralics/util.h"
-#include <fmt/ostream.h>
+#include <spdlog/fmt/ostr.h>
 
 auto AttList::lookup(const std::string &x) -> std::string * {
     if (auto i = find(x); i != end()) return &(i->second);

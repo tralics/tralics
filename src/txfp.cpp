@@ -2,8 +2,8 @@
 #include "tralics/FpNum.h"
 #include "tralics/FpStack.h"
 #include "tralics/Parser.h"
-#include <fmt/format.h>
-#include <fmt/ostream.h>
+#include <spdlog/fmt/fmt.h>
+#include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 
 namespace {

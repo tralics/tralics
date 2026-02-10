@@ -3,7 +3,7 @@
 #include "tralics/Parser.h"
 #include "tralics/TitlePage.h"
 #include "tralics/TitlePageFullLine.h"
-#include <fmt/ostream.h>
+#include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <sstream>
 

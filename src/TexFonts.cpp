@@ -1,6 +1,6 @@
 #include "tralics/TexFonts.h"
 #include "tralics/Parser.h"
-#include <fmt/format.h>
+#include <spdlog/fmt/fmt.h>
 
 // Finds a font given by name and size, or creates one if needed
 auto TexFonts::find_font(const TexFont &f) -> size_t {

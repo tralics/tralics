@@ -5,7 +5,7 @@
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include <ctime>
-#include <fmt/format.h>
+#include <spdlog/fmt/fmt.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 

@@ -8,7 +8,7 @@
 #include "tralics/XmlAction.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
-#include <fmt/ostream.h>
+#include <spdlog/fmt/ostr.h>
 #include <fstream>
 #include <spdlog/spdlog.h>
 

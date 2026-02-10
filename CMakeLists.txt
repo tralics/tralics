@@ -11,11 +11,9 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/ctre-3.10.0/include)
-include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/fmt-12.1.0/include)
 include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/spdlog-1.17.0/include)
 include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/utfcpp-4.0.9/source)
 
-add_compile_definitions(FMT_HEADER_ONLY SPDLOG_FMT_EXTERNAL)
 add_compile_options(-fdiagnostics-color=always -pedantic -Wall)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")

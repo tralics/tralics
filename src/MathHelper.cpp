@@ -4,7 +4,7 @@
 #include "tralics/Parser.h"
 #include "tralics/Stack.h"
 #include "tralics/globals.h"
-#include <fmt/format.h>
+#include <spdlog/fmt/fmt.h>
 #include <spdlog/spdlog.h>
 
 namespace tralics_ns {

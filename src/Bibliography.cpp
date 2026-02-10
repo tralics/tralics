@@ -3,7 +3,7 @@
 #include "tralics/Bibtex.h"
 #include "tralics/MainClass.h"
 #include "tralics/globals.h"
-#include <fmt/format.h>
+#include <spdlog/fmt/fmt.h>
 #include <spdlog/spdlog.h>
 
 // This creates a unique ID, named bid1, bid2, etc.

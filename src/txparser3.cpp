@@ -4,8 +4,8 @@
 #include "tralics/SaveAux.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
-#include <fmt/format.h>
-#include <fmt/ostream.h>
+#include <spdlog/fmt/fmt.h>
+#include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 
 auto to_string(save_type v) -> std::string_view {

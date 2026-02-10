@@ -3,6 +3,5 @@ as many systems as possible. The list so far is below; licenses and copyright
 information can be found inside each subfolder.
 
 ctre   (version 3.10.0), from https://github.com/hanickadot/compile-time-regular-expressions
-fmtlib (version 12.1.0), from https://github.com/fmtlib/fmt
 spdlog (version 1.17.0), from https://github.com/gabime/spdlog
 utfcpp (version 4.0.9),  from https://github.com/nemtrif/utfcpp

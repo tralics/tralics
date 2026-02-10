@@ -1,6 +1,6 @@
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
-#include <fmt/format.h>
+#include <spdlog/fmt/fmt.h>
 
 namespace arith_ns {
     void start_err(std::optional<std::string_view> s);

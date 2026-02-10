@@ -7,8 +7,8 @@
 #include "tralics/util.h"
 #include <cctype>
 #include <ctre.hpp>
-#include <fmt/format.h>
-#include <fmt/ostream.h>
+#include <spdlog/fmt/fmt.h>
+#include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <utf8.h>
 

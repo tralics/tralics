@@ -1,0 +1,58 @@
+Tralics architecture overview (high level)
+==========================================
+
+Main classes and responsibilities
+- MainClass: top-level driver. Parses command line, locates config/tcf files,
+  reads config/input LineLists, determines document type/DTD, bootstraps
+  resources (bibtex, fonts, LaTeX), starts translation (trans0), and writes
+  XML output/logs.
+- Parser: core translator and state machine. Holds macro table (Mactab),
+  EQTB tables for registers (ints/dims/glue/boxes/tokens/strings), catcodes,
+  and scanning/expansion state. It reads tokens, expands macros, parses
+  commands/arguments, and calls translate_all/translate03 loops that build XML.
+- Stack: XML construction stack and mode tracker (v/h/math/array/bib/etc).
+  Owns the current XML tree nodes, manages push/pop frames, ids, and paragraph
+  transitions, and provides helpers for adding nodes/attributes.
+- Xml: tree node (name + attributes + children) used for output structure.
+- Token / CmdChr: Token is the compact TeX token encoding (char vs control
+  sequence). CmdChr is the (command, subtype) pair derived from a Token.
+- Hashtab: main control-sequence hash. Maps strings to Token ids and holds the
+  eqtb of command meanings (Hashtab::the_eqtb). Also registers primitives.
+- Mactab: macro table with reference-counted Macro bodies.
+- NameMapper (the_names): string interning/remapping for XML element/attribute
+  names (supports configuration-driven renaming).
+- Symcode: metadata for symcodes (names and optional dispatch/action hooks).
+
+Phases of processing (simplified)
+1) Startup/config:
+   - MainClass parses arguments, determines input/config paths, reads config,
+     resolves document type/DTD, and initializes encodings.
+2) Boot/initialization:
+   - Parser bootstraps EQTB defaults, macros, primitives (Hashtab),
+     fonts/languages, and package setup (including LaTeX/latex3 helpers).
+3) Translation:
+   - LineList provides input lines. Parser scans into Token stream, expands
+     macros, and executes commands. translate_all loops get_x_token/translate03
+     and accumulates text into unprocessed_xml, then flushes to Stack.
+4) XML tree assembly:
+   - Stack manages paragraph/mode transitions and pushes Xml nodes, attributes,
+     and anchors. Parser helpers convert TeX constructs to Xml nodes.
+5) Finalization/output:
+   - Parser final checks/post-processing (images, labels, math), then MainClass
+     writes XML/log output.
+
+Hash tables / registries
+- Hashtab: global control sequence dictionary + eqtb command map.
+- Mactab: macro bodies with ref counts (expansion-safe).
+- EQTB tables: scoped TeX registers (ints, dimensions, glue, boxes, token lists,
+  and strings). EQTB entries store value + level for scoping.
+- Stack id_map: sparse id->Xml* lookup for TeX-level commands referencing nodes.
+
+Enums and identifiers
+- enums.h defines symcodes (command codes), subtypes (command variants), internal
+  parameter types, math list types and math node types, boundary types, and
+  catcodes. These enums drive parsing decisions and dispatch tables.
+
+Notes
+- Most translation logic lives in tx*.cpp (e.g., txtranslate.cpp for the main
+  translation loop), with package-specific behavior under src/packages/.

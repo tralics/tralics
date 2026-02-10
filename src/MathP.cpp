@@ -1,6 +1,6 @@
 #include "tralics/MathP.h"
 #include "tralics/Parser.h"
-#include <fmt/ostream.h>
+#include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 
 auto MathP::has_small() const -> bool {

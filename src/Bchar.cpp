@@ -1,7 +1,7 @@
 #include "tralics/Bchar.h"
 #include "tralics/Bibtex.h"
 #include "tralics/util.h"
-#include <fmt/ostream.h>
+#include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 
 auto operator<<(std::ostream &X, const Bchar &Y) -> std::ostream & {

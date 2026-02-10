@@ -5,8 +5,8 @@
 #include "tralics/SaveAux.h"
 #include "tralics/Saver.h"
 #include "tralics/globals.h"
-#include <fmt/format.h>
-#include <fmt/ostream.h>
+#include <spdlog/fmt/fmt.h>
+#include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 
 #ifdef _MSC_VER

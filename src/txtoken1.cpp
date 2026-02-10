@@ -1,7 +1,7 @@
 #include "tralics/Buffer.h"
 #include "tralics/Dispatcher.h"
 #include "tralics/Symcode.h"
-#include <fmt/format.h>
+#include <spdlog/fmt/fmt.h>
 #include <spdlog/spdlog.h>
 
 // We define functions that return the name of a token;

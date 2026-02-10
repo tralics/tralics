@@ -2,7 +2,7 @@
 #include "TokenList.h"
 #include "enums.h"
 #include <cstring>
-#include <fmt/format.h>
+#include <spdlog/fmt/fmt.h>
 #include <iostream>
 #include <optional>
 #include <string_view>

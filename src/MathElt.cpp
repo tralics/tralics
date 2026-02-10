@@ -2,7 +2,7 @@
 #include "tralics/Buffer.h"
 #include "tralics/Math.h"
 #include "tralics/util.h"
-#include <fmt/ostream.h>
+#include <spdlog/fmt/ostr.h>
 
 // This prints a math element
 void MathElt::print() const {

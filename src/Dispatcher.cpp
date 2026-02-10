@@ -4,7 +4,7 @@
 #include "tralics/Parser.h"
 #include "tralics/Symcode.h"
 #include "tralics/globals.h"
-#include <fmt/ostream.h>
+#include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 
 void Dispatcher::register_action(symcodes x, const std::function<bool(subtypes)> &f) { Symcode::get(x).action = f; }

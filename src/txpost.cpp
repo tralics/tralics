@@ -4,7 +4,7 @@
 #include "tralics/WordList.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
-#include <fmt/format.h>
+#include <spdlog/fmt/fmt.h>
 
 namespace {
     std::vector<std::pair<int, std::string>> refindex_list; // list of all \ref to \index

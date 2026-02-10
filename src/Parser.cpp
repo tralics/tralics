@@ -13,8 +13,8 @@
 #include "tralics/Symcode.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
-#include <fmt/format.h>
-#include <fmt/ostream.h>
+#include <spdlog/fmt/fmt.h>
+#include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 
 namespace accent_ns {
