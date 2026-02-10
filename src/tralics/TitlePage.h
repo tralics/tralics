@@ -20,9 +20,7 @@ struct TitlePage : public std::vector<Xml *> {
     void make_invalid() { valid = false; }
     void make_valid() { valid = true; }
     void start_thing(bool verbose);
-    void parse();
     auto increase_data() -> size_t { return len2++; }
-    void check_size();
 };
 
 inline TitlePage Titlepage;

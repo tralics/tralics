@@ -55,11 +55,7 @@ private:
     void call_type_special();
     void format_series_etc(bool pa);
     void sort_author(bool au);
-    void sort_editor();
-    void sort_organization();
-    void sort_check(std::string_view);
     void presort(long serial);
-    void sort_key();
     void format_author(bool au);
     void forward_pass(std::string &previous_label, int &last_num);
     void reverse_pass(int &next_extra);

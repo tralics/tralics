@@ -24,7 +24,6 @@ struct ScaledInt {
     void times_10_18();
     void ovf30();
     void ovf31();
-
     operator std::string() const;
 };
 

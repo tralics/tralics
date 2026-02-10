@@ -46,7 +46,6 @@ public:
     }
     void               set_type(bool b);
     [[nodiscard]] auto has_label() const -> bool { return seen_label || eqnum_status == 1 || eqnum_status == 3; }
-    void               stats();
     void               reset(bool dual);
     [[nodiscard]] auto is_inline() const -> bool { return current_mode; }
     [[nodiscard]] auto has_tag() const -> bool { return !tag_list.empty(); }

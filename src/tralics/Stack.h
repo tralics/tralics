@@ -114,7 +114,6 @@ public:
     void               set_no_mode() { cur_mode = mode_none; }
     void               set_v_mode() { cur_mode = mode_v; }
     void               set_xid_boot() { xid_boot = next_id - 1; }
-    void               T_ampersand();
     void               T_hline();
     auto               temporary() -> Xml *;
     auto               top_stack() -> Xml               *{ return back().obj; }

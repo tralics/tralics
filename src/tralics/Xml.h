@@ -89,7 +89,6 @@ public:
     auto last_box() -> Xml *;
     void last_to_SH() const;
     void move(std::string match, Xml *res);
-    void one_fig_tab(bool is_fig);
     auto par_is_empty() -> bool;
     void postprocess_fig_table(bool is_fig);
     auto put_at(long n, Xml *x) -> bool;

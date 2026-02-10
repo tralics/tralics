@@ -37,7 +37,6 @@ private:
     bool                     want_numeric{};
     std::string              cur_field_name;
     std::string              no_year;
-    bool                     noyearerror{};
     std::array<id_type, 128> id_class{};
 
 public:
@@ -66,22 +65,18 @@ private:
     void               define_a_macro(std::string_view name, std::string_view value);
     auto               find_a_macro(Buffer &name, bool insert, std::optional<std::string_view> xname, std::string_view val) -> std::optional<size_t>;
     auto               find_lower_case(const CitationKey &s, int &n) -> BibEntry *;
-    void               forward_pass();
     auto               get_class(char32_t c) -> id_type { return id_class[c]; }
-    void               kill_the_lists();
     auto               look_for_macro(const std::string &name) -> std::optional<size_t>;
     void               mac_def_val(size_t X) { all_macros[X].value = all_macros[X].name; }
     void               mac_set_val(size_t X, const std::string &s) { all_macros[X].value = s; }
     auto               make_entry(const CitationKey &a, bib_creator b, std::string myid) -> BibEntry *;
     auto               next_char() -> char32_t { return input_line[input_line_pos++]; }
     auto               next_line(bool what) -> bool;
-    auto               not_start_or_end(int what, char c, bool s) -> bool;
     auto               parse_one_item() -> bool;
     [[nodiscard]] auto parse_one_field(BibEntry *X) -> bool;
     [[nodiscard]] auto read_one_field(bool store) -> bool;
     [[nodiscard]] auto read_field(bool store) -> bool;
     void               reset_input() { input_line.clear(); }
-    void               reverse_pass();
     [[nodiscard]] auto scan_for_at() -> bool;
     auto               scan_identifier(size_t what) -> std::optional<bool>;
     auto               scan_identifier0(size_t what) -> std::optional<int>;
@@ -92,7 +87,6 @@ private:
 public:
     auto get_an_entry(size_t i) { return all_entries[i]; }
     auto exec_bibitem(const std::string &b) -> std::string;
-    auto implement_cit(std::string_view x, std::string w) -> int;
     void work();
     void read_bib_file(const std::string &s);
     void err_in_file(std::string_view s, bool last) const;

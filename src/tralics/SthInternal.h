@@ -19,17 +19,12 @@ struct SthInternal {
     [[nodiscard]] auto get_dim_val() const -> ScaledInt { return int_val; }
     [[nodiscard]] auto get_glue_width() const -> ScaledInt { return glue_val.width; }
     [[nodiscard]] auto get_int_val() const -> long { return int_val.value; }
-
-    void add_ovf(const SthInternal &r);
     void add(const SthInternal &r);
     void attach_fraction(RealNumber x);
     void attach_sign(bool negative);
     void change_level(internal_type level);
     void check_overflow(scan_expr_t t);
     void copy(const SthInternal &x);
-    void cv_dim_to_mu();
-    void cv_glue_to_mu();
-    void cv_mu_to_glue();
     void expr_mul(long n);
     void fast_negate() { int_val = -int_val; }
     void get_info(subtypes m);

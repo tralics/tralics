@@ -19,8 +19,6 @@ struct Glue {
     void scale(long n, long d);
     void quotient(long f);
     void check_overflow();
-    void expr_mul(long f);
-    void add_ovf(const Glue &);
 };
 
 auto operator<<(std::ostream &fp, const Glue &x) -> std::ostream &;

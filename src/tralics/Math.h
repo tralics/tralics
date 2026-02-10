@@ -39,7 +39,6 @@ public:
     [[nodiscard]] auto        get_type() const -> math_list_type { return type; }
     [[nodiscard]] auto        get_name() const -> std::string;
     [[nodiscard]] static auto get_list(size_t w) -> Math &;
-    void                      hack_type(int);
     [[nodiscard]] auto        has_type(int x) const -> bool { return type == x; }
     void                      is_font_cmd1_list(const_math_iterator &B, const_math_iterator &E);
     auto                      M_array(bool numbered, math_style cms) -> Xml *;
@@ -52,15 +51,12 @@ public:
     void                      push_front(CmdChr X, subtypes c);
     void                      remove_spaces();
     void                      set_display_type() { type = math_ddollar_cd; }
-    void                      set_env_name(int);
     void                      set_nondisplay_type() { type = math_dollar_cd; }
     void                      set_type(math_list_type c) { type = c; }
     auto                      trivial_math(long action) -> Xml *;
     auto                      trivial_math_index(symcodes cmd) -> Xml *;
     auto                      check_align() -> int;
-
 private:
-    void               add_cur_cont();
     auto               add_fence(bool final, MathF &M) -> bool;
     void               concat(Xml *res);
     void               concat_space(Xml *res);
@@ -70,17 +66,13 @@ private:
     void               fetch_rlc(std::vector<AttList> &table);
     void               find_paren0(MathP &aux) const;
     auto               finish_translate1(bool vb) -> bool;
-    auto               finish_translate2() -> bool;
     void               handle_mbox(Math &res);
     [[nodiscard]] auto has_over() const -> bool;
-    auto               is_font_cmd1() -> bool;
     auto               large1(MathElt &cl, math_style cms) -> Xml *;
     auto               M_cv0(math_style cms) -> XmlAndType;
     auto               M_cv3(math_style cms) -> Math;
     void               handle_cmd_Big(math_style cms);
     auto               handle_cmd_Big_aux(math_style cms) -> bool;
-    void               cv_hspace_t(MathElt &cur);
-    auto               M_cvaux() -> Math;
     auto               M_ref() -> Xml *;
     auto               M_mbox1(Buffer &B, subtypes &f) -> int;
     auto               only_digits(Buffer &B) const -> bool;

@@ -57,7 +57,6 @@ public:
 
 private:
     [[nodiscard]] auto cat_ifeq_name() const -> std::optional<std::string_view>;
-    [[nodiscard]] auto cmd_special_name() const -> std::optional<std::string_view>;
     [[nodiscard]] auto l3_expand_aux_name() const -> std::optional<std::string_view>;
     [[nodiscard]] auto l3_expand_base_name() const -> std::optional<std::string_view>;
     [[nodiscard]] auto l3_ifx_name() const -> std::optional<std::string_view>;
@@ -95,8 +94,6 @@ private:
     [[nodiscard]] auto token_efigure_name() const -> std::optional<std::string_view>;
     [[nodiscard]] auto token_eignore_name() const -> std::optional<std::string_view>;
     [[nodiscard]] auto token_eignorec_name() const -> std::optional<std::string_view>;
-    [[nodiscard]] auto token_emath_name() const -> std::optional<std::string_view>;
-    [[nodiscard]] auto token_eparticipant_name() const -> std::optional<std::string_view>;
     [[nodiscard]] auto token_error_name() const -> std::optional<std::string_view>;
     [[nodiscard]] auto token_extension_name() const -> std::optional<std::string_view>;
     [[nodiscard]] auto token_fancy_name() const -> std::optional<std::string_view>;

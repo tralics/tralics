@@ -64,7 +64,6 @@ private:
     auto               cv_special(math_style cms) -> MathElt;
     [[nodiscard]] auto cv_special1(math_style cms) const -> MathElt;
     auto               cv_list(math_style cms, bool ph) -> MathElt;
-    auto               cv_list_no() -> MathElt;
     [[nodiscard]] auto cv_mi(math_style cms) const -> MathElt;
     void               cv1_err();
     void               dump_for_err() const;
