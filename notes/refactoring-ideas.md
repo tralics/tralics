@@ -49,6 +49,12 @@ types are mismatched throughout.
 
 ## Quick wins
 
+### Remove legacy subsystems
+
+- Remove readline support.
+- Remove txra and other ra-related parts.
+- Investigate whether titlepage code can be simplified or removed.
+
 ### Stale TODOs/FIXMEs
 
 ~15 stale markers, including a confirmed bug comment in txparser2.cpp
