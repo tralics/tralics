@@ -12,7 +12,6 @@ endif()
 
 include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/ctre-3.10.0/include)
 include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/fmt-12.1.0/include)
-include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/gsl-4.2.1/include)
 include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/spdlog-1.17.0/include)
 include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/external/utfcpp-4.0.9/source)
 

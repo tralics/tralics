@@ -5,7 +5,7 @@
 ### Memory management: 283 `new` vs 3 `delete`
 
 `Xml` objects are allocated with `new` everywhere (txmathboot.cpp: 33, txmath.cpp: 51)
-and wrapped in `gsl::not_null<Xml*>`. There's no clear ownership model. Migrating to
+and stored as raw pointers. There's no clear ownership model. Migrating to
 `std::unique_ptr<Xml>` or an arena allocator would prevent leaks and clarify lifetimes.
 
 All `Xml` values are now heap-allocated (no value semantics remain). Move
