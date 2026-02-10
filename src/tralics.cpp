@@ -1,18 +1,3 @@
-// tralics, a LaTeX to XML translator
-// Copyright INRIA (Jose Grimm) 2002, 2004, 2007,2008
-
-// This software is governed by the CeCILL license under French law and
-// abiding by the rules of distribution of free software.  You can  use,
-// modify and/ or redistribute the software under the terms of the CeCILL
-// license as circulated by CEA, CNRS and INRIA at the following URL
-// "http://www.cecill.info".
-// (See the file COPYING in the main directory for details)
-
-// InterDepositDigitalNumber = IDDN.FR.001.510030.000.S.P.2002.000.31235
-// for version 1.6, dated 05/12/2002.
-// InterDepositDigitalNumber = IDDN.FR.001.510030.001.S.P.2002.000.31235
-// for version 2.9.4, dated 18/02/2007.
-
 // The file contains the main data structures, and code to fill the tables.
 
 #include "tralics/MainClass.h"
@@ -34,7 +19,6 @@ auto main(int argc, char **argv) -> int {
     spdlog::set_default_logger(logger);
     spdlog::set_level(spdlog::level::trace);
     spdlog::info("This is tralics {}, a LaTeX to XML translator", the_main.tralics_version);
-    spdlog::info("Copyright INRIA/MIAOU/APICS/MARELLE 2002-2015, Jos\\'e Grimm");
     spdlog::info("Licensed under the CeCILL Free Software Licensing Agreement");
     the_parser.boot(); // create the hash table and all that
     the_main.run(argc, argv);

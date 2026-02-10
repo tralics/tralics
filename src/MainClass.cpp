@@ -360,7 +360,6 @@ void MainClass::open_log() { // \todo spdlog etc
     spdlog::info("Transcript written to {}", f.string());
 
     spdlog::trace("Transcript file of tralics {} for file {}", the_main.tralics_version, infile.string());
-    spdlog::trace("Copyright INRIA/MIAOU/APICS/MARELLE 2002-2015, Jos\\'e Grimm");
     spdlog::trace("Tralics is licensed under the CeCILL Free Software Licensing Agreement");
     spdlog::trace("OS: {} running on {}", print_os(cur_os), machine);
     spdlog::trace("Output encoding: {}", print_enc(output_encoding));
