@@ -9,11 +9,13 @@ class Buffer;
 
 class Xid {
 public:
-    size_t value;
-    Xml   *xml{nullptr}; ///< direct pointer to owning Xml (avoids enames lookup)
+    size_t       value;
+    mutable Xml *xml{nullptr}; ///< direct pointer to owning Xml (lazily resolved)
 
     Xid(size_t v = 0) : value(v) {}
     Xid(size_t v, Xml *p) : value(v), xml(p) {}
+
+    auto resolve() const -> Xml *; ///< lazily resolve xml pointer via id_map
 
     [[nodiscard]] auto get_att() const -> AttList &;
     [[nodiscard]] auto is_font_change() const -> bool;

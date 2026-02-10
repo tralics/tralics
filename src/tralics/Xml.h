@@ -45,17 +45,35 @@ public:
     auto find_on_tree(Xml *check, Xml *&res) const -> bool;
     auto get_first_env(const std::string &name) -> Xml *;
 
-    void add_att(const std::string &a, const std::string &b) { id.add_attribute(a, b); }
-    void add_att(const std::string &a, const std::string &b, bool force) { id.add_attribute(a, b, force); }
-    void add_att(const AttList &L, bool f) { id.add_attribute(L, f); }
-    void add_att(Xid b) { id.add_attribute(b); }
-    void add_att_but_rend(Xid b) { id.add_attribute_but_rend(b); }
-    auto has_att(const std::string &n) -> std::string { return id.has_attribute(n); }
-    void add_special_att(const std::string &S, Buffer &B) { id.add_special_att(S, B); }
-    auto is_font_change() const -> bool { return id.is_font_change(); }
-    void add_span(long n) { id.add_span(n); }
-    void add_bottom_rule() { id.add_bottom_rule(); }
-    void add_ref(const std::string &s) { id.add_ref(s); }
+    void add_att(const std::string &a, const std::string &b, bool force = true) {
+        if (force)
+            att[a] = b;
+        else
+            att.emplace(a, b);
+    }
+    void add_att(const AttList &L, bool f) {
+        for (const auto &i : L) {
+            if (f)
+                att[i.first] = i.second;
+            else
+                att.emplace(i.first, i.second);
+        }
+    }
+    void add_att(Xid b) { add_att(b.xml->att, true); }
+    void add_att_but_rend(Xid b) {
+        for (const auto &i : b.xml->att)
+            if (i.first != the_names["rend"]) att[i.first] = i.second;
+    }
+    auto has_att(const std::string &n) -> std::string {
+        if (auto *i = att.lookup(n)) return *i;
+        return {};
+    }
+    auto is_font_change() -> bool { return att.lookup(the_names["'hi_flag"]) != nullptr; }
+    void add_span(long n);
+    void add_top_rule();
+    void add_bottom_rule();
+    void add_ref(const std::string &s);
+    void add_special_att(const std::string &S, Buffer &B);
     void take_id(Xid xid);  // take ownership of a pre-allocated Xid's attributes
     void add_first(Xml *x);
     void add_tmp(gsl::not_null<Xml *> x);

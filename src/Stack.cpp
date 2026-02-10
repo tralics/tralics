@@ -85,8 +85,8 @@ auto Stack::next_xid(Xml *elt) -> Xid {
     auto idx = next_id++;
     if (elt == nullptr) {
         elt = new Xml("", Xid(idx));
-        elt->id.xml = elt;
     }
+    elt->id.xml = elt;
     id_map[idx] = elt;
     last_xml    = elt;
     return Xid(idx, elt);
@@ -269,6 +269,8 @@ auto Stack::push_hbox(std::string name) -> Xml * {
 // (see Stack::Stack).
 auto Stack::temporary() -> Xml * {
     Xml *res = new Xml("temporary", Xid(2));
+    res->id.xml = res;
+    id_map[2]   = res;
     ipush(the_names["argument"], res);
     cur_mode = mode_argument;
     push_trace();

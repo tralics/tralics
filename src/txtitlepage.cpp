@@ -104,7 +104,7 @@ bool Parser::T_titlepage_finish(size_t v) {
     bool          also_bib = false;
     if (tmp.find("'only title page'") != std::string::npos) finished = true;
     if (tmp.find("'translate also bibliography'") != std::string::npos) also_bib = true;
-    Xid(1).add_special_att(tmp, B);
+    the_stack.elt_from_id(1)->add_special_att(tmp, B);
     Xml *res = tpa.convert(2);
     res->add_special_att(tpa.T3, B);
     kmax = Titlepage.get_len2();
@@ -232,7 +232,7 @@ void Buffer::find_top_atts() {
     if (at(ptrs.b) == '\"') {
         auto        as = std::string(a);
         std::string bs = std::string(substr(ptrs.b + 1));
-        Xid(1).add_attribute(as, bs);
+        the_stack.elt_from_id(1)->add_att(as, bs);
     } else if (substr(ptrs.b) == "\\specialyear") {
         // \todo RA remove
     } else if (substr(ptrs.b) == "\\tralics") {
@@ -241,7 +241,7 @@ void Buffer::find_top_atts() {
         append("Tralics version ");
         append(the_main.tralics_version);
         std::string bs = std::string(*this);
-        Xid(1).add_attribute(as, bs);
+        the_stack.elt_from_id(1)->add_att(as, bs);
     } else {
         docspecial = fmt::format("\\addattributestodocument{{{}}}{{{}}}", a, data() + ptrs.b);
         the_main.add_to_from_config(the_main.init_file_pos, docspecial);

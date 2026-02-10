@@ -1,102 +1,42 @@
 #include "tralics/Xid.h"
 #include "tralics/Buffer.h"
-#include "tralics/MainClass.h"
 #include "tralics/NameMapper.h"
-#include "tralics/Parser.h"
 #include "tralics/Stack.h"
+#include "tralics/Xml.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
 
-void Xid::add_top_rule() const {
-    add_attribute(the_names["cell_topborder"], the_names["true"]);
-    if (the_parser.in_hlinee) {
-        add_attribute(the_names["border_top_width"], the_parser.hlinee_width);
-        if (the_parser.have_above) add_attribute(the_names["top_rule_space_above"], the_parser.hlinee_above);
-        if (the_parser.have_below) add_attribute(the_names["top_rule_space_below"], the_parser.hlinee_below);
-    }
-}
-void Xid::add_bottom_rule() const {
-    add_attribute(the_names["cell_bottomborder"], the_names["true"]);
-    if (the_parser.in_hlinee) {
-        add_attribute(the_names["border_bottom_width"], the_parser.hlinee_width);
-        if (the_parser.have_above) add_attribute(the_names["bottom_rule_space_above"], the_parser.hlinee_above);
-        if (the_parser.have_below) add_attribute(the_names["bottom_rule_space_below"], the_parser.hlinee_below);
-    }
+// Resolve the xml pointer, lazily looking it up if not yet set.
+auto Xid::resolve() const -> Xml * {
+    if (xml == nullptr) xml = the_stack.elt_from_id(value);
+    return xml;
 }
 
-// adds a span value of n to the current cell
-void Xid::add_span(long n) const {
-    if (n == 1) return;
-    errbuf = std::to_string(n); // \todo errbuf??
-    add_attribute(the_names["cols"], errbuf);
-}
+void Xid::add_top_rule() const { resolve()->add_top_rule(); }
+void Xid::add_bottom_rule() const { resolve()->add_bottom_rule(); }
+void Xid::add_span(long n) const { resolve()->add_span(n); }
 
-// This returns the attribute list of this id.
-auto Xid::get_att() const -> AttList & {
-    if (xml != nullptr) return xml->att;
-    auto *elt = the_stack.elt_from_id(value);
-    return elt->att; // fallback for legacy bare Xids (elt must exist)
-}
+auto Xid::get_att() const -> AttList & { return resolve()->att; }
 
-// Return att value if this id has attribute value n.
-// Returns null string otherwise
-auto Xid::has_attribute(const std::string &n) const -> std::string {
-    AttList &X = get_att();
-    if (auto *i = X.lookup(n)) return *i;
-    return {};
-}
+auto Xid::has_attribute(const std::string &n) const -> std::string { return resolve()->has_att(n); }
 
-// Return true if this id has special attribute pair.
-// (it is unprintable).
-auto Xid::is_font_change() const -> bool {
-    std::string n(the_names["'hi_flag"]);
-    return get_att().lookup(n) != nullptr;
-}
+auto Xid::is_font_change() const -> bool { return resolve()->is_font_change(); }
 
-// Add attribute named A value B to this id.
-void Xid::add_attribute(const std::string &A, const std::string &B, bool force) const {
-    auto &L = get_att();
-    if (force)
-        L[A] = B;
-    else
-        L.emplace(A, B);
-}
+void Xid::add_attribute(const std::string &A, const std::string &B, bool force) const { resolve()->add_att(A, B, force); }
 
-// Adds the list L to the attribute list of this id.
-void Xid::add_attribute(const AttList &L, bool force) const {
-    AttList &l = get_att();
-    for (const auto &i : L) {
-        if (force)
-            l[i.first] = i.second;
-        else
-            l.emplace(i.first, i.second);
-    }
-}
+void Xid::add_attribute(const AttList &L, bool force) const { resolve()->add_att(L, force); }
 
-void Xid::add_attribute_but_rend(Xid b) const {
-    AttList &l = get_att();
-    for (const auto &i : b.get_att())
-        if (i.first != the_names["rend"]) l[i.first] = i.second;
-}
+void Xid::add_attribute_but_rend(Xid b) const { resolve()->add_att_but_rend(b); }
 
-// Add attribute list of element B to this id.
-void Xid::add_attribute(Xid b) const { add_attribute(b.get_att(), true); }
+void Xid::add_attribute(Xid b) const { resolve()->add_att(b); }
 
-// Implementation of \ref{foo}. We enter foo in the hashtab.
-// and create/update the LabelInfo. We remember the ref in the_parser.ref_list.
-void Xid::add_ref(const std::string &s) const { tralics_ns::add_ref(to_signed(value), s, false); }
+void Xid::add_ref(const std::string &s) const { resolve()->add_ref(s); }
 
-// Thew string S, a sequence of a='b', is converted to attributes of this.
-void Xid::add_special_att(const std::string &S, Buffer &B) const {
-    B      = S;
-    B.ptrs = {0, 0};
-    B.push_back_special_att(*this);
-}
+void Xid::add_special_att(const std::string &S, Buffer &B) const { resolve()->add_special_att(S, B); }
 
-auto operator<<(std::ostream &fp, Xid X) -> std::ostream & { return fp << X.get_att(); }
+auto operator<<(std::ostream &fp, Xid X) -> std::ostream & { return fp << X.resolve()->att; }
 
 auto fetch_att(Xid idx, const std::string &m) -> std::optional<std::string> {
-    AttList &L = idx.get_att();
-    if (auto *k = L.lookup(m)) return encode(*k);
+    if (auto *k = idx.resolve()->att.lookup(m)) return encode(*k);
     return {};
 }

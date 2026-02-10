@@ -179,7 +179,11 @@ void Dispatcher::boot() {
     register_action_plain(enumerate_cmd, &Parser::T_listenv);
     register_action_plain(eof_marker_cmd, [] {});
     register_action_plain(epsfbox_cmd, &Parser::T_epsfbox);
-    register_action_plain(eqref_cmd, [] { Xid(the_parser.read_elt_id(the_parser.cur_tok)).add_ref(the_parser.sT_arg_nopar()); });
+    register_action_plain(eqref_cmd, [] {
+        auto n = the_parser.read_elt_id(the_parser.cur_tok);
+        Xml *e = the_stack.elt_from_id(n);
+        if (e != nullptr) e->add_ref(the_parser.sT_arg_nopar());
+    });
     register_action_plain(error_cmd, &Parser::T_error);
     register_action_plain(etex_cmd, &Parser::T_etex);
     register_action_plain(execute_options_cmd, &Parser::T_execute_options);

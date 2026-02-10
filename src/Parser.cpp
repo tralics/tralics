@@ -965,10 +965,11 @@ namespace {
             auto        E = i.first;
             std::string V = i.second;
             auto       *L = labinfo(V);
+            Xml        *e = the_stack.elt_from_id(E);
             if (!L->defined) {
                 std::string msg = fmt::format("Error signaled in postprocessor\nundefined label `{}` (first use at line {} in file {})", V,
                                               L->lineno, L->filename);
-                Xid(E).add_attribute(the_names["target"], V);
+                if (e != nullptr) e->add_att(the_names["target"], V);
                 std::string B = L->id;
                 for (auto &removed_label : the_parser.removed_labels) {
                     if (removed_label.second == B) msg += fmt::format("\n(Label was removed with `{}`)", removed_label.first);
@@ -978,7 +979,7 @@ namespace {
                 the_parser.nb_errs++;
             }
             std::string B = L->id;
-            if (!B.empty()) Xid(E).add_attribute(the_names["target"], B);
+            if (!B.empty() && e != nullptr) e->add_att(the_names["target"], B);
         }
     }
 
@@ -2153,7 +2154,8 @@ void Parser::solve_cite(bool user) {
     auto key = std::string(fetch_name0_nopar());
     if (user) insert_every_bib();
     if (n == 0) return;
-    Xid           N  = Xid(n);
+    Xml          *N  = the_stack.elt_from_id(n);
+    if (N == nullptr) return;
     Bibliography &B  = the_bibliography;
     size_t        nn = 0;
     if (F)
@@ -2166,8 +2168,7 @@ void Parser::solve_cite(bool user) {
         the_parser.signal_error(the_parser.err_tok, "bad solve");
         return;
     }
-    AttList &AL    = N.get_att();
-    auto    *my_id = AL.lookup(the_names["id"]);
+    auto *my_id = N->att.lookup(the_names["id"]);
     if (my_id != nullptr) {
         if (CI.id.empty())
             CI.id = *my_id;
@@ -2177,8 +2178,8 @@ void Parser::solve_cite(bool user) {
             return;
         }
     } else
-        AL[the_names["id"]] = CI.get_id();
-    CI.solved = N;
+        N->att[the_names["id"]] = CI.get_id();
+    CI.solved = N->id;
 }
 
 // \bpers[opt-full]{first-name}{von-part}{last-name}{jr-name}

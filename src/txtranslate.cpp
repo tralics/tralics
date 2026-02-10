@@ -568,8 +568,8 @@ auto Parser::T_paras(subtypes x) -> bool {
             token_from_list(L.front());
             sectionning_offset = section_code;
             if (cur_cmd_chr.cmd == section_cmd) sectionning_offset = cur_cmd_chr.chr;
-            if (sectionning_offset == chapter_code) Xid(1).add_attribute(the_names["chapters"], the_names["true"]);
-            if (sectionning_offset == part_code) Xid(1).add_attribute(the_names["part"], the_names["true"]);
+            if (sectionning_offset == chapter_code) the_stack.elt_from_id(1)->add_att(the_names["chapters"], the_names["true"]);
+            if (sectionning_offset == part_code) the_stack.elt_from_id(1)->add_att(the_names["part"], the_names["true"]);
         }
         return true;
     }
@@ -2023,7 +2023,10 @@ void Parser::T_xmladdatt(subtypes c) {
         e->name = val;
         return;
     }
-    if (n != 0) Xid(n).add_attribute(key, val, force);
+    if (n != 0) {
+        Xml *e = the_stack.elt_from_id(n);
+        if (e != nullptr) e->add_att(key, val, force);
+    }
 }
 
 // Returns the value of an attribute or element
@@ -2037,7 +2040,9 @@ auto Parser::get_attval() -> std::string {
         if (e == nullptr) return "";
         return e->name;
     }
-    return Xid(n).has_attribute(key);
+    Xml *e = the_stack.elt_from_id(n);
+    if (e == nullptr) return "";
+    return e->has_att(key);
 }
 
 void Parser::T_define_verbatim_env() {

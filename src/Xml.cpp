@@ -250,6 +250,38 @@ void Xml::take_id(Xid xid) {
     if (id.value > 0 && id.value < the_stack.enames_size()) the_stack.set_elt(id.value, this);
 }
 
+void Xml::add_top_rule() {
+    add_att(the_names["cell_topborder"], the_names["true"]);
+    if (the_parser.in_hlinee) {
+        add_att(the_names["border_top_width"], the_parser.hlinee_width);
+        if (the_parser.have_above) add_att(the_names["top_rule_space_above"], the_parser.hlinee_above);
+        if (the_parser.have_below) add_att(the_names["top_rule_space_below"], the_parser.hlinee_below);
+    }
+}
+
+void Xml::add_bottom_rule() {
+    add_att(the_names["cell_bottomborder"], the_names["true"]);
+    if (the_parser.in_hlinee) {
+        add_att(the_names["border_bottom_width"], the_parser.hlinee_width);
+        if (the_parser.have_above) add_att(the_names["bottom_rule_space_above"], the_parser.hlinee_above);
+        if (the_parser.have_below) add_att(the_names["bottom_rule_space_below"], the_parser.hlinee_below);
+    }
+}
+
+void Xml::add_span(long n) {
+    if (n == 1) return;
+    errbuf = std::to_string(n); // \todo errbuf??
+    add_att(the_names["cols"], errbuf);
+}
+
+void Xml::add_ref(const std::string &s) { tralics_ns::add_ref(to_signed(id.value), s, false); }
+
+void Xml::add_special_att(const std::string &S, Buffer &B) {
+    B      = S;
+    B.ptrs = {0, 0};
+    B.push_back_special_att(id);
+}
+
 Xml::Xml(Xml &&other) noexcept
     : std::vector<gsl::not_null<Xml *>>(std::move(other)), id(other.id), name(std::move(other.name)), att(std::move(other.att)) {
     id.xml = this;
