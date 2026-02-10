@@ -3,7 +3,6 @@
 #include "enums.h"
 #include <array>
 #include <filesystem>
-#include <gsl/gsl>
 #include <optional>
 #include <string>
 #include <string_view>
@@ -53,7 +52,7 @@ namespace math_ns {
     auto special_fence(subtypes s, size_t &open, size_t &close) -> bool; // \todo return a pair?
     auto style_level(subtypes tt) -> math_style;
     auto make_math_char(uchar c, size_t n) -> Xml *;
-    auto xml2sons(std::string elt, gsl::not_null<Xml *> first_arg, gsl::not_null<Xml *> second_arg) -> Xml *;
+    auto xml2sons(std::string elt, Xml *first_arg, Xml *second_arg) -> Xml *;
 } // namespace math_ns
 
 namespace token_ns {

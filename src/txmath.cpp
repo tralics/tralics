@@ -9,6 +9,7 @@
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include <algorithm>
+#include <cassert>
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 #include <spdlog/spdlog.h>
@@ -30,9 +31,10 @@ namespace {
     }
 
     // This adds a style element above res.
-    auto add_style(int lvl, gsl::not_null<Xml *> res) -> gsl::not_null<Xml *> {
+    auto add_style(int lvl, Xml *res) -> Xml * {
+        assert(res != nullptr);
         if (lvl < 0) return res; // special case
-        res = gsl::not_null{new Xml(the_names["mstyle"], res)};
+        res = new Xml(the_names["mstyle"], res);
         if (lvl == 0) {
             res->add_att(the_names["displaystyle"], the_names["true"]);
             res->add_att(the_names["scriptlevel"], the_names["0"]);
@@ -198,12 +200,14 @@ namespace {
     }
 
     // As above, but if B1 is not empty, adds b1 as attribute with value true.
-    auto xml2_space(std::string elt, const std::string &b1, Xml *first_arg, Xml *second_arg) -> gsl::not_null<Xml *> {
-        auto tmp = gsl::not_null{new Xml(std::move(elt), nullptr)};
+    auto xml2_space(std::string elt, const std::string &b1, Xml *first_arg, Xml *second_arg) -> Xml * {
+        assert(first_arg != nullptr);
+        assert(second_arg != nullptr);
+        auto *tmp = new Xml(std::move(elt), nullptr);
         if (!b1.empty()) tmp->add_att(b1, the_names["true"]);
-        tmp->add_tmp(gsl::not_null{first_arg});
+        tmp->add_tmp(first_arg);
         tmp->push_back_unless_nullptr(new Xml(std::string(" ")));
-        tmp->add_tmp(gsl::not_null{second_arg});
+        tmp->add_tmp(second_arg);
         return tmp;
     }
 
@@ -515,13 +519,14 @@ void Math::print() const {
 void MathDataP::set_type(size_t k, math_list_type c) { (*this)[k].set_type(c); }
 
 // General fence around val.
-auto MathDataP::make_mfenced(size_t open, size_t close, gsl::not_null<Xml *> val) -> gsl::not_null<Xml *> {
-    auto res = gsl::not_null{new Xml(the_names["mfenced"], nullptr)};
+auto MathDataP::make_mfenced(size_t open, size_t close, Xml *val) -> Xml * {
+    assert(val != nullptr);
+    auto *res = new Xml(the_names["mfenced"], nullptr);
     if (xml_lr_ptable[close]) res->add_att(the_names["close"], *xml_lr_ptable[close]);
     if (xml_lr_ptable[open]) res->add_att(the_names["open"], *xml_lr_ptable[open]);
     bool single_elt = val->size() == 1;
     if (the_names["np_separator"] == the_names["mrow"]) {
-        if (!single_elt) val = gsl::not_null{new Xml(the_names["mrow"], val)};
+        if (!single_elt) val = new Xml(the_names["mrow"], val);
     } else if (the_names["np_separator"].empty() && single_elt) {
     } else
         res->add_att(the_names["separators"], the_names["np_separator"]);
@@ -550,7 +555,9 @@ void Parser::add_math_label(Xml *res) {
 }
 
 // Generates <elt>first_arg second_arg</elt>
-auto math_ns::xml2sons(std::string elt, gsl::not_null<Xml *> first_arg, gsl::not_null<Xml *> second_arg) -> Xml * {
+auto math_ns::xml2sons(std::string elt, Xml *first_arg, Xml *second_arg) -> Xml * {
+    assert(first_arg != nullptr);
+    assert(second_arg != nullptr);
     auto *tmp = new Xml(std::move(elt), nullptr);
     tmp->add_tmp(first_arg);
     tmp->push_back_unless_nullptr(new Xml(std::string(" ")));
@@ -802,7 +809,7 @@ void Parser::finish_trivial_math(Xml *res) {
     if (tracing_math()) { spdlog::trace("formula was math"); }
     leave_v_mode();
     math_data.finish_math_mem();
-    the_stack.top_stack()->add_tmp(gsl::not_null{res});
+    the_stack.top_stack()->add_tmp(res);
 }
 
 // Toplevel function. Reads and translates a formula.
@@ -875,7 +882,7 @@ auto Parser::T_math(subtypes type) -> bool {
     Xml *x = new Xml(the_names["math"], nullptr);
     x->take_id(cmi.cur_math_id);
     x->add_att(the_names["xmlns"], the_names["mathmlns"]);
-    x->add_tmp(gsl::not_null{res});
+    x->add_tmp(res);
     if (!is_inline) x->add_att(the_names["mode"], the_names["cst_display"]);
     Xml *res1 = new Xml(the_names["formula"], x);
     if (alter != nullptr) res1->push_back_unless_nullptr(alter);
@@ -1800,7 +1807,7 @@ auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) ->
         res->add_att(the_names["columnalign"], the_names["right"]);
     else if (tbl_align == 3)
         res->add_att(the_names["columnalign"], the_names["np_center"]);
-    res->add_tmp(gsl::not_null{args.convert_math(W)});
+    res->add_tmp(args.convert_math(W));
     return res;
 }
 
@@ -1825,14 +1832,18 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
         symcodes cmd = front().cmd;
         if (cmd == alignment_catcode) { // finish cell
             pop_front();
-            row->push_back(gsl::not_null{cell.convert_cell(n, table, W)});
+            Xml *cell_xml = cell.convert_cell(n, table, W);
+            assert(cell_xml != nullptr);
+            row->push_back(cell_xml);
             cmi.cur_cell_id = cid;
             cell.clear();
             first_cell = false;
         } else if (cmd == backslash_cmd) { // finish row and cell
             pop_front();
             remove_opt_arg(true); // optional argument ignored.
-            row->push_back(gsl::not_null{cell.convert_cell(n, table, W)});
+            Xml *cell_xml = cell.convert_cell(n, table, W);
+            assert(cell_xml != nullptr);
+            row->push_back(cell_xml);
             if (first_cell) cmi.cur_cell_id->add_att(the_names["columnalign"], the_names["left"]);
             cmi.cur_cell_id = cid;
             cell.clear();
@@ -1851,7 +1862,9 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
         }
     }
     if (!cell.empty()) {
-        row->push_back(gsl::not_null{cell.convert_cell(n, table, W)});
+        Xml *cell_xml = cell.convert_cell(n, table, W);
+        assert(cell_xml != nullptr);
+        row->push_back(cell_xml);
         if (is_multline) cmi.cur_cell_id->add_att(the_names["columnalign"], the_names["right"]);
         cmi.cur_cell_id = cid;
     }
@@ -2057,7 +2070,7 @@ auto MathElt::cv_list(math_style cms, bool ph) -> MathElt {
         X.pop_front();
         X.pop_back();
         XmlAndType res  = X.M_cv(cms, 0);
-        Xml       *res2 = math_data.make_mfenced(a, b, gsl::not_null{res.value});
+        Xml       *res2 = math_data.make_mfenced(a, b, res.value);
         return {res2, mt_flag_big};
     }
     if (get_lcmd() == math_env_cd) // case \begin{array}...
@@ -2318,11 +2331,11 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
             s  = the_names["munder"];
         } else {
             Xml *tmp2 = new Xml(the_names["munderover"], nullptr);
-            tmp2->add_tmp(gsl::not_null{A3});
+            tmp2->add_tmp(A3);
             tmp2->push_back_unless_nullptr(new Xml(std::string(" ")));
-            tmp2->add_tmp(gsl::not_null{A1});
+            tmp2->add_tmp(A1);
             tmp2->push_back_unless_nullptr(new Xml(std::string(" ")));
-            tmp2->add_tmp(gsl::not_null{A2});
+            tmp2->add_tmp(A2);
             return {tmp2, mt_flag_big};
         }
     } else if (c >= first_maccent_code && c <= last_maccent_code) {
@@ -2613,7 +2626,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
         if (need_row == 2) W = new Xml(the_names["mrow"], W);
         if (!seen_style) return {W, res_type};
 
-        Xml *res2 = add_style(cms, gsl::not_null{W});
+        Xml *res2 = add_style(cms, W);
         return {res2, res_type};
     }
     Xml *tmp = new Xml(the_names["temporary"], nullptr);
@@ -2623,7 +2636,7 @@ auto Math::M_cv(math_style cms, int need_row) -> XmlAndType {
         res22 = new Xml(the_names["mrow"], tmp);
     else
         res22 = tmp;
-    if (seen_style) res22 = add_style(cms, gsl::not_null{res22});
+    if (seen_style) res22 = add_style(cms, res22);
     return {res22, res_type};
 }
 
@@ -2829,10 +2842,10 @@ auto Math::large1(MathElt &cl, math_style cms) -> Xml * {
     res0.concat_space(res1);
     if (bad) {
         Xml *res = new Xml(the_names["mrow"], nullptr);
-        res->add_tmp(gsl::not_null{res1});
+        res->add_tmp(res1);
         return res;
     }
-    return math_data.make_mfenced(open, close, gsl::not_null{res1});
+    return math_data.make_mfenced(open, close, res1);
 }
 
 // This piece of code tries to add some <mfenced> commands

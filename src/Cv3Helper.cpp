@@ -3,6 +3,7 @@
 #include "tralics/MathDataP.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
+#include <cassert>
 
 void Cv3Helper::reinit() {
     state       = 2;
@@ -191,14 +192,15 @@ void Cv3Helper::add_kernel(math_style cms) {
     }
 
     // case {\sum}_1
-    tmp->add_tmp(gsl::not_null{p});
+    assert(p != nullptr);
+    tmp->add_tmp(p);
     tmp->push_back_unless_nullptr(new Xml(std::string(" ")));
     if (index != nullptr) {
-        tmp->add_tmp(gsl::not_null{index});
+        tmp->add_tmp(index);
         tmp->push_back_unless_nullptr(new Xml(std::string(" ")));
     }
     if (exponent != nullptr) {
-        tmp->add_tmp(gsl::not_null{exponent});
+        tmp->add_tmp(exponent);
         tmp->push_back_unless_nullptr(new Xml(std::string(" ")));
     }
     p = tmp;

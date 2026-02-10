@@ -1002,9 +1002,9 @@ auto math_ns::mk_space(const std::string &a) -> Xml * {
     return b;
 }
 
-auto MathDataP::mk_mo(std::string_view a) -> gsl::not_null<Xml *> {
+auto MathDataP::mk_mo(std::string_view a) -> Xml * {
     Xml *x = new Xml(std::string(a));
-    return gsl::not_null{new Xml(the_names["mo"], x)};
+    return new Xml(the_names["mo"], x);
 }
 
 // Case of math env. Converts an integer into a string,

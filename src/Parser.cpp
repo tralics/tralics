@@ -1912,7 +1912,7 @@ void Parser::T_cite_one() {
     auto      xtype = std::string(fetch_name1(L));
     L               = get_mac_value(hash_table.cite_prenote_token);
     auto prenote    = std::string(fetch_name1(L));
-    if (arg != nullptr) res->add_tmp(gsl::not_null{arg});
+    if (arg != nullptr) res->add_tmp(arg);
     the_stack.add_last(new Xml(the_names["cit"], res));
     if (!type.empty()) the_stack.add_att_to_last(the_names["rend"], type);
     if (!xtype.empty()) the_stack.add_att_to_last(the_names["citetype"], xtype);

@@ -3,7 +3,6 @@
 #include "Buffer.h"
 #include "NameMapper.h"
 #include <cassert>
-#include <gsl/gsl>
 
 struct XmlAction;
 
