@@ -52,7 +52,7 @@ namespace {
 auto Parser::get_index_value() -> size_t {
     std::string s         = sT_optarg_nopar();
     auto       &the_index = AllIndex::the_index();
-    return the_index.find(s).AL.value;
+    return the_index.find(s).AL->id;
 }
 
 // Case of \index{key@value|encap}

@@ -276,7 +276,7 @@ struct Parser {
     auto               next_from_line0() -> bool;
     auto               ok_to_define(Token a, rd_flag redef) -> bool;
     auto               optional_enumerate(TokenList &L, const std::string &ctr) -> bool;
-    auto               push_par() -> Xid;
+    auto               push_par() -> Xml *;
     auto               read_delimited(const TokenList &L) -> TokenList;
     auto               read_elt_id(Token T) -> size_t;
     auto               read_for_variable() -> Token;
@@ -370,7 +370,7 @@ struct Parser {
     void               accent_err3();
     void               accent_err4();
     void               add_math_label(Xml *res);
-    void               add_vspace(Token T, ScaledInt dimen, Xid X);
+    void               add_vspace(Token T, ScaledInt dimen, Xml *x);
     void               after_math(bool is_inline);
     void               after_parameter(bool exp, size_t N);
     void               append_glue(Token T, ScaledInt dimen, bool vert);
@@ -872,7 +872,7 @@ struct Parser {
     void               T_xmlenv_end(subtypes c);
     void               T_xmlenv(subtypes c);
     void               TM_fonts();
-    void               TM_tabular_arg(Xid id);
+    void               TM_tabular_arg(Xml *x);
     void               token_for_show(bool lg, const CmdChr &val, Buffer &B);
     void               token_from_list(Token t);
     void               token_list_define(size_t p, const TokenList &c, bool gbl);
@@ -958,7 +958,7 @@ struct Parser {
 
     // \todo specific methods used in packages, belong there
     // \todo static methods that would fit better elsewhere
-    static auto ileave_v_mode() -> Xid;
+    static auto ileave_v_mode() -> Xml *;
     static auto last_att_list() -> AttList &;
     static void add_bib_marker(bool force);
     void        push_save_stack(SaveAuxBase *v);

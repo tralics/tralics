@@ -155,12 +155,12 @@ void NewArray::test_pach() {
 // for one cell. We read the content C of the cell, and push back
 // the {UCV} list (where U and V the optional <u> and <v> parts.
 // braces are added because cells are assumed to be typeset in a group.
-void NewArray::run(Xid ID, bool main_fct) {
+void NewArray::run(Xml *ID, bool main_fct) {
     id = ID;
     if (!main_fct) { // read and set the column span
         std::string        x = P->nT_arg_nopar();
         const std::string &s = x;
-        if (s != "1") id.add_attribute(the_names["cols"], x);
+        if (s != "1") id->add_att(the_names["cols"], x);
     }
     preamble = P->read_arg(); // read the preamble
     preamble.expand_star();
@@ -255,7 +255,7 @@ void NewArray::run(Xid ID, bool main_fct) {
     }
     ac_maybe_finish_multi(seen);
     // Case of \multicolumn,
-    id.add_attribute(attribs, true);
+    id->add_att(attribs, true);
     attribs.clear();
     TokenList cell = P->read_arg();
     cell.splice(cell.begin(), u_list);

@@ -1,7 +1,6 @@
 #pragma once
 #include "AttList.h"
 #include "TokenList.h"
-#include "Xid.h"
 
 // Token classes and numbers for preamble tokens.
 // c     0   0    ---    Start 4  -
@@ -17,6 +16,7 @@
 
 struct Parser;
 class ArrayInfo;
+class Xml;
 
 // Class used to implement array.sty
 class NewArray {
@@ -31,7 +31,7 @@ class NewArray {
     TokenList                       current_list;
     Parser                         *P{}; // \todo always the_parser, remove
     ArrayInfo                      *AI{};
-    Xid                             id;
+    Xml                            *id{};
     TokenList                       u_list, v_list;
     AttList                         attribs;
     int                             ac_cell_no{};
@@ -50,7 +50,7 @@ public:
     void test_pach();
     void ac_maybe_finish();
     void ac_maybe_finish_multi(bool &seen);
-    void run(Xid /*ID*/, bool main_fct);
+    void run(Xml *ID, bool main_fct);
     auto ac_next() -> bool;
 };
 

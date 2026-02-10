@@ -36,7 +36,7 @@ namespace {
             if (texte != nullptr) {
                 texte->change_name("cell");
                 row1->push_back_unless_nullptr(texte);
-                texte->add_att(sf->id);
+                texte->add_att(sf);
             }
             if (leg != nullptr) {
                 leg->change_name("cell");
@@ -103,7 +103,7 @@ namespace {
                 }
                 if (texte != nullptr) {
                     Xml *xx = texte->get_first_env("figure");
-                    if (xx != nullptr) { sf->add_att_but_rend(xx->id); }
+                    if (xx != nullptr) { sf->add_att_but_rend(xx); }
                     texte->add_non_empty_to(junk);
                 }
                 to->push_back_unless_nullptr(sf);
@@ -136,7 +136,7 @@ namespace {
         case 0: // a single figure
             X = from->get_first_env("figure");
             if (X != nullptr) { // copy all atributes of X but rend in this
-                to->add_att_but_rend(X->id);
+                to->add_att_but_rend(X);
             }
             return;
         case 1: // a table in the figure, move all tables
@@ -225,7 +225,7 @@ namespace {
                     to->push_back_list(C);
                 else
                     to->push_back_unless_nullptr(C); // This is strange...
-                to->add_att_but_rend(C->id);
+                to->add_att_but_rend(C);
                 from->clear();
                 to->change_name("table");
             }
@@ -239,15 +239,14 @@ Xml::Xml(std::string N, Xml *z) : name(std::move(N)) {
     if (z != nullptr) add_tmp(gsl::not_null{z});
 }
 
-// Take ownership of a pre-allocated Xid's attributes.
-// Moves attributes from the placeholder Xml to this one, and updates the pointer.
-void Xml::take_id(Xid xid) {
-    if (xid.xml != nullptr && xid.xml != this) {
-        att = std::move(xid.xml->att);
+// Take ownership of a pre-allocated Xml's attributes.
+// Moves attributes from the placeholder Xml to this one, and updates id.
+void Xml::take_id(Xml *other) {
+    if (other != nullptr && other != this) {
+        att = std::move(other->att);
+        id  = other->id;
+        if (id > 0 && id < the_stack.enames_size()) the_stack.set_elt(id, this);
     }
-    id     = xid;
-    id.xml = this;
-    if (id.value > 0 && id.value < the_stack.enames_size()) the_stack.set_elt(id.value, this);
 }
 
 void Xml::add_top_rule() {
@@ -274,31 +273,15 @@ void Xml::add_span(long n) {
     add_att(the_names["cols"], errbuf);
 }
 
-void Xml::add_ref(const std::string &s) { tralics_ns::add_ref(to_signed(id.value), s, false); }
+void Xml::add_ref(const std::string &s) { tralics_ns::add_ref(to_signed(id), s, false); }
 
 void Xml::add_special_att(const std::string &S, Buffer &B) {
     B      = S;
     B.ptrs = {0, 0};
-    B.push_back_special_att(id);
+    B.push_back_special_att(*this);
 }
 
-Xml::Xml(Xml &&other) noexcept
-    : std::vector<gsl::not_null<Xml *>>(std::move(other)), id(other.id), name(std::move(other.name)), att(std::move(other.att)) {
-    id.xml = this;
-    if (id.value > 0 && id.value < the_stack.enames_size()) the_stack.set_elt(id.value, this);
-}
-
-Xml &Xml::operator=(Xml &&other) noexcept {
-    if (this != &other) {
-        std::vector<gsl::not_null<Xml *>>::operator=(std::move(other));
-        id   = other.id;
-        name = std::move(other.name);
-        att  = std::move(other.att);
-        id.xml = this;
-        if (id.value > 0 && id.value < the_stack.enames_size()) the_stack.set_elt(id.value, this);
-    }
-    return *this;
-}
+// Move constructor and assignment deleted — Xml objects are heap-allocated only.
 
 // Case of cline, placed after a row. If action is false, we check whether the
 // row, including the spans of the cells, is adapted to the pattern.
@@ -392,7 +375,7 @@ void Xml::bordermatrix() {
 // attributes; return null otherwise.
 auto Xml::spec_copy() const -> Xml * {
     if (name != the_names["mo"]) return nullptr;
-    AttList &X = id.get_att();
+    const AttList &X = att;
     if (X.find(the_names["movablelimits"]) == X.end()) return nullptr;
     Xml *res                                               = new Xml(name, nullptr);
     static_cast<std::vector<gsl::not_null<Xml *>> &>(*res) = *this;
@@ -427,7 +410,7 @@ auto Xml::is_child(Xml *x) const -> bool {
 auto Xml::deep_copy() -> gsl::not_null<Xml *> {
     if (!is_element()) return gsl::not_null{this};
     gsl::not_null res{new Xml(name, nullptr)};
-    res->add_att(id);
+    res->add_att(att, true);
     for (size_t i = 0; i < size(); i++) { res->push_back_unless_nullptr((*this)[i]->deep_copy()); }
     return res;
 }
@@ -441,7 +424,7 @@ void Xml::recurse0(XmlAction &X) {
         if (y->has_name(X.match)) switch (X.what) {
             case rc_contains: X.mark_found(); return;
             case rc_delete_first:
-                X.int_val = to_signed(y->id.value);
+                X.int_val = to_signed(y->id);
                 erase(begin() + to_signed(k));
                 return;
             case rc_return_first:
@@ -538,7 +521,7 @@ void Xml::remove_last_empty_hi() {
 
 // Return true if this is an empty <hi> (recursion allowed)
 auto Xml::only_recur_hi() const -> bool {
-    if (!id.is_font_change()) return false;
+    if (!is_font_change()) return false;
     if (empty()) return true;
     Xml *x = single_son();
     if (x == nullptr) return false;
@@ -597,20 +580,20 @@ void Xml::insert_bib(Xml *bib, Xml *match) {
 
 void Xml::print_on(std::ostream &o) const {
     if (!is_element()) {
-        if (id.value == 0)
+        if (id == 0)
             o << encode(name);
-        else if (id.value == size_t(-1))
+        else if (id == size_t(-1))
             fmt::print(o, "<!--{}-->", encode(name));
-        else if (id.value == size_t(-2)) {
+        else if (id == size_t(-2)) {
             fmt::print(o, "<!{}", encode(name));
             for (const auto &e : *this) o << e;
             o << ">";
-        } else if (id.value == size_t(-3))
+        } else if (id == size_t(-3))
             fmt::print(o, "<?{}?>", encode(name));
         return;
     }
 
-    const auto &a = id.get_att();
+    const auto &a = att;
 
     if (empty() && !name.empty()) {
         fmt::print(o, "<{}{}/>", name.c_str(), fmt::streamed(a));
@@ -644,7 +627,7 @@ auto Xml::get_first_env(const std::string &N) -> Xml * {
 auto Xml::is_empty_p() const -> bool {
     if (!has_name_of("cst_p")) return false;
     if (!empty()) return false;
-    AttList &X = id.get_att();
+    const AttList &X = att;
     if (X.empty()) return true;
     if (X.size() != 1) return false;
     return std::any_of(X.begin(), X.end(), [](const auto &i) { return i.first == the_names["noindent"]; });
@@ -781,8 +764,8 @@ void Xml::convert_to_string(Buffer &b) {
         return;
     }
     err_buf.clear();
-    if (id.is_font_change()) {
-        std::string w = id.has_attribute(the_names["rend"]);
+    if (is_font_change()) {
+        std::string w = has_att(the_names["rend"]);
         if (!w.empty()) {
             err_buf += "unexpected font change " + encode(w);
             the_parser.unexpected_font();
@@ -830,7 +813,13 @@ void Xml::push_back_unless_nullptr(Xml *x) {
 }
 
 // True if last element on the tree is a string.
-auto Xml::last_is_string() const -> bool { return !empty() && back()->id.value == 0; }
+auto Xml::last_is_string() const -> bool { return !empty() && back()->id == 0; }
+
+auto fetch_att(Xml *x, const std::string &m) -> std::optional<std::string> {
+    if (x == nullptr) return {};
+    if (auto *k = x->att.lookup(m)) return encode(*k);
+    return {};
+}
 
 // Assume that last element is a string. This string is put in the internal
 // buffer
@@ -882,7 +871,7 @@ void Xml::add_nl() {
 auto Xml::get_cell_span() const -> long { // \todo std::optional<size_t>
     if (!is_element()) return 0;
     if (!has_name(the_names["cell"])) return -1; // not a cell
-    auto a = fetch_att(id, the_names["cols"]);
+    auto a = fetch_att(const_cast<Xml *>(this), the_names["cols"]);
     if (!a) return 1;              // no property, default is 1
     auto o = Buffer(*a).int_val(); // \todo without Buffer
     return o ? to_signed(*o) : -1;

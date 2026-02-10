@@ -539,7 +539,7 @@ auto MathDataP::make_mfenced(size_t open, size_t close, gsl::not_null<Xml *> val
     return res;
 }
 
-void math_ns::add_attribute_spec(const std::string &a, const std::string &b) { cmi.cur_texmath_id.add_attribute(a, b, true); }
+void math_ns::add_attribute_spec(const std::string &a, const std::string &b) { cmi.cur_texmath_id->add_att(a, b, true); }
 
 // Adds a label to the formula X
 void Parser::add_math_label(Xml *res) {
@@ -554,7 +554,7 @@ void Parser::add_math_label(Xml *res) {
         math_buffer = fmt::format("mid{}", mid);
         cmi.tag     = math_buffer;
     }
-    the_stack.create_new_anchor(res->id, my_id, std::string(cmi.tag));
+    the_stack.create_new_anchor(res, my_id, std::string(cmi.tag));
     const std::string &label = cmi.label_val;
     if (!label.empty()) create_label(label, my_id);
 }
@@ -792,12 +792,12 @@ void Parser::after_math(bool is_inline) {
 // This is called if no MathML should be generated.
 void Parser::finish_no_mathml(bool is_inline, size_t vp) {
     Math       &u  = math_data.get_list(vp);
-    Xid         id = cmi.cur_math_id;
+    Xml        *id = cmi.cur_math_id;
     std::string S  = u.get_name();
     auto        s  = std::string(S);
     if (S.empty()) s = the_names[is_inline ? "inline" : "display"];
-    id.add_attribute(the_names["type"], the_names[cmi.pos_att]);
-    id.add_attribute(the_names["textype"], s);
+    id->add_att(the_names["type"], the_names[cmi.pos_att]);
+    id->add_att(the_names["textype"], s);
     Xml *res = u.convert_math_noML(eqtb_int_table[nomath_code].val == -2);
     res->take_id(id);
     after_math(is_inline);
@@ -1405,7 +1405,7 @@ void Parser::scan_eqno(math_list_type type) {
         return;
     }
     std::string w = cur_cmd_chr.chr == leqno_code ? "left" : "right";
-    cmi.cur_formula_id.add_attribute(the_names["eqnpos"], the_names[w], true);
+    cmi.cur_formula_id->add_att(the_names["eqnpos"], the_names[w], true);
     TokenList L;
     int       balance = 0;
     for (;;) {
@@ -1773,13 +1773,12 @@ auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) ->
         n++; // empty cell, no atts needed.
         return res;
     }
-    Xid id          = res->id;
     int tbl_align   = 0;
-    cmi.cur_cell_id = id;
+    cmi.cur_cell_id = res;
     Math args       = *this;
     if (!(front().cmd == special_math_cmd && front().get_lcmd() == sub_to_math(multicolumn_code))) {
         auto m = table.size();
-        if (n < m) id.add_attribute(table[n], true);
+        if (n < m) res->add_att(table[n], true);
         n++;
     } else {
         Math L = front().get_list();
@@ -1794,7 +1793,7 @@ auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) ->
         if (k <= 0)
             n++;
         else {
-            id.add_attribute(the_names["columnspan"], std::string(std::to_string(k)));
+            res->add_att(the_names["columnspan"], std::string(std::to_string(k)));
             n += to_unsigned(k);
         }
         L.get_arg2().convert_this_to_string(math_buffer);
@@ -1806,11 +1805,11 @@ auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) ->
     int k = args.check_align();
     if (k != 0) tbl_align = k;
     if (tbl_align == 1)
-        id.add_attribute(the_names["columnalign"], the_names["left"]);
+        res->add_att(the_names["columnalign"], the_names["left"]);
     else if (tbl_align == 2)
-        id.add_attribute(the_names["columnalign"], the_names["right"]);
+        res->add_att(the_names["columnalign"], the_names["right"]);
     else if (tbl_align == 3)
-        id.add_attribute(the_names["columnalign"], the_names["np_center"]);
+        res->add_att(the_names["columnalign"], the_names["np_center"]);
     res->add_tmp(gsl::not_null{args.convert_math(W)});
     return res;
 }
@@ -1823,11 +1822,11 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
     size_t n           = 0; // index of cell in row.
     Xml   *res         = new Xml(the_names["mtable"], nullptr);
     Xml   *row         = new Xml(the_names["mtr"], nullptr);
-    Xid    rid         = cmi.cur_row_id; // old rid, to be restored at the end
-    Xid    cid         = cmi.cur_cell_id;
-    Xid    taid        = cmi.cur_table_id;
-    cmi.cur_table_id   = res->id;
-    cmi.cur_row_id     = row->id;
+    Xml   *rid         = cmi.cur_row_id; // old rid, to be restored at the end
+    Xml   *cid         = cmi.cur_cell_id;
+    Xml   *taid        = cmi.cur_table_id;
+    cmi.cur_table_id   = res;
+    cmi.cur_row_id     = row;
     if (needs_dp) W = ms_D;
     res->push_back_unless_nullptr(row);
     bool first_cell = is_multline;
@@ -1844,7 +1843,7 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
             pop_front();
             remove_opt_arg(true); // optional argument ignored.
             row->push_back(gsl::not_null{cell.convert_cell(n, table, W)});
-            if (first_cell) cmi.cur_cell_id.add_attribute(the_names["columnalign"], the_names["left"]);
+            if (first_cell) cmi.cur_cell_id->add_att(the_names["columnalign"], the_names["left"]);
             cmi.cur_cell_id = cid;
             cell.clear();
             first_cell = false;
@@ -1852,7 +1851,7 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
 
             n              = 0;
             row            = new Xml(the_names["mtr"], nullptr);
-            cmi.cur_row_id = row->id;
+            cmi.cur_row_id = row;
             res->push_back_unless_nullptr(row);
         } else if (cmd == space_catcode && cell.empty()) {
             pop_front();
@@ -1863,7 +1862,7 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
     }
     if (!cell.empty()) {
         row->push_back(gsl::not_null{cell.convert_cell(n, table, W)});
-        if (is_multline) cmi.cur_cell_id.add_attribute(the_names["columnalign"], the_names["right"]);
+        if (is_multline) cmi.cur_cell_id->add_att(the_names["columnalign"], the_names["right"]);
         cmi.cur_cell_id = cid;
     }
     if (row->empty()) // kill the last empty row
@@ -1872,11 +1871,10 @@ auto Math::split_as_array(std::vector<AttList> &table, math_style W, bool number
         if (numbered) cmi.ml_second_pass(row, tracing_math());
     }
 
-    Xid w = the_stack.next_xid(res);
-    w.add_attribute(cmi.cur_table_id); // move the attributes
+    the_stack.next_xid(res);
+    res->add_att(cmi.cur_table_id); // move the attributes
     cmi.cur_row_id   = rid;
     cmi.cur_table_id = taid;
-    res->id          = w;
     if (needs_dp) res->add_att(the_names["displaystyle"], the_names["true"]);
     return res;
 }
@@ -2208,8 +2206,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         std::string s2  = L.get_arg2().convert_this_to_string(math_buffer);
         Xml        *x   = new Xml(the_names["mrow"], nullptr);
         std::string id  = next_label_id();
-        Xid         xid = x->id;
-        the_stack.create_new_anchor(xid, id, std::string(s1));
+        the_stack.create_new_anchor(x, id, std::string(s1));
         the_parser.create_label(s2, id);
         return {x, mt_flag_small};
     }

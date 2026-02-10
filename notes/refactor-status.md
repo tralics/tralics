@@ -1,6 +1,6 @@
 # Tralics Refactor Status
 
-Date: 2026-02-07
+Date: 2026-02-10
 
 ## What was done
 
@@ -13,10 +13,27 @@ Date: 2026-02-07
    - Updated call sites to use `the_main.*` and `the_parser.*`.
    - Commit: `f6ad486` "Move runtime state into MainClass and Parser"
 
+3) Eliminated `EndOfData` exception-as-control-flow.
+   - All 26 `throw EndOfData()` sites converted to bool returns.
+   - `class EndOfData` removed from `types.h`. XmlIO uses a local `Eof` struct.
+   - 9 `register_action_plain` registrations upgraded to `register_action`.
+
+4) Eliminated `Xid` indirection layer.
+   - Moved `AttList` from `Xid` into `Xml` as a direct member `att`.
+   - Moved all method bodies from `Xid.cpp` into `Xml` (`add_top_rule`, `add_bottom_rule`,
+     `add_span`, `add_ref`, `add_special_att`).
+   - Converted 6 `MathHelper` Xid members, `ArrayInfo::id`, `NewArray::id`,
+     `OneIndex::AL`, `CitationItem::solved` from `Xid` to `Xml*`.
+   - Converted all ~40 local `Xid` variables to `Xml*` across 8 `.cpp` files.
+   - Changed `Xml::id` from `Xid` to `size_t`.
+   - Deleted `Xid.h` and `Xid.cpp`.
+   - Added const overload of `AttList::lookup`.
+   - All Xml objects are now heap-only (move ctor/assignment deleted).
+   - `Stack::id_map` provides sparse integer→`Xml*` lookup for `\XMLaddatt`.
+
 ## Tests
 
-- `ninja -C build` runs and includes tests.
-- Warnings only: deprecated `EndOfData` in `XmlIO.cpp`, `txmath.cpp`, `txparser3.cpp`, `txtranslate.cpp`.
+- `ninja -C build` runs and includes tests. All pass.
 
 ## What not to do (we tried it)
 

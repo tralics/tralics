@@ -10,6 +10,11 @@ auto AttList::lookup(const std::string &x) -> std::string * {
     return nullptr;
 }
 
+auto AttList::lookup(const std::string &x) const -> const std::string * {
+    if (auto i = find(x); i != end()) return &(i->second);
+    return nullptr;
+}
+
 auto operator<<(std::ostream &o, const AttList &l) -> std::ostream & {
     for (const auto &[name, value] : l) {
         if (name[0] == '\'') continue;

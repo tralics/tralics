@@ -15,7 +15,7 @@ using tralics_ns::math_env_props;
 
 // Implements \cellattribute
 void MathHelper::add_attribute(const std::string &a, const std::string &b, subtypes c) const {
-    Xid w;
+    Xml *w = nullptr;
     if (c == cell_attribute_code)
         w = cur_cell_id;
     else if (c == row_attribute_code)
@@ -26,9 +26,7 @@ void MathHelper::add_attribute(const std::string &a, const std::string &b, subty
         w = cur_math_id;
     else if (c == formula_attribute_code)
         w = cur_formula_id;
-    else
-        return;
-    w.add_attribute(a, b, true);
+    if (w != nullptr) w->add_att(a, b);
 }
 
 // This is called before every math formula.
@@ -42,10 +40,10 @@ void MathHelper::reset(bool dual) {
     is_tag_starred = false;
     math_env_ctr   = 0;
     all_env_ctr    = 0;
-    cur_math_id    = the_stack.next_xid(nullptr);
-    cur_formula_id = the_stack.next_xid(nullptr);
+    cur_math_id    = the_stack.elt_from_id(the_stack.next_xid(nullptr));
+    cur_formula_id = the_stack.elt_from_id(the_stack.next_xid(nullptr));
     if (dual)
-        cur_texmath_id = the_stack.next_xid(nullptr);
+        cur_texmath_id = the_stack.elt_from_id(the_stack.next_xid(nullptr));
     else
         cur_texmath_id = cur_math_id;
     multi_labels.clear();
@@ -206,7 +204,7 @@ void MathHelper::ml_second_pass(Xml *row, bool vb) {
     }
     if (stag) {
         std::string id = next_label_id();
-        the_stack.create_new_anchor(row->id, id, std::string(tag));
+        the_stack.create_new_anchor(row, id, std::string(tag));
         if (slabel) the_parser.create_label(label, id);
     } else if (slabel)
         the_parser.parse_error("Internal error");

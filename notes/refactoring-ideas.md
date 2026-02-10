@@ -8,6 +8,10 @@
 and wrapped in `gsl::not_null<Xml*>`. There's no clear ownership model. Migrating to
 `std::unique_ptr<Xml>` or an arena allocator would prevent leaks and clarify lifetimes.
 
+All `Xml` values are now heap-allocated (no value semantics remain). Move
+ctor/assignment are deleted. This is a good starting point for introducing
+`unique_ptr` or an arena.
+
 ### Monster functions
 
 `txparser.cpp` has a ~1300-line function, `txfp.cpp` has a ~1000-line one,
@@ -18,6 +22,13 @@ and wrapped in `gsl::not_null<Xml*>`. There's no clear ownership model. Migratin
 Eliminated. All 26 `throw EndOfData()` sites converted to bool returns. The
 `class EndOfData` has been removed from `types.h`. XmlIO uses a local `Eof` struct.
 9 `register_action_plain` registrations upgraded to `register_action`.
+
+### ~~Xid indirection layer~~ ✅ DONE
+
+Eliminated. `Xml::id` is now `size_t` (was `Xid {size_t value; Xml* xml}`).
+All attribute operations go through `Xml*` directly (`->add_att()`, `->att`, etc.).
+`Xid.h` and `Xid.cpp` deleted. `AttList::lookup` has const and non-const overloads.
+`Stack::id_map` provides integer→`Xml*` lookup for TeX-level `\XMLaddatt` commands.
 
 ## Medium impact
 

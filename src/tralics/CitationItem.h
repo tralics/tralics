@@ -1,16 +1,17 @@
 #pragma once
 #include "Buffer.h"
-#include "Xid.h"
+
+class Xml;
 
 struct CitationItem {
     std::string key, from, id;
-    Xid         solved;
+    Xml        *solved{};
 
     CitationItem(std::string A, std::string B) : key(std::move(A)), from(std::move(B)) {}
 
     void dump(Buffer &b) const;
 
-    [[nodiscard]] auto is_solved() const -> bool { return solved.value != 0; }
+    [[nodiscard]] auto is_solved() const -> bool { return solved != nullptr; }
     [[nodiscard]] auto match(const std::string &A, const std::string &B) const -> bool;
     [[nodiscard]] auto match_star(const std::string &A) const -> bool;
 

@@ -665,7 +665,6 @@ auto Parser::check_builtin_pack(const std::string &pack) -> bool {
 
 // Built-in class handler. Class name unused
 void Parser::check_builtin_class() {
-    Xid doc_att(1);
     if (is_raw_option(cur_opt_list, "useallsizes")) the_main.use_all_sizes = true;
     if (is_raw_option(cur_opt_list, "french")) set_default_language(1);
     if (is_raw_option(cur_opt_list, "english")) set_default_language(0);
@@ -709,8 +708,8 @@ void Parser::add_language_att() const {
         b = "french";
     else if (D == 2)
         b = "german";
-    Xid doc_att(1);
-    if ((b != "cst_empty") && !the_names["language"].empty()) doc_att.get_att()[the_names["language"]] = the_names[b];
+    Xml *doc_elt = the_stack.elt_from_id(1);
+    if ((b != "cst_empty") && !the_names["language"].empty()) doc_elt->att[the_names["language"]] = the_names[b];
 }
 
 auto LatexPackage::find_option(const std::string &nname) -> long {

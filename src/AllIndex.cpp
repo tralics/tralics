@@ -4,8 +4,8 @@
 
 // By default, this is a glossary and a main index
 AllIndex::AllIndex() {
-    emplace_back("glossary", "Glossary", 6);
-    emplace_back("default", "Index", 5);
+    emplace_back("glossary", "Glossary", the_stack.elt_from_id(6));
+    emplace_back("default", "Index", the_stack.elt_from_id(5));
 }
 
 auto AllIndex::the_index() -> AllIndex & {
@@ -22,6 +22,6 @@ auto AllIndex::find(const std::string &s) -> OneIndex & {
 
 void AllIndex::insert(const std::string &s, const std::string &title) {
     if (std::any_of(begin(), end(), [&](const auto &i) { return i.name == s; })) return;
-    auto id = the_stack.next_xid(nullptr);
-    emplace_back(s, title, id);
+    auto *elt = the_stack.elt_from_id(the_stack.next_xid(nullptr));
+    emplace_back(s, title, elt);
 }

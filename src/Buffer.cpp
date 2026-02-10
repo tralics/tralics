@@ -610,12 +610,12 @@ auto Buffer::xml_and_attrib(const std::string &s) -> Xml * {
     bool has_spaces = look_at_space(s);
     if (!has_spaces) return new Xml(s, nullptr);
     auto *res = new Xml(substr(0, ptrs.b), nullptr);
-    push_back_special_att(res->id);
+    push_back_special_att(*res);
     return res;
 }
 
-// This converts the buffer in to an attribute list for id.
-void Buffer::push_back_special_att(const Xid &id) {
+// This converts the buffer in to an attribute list for x.
+void Buffer::push_back_special_att(Xml &x) {
     for (;;) {
         if (!find_equals()) return;
         auto name_start = ptrs.a;
@@ -626,7 +626,7 @@ void Buffer::push_back_special_att(const Xid &id) {
         if (!string_delims()) return;
         std::string a = substr(name_start, name_end - name_start);
         std::string b = substr(ptrs.a, ptrs.b - ptrs.a);
-        id.add_attribute(a, b);
+        x.add_att(a, b);
         advance();
     }
 }

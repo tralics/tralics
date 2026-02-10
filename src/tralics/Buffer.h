@@ -13,7 +13,6 @@ struct Glue;
 struct ScaledInt;
 struct SthInternal;
 class Macro;
-class Xid;
 class Xml;
 
 /// A utility structure which is basically a std::string with a marked range,
@@ -118,7 +117,7 @@ public:
     void append_with_xml_escaping(char32_t c);
     void push_back_roman(long n);
     void push_back_Roman(long n);
-    void push_back_special_att(const Xid &id);
+    void push_back_special_att(Xml &x);
     void push_back_unless_punct(char c);
     void push_back_xml_char(char c);
     void remove_last_space();

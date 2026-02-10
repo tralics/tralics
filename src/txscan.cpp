@@ -1208,7 +1208,7 @@ void Parser::scan_something_internal(internal_type level) {
         case xmlAname_code: xml_name(the_xmlA, level); return;
         case xmlBname_code: xml_name(the_xmlB, level); return;
         case xmlAsize_code: cur_val.set_int(the_xmlA != nullptr ? the_xmlA->real_size() : -1); return;
-        case xmlcurrentid_code: cur_val.set_int(to_signed(the_stack.cur_xid().value)); return;
+        case xmlcurrentid_code: cur_val.set_int(to_signed(the_stack.cur_xid()->id)); return;
         case xmlcurrow_code:
         case xmlcurcell_code:
         case xmlcurarray_code: cur_val.set_int(to_signed(the_stack.find_ctrid(m))); return;
@@ -1391,7 +1391,7 @@ void Parser::scan_something_internal(internal_type level) {
     }
 }
 
-void Parser::fetch_box_id(Xml *x) { cur_val.set_int(x != nullptr ? to_signed(x->id.value) : -4); }
+void Parser::fetch_box_id(Xml *x) { cur_val.set_int(x != nullptr ? to_signed(x->id) : -4); }
 
 // Aux function for \parshapeXXX, XXX= length indent or dimen
 void Parser::parshape_aux(subtypes m) {

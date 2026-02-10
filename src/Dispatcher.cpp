@@ -542,7 +542,7 @@ void Dispatcher::boot() {
             if (!inserted) {
                 auto *top  = the_stack.top_stack();
                 top->att   = std::move(the_stack.get_att_list(4));
-                top->id    = Xid(4, top);
+                top->id    = 4;
                 the_stack.set_elt(4, top);
             }
             inserted = true;

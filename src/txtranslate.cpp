@@ -150,10 +150,10 @@ void Parser::leave_v_mode() {
     if (the_stack.in_v_mode()) ileave_v_mode();
 }
 
-auto Parser::ileave_v_mode() -> Xid {
-    Xid res = the_stack.push_par(cur_centering());
+auto Parser::ileave_v_mode() -> Xml * {
+    Xml *res = the_stack.push_par(cur_centering());
     if (unfinished_par != nullptr) {
-        res.add_attribute(unfinished_par->att, true);
+        res->add_att(unfinished_par->att, true);
         unfinished_par = nullptr;
     }
     return res;
@@ -374,9 +374,9 @@ void Parser::implicit_par(subtypes c) {
 void Parser::finish_par_cmd(bool noindent, const std::string &xs) {
     leave_h_mode();
     auto k  = cur_centering();
-    Xid  id = ileave_v_mode();
-    if (!xs.empty()) id.add_attribute(the_names["space_before"], xs);
-    if (k != 1) id.add_attribute(the_names["noindent"], st_bool(noindent));
+    Xml *id = ileave_v_mode();
+    if (!xs.empty()) id->add_att(the_names["space_before"], xs);
+    if (k != 1) id->add_att(the_names["noindent"], st_bool(noindent));
 }
 
 // Translation of \par
@@ -618,9 +618,9 @@ auto Parser::T_paras(subtypes x) -> bool {
 void Parser::T_ref(bool is_ref) {
     std::string a = special_next_arg();
     the_stack.add_newid0("ref");
-    Xid X = the_stack.last_xid();
-    X.add_ref(a);
-    if (!is_ref) X.add_attribute(the_names["rend"], the_names["page"]);
+    Xml *X = the_stack.last_xml_elt();
+    X->add_ref(a);
+    if (!is_ref) X->add_att(the_names["rend"], the_names["page"]);
 }
 
 // \begin or \end of subequations
@@ -1016,13 +1016,13 @@ void Parser::append_glue(Token T, ScaledInt dimen, bool vert) {
             return;
         }
         if (cp->par_is_empty()) {
-            add_vspace(T, dimen, cp->id);
+            add_vspace(T, dimen, cp);
             return;
         }
     }
     leave_h_mode(); // start a new par if needed.
     if (!the_stack.in_v_mode()) return;
-    Xid cp = ileave_v_mode();
+    Xml *cp = ileave_v_mode();
     add_vspace(T, dimen, cp);
 }
 
@@ -1131,16 +1131,15 @@ void Parser::T_color(subtypes c) {
 }
 
 // Add the given dimension as spacebefore value to the paragraph x.
-void Parser::add_vspace(Token T, ScaledInt dimen, Xid x) {
-    AttList &L = x.get_att();
-    auto    *K = L.lookup(the_names["space_before"]);
+void Parser::add_vspace(Token T, ScaledInt dimen, Xml *x) {
+    auto *K = x->att.lookup(the_names["space_before"]);
     if (K != nullptr) {
         TokenList La = token_ns::string_to_list(*K, false);
         list_to_glue(it_glue, T, La);
         dimen += cur_val.get_glue_width();
     }
     auto k = std::string(dimen);
-    x.add_attribute(the_names["space_before"], k, true);
+    x->add_att(the_names["space_before"], k, true);
 }
 
 auto Parser::internal_makebox() -> Xml * {
@@ -1303,11 +1302,11 @@ auto Parser::T_fbox_dash_box() -> bool {
     T_twodims(B, C, T);
     std::string oarg = sT_optarg_nopar();
     the_stack.push1(the_names["pic-dashbox"]);
-    Xid cur_id = the_stack.get_top_id();
-    if (!oarg.empty()) cur_id.add_attribute(the_names["box_pos"], std::string(oarg));
-    cur_id.add_attribute(the_names["height"], C);
-    cur_id.add_attribute(the_names["width"], B);
-    cur_id.add_attribute(the_names["dashdim"], A);
+    Xml *cur_id = the_stack.get_top_id();
+    if (!oarg.empty()) cur_id->add_att(the_names["box_pos"], std::string(oarg));
+    cur_id->add_att(the_names["height"], C);
+    cur_id->add_att(the_names["width"], B);
+    cur_id->add_att(the_names["dashdim"], A);
     if (!T_arg_local()) return false;
     the_stack.pop(the_names["pic-dashbox"]);
     return true;
@@ -1318,7 +1317,7 @@ auto Parser::T_fbox_rotate_box() -> bool {
     std::string val = nT_arg_nopar();
     leave_v_mode();
     the_stack.push1(the_names["rotatebox"]);
-    the_stack.get_top_id().add_attribute(the_names["rotate_angle"], val);
+    the_stack.get_top_id()->add_att(the_names["rotate_angle"], val);
     if (!T_arg_local()) return false;
     the_stack.pop(the_names["rotatebox"]);
     return true;
@@ -1494,8 +1493,8 @@ auto Parser::special_tpa_arg(const std::string &name, const std::string &y, bool
     if (par) the_stack.set_v_mode();
     the_stack.push(Y, new Xml(Y, nullptr));
     if (has_q) the_stack.mark_omit_cell();
-    Xid cid = the_stack.get_top_id();
-    if (has_atts) tpa_buffer.push_back_special_att(cid);
+    Xml *cid = the_stack.get_top_id();
+    if (has_atts) tpa_buffer.push_back_special_att(*cid);
     if (par) ileave_v_mode();
     Buffer &B = tpa_buffer;
     if (!env) {
@@ -1809,25 +1808,24 @@ auto Parser::T_put(subtypes c) -> bool {
     // Case of \put or \multiput \scaleput
     the_stack.push1(the_names[x0]);
     the_stack.set_arg_mode();
-    Xid cur_id = the_stack.get_top_id();
+    Xml *cur_id = the_stack.get_top_id();
     if (c == scaleput_code) {
-        AttList &AL              = cur_id.get_att();
-        AL[the_names["yscalex"]] = get_c_val(hash_table.yscalex_token);
-        AL[the_names["xscaley"]] = get_c_val(hash_table.xscaley_token);
-        AL[the_names["yscale"]]  = get_c_val(hash_table.yscale_token);
-        AL[the_names["xscale"]]  = get_c_val(hash_table.xscale_token);
+        cur_id->att[the_names["yscalex"]] = get_c_val(hash_table.yscalex_token);
+        cur_id->att[the_names["xscaley"]] = get_c_val(hash_table.xscaley_token);
+        cur_id->att[the_names["yscale"]]  = get_c_val(hash_table.yscale_token);
+        cur_id->att[the_names["xscale"]]  = get_c_val(hash_table.xscale_token);
     }
     if (c == multiput_code) {
         std::string aa, bb;
         T_twodims(aa, bb, C);
-        cur_id.add_attribute(the_names["dy"], bb);
-        cur_id.add_attribute(the_names["dx"], aa);
+        cur_id->add_att(the_names["dy"], bb);
+        cur_id->add_att(the_names["dx"], aa);
         TokenList L = read_arg();
         D           = token_list_to_att(L, C, true); // integer....
-        cur_id.add_attribute(the_names["repeat"], D);
+        cur_id->add_att(the_names["repeat"], D);
     }
-    cur_id.add_attribute(the_names["ypos"], B);
-    cur_id.add_attribute(the_names["xpos"], A);
+    cur_id->add_att(the_names["ypos"], B);
+    cur_id->add_att(the_names["xpos"], A);
     if (!T_arg()) return false;
     the_stack.pop(the_names[x0]);
     if (c == put_code || c == multiput_code) remove_initial_space_and_back_input();
@@ -1857,20 +1855,20 @@ auto Parser::T_curves(subtypes c) -> bool {
     }
     the_stack.push1(the_names[x0]);
     the_stack.set_arg_mode();
-    Xid  cur_id = the_stack.get_top_id();
+    Xml *cur_id = the_stack.get_top_id();
     auto specs  = nT_optarg_nopar();
-    if (specs && !specs->empty()) cur_id.add_attribute(the_names["curve_nbpts"], *specs);
+    if (specs && !specs->empty()) cur_id->add_att(the_names["curve_nbpts"], *specs);
     TokenList emptyl;
-    cur_id.add_attribute(the_names["unit_length"], token_list_to_att(emptyl, C, false));
+    cur_id->add_att(the_names["unit_length"], token_list_to_att(emptyl, C, false));
     if (c == arc_code) {
         std::string aa, bb;
         T_twodims(aa, bb, C);
-        cur_id.add_attribute(the_names["ypos"], bb);
-        cur_id.add_attribute(the_names["xpos"], aa);
+        cur_id->add_att(the_names["ypos"], bb);
+        cur_id->add_att(the_names["xpos"], aa);
         specs = nT_arg_nopar();
-        cur_id.add_attribute(the_names["angle"], *specs);
+        cur_id->add_att(the_names["angle"], *specs);
     } else if (c == bigcircle_code) {
-        cur_id.add_attribute(the_names["size"], nT_arg_nopar());
+        cur_id->add_att(the_names["size"], nT_arg_nopar());
     } else {
         Token match(other_t_offset, '(');
         skip_initial_space();
@@ -1985,7 +1983,7 @@ void Parser::T_error() {
 
 // scans an element id, in brackets, default is cur_id
 auto Parser::read_elt_id(Token T) -> size_t {
-    auto cur   = the_stack.cur_xid().value;
+    auto cur   = the_stack.cur_xid()->id;
     auto upper = the_stack.get_xid();
     auto n     = scan_special_int_d(T, to_signed(cur));
     if (n > 0 && n <= to_signed(upper)) return to_unsigned(n);
@@ -2003,7 +2001,7 @@ void Parser::T_xmladdatt(subtypes c) {
     auto   guard = InLoadHandler();
 
     if (c == addatt_to_cur_code)
-        n = the_stack.cur_xid().value;
+        n = the_stack.cur_xid()->id;
     else if (c == addatt_to_last_code)
         n = the_stack.get_xid();
     else if (c == addatt_to_doc_code)

@@ -2,24 +2,23 @@
 #include "AttList.h"
 #include "Buffer.h"
 #include "NameMapper.h"
-#include "Xid.h"
 #include <gsl/gsl>
 
 struct XmlAction;
 
 class Xml : public std::vector<gsl::not_null<Xml *>> { // \todo value semantics
 public:
-    Xid         id{0};  ///< id of the objet
+    size_t      id{0};  ///< id of the object
     std::string name;   ///< name of the element
     AttList     att;    ///< attributes of the element
 
     explicit Xml(const std::string &n) : name(std::string(n)) {}
-    Xml(const std::string &s, Xid n) : id(n), name(the_names[s]) {}
+    Xml(const std::string &s, size_t n) : id(n), name(the_names[s]) {}
     Xml(std::string N, Xml *z);
-    Xml(Xml &&other) noexcept;
-    Xml &operator=(Xml &&other) noexcept;
     Xml(const Xml &) = delete;
     Xml &operator=(const Xml &) = delete;
+    Xml(Xml &&)                 = delete;
+    Xml &operator=(Xml &&)      = delete;
 
     [[nodiscard]] auto all_empty() const -> bool;
     [[nodiscard]] auto back_or_nullptr() const -> Xml * { return empty() ? nullptr : back().get(); }
@@ -27,7 +26,7 @@ public:
     [[nodiscard]] auto has_name(const std::string &s) const -> bool { return name == s; }
     [[nodiscard]] auto has_name_of(const std::string &s) const -> bool { return name == the_names[s]; }
     [[nodiscard]] auto is_anchor() const -> bool { return is_element() && name == the_names["anchor"]; }
-    [[nodiscard]] auto is_element() const -> bool { return to_signed(id.value) > 0; }
+    [[nodiscard]] auto is_element() const -> bool { return to_signed(id) > 0; }
     [[nodiscard]] auto is_whitespace() const -> bool;
     [[nodiscard]] auto is_empty_p() const -> bool;
     [[nodiscard]] auto last_addr() const -> Xml *;
@@ -59,22 +58,22 @@ public:
                 att.emplace(i.first, i.second);
         }
     }
-    void add_att(Xid b) { add_att(b.xml->att, true); }
-    void add_att_but_rend(Xid b) {
-        for (const auto &i : b.xml->att)
+    void add_att(Xml *b) { add_att(b->att, true); }
+    void add_att_but_rend(Xml *b) {
+        for (const auto &i : b->att)
             if (i.first != the_names["rend"]) att[i.first] = i.second;
     }
     auto has_att(const std::string &n) -> std::string {
         if (auto *i = att.lookup(n)) return *i;
         return {};
     }
-    auto is_font_change() -> bool { return att.lookup(the_names["'hi_flag"]) != nullptr; }
+    auto is_font_change() const -> bool { return att.lookup(the_names["'hi_flag"]) != nullptr; }
     void add_span(long n);
     void add_top_rule();
     void add_bottom_rule();
     void add_ref(const std::string &s);
     void add_special_att(const std::string &S, Buffer &B);
-    void take_id(Xid xid);  // take ownership of a pre-allocated Xid's attributes
+    void take_id(Xml *from);  // take ownership of a pre-allocated element's id and attributes
     void add_first(Xml *x);
     void add_tmp(gsl::not_null<Xml *> x);
     void add_last_nl(Xml *x);
@@ -129,5 +128,7 @@ struct XmlAndType {
 auto read_xml(const std::string &s) -> Xml *;
 
 auto operator<<(std::ostream &fp, const Xml *T) -> std::ostream &;
+
+auto fetch_att(Xml *x, const std::string &m) -> std::optional<std::string>;
 
 using EqtbBox = EQTB<Xml *>;

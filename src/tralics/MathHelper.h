@@ -1,6 +1,5 @@
 #pragma once
 #include "TokenList.h"
-#include "Xid.h"
 #include "Xml.h"
 #include <string>
 #include <vector>
@@ -9,12 +8,12 @@
 // but math handling is not recursive. reset() is called on every formula.
 class MathHelper {
 public:
-    Xid         cur_cell_id;    // Id of current cell
-    Xid         cur_row_id;     // Id of current row
-    Xid         cur_formula_id; // Id of current formula
-    Xid         cur_math_id;    // Id of current math element
-    Xid         cur_texmath_id; // Id of current texmath
-    Xid         cur_table_id;   // Id of current table
+    Xml        *cur_cell_id{};    // current cell element
+    Xml        *cur_row_id{};     // current row element
+    Xml        *cur_formula_id{}; // current formula element
+    Xml        *cur_math_id{};    // current math element
+    Xml        *cur_texmath_id{}; // current texmath element
+    Xml        *cur_table_id{};   // current table element
     int         all_env_ctr{};
     int         eqnum_status{}; // how many numbers for this equation?
     int         math_env_ctr{}; // two counters for environments

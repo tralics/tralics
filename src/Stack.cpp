@@ -64,32 +64,31 @@ void Stack::add_border(long a, long b) {
     push1(the_names["row"]);
     push_pop_cell(push_only);
     if (a != 1) {
-        last_xid().add_span(a - 1);
+        last_xml->add_span(a - 1);
         push_pop_cell(push_and_pop);
     }
-    last_xid().add_span(b);
-    last_xid().add_bottom_rule();
+    last_xml->add_span(b);
+    last_xml->add_bottom_rule();
     push_pop_cell(pop_only);
     pop(the_names["row"]);
 }
 
 // This implements \hline, its adds a top attribute to a row
 void Stack::T_hline() {
-    Xid cid, rid, tid;
+    Xml *cid = nullptr, *rid = nullptr, *tid = nullptr;
     find_cid_rid_tid(cid, rid, tid);
-    if (rid.has_attribute(the_names["cell_topborder"]).empty()) rid.add_top_rule();
+    if (rid != nullptr && rid->has_att(the_names["cell_topborder"]).empty()) rid->add_top_rule();
 }
 
 // Increases xid, makes sure that the attribute table is big enough
-auto Stack::next_xid(Xml *elt) -> Xid {
+auto Stack::next_xid(Xml *elt) -> size_t {
     auto idx = next_id++;
     if (elt == nullptr) {
-        elt = new Xml("", Xid(idx));
+        elt = new Xml("", idx);
     }
-    elt->id.xml = elt;
     id_map[idx] = elt;
     last_xml    = elt;
-    return Xid(idx, elt);
+    return idx;
 }
 
 Stack::Stack() {
@@ -120,25 +119,24 @@ auto Stack::find_parent(Xml *x) -> Xml * {
 }
 
 // Add A=B as attribute list to last xid.
-void Stack::add_att_to_last(const std::string &A, const std::string &B) { last_xid().get_att()[A] = B; }
+void Stack::add_att_to_last(const std::string &A, const std::string &B) { last_xml->att[A] = B; }
 
 // Add A=B as attribute list to top stack
-void Stack::add_att_to_cur(const std::string &A, const std::string &B) { cur_xid().add_attribute(A, B); }
+void Stack::add_att_to_cur(const std::string &A, const std::string &B) { top_stack()->add_att(A, B); }
 
 // Add A=B as attribute list to last xid
 // (if force is true, ignores old value otherwise new value).
 void Stack::add_att_to_last(const std::string &A, const std::string &B, bool force) {
-    auto &L = last_xid().get_att();
     if (force)
-        L[A] = B;
+        last_xml->att[A] = B;
     else
-        L.emplace(A, B);
+        last_xml->att.emplace(A, B);
 }
 
 // Add A=B as attribute list to top stack
 // (if force is true, ignores old value otherwise new value).
 void Stack::add_att_to_cur(const std::string &A, const std::string &B, bool force) {
-    auto &L = cur_xid().get_att();
+    auto &L = top_stack()->att;
     if (force)
         L[A] = B;
     else
@@ -155,7 +153,7 @@ void Stack::hack_for_hanl() {
 // returns a reference to the attribute list of the object.
 auto Stack::add_newid0(const std::string &x) -> AttList & {
     top_stack()->push_back_unless_nullptr(new Xml(the_names[x], nullptr));
-    return last_xid().get_att();
+    return last_xml->att;
 }
 
 // Adds x to the tail of the current list.
@@ -268,8 +266,7 @@ auto Stack::push_hbox(std::string name) -> Xml * {
 // The number of the element is 2. No other element has 2 as number
 // (see Stack::Stack).
 auto Stack::temporary() -> Xml * {
-    Xml *res = new Xml("temporary", Xid(2));
-    res->id.xml = res;
+    Xml *res = new Xml("temporary", size_t(2));
     id_map[2]   = res;
     ipush(the_names["argument"], res);
     cur_mode = mode_argument;
@@ -286,7 +283,7 @@ void Stack::init_all(const std::string &a) {
     Xml *V   = new Xml(std::string(a), nullptr);
     V->push_back_unless_nullptr(nullptr); // Make a hole for the color pool
     V->att = std::move(elt_from_id(1)->att);
-    V->id = Xid(1, V);
+    V->id = 1;
     id_map[1] = V;
     ipush(the_names["document"], V);
     newline_xml = new Xml("\n");
@@ -343,14 +340,13 @@ void Stack::pop(const std::string &a) {
 // Pushes a <p>. The argument a is (an attribute value for) a vertical space
 // if indent =false, the paragraph is not indented.
 // if a<0 ? beurks...
-auto Stack::push_par(size_t k) -> Xid {
+auto Stack::push_par(size_t k) -> Xml * {
     Xml *res = new Xml(the_names["cst_p"], nullptr);
-    Xid  id  = res->id;
     push(the_names["cst_p"], res);
     cur_mode = mode_h; // we are in horizontal mode now
     check_font();
-    if (k > 0) id.add_attribute(the_names["rend"], the_names.center(k));
-    return id;
+    if (k > 0) res->add_att(the_names["rend"], the_names.center(k));
+    return res;
 }
 
 // Fonts without argument like \it, (still ok ?)
@@ -457,34 +453,34 @@ void Stack::para_aux(int x) {
 }
 
 // This allocates a slot for a new table.
-auto Stack::new_array_info(Xid id) -> ArrayInfo & {
-    AI.emplace_back(id);
+auto Stack::new_array_info(Xml *x) -> ArrayInfo & {
+    AI.emplace_back(x);
     return AI.back();
 }
 
 // This finds the table info given an ID
-auto Stack::find_cell_props(Xid id) -> ArrayInfo * {
+auto Stack::find_cell_props(Xml *x) -> ArrayInfo * {
     if (AI.empty()) return nullptr;
-    if (!(AI.back().id == id)) return nullptr;
+    if (AI.back().id != x) return nullptr;
     return &AI.back();
 }
 
 // This finds the cell row and table ID currently on the  stack.
-void Stack::find_cid_rid_tid(Xid &cid, Xid &rid, Xid &tid) {
+void Stack::find_cid_rid_tid(Xml *&cid, Xml *&rid, Xml *&tid) {
     auto k = size() - 1;
     while (at(k).frame == " ") k--;
     if (at(k).frame == the_names["cell"]) {
-        cid = at(k).obj->id;
+        cid = at(k).obj;
         k--;
     }
     while (at(k).frame == " ") k--;
     if (at(k).frame == the_names["row"]) {
-        rid = at(k).obj->id;
+        rid = at(k).obj;
         k--;
     }
     while (at(k).frame == " ") k--;
     if (at(k).frame == the_names["tabular"] || at(k).frame == the_names["tabular*"]) {
-        tid = at(k).obj->id;
+        tid = at(k).obj;
         k--;
     }
 }
@@ -495,20 +491,20 @@ auto Stack::find_ctrid(subtypes m) -> size_t {
         if (obj == nullptr) continue;
         std::string frame = at(k).frame;
         if (frame == " ") continue;
-        if (m == xmlcurrow_code && frame == the_names["row"]) return obj->id.value;
-        if (m == xmlcurcell_code && frame == the_names["cell"]) return obj->id.value;
-        if (m == xmlcurarray_code && (frame == the_names["tabular"] || frame == the_names["tabular*"])) return obj->id.value;
+        if (m == xmlcurrow_code && frame == the_names["row"]) return obj->id;
+        if (m == xmlcurcell_code && frame == the_names["cell"]) return obj->id;
+        if (m == xmlcurarray_code && (frame == the_names["tabular"] || frame == the_names["tabular*"])) return obj->id;
     }
     return 0;
 }
 
 // Computes the cell-id in cid, and returns the table associated.
-auto Stack::get_my_table(Xid &cid) -> ArrayInfo * {
-    Xid rid, tid;
+auto Stack::get_my_table(Xml *&cid) -> ArrayInfo * {
+    Xml *rid = nullptr, *tid = nullptr;
     find_cid_rid_tid(cid, rid, tid);
     ArrayInfo *A = find_cell_props(tid);
     if (A == nullptr) {
-        spdlog::critical("Fatal: {} find_cell_prop failure", tid.value);
+        spdlog::critical("Fatal: find_cell_prop failure for id {}", tid ? tid->id : 0);
         abort();
     }
     return A;
@@ -521,7 +517,7 @@ void Stack::delete_table_atts() {
 }
 
 auto Stack::get_u_or_v(bool u_or_v) -> TokenList {
-    Xid        unused;
+    Xml       *unused = nullptr;
     ArrayInfo *A       = get_my_table(unused);
     auto       cell_no = A->cell_no;
     return A->get_u_or_v(u_or_v, cell_no);
@@ -530,7 +526,7 @@ auto Stack::get_u_or_v(bool u_or_v) -> TokenList {
 // Adds positions attributes to the current cell, given the current
 // table info.
 void Stack::finish_cell(int w) {
-    Xid        cid;
+    Xml       *cid = nullptr;
     ArrayInfo *A       = get_my_table(cid);
     auto       cell_no = A->cell_no;
     AttList    atts    = A->get_cell_atts(cell_no);
@@ -544,7 +540,7 @@ void Stack::finish_cell(int w) {
         cell_no += to_unsigned(n);
     } else {
         cell_no++;
-        cid.add_attribute(atts, true);
+        cid->add_att(atts, true);
     }
     A->cell_no = (w == -1 ? cell_no : to_unsigned(w));
 }
@@ -555,17 +551,16 @@ void Stack::mark_omit_cell() { back().omit_cell = true; }
 // This removes the last element of the top-stack
 auto Stack::remove_last() -> Xml * { return top_stack()->remove_last(); }
 
-void Stack::create_new_anchor(Xid xid, const std::string &id, const std::string &idtext) {
-    AttList &AL              = xid.get_att();
-    AL[the_names["id"]]      = id;
-    AL[the_names["id-text"]] = idtext;
+void Stack::create_new_anchor(Xml *x, const std::string &id, const std::string &idtext) {
+    x->att[the_names["id"]]      = id;
+    x->att[the_names["id-text"]] = idtext;
 }
 
 // mark current element as target for a label.
 auto Stack::add_new_anchor() -> std::string {
     std::string id = next_label_id();
     set_cur_id(id);
-    create_new_anchor(last_xid(), id, get_cur_label());
+    create_new_anchor(last_xml, id, get_cur_label());
     return id;
 }
 
@@ -573,7 +568,7 @@ auto Stack::add_new_anchor_spec() -> std::string {
     static size_t last_top_label_id = 0;
     auto          id                = std::string(fmt::format("cid{}", ++last_top_label_id));
     set_cur_id(id);
-    create_new_anchor(last_xid(), id, get_cur_label());
+    create_new_anchor(last_xml, id, get_cur_label());
     return id;
 }
 
@@ -584,9 +579,9 @@ auto Stack::add_anchor(const std::string &s, bool spec) -> std::string {
     set_cur_id(id);
     if (!spec) {
         add_newid0("anchor");
-        create_new_anchor(last_xid(), id, std::string(s));
+        create_new_anchor(last_xml, id, std::string(s));
     } else {
-        create_new_anchor(cur_xid(), id, std::string(s));
+        create_new_anchor(top_stack(), id, std::string(s));
     }
     return id;
 }

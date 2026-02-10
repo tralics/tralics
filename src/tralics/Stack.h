@@ -39,7 +39,7 @@ public:
     [[nodiscard]] auto get_cur_par() const -> Xml *;
     [[nodiscard]] auto get_mode() const -> mode { return cur_mode; }
     [[nodiscard]] auto get_xid() const -> size_t { return next_id - 1; }
-    [[nodiscard]] auto last_xid() const -> Xid { return Xid(get_xid(), last_xml); }
+    [[nodiscard]] auto last_xml_elt() const -> Xml * { return last_xml; }
     [[nodiscard]] auto enames_size() const -> size_t { return next_id; }
     [[nodiscard]] auto in_v_mode() const -> bool { return get_mode() == mode_v; }
     [[nodiscard]] auto in_h_mode() const -> bool { return get_mode() == mode_h; }
@@ -48,7 +48,7 @@ public:
     [[nodiscard]] auto in_array_mode() const -> bool { return get_mode() == mode_array; }
     [[nodiscard]] auto is_frame(const std::string &s) const -> bool;
     [[nodiscard]] auto is_frame2(const std::string &S) const -> bool;
-    [[nodiscard]] auto last_att_list() const -> AttList & { return last_xid().get_att(); }
+    [[nodiscard]] auto last_att_list() const -> AttList & { return last_xml->att; }
 
     auto               add_anchor(const std::string &s, bool spec) -> std::string;
     void               add_att_to_last(const std::string &A, const std::string &B, bool force);
@@ -64,9 +64,9 @@ public:
     void               add_nl();
     auto               add_newid0(const std::string &x) -> AttList &;
     void               check_font();
-    void               create_new_anchor(Xid xid, const std::string &id, const std::string &idtext);
-    auto               cur_xid() -> Xid { return top_stack()->id; }
-    auto               get_top_id() -> Xid { return top_stack()->id; }
+    void               create_new_anchor(Xml *x, const std::string &id, const std::string &idtext);
+    auto               cur_xid() -> Xml * { return top_stack(); }
+    auto               get_top_id() -> Xml * { return top_stack(); }
     void               delete_table_atts();
     void               dump();
     auto               document_element() -> Xml               *{ return at(0).obj; }
@@ -74,14 +74,14 @@ public:
     void               set_elt(size_t n, Xml *p) { id_map[n] = p; }
     void               end_module();
     auto               fetch_by_id(size_t n) -> Xml *;
-    auto               find_cell_props(Xid id) -> ArrayInfo *;
-    void               find_cid_rid_tid(Xid &cid, Xid &rid, Xid &tid);
+    auto               find_cell_props(Xml *x) -> ArrayInfo *;
+    void               find_cid_rid_tid(Xml *&cid, Xml *&rid, Xml *&tid);
     auto               find_ctrid(subtypes m) -> size_t;
     auto               find_parent(Xml *x) -> Xml *;
     void               finish_cell(int w);
     void               fonts0(const std::string &x);
     auto               get_att_list(size_t k) -> AttList               &{ return elt_from_id(k)->att; }
-    auto               get_my_table(Xid &cid) -> ArrayInfo *;
+    auto               get_my_table(Xml *&cid) -> ArrayInfo *;
     auto               get_u_or_v(bool u_or_v) -> TokenList;
     void               hack_for_hanl();
     void               implement_cit(const std::string &b1, const std::string &b2, const std::string &a, const std::string &c);
@@ -90,8 +90,8 @@ public:
     auto               is_float() -> bool;
     auto               is_omit_cell() -> bool { return back().omit_cell; }
     void               mark_omit_cell();
-    auto               new_array_info(Xid i) -> ArrayInfo &;
-    auto               next_xid(Xml *elt) -> Xid;
+    auto               new_array_info(Xml *x) -> ArrayInfo &;
+    auto               next_xid(Xml *elt) -> size_t;
     void               para_aux(int x);
     void               pop(const std::string &a);
     void               pop_if_frame(const std::string &x);
@@ -101,7 +101,7 @@ public:
     auto               push_hbox(std::string name) -> Xml *;
     void               push_pop_cell(int dir);
     void               push_trace();
-    auto               push_par(size_t k) -> Xid;
+    auto               push_par(size_t k) -> Xml *;
     auto               remove_last() -> Xml *;
     void               remove_last_space();
     void               set_arg_mode() { cur_mode = mode_argument; }

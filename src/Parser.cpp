@@ -116,14 +116,13 @@ namespace {
             idx_size += n;
             idx_nb++;
             Xml *res = new Xml(the_names[j == 0 ? "theglossary" : "theindex"], nullptr); // OK?
-            Xid  id  = res->id;
             {
                 const std::string &t = CI.title;
-                if (!t.empty()) id.add_attribute(the_names["title"], std::string(t));
+                if (!t.empty()) res->add_att(the_names["title"], std::string(t));
             }
             {
-                AttList &L = CI.AL.get_att();
-                id.add_attribute(L, true);
+                AttList &L = CI.AL->att;
+                res->add_att(L, true);
             }
             for (size_t i = 0; i < n; i++) {
                 Xml *A = CI.at(i).translation;
@@ -1973,7 +1972,7 @@ auto Parser::after_main_text() -> bool {
         Xml *res = the_stack.temporary();
         the_stack.push1(the_names["biblio"]);
         AttList &L = the_stack.get_att_list(3);
-        the_stack.cur_xid().add_attribute(L, true);
+        the_stack.cur_xid()->add_att(L, true);
         if (!translate0()) return false;
         the_stack.pop(the_names["biblio"]);
         the_stack.pop(the_names["argument"]);
@@ -2143,7 +2142,7 @@ void Parser::solve_cite(bool user) {
     if (user) {
         implicit_par(zero_code);
         the_stack.add_last(new Xml(the_names["bibitem"], nullptr));
-        if (auto ukey = nT_optarg_nopar()) the_stack.last_xid().get_att()[the_names["bibkey"]] = *ukey;
+        if (auto ukey = nT_optarg_nopar()) the_stack.last_xml_elt()->att[the_names["bibkey"]] = *ukey;
         n = the_stack.get_xid();
     } else {
         F    = remove_initial_star();
@@ -2179,7 +2178,7 @@ void Parser::solve_cite(bool user) {
         }
     } else
         N->att[the_names["id"]] = CI.get_id();
-    CI.solved = N->id;
+    CI.solved = N;
 }
 
 // \bpers[opt-full]{first-name}{von-part}{last-name}{jr-name}
@@ -2249,7 +2248,7 @@ void Parser::insert_every_bib() {
     back_input(everybib);
 }
 
-auto Parser::last_att_list() -> AttList & { return the_stack.get_top_id().get_att(); }
+auto Parser::last_att_list() -> AttList & { return the_stack.get_top_id()->att; }
 
 // Implements \newcolumntype{C}[opt]{body}
 // as \newcommand\cmd[opt]{body}
@@ -2323,13 +2322,13 @@ void Parser::expand_nct(TokenList &L) {
 
 // Start a row. If a=-1, it is the first row
 void Parser::start_a_row(long a, const std::string &s) {
-    Xid prev_row(2); // dummy id as default value
+    Xml *prev_row = the_stack.elt_from_id(2); // dummy default
     {
         Xml *V = the_stack.top_stack()->last_addr();
-        if (V != nullptr) prev_row = V->id;
+        if (V != nullptr) prev_row = V;
     }
     bool initial_hline = false;
-    if (!s.empty()) prev_row.add_attribute(the_names["row_spaceafter"], s);
+    if (!s.empty()) prev_row->add_att(the_names["row_spaceafter"], s);
     for (;;) {
         remove_initial_space_and_back_input(); // get first non-space xtoken
         symcodes S = cur_cmd_chr.cmd;
@@ -2348,13 +2347,13 @@ void Parser::start_a_row(long a, const std::string &s) {
                 if (a < 0)
                     initial_hline = true;
                 else
-                    prev_row.add_bottom_rule();
+                    prev_row->add_bottom_rule();
             }
             continue;
         }
         if (S == end_cmd) return;
         the_stack.push1(the_names["row"]);
-        if (initial_hline) the_stack.cur_xid().add_top_rule();
+        if (initial_hline) the_stack.cur_xid()->add_top_rule();
         start_a_cell(false);
         return;
     }
@@ -2377,7 +2376,7 @@ void Parser::start_a_cell(bool started) {
         the_stack.mark_omit_cell();
         get_token();
         unprocessed_xml.remove_last_space();
-        Xid cid = the_stack.get_top_id();
+        Xml *cid = the_stack.get_top_id();
         new_array_object.run(cid, false);
     } else {
         TokenList L = the_stack.get_u_or_v(true);
@@ -2411,18 +2410,18 @@ void Parser::T_start_tabular(subtypes c) {
     M_let_fast(hash_table.par_token, hash_table.empty_token, false);
     the_stack.push1(x, the_names["table"]);
     the_stack.add_att_to_last(the_names["rend"], the_names["inline"]);
-    Xid id = the_stack.last_xid();
+    Xml *id = the_stack.last_xml_elt();
     if (c != 0) { // case of tabular*
         Token     T         = cur_tok;
         TokenList L         = read_arg();
         ScaledInt tab_width = dimen_from_list(T, L);
-        if (!(tab_width == ScaledInt{0})) id.add_attribute(the_names["table_width"], std::string(tab_width));
+        if (!(tab_width == ScaledInt{0})) id->add_att(the_names["table_width"], std::string(tab_width));
         get_token(); // eat the relax
         if (!cur_cmd_chr.is_relax()) back_input();
     }
     {
         auto pos = get_ctb_opt(); // Lamport does not mention c, who cares
-        if (pos) id.add_attribute(the_names["vpos"], the_names[*pos]);
+        if (pos) id->add_att(the_names["vpos"], the_names[*pos]);
     }
     new_array_object.run(id, true);
     the_stack.set_array_mode(); // Is the mode ok ?
