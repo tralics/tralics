@@ -271,7 +271,6 @@ Hashtab::Hashtab() {
     primitive("@@end", specimp_cmd, atatend_code);
     primitive("tralics@abort", specimp_cmd, abort_code);
     primitive("tralics@sleep", specimp_cmd, sleep_code);
-    primitive("tralics@prompt", specimp_cmd, prompt_code);
     primitive("tralics@random", random_cmd, one_code);
     primitive("pdfstrcmp", pdfstrcmp_cmd);
     primitive("OT2-encoding", ot2enc_cmd, one_code);

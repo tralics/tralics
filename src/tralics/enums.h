@@ -829,7 +829,6 @@ enum subtypes : unsigned {
     allowbreak_code,
     abort_code,
     sleep_code,
-    prompt_code,
     l3_p_code = 0,
     l3_TF_code,
     l3_T_code,

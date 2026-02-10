@@ -1707,7 +1707,6 @@ auto CmdChr::token_unimp_name() const -> std::optional<std::string_view> {
     case allowbreak_code: return "allowbreak";
     case abort_code: return "tralics@abort";
     case sleep_code: return "tralics@sleep";
-    case prompt_code: return "tralics@prompt";
     default: return std::nullopt;
     }
 }

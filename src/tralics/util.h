@@ -5,8 +5,6 @@
 #include <string>
 #include <vector>
 
-void readline(char *buffer, size_t screen_size);
-
 auto bt_to_string(boundary_type v) -> std::string;
 auto codepoints(const std::string &s) -> std::vector<char32_t>;
 auto convert_to_latin1(const std::string &s, bool latin1) -> std::string;

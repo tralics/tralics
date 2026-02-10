@@ -15,8 +15,6 @@
 #include <unistd.h>
 #endif
 
-void readline_newprompt(std::string s); // in readline.cpp, but only used here
-
 namespace {
     Buffer current_head;
     Xml   *unfinished_par{nullptr};
@@ -2058,11 +2056,6 @@ void Parser::T_specimp(subtypes c) {
     case penalty_code: scan_int(cur_tok); return;
     case abort_code: close_all(); exit(0);
     case sleep_code: txsleep(static_cast<unsigned>(scan_int(cur_tok))); return;
-    case prompt_code: {
-        auto S = string_to_write(write18_slot + 1);
-        readline_newprompt(S);
-        return;
-    }
     case atatend_code:
         spdlog::error("Terminated with {} at line {}", fmt::streamed(cur_tok), get_cur_line());
         close_all();

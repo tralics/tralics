@@ -13,6 +13,8 @@
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 #include <spdlog/spdlog.h>
+#include <iostream>
+#include <string>
 
 namespace {
     // data structure associated to \input3=some_file.
@@ -803,15 +805,18 @@ void Parser::insert_endline_char() {
 
 auto Parser::new_line_for_read(bool spec) -> bool {
     state = state_N;
-    static std::array<char, 4096> m_ligne;
     int                           n = 0;
     scratch.clear();
     input_line.clear();
     if (cur_in_chan == nb_input_channels) {
-        readline(m_ligne.data(), 78); // \todo pass the array instead
         static int tty_line_no = 0;
-        n                      = ++tty_line_no;
-        scratch.append(m_ligne.data()); // \todo push_back(std::array<char>)
+        std::string line;
+        if (!std::getline(std::cin, line)) {
+            n = -1;
+        } else {
+            n = ++tty_line_no;
+            scratch = line;
+        }
     } else {
         auto nn = tex_input_files[cur_in_chan].lines.get_next(scratch);
         n       = nn ? *nn : -1; // \todo use optional better
