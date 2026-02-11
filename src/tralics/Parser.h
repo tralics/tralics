@@ -132,7 +132,6 @@ struct Parser {
     [[nodiscard]] auto cur_line_to_istring() const -> std::string;
     void               decr_cur_level() { cur_level--; }
     [[nodiscard]] auto get_cur_filename() const -> std::string { return lines.file_name; }
-    [[nodiscard]] auto get_cur_file_pos() const -> long { return cur_file_pos; } // TODO: remove
     [[nodiscard]] auto get_cur_level() const -> int { return cur_level; }
     [[nodiscard]] auto get_cur_line() const -> int { return cur_line; }
     auto               get_cur_val() -> SthInternal               &{ return cur_val; }
@@ -276,11 +275,11 @@ struct Parser {
     auto               read_latex_macro() -> Macro *;
     auto               read_mac_body(bool exp) -> TokenList;
     auto               read_mac_nbargs() -> size_t;
+    auto               read_unit() -> std::optional<size_t>;
     [[nodiscard]] auto read_optarg() -> std::optional<TokenList>;
     [[nodiscard]] auto read_optarg_nopar() -> std::optional<TokenList>;
     auto               read_token_arg(int cl) -> bool;
     auto               read_token_arg(Token t) -> bool;
-    auto               read_unit() -> int;
     auto               read_until_nopar(Token x) -> TokenList;
     auto               read_until(Token x) -> TokenList;
     auto               remove_initial_plus(bool plus) -> bool;

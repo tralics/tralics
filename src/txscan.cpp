@@ -1505,7 +1505,7 @@ void Parser::scan_double(RealNumber &res) {
 
 // This is a bit more efficient then a lot of scan_keyword...
 // it reads a unit, returns
-auto Parser::read_unit() -> int { // TODO: std::optional<size_t>
+auto Parser::read_unit() -> std::optional<size_t> {
     remove_initial_space();
     if (cur_tok.is_a_char()) {
         auto  c1   = static_cast<char32_t>(std::tolower(static_cast<int>(cur_cmd_chr.char_val())));
@@ -1513,34 +1513,34 @@ auto Parser::read_unit() -> int { // TODO: std::optional<size_t>
         get_x_token();
         if (cur_tok.is_a_char()) {
             auto c2 = static_cast<char32_t>(std::tolower(static_cast<int>(cur_cmd_chr.char_val())));
-            if (c1 == 'p' && c2 == 't') return unit_pt;
-            if (c1 == 'i' && c2 == 'n') return unit_in;
-            if (c1 == 'p' && c2 == 'c') return unit_pc;
-            if (c1 == 'c' && c2 == 'm') return unit_cm;
-            if (c1 == 'm' && c2 == 'm') return unit_mm;
-            if (c1 == 'b' && c2 == 'p') return unit_bp;
-            if (c1 == 'd' && c2 == 'd') return unit_dd;
-            if (c1 == 'c' && c2 == 'c') return unit_cc;
-            if (c1 == 's' && c2 == 'p') return unit_sp;
+            if (c1 == 'p' && c2 == 't') return static_cast<size_t>(unit_pt);
+            if (c1 == 'i' && c2 == 'n') return static_cast<size_t>(unit_in);
+            if (c1 == 'p' && c2 == 'c') return static_cast<size_t>(unit_pc);
+            if (c1 == 'c' && c2 == 'm') return static_cast<size_t>(unit_cm);
+            if (c1 == 'm' && c2 == 'm') return static_cast<size_t>(unit_mm);
+            if (c1 == 'b' && c2 == 'p') return static_cast<size_t>(unit_bp);
+            if (c1 == 'd' && c2 == 'd') return static_cast<size_t>(unit_dd);
+            if (c1 == 'c' && c2 == 'c') return static_cast<size_t>(unit_cc);
+            if (c1 == 's' && c2 == 'p') return static_cast<size_t>(unit_sp);
         }
         if (cur_tok.is_valid()) back_input();
         cur_tok = save;
     }
     if (cur_tok.is_valid()) back_input();
-    return -1;
+    return {};
 }
 
 // Assume that we have read the -3.5 in -3.5cm
 // We have to read the cm and convert the cm into sp.
 void Parser::scan_unit(RealNumber R) {
     scan_keyword("true"); // \mag is ignored, hence no multiply....
-    int k0 = read_unit();
-    if (k0 < 0) {
+    auto unit = read_unit();
+    if (!unit) {
         parse_error(err_tok, "Missing unit (replaced by pt) ", cur_tok, "", "missing unit");
-        k0 = unit_pt;
+        unit = static_cast<size_t>(unit_pt);
     }
-    auto k = to_unsigned(k0);
-    if (k == unit_sp) {
+    auto k = *unit;
+    if (k == static_cast<size_t>(unit_sp)) {
         cur_val.int_val = ScaledInt{R.ipart};
         cur_val.attach_sign(R.negative);
         return; // special ignore frac. part

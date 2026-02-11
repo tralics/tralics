@@ -50,7 +50,7 @@ Parser::~Parser() = default;
 
 // saving and restoring things
 
-auto operator<<(std::ostream &fp, const boundary_type &x) -> std::ostream & { return fp << bt_to_string(x); }
+auto operator<<(std::ostream &fp, const boundary_type &x) -> std::ostream & { return fp << bt_to_string(x).value_or("impossible"); }
 
 // This adds a new element to the save stack. TODO: inline
 void Parser::push_save_stack(SaveAuxBase *v) { save_stack.emplace_back(v); }
@@ -290,13 +290,13 @@ auto Parser::pop_level(boundary_type v) -> bool {
             must_throw = true;
         else if (w == bt_env) {
             if (v == bt_semisimple) v = bt_esemisimple;
-            err_buf = fmt::format("Extra {} found in unclosed environment {}", bt_to_string(v), cur_env_name);
+            err_buf = fmt::format("Extra {} found in unclosed environment {}", bt_to_string(v).value_or("impossible"), cur_env_name);
             signal_error(err_tok, "extra brace");
             return true;
         } else {
             if (w == bt_semisimple) w = bt_esemisimple;
             if (v == bt_semisimple) v = bt_esemisimple;
-            wrong_pop(err_tok, bt_to_string(v), bt_to_string(w));
+            wrong_pop(err_tok, bt_to_string(v).value_or("impossible"), bt_to_string(w).value_or("impossible"));
         }
     }
     if (v == bt_env && cur_tok.is_valid()) {
@@ -349,7 +349,7 @@ auto Parser::pop_all_levels() -> bool {
                 the_parser.nb_errs++;
             }
             started = true;
-            B += "Non-closed " + bt_to_string(w);
+            B += "Non-closed " + bt_to_string(w).value_or("impossible");
             if (w == bt_env) B += " `" + ename + "'";
             B.format(" started at line {}", l);
         }

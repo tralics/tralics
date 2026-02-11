@@ -23,7 +23,7 @@ SaveAuxBoundary::~SaveAuxBoundary() {
 }
 
 void SaveAuxBoundary::dump(int n) {
-    std::string s = val == bt_semisimple ? "semi simple" : bt_to_string(val);
+    std::string s = val == bt_semisimple ? "semi simple" : bt_to_string(val).value_or("impossible");
     spdlog::trace("### {} group (level {}) entered at line {}", s, n, line);
 }
 

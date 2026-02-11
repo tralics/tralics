@@ -202,7 +202,7 @@ ClassesData::ClassesData() { packages.push_back(new LatexPackage("Fdummy file"))
 // Returns data for current class or package
 // Hack for InputClass, where N is negative
 auto ClassesData::cur_pack() -> LatexPackage * {
-    auto n = the_parser.get_cur_file_pos();
+    auto n = the_parser.cur_file_pos;
     if (n < 0) n = -n;
     return packages[to_unsigned(n)];
 }

@@ -217,9 +217,6 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
 - src/Mactab.cpp
   - 21: shared_ptr or something RAII?
 
-- src/txscan.cpp
-  - 1506: std::optional<size_t>
-
 - src/packages/tipa.cpp
   - 13: find a way to remove ipa_cmd from enums.h
 
