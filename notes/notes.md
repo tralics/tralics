@@ -225,13 +225,11 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
   - 195: make Glue formattable
 
 - src/txmathboot.cpp
-  - 22: Why a global function?
   - 1253: big table of entities and codepoints
   - 1296: useless?
   - 1389: move to a more reasonable and robust place
 
 - src/txmath.cpp
-  - 343: why a separate global method?
   - 577: useless?
   - 996: move the logic to Symcode
   - 1021: put this into Symcode

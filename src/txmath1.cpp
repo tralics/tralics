@@ -1214,9 +1214,9 @@ auto Math::special1() const -> Xml * {
     const MathElt &W = back();
     Xml           *xval{nullptr};
     if (W.cmd == letter_catcode && W.get_char() == 'o')
-        xval = math_ns::get_builtin(xml_o_loc);
+        xval = math_data.get_builtin(xml_o_loc);
     else if (W.cmd == letter_catcode && W.get_char() == 'e')
-        xval = math_ns::get_builtin(xml_e_loc);
+        xval = math_data.get_builtin(xml_e_loc);
     else {
         xval = W.special3();
         if (xval == nullptr) return nullptr;

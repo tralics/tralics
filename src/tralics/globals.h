@@ -33,8 +33,6 @@ namespace main_ns {
 
 namespace math_ns {
     void add_attribute_spec(const std::string &a, const std::string &b);
-    auto get_builtin(size_t p) -> Xml *;
-    auto get_builtin_alt(size_t p) -> Xml *;
     auto handle_hspace(Buffer &B) -> Xml *;
     auto handle_space(Buffer &) -> Xml *;
     void insert_delimiter(del_pos k);

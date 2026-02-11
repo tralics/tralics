@@ -179,7 +179,7 @@ void Cv3Helper::add_kernel(math_style cms) {
     auto bl = find_operator(cms);
     if (the_main.prime_hack && exponent == math_data.get_mc_table(27) && bl == "msup") {
         bl       = "mrow";
-        exponent = math_ns::get_builtin(varprime_code);
+        exponent = math_data.get_builtin(varprime_code);
     }
     Xml *tmp = new Xml(the_names[bl], nullptr);
     // case a_b_c. If we do nothing, the mathml interpreter will barf

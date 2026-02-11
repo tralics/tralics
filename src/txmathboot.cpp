@@ -19,8 +19,6 @@ std::array<Xml *, 128> single_chars{};
 // #define LANGLE "&#x27E8;"
 // #define RANGLE "&#x27E9;"
 
-auto math_ns::get_builtin_alt(size_t p) -> Xml * { return math_data.get_builtin_alt(p); } // TODO: Why a global function?
-
 inline void eval_let(std::string_view a, std::string_view b) { hash_table.eval_let(std::string(a), std::string(b)); }
 void        math_ns::fill_single_char() {
     for (uchar x = 'a'; x <= 'z'; x++) { single_chars[x] = new Xml(std::string(1, char(x))); }
@@ -1328,11 +1326,11 @@ void MathDataP::boot2() {
     init_builtin("varlimsup", varlimsup_code, xml2sons(the_names["mover"], lim_op, get_mc_table(1)), mathop_cmd);
     init_builtin("varliminf", varliminf_code, xml2sons(the_names["munder"], lim_op, get_mc_table(3)), mathop_cmd);
 
-    auto *x = xml2sons(the_names["munder"], lim_op, get_builtin(underrightarrow_code));
+    auto *x = xml2sons(the_names["munder"], lim_op, math_data.get_builtin(underrightarrow_code));
     x->add_att(the_names["accentunder"], the_names["true"]);
     init_builtin("varinjlim", varinjlim_code, x, mathop_cmd);
 
-    x = xml2sons(the_names["munder"], lim_op, get_builtin(underleftarrow_code));
+    x = xml2sons(the_names["munder"], lim_op, math_data.get_builtin(underleftarrow_code));
     x->add_att(the_names["accentunder"], the_names["true"]);
     init_builtin("varprojlim", varprojlim_code, x, mathop_cmd);
 
@@ -1343,9 +1341,9 @@ void MathDataP::boot2() {
     init_builtin("strut", strut_code, x, mathord_cmd);
     init_builtin("mathstrut", strut_code, x, mathord_cmd);
 
-    Xml *y = new Xml(the_names["mpadded"], get_builtin(int_code));
+    Xml *y = new Xml(the_names["mpadded"], math_data.get_builtin(int_code));
     y->add_att(the_names["np_cst_width"], std::string("-3pt"));
-    Xml *z = get_builtin(xml_thickmu_space_loc);
+    Xml *z = math_data.get_builtin(xml_thickmu_space_loc);
     x      = new Xml(the_names["mrow"], nullptr);
     x->push_back_unless_nullptr(z);
     x->push_back_unless_nullptr(y);
@@ -1368,9 +1366,9 @@ void MathDataP::boot2() {
     x->push_back_unless_nullptr(z);
     init_builtin("iiiint", iiiint_code, x, mathop_cmd);
     x = new Xml(the_names["mrow"], nullptr);
-    x->push_back_unless_nullptr(get_builtin(int_code));
+    x->push_back_unless_nullptr(math_data.get_builtin(int_code));
     x->push_back_unless_nullptr(math_data.get_mc_table(6));
-    x->push_back_unless_nullptr(get_builtin(int_code));
+    x->push_back_unless_nullptr(math_data.get_builtin(int_code));
     init_builtin("idotsint", idotsint_code, x, mathop_cmd);
     x                              = new Xml(std::string("none"), nullptr);
     hash_table.mmlnone_token       = init_builtin("mmlnone", mml_none_code, x, mathord_cmd);

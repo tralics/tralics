@@ -340,8 +340,6 @@ void math_ns::add_to_trace(char x) {
     trace_needs_space = false;
 }
 
-auto math_ns::get_builtin(size_t p) -> Xml * { return math_data.get_builtin(p); } // TODO: why a separate global method?
-
 // -----------------------------------------------------------------------
 // Math environments. The following are recognised.
 
@@ -2010,7 +2008,7 @@ auto Math::trivial_math(long action) -> Xml * {
         front().cmd == mathopn_cmd || front().cmd == mathrel_cmd || front().cmd == mathinner_cmd || front().cmd == mathbetween_cmd ||
         front().cmd == mathopen_cmd || front().cmd == mathclose_cmd) {
         size_t c = front().chr;
-        if (first_inline_hack <= c && c <= last_inline_hack) return math_ns::get_builtin_alt(c);
+        if (first_inline_hack <= c && c <= last_inline_hack) return math_data.get_builtin_alt(c);
     }
     return nullptr;
 }
@@ -2321,7 +2319,7 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
         tmp = L.get_arg2();
         tmp.check_align();
         A2      = tmp.convert_math(cms);
-        Xml *A3 = get_builtin(c);
+        Xml *A3 = math_data.get_builtin(c);
         if (L.get_arg1().empty()) {
             A1 = A3;
             s  = the_names["mover"];
@@ -2339,7 +2337,7 @@ auto MathElt::cv_special1(math_style cms) const -> MathElt {
             return {tmp2, mt_flag_big};
         }
     } else if (c >= first_maccent_code && c <= last_maccent_code) {
-        A2  = get_builtin(c);
+        A2  = math_data.get_builtin(c);
         pos = c >= first_under_accent_code ? "accentunder" : "accent";
     } else if (c == overline_code) {
         A2  = math_data.get_mc_table(1);
@@ -2763,9 +2761,9 @@ void Math::handle_mbox(Math &res) {
             else if (ok == 8)
                 b = math_data.get_mc_table(14);
             else if (ok == 9)
-                b = get_builtin(xml_medmu_space_loc);
+                b = math_data.get_builtin(xml_medmu_space_loc);
             else if (ok == 10)
-                b = get_builtin(xml_thickmu_space_loc);
+                b = math_data.get_builtin(xml_thickmu_space_loc);
             else if (ok == 11) {
                 Buffer &B = Trace;
                 B.clear();
