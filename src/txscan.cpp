@@ -392,6 +392,8 @@ void Parser::open_tex_file(const std::string &f, bool seen_star) {
     every_eof = true;
 }
 
+void Parser::open_tex_file(const std::filesystem::path &f, bool seen_star) { open_tex_file(f.string(), seen_star); }
+
 // We have seen a character c at category code 7, for instance ^
 // It could be ^^Z ^^ab ^^^^abce or ^^^^^abcde
 // If this is the case, a new character is constructed and replaces the last
@@ -819,7 +821,7 @@ auto Parser::new_line_for_read(bool spec) -> bool {
         }
     } else {
         auto nn = tex_input_files[cur_in_chan].lines.get_next(scratch);
-        n       = nn ? *nn : -1; // TODO: use optional better
+        n       = nn.value_or(-1);
     }
     if (n < 0) {
         tex_input_files[cur_in_chan].close();
@@ -850,7 +852,7 @@ auto Parser::get_a_new_line() -> bool {
         force_eof = false;
     } else {
         auto nn = lines.get_next(scratch);
-        n       = nn ? *nn : -1; // TODO: use optional better
+        n       = nn.value_or(-1);
         if (n < 0 && every_eof) {
             every_eof   = false;
             TokenList L = toks_registers[everyeof_code].val;
@@ -884,7 +886,7 @@ auto Parser::get_a_new_line() -> bool {
 // Reads from file (or the tty if the file is closed).
 // A whole line is read. If braces are unbalanced, a second (or third...)
 // line is read.
-auto Parser::read_from_file(long ch, bool rl_sw) -> TokenList { // TODO: should ch be unsigned?
+auto Parser::read_from_file(long ch, bool rl_sw) -> TokenList {
     std::string fn = "tty";
     if (ch < 0 || ch >= nb_input_channels)
         cur_in_chan = tty_in_chan;

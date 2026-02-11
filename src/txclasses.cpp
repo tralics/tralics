@@ -6,6 +6,7 @@
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
+#include <filesystem>
 #include <spdlog/fmt/fmt.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
@@ -243,11 +244,7 @@ void Parser::insert_hook(long n) {
 
 // Store the file name (without dir) and date in the the_main.file_list buffer
 void classes_ns::add_to_filelist(const std::string &s, const std::string &date) {
-    auto n = s.size();
-    long k = -1;
-    for (size_t i = 0; i < n; i++)
-        if (s[i] == '/') k = to_signed(i); // last slash TODO: std::filesystem
-    auto S = s.substr(to_unsigned(k + 1));
+    auto S = std::filesystem::path(s).filename().string();
     the_main.file_list += fmt::format("{:>12}   {}\n", S, date);
 }
 
@@ -527,7 +524,7 @@ void Parser::T_inputclass() {
         parse_error(err_tok, "Cannot input " + name + ".clt", "");
     } else {
         auto k = cur_file_pos;
-        open_tex_file(res->string(), true); // TODO: fs::path
+        open_tex_file(*res, true);
         if (k > 0) k = -k;
         set_cur_file_pos(k);
     }
@@ -615,7 +612,7 @@ void Parser::use_a_package(const std::string &name, bool type, const std::string
         return;
     }
     cur->date = "0000/00/00";
-    open_tex_file(res->string(), true);
+    open_tex_file(*res, true);
     set_cur_file_pos(to_signed(p));
     Buffer &b       = txclasses_local_buf;
     b               = name;

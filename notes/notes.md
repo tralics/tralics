@@ -228,9 +228,6 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
 
 - src/txscan.cpp
   - 66: is that just std::filesystem::exists, or is the side-effect necessary?
-  - 822: use optional better
-  - 853: use optional better
-  - 887: should ch be unsigned?
   - 1506: std::optional<size_t>
 
 - src/packages/tipa.cpp
@@ -352,8 +349,6 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
 
 - src/txclasses.cpp
   - 77: make TokenList formattable
-  - 249: std::filesystem
-  - 530: fs::path
 
 - src/txparser2.cpp
   - 15: c++ standard class for date?

@@ -11,6 +11,7 @@
 #include "SaveState.h"
 #include "Stack.h"
 #include "SthInternal.h"
+#include <filesystem>
 #include <memory>
 
 struct RealNumber;
@@ -588,6 +589,7 @@ struct Parser {
     void               one_of_two(bool which);
     void               one_of_two(TokenList &A, TokenList &B, bool which);
     void               open_tex_file(const std::string &f, bool seen_star);
+    void               open_tex_file(const std::filesystem::path &f, bool seen_star);
     void               opt_to_mandatory();
     void               out_warning(Buffer &B, msg_type what);
     void               parshape_aux(subtypes m);
