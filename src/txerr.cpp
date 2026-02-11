@@ -1,6 +1,7 @@
 #include "tralics/MainClass.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
+#include "tralics/util.h"
 #include <spdlog/fmt/fmt.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
@@ -8,23 +9,31 @@
 using namespace std::string_literals;
 
 namespace {
+    auto escape_xml_char(char32_t c) -> std::string {
+        if (c == 0) return {};
+        if (c == '\n') return "\n";
+        if (c == '\r') return "\r";
+        if (c == '\t') return "\t";
+        if (c == '<') return "&lt;";
+        if (c == '>') return "&gt;";
+        if (c == '&') return "&amp;";
+        if (c < 32 || c > 65535) return fmt::format("&#x{:X};", size_t(c));
+        return to_utf8(c);
+    }
+
     auto convert_for_xml_err(Token T) -> std::string {
         if (T.is_null()) return "\\invalid.";
 
         if (T.char_or_active()) {
             char32_t c = T.char_val();
             if (c == 0) return "^^@";
-            Buffer B;
-            B.append_with_xml_escaping(c); // TODO: without Buffer
-            return std::move(B);
+            return escape_xml_char(c);
         }
 
         if (T.active_or_single()) {
             char32_t c = T.char_val();
             if (c == 0) return "\\^^@";
-            Buffer B("\\");
-            B.append_with_xml_escaping(c);
-            return std::move(B);
+            return "\\" + escape_xml_char(c);
         }
 
         if (T.is_in_hash()) {

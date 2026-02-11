@@ -572,11 +572,10 @@ void MathDataP::realloc_list() {
     spdlog::trace("Realloc math table to {}", k);
 }
 
-// Makes sure there is enough place for two copies TODO: useless?
+// Makes sure there is enough place for two copies.
 void MathDataP::realloc_list0() {
     auto n = lmath_pos + 1;
-    if (n + n + n > size()) realloc_list();
-    if (n + n + n > size()) realloc_list();
+    while (n + n + n > size()) realloc_list();
 }
 
 // Appends the list X at the end, and destroys X.

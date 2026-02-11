@@ -230,7 +230,6 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
   - 1389: move to a more reasonable and robust place
 
 - src/txmath.cpp
-  - 577: useless?
   - 996: move the logic to Symcode
   - 1021: put this into Symcode
   - 1076: put this into Symcode
@@ -238,7 +237,6 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
   - 1619: this is weird, store a string instead of a type
 
 - src/txerr.cpp
-  - 18: without Buffer
 
 - src/Dispatcher.cpp
   - 380: wrap the next ones in functions to fit on one line
