@@ -18,5 +18,5 @@ void Mactab::delete_macro_ref(size_t i) {
         abort();
     }
     at(i).ref--;
-    if (at(i).ref == 0) at(i).ptr.reset(); // \todo shared_ptr or something RAII?
+    if (at(i).ref == 0) at(i).ptr.reset(); // TODO: shared_ptr or something RAII?
 }

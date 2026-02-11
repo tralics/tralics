@@ -40,7 +40,7 @@ auto split_commas(const std::string &S) -> std::vector<std::string> {
     return res;
 }
 
-auto split_assign(std::string s) -> std::pair<std::string, std::string> { // \todo similar to split_at_colon
+auto split_assign(std::string s) -> std::pair<std::string, std::string> { // TODO: similar to split_at_colon
     size_t i = 0;
     while ((s[i] != 0) && (s[i] != '=')) i++;
     std::string key = without_end_spaces(std::string(s).substr(0, i));
@@ -67,7 +67,7 @@ auto only_digits(const std::string &s) -> bool {
     return std::all_of(s.begin(), s.end(), [](char v) { return std::isdigit(v); });
 }
 
-auto bt_to_string(boundary_type v) -> std::string { // \todo std::optional<std::string>
+auto bt_to_string(boundary_type v) -> std::string { // TODO: std::optional<std::string>
     switch (v) {
     case bt_brace: return "brace";
     case bt_cell: return "cell";

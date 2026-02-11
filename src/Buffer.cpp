@@ -21,7 +21,7 @@ namespace {
     auto is_accent_char(char c) -> bool { return c == '\'' || c == '`' || c == '^' || c == '"' || c == '~' || c == '.' || c == '='; }
 
     // True if \sortnoop, \SortNoop, \noopsort plus brace or space
-    // First char to test is at i+1 \todo regexp
+    // First char to test is at i+1 TODO: regexp
     auto is_noopsort(const std::string &s, size_t i) -> bool {
         auto n = s.size();
         if (i + 10 >= n) return false;
@@ -36,11 +36,11 @@ namespace {
         return false;
     }
 
-    /// Returns the current escape char (used for printing)
+    // Returns the current escape char (used for printing)
     auto current_escape_char() -> long { return eqtb_int_table[escapechar_code].val; }
 
-    /// Returns a temporary string, corresponding to the command with
-    /// an empty name, without initial escape char.
+    // Returns a temporary string, corresponding to the command with
+    // an empty name, without initial escape char.
     auto null_cs_name() -> std::string {
         auto c = current_escape_char();
         if (c == '\\') return "csname\\endcsname";
@@ -880,7 +880,7 @@ void Buffer::fill_table(std::vector<bchar_type> &table) {
     }
 }
 
-auto Buffer::find_and(const bchar_type *table) -> bool { // \todo regexp "\s*[aA][nN][dD]\s"
+auto Buffer::find_and(const bchar_type *table) -> bool { // TODO: regexp "\s*[aA][nN][dD]\s"
     for (;;) {
         char c = head();
         if (c == 0) return true;

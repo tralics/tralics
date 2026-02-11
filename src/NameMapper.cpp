@@ -238,12 +238,12 @@ void NameMapper::assign(const std::string &sa, const std::string &sb) {
     if (sa == "bibtex_fields") {
         std::vector<std::string> &bib  = the_main.bibtex_fields;
         std::vector<std::string> &bib1 = the_main.bibtex_fields_s;
-        Buffer(sb).interpret_aux(bib, bib1, "bibtex_fields: "); // \todo without Buffer
+        Buffer(sb).interpret_aux(bib, bib1, "bibtex_fields: "); // TODO: without Buffer
     }
     if (sa == "bibtex_extensions") {
         std::vector<std::string> &bib  = the_main.bibtex_extensions;
         std::vector<std::string> &bib2 = the_main.bibtex_extensions_s;
-        Buffer(sb).interpret_aux(bib, bib2, "bibtex_extensions: "); // \todo without Buffer
+        Buffer(sb).interpret_aux(bib, bib2, "bibtex_extensions: "); // TODO: without Buffer
     }
     if (sa == "mfenced_separator_val") {
         if (sb == "NONE")

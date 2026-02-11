@@ -14,7 +14,7 @@ public:
     std::optional<std::function<std::string(subtypes)>> name_fun;
     std::optional<std::string>                          name_str;
 
-    std::optional<std::function<bool(subtypes)>> action; // \todo add a map like name_sub
+    std::optional<std::function<bool(subtypes)>> action; // TODO: add a map like name_sub
 
     operator symcodes() const { return val; }
 

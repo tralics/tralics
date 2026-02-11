@@ -13,4 +13,4 @@ struct ConfigData : public std::unordered_map<std::string, ParamDataList> {
     [[nodiscard]] auto format_keys(const std::string &name) const -> std::string;
 };
 
-inline ConfigData config_data; // \todo make static?
+inline ConfigData config_data; // TODO: make static?

@@ -14,7 +14,7 @@ struct BibtexName {
     std::string value, long_key, short_key, name_key;
 };
 
-// A bibliographic entry \todo derive from CitationKey?
+// A bibliographic entry TODO: derive from CitationKey?
 class BibEntry {
     friend class Bibtex;
 

@@ -340,7 +340,7 @@ void math_ns::add_to_trace(char x) {
     trace_needs_space = false;
 }
 
-auto math_ns::get_builtin(size_t p) -> Xml * { return math_data.get_builtin(p); } // \todo why a separate global method?
+auto math_ns::get_builtin(size_t p) -> Xml * { return math_data.get_builtin(p); } // TODO: why a separate global method?
 
 // -----------------------------------------------------------------------
 // Math environments. The following are recognised.
@@ -574,7 +574,7 @@ void MathDataP::realloc_list() {
     spdlog::trace("Realloc math table to {}", k);
 }
 
-// Makes sure there is enough place for two copies \todo useless?
+// Makes sure there is enough place for two copies TODO: useless?
 void MathDataP::realloc_list0() {
     auto n = lmath_pos + 1;
     if (n + n + n > size()) realloc_list();
@@ -993,7 +993,7 @@ auto Parser::scan_math1(size_t res) -> int {
 // The function that reads a math formula. Read tokens until the end
 // of the current group is seen. Fills the list number res, of type type
 // Return false on failure
-// \todo move the logic to Symcode
+// TODO: move the logic to Symcode
 auto Parser::scan_math(size_t res, math_list_type type) -> bool {
     for (;;) {
         int w = scan_math1(res);
@@ -1018,7 +1018,7 @@ auto Parser::scan_math(size_t res, math_list_type type) -> bool {
             if (type == math_argument_cd) err_buf += " while scanning argument of " + fct_caller.tok_to_str();
             signal_error(err_tok, "Unexpected par");
             return true;
-        case eqno_cmd: scan_eqno(type); continue; // \todo put this into Symcode
+        case eqno_cmd: scan_eqno(type); continue; // TODO: put this into Symcode
         case tag_cmd: scan_math_tag(c); continue;
         case label_cmd:
             if (c == 1) { // anchor
@@ -1073,7 +1073,7 @@ auto Parser::scan_math(size_t res, math_list_type type) -> bool {
         case end_cmd:
             if (scan_math_env(res, type)) return true;
             continue;
-        case left_cmd: { // \todo put this into Symcode
+        case left_cmd: { // TODO: put this into Symcode
             del_pos k   = math_lr_value();
             auto    tmp = new_math_list(res, math_LR_cd, nomathenv_code);
             if (!tmp) return false;
@@ -1085,7 +1085,7 @@ auto Parser::scan_math(size_t res, math_list_type type) -> bool {
             }
             continue;
         }
-        case right_cmd: { // \todo put this into Symcode
+        case right_cmd: { // TODO: put this into Symcode
             del_pos k = math_lr_value();
             if (type == math_LR_cd) {
                 math_data.get_list(res).push_back(CmdChr(right_cmd, subtypes(k)));
@@ -1616,7 +1616,7 @@ auto Parser::scan_math_mi(size_t res, subtypes c, subtypes k, CmdChr W) -> bool 
     auto r1 = math_argument(0, ct);
     if (!r1) return false;
     Math &u = math_data.get_list(k);
-    // \todo this is weird, store a string instead of a type
+    // TODO: this is weird, store a string instead of a type
     if (c == mathbox_code) u.saved = s;
     u.push_back_list(*r1, math_argument_cd);
     for (size_t i = 0; i < n; i++) u.push_back(T[i]);

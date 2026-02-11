@@ -19,10 +19,10 @@
 namespace {
     // data structure associated to \input3=some_file.
     struct FileForInput {
-        bool     is_open{false}; ///< is this file active ?
-        LineList lines;          ///< the lines that are not yet read by TeX
-        Buffer   cur_line;       ///< the current line
-        int      line_no{0};     ///< the current line number
+        bool     is_open{false}; // is this file active ?
+        LineList lines;          // the lines that are not yet read by TeX
+        Buffer   cur_line;       // the current line
+        int      line_no{0};     // the current line number
 
         void open(const std::string &file, const std::filesystem::path &fn, bool action);
         void close();
@@ -63,7 +63,7 @@ namespace {
     bool                                        require_eof = true;  // eof is an outer token
 
     auto find_no_path(const std::string &s)
-        -> std::optional<std::filesystem::path> { // \todo is that just std::filesystem::exists, or is the side-effect necessary?
+        -> std::optional<std::filesystem::path> { // TODO: is that just std::filesystem::exists, or is the side-effect necessary?
         if (s.empty()) return {};
         if (std::filesystem::exists(s)) return s;
         return {};
@@ -819,7 +819,7 @@ auto Parser::new_line_for_read(bool spec) -> bool {
         }
     } else {
         auto nn = tex_input_files[cur_in_chan].lines.get_next(scratch);
-        n       = nn ? *nn : -1; // \todo use optional better
+        n       = nn ? *nn : -1; // TODO: use optional better
     }
     if (n < 0) {
         tex_input_files[cur_in_chan].close();
@@ -850,7 +850,7 @@ auto Parser::get_a_new_line() -> bool {
         force_eof = false;
     } else {
         auto nn = lines.get_next(scratch);
-        n       = nn ? *nn : -1; // \todo use optional better
+        n       = nn ? *nn : -1; // TODO: use optional better
         if (n < 0 && every_eof) {
             every_eof   = false;
             TokenList L = toks_registers[everyeof_code].val;
@@ -884,7 +884,7 @@ auto Parser::get_a_new_line() -> bool {
 // Reads from file (or the tty if the file is closed).
 // A whole line is read. If braces are unbalanced, a second (or third...)
 // line is read.
-auto Parser::read_from_file(long ch, bool rl_sw) -> TokenList { // \todo should ch be unsigned?
+auto Parser::read_from_file(long ch, bool rl_sw) -> TokenList { // TODO: should ch be unsigned?
     std::string fn = "tty";
     if (ch < 0 || ch >= nb_input_channels)
         cur_in_chan = tty_in_chan;
@@ -1177,7 +1177,7 @@ void SthInternal::change_level(internal_type level) {
 
 void Parser::scan_something_internal(internal_type level) {
     subtypes m = cur_cmd_chr.chr;
-    size_t   v = 0; // \todo size_t?
+    size_t   v = 0; // TODO: size_t?
     switch (cur_cmd_chr.cmd) {
     case char_given_cmd: // result of \chardef
     case math_given_cmd: cur_val.set_int(m); return;
@@ -1498,12 +1498,12 @@ void Parser::scan_double(RealNumber &res) {
         }
     }
     back_input_unless_space();
-    res.convert_decimal_part(k, table.data()); // \todo pass the array instead
+    res.convert_decimal_part(k, table.data()); // TODO: pass the array instead
 }
 
 // This is a bit more efficient then a lot of scan_keyword...
 // it reads a unit, returns
-auto Parser::read_unit() -> int { // \todo std::optional<size_t>
+auto Parser::read_unit() -> int { // TODO: std::optional<size_t>
     remove_initial_space();
     if (cur_tok.is_a_char()) {
         auto  c1   = static_cast<char32_t>(std::tolower(static_cast<int>(cur_cmd_chr.char_val())));

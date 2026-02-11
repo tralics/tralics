@@ -6,7 +6,7 @@
 void TokenList::add_env(const std::string &name) {
     TokenList res;
     res.push_back(hash_table.locate("begin"));
-    res.splice(res.end(), token_ns::string_to_list(name, true)); // \todo res.append()
+    res.splice(res.end(), token_ns::string_to_list(name, true)); // TODO: res.append()
     res.splice(res.end(), *this);
     res.push_back(hash_table.locate("end"));
     res.splice(res.end(), token_ns::string_to_list(name, true));

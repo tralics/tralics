@@ -16,7 +16,7 @@ namespace trees_ns {
 } // namespace trees_ns
 
 namespace date_ns {
-    auto check_date(long y, size_t m, size_t d) -> bool; // \todo there has to be a system library for that
+    auto check_date(long y, size_t m, size_t d) -> bool; // TODO: there has to be a system library for that
     auto year_length(long y) -> size_t;
     auto month_length(long y, size_t m) -> size_t;
     void prev_date(long &year, size_t &month, size_t &day);
@@ -381,7 +381,7 @@ void Parser::set_counter(Token T, long c) {
 }
 
 // Stores the value c in the counter T if possible
-auto Parser::get_counter(Token T) -> long { // \todo rewrite properly
+auto Parser::get_counter(Token T) -> long { // TODO: rewrite properly
     long c = 0;
     see_cs_token(T);
     if (cur_cmd_chr.cmd != assign_int_cmd) return c;

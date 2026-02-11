@@ -36,7 +36,7 @@ namespace {
         return {};
     }
 
-    void find_one_type(const std::string &s, std::vector<std::string> &S) { // \todo regexp?
+    void find_one_type(const std::string &s, std::vector<std::string> &S) { // TODO: regexp?
         if (!s.starts_with("BeginType")) return;
 
         size_t b = 9;
@@ -207,7 +207,7 @@ auto LineList::get_next(std::string &b, bool &cv) -> int {
     return n;
 }
 
-/// This finds a line with documentclass in it
+// This finds a line with documentclass in it
 auto LineList::find_documentclass() -> std::string {
     static constexpr auto pattern = ctll::fixed_string{R"(.*\\documentclass.*\{([a-zA-Z0-9]+)\}.*)"};
     for (auto C = begin(); C != end(); ++C) {
@@ -415,7 +415,7 @@ auto LineList::find_aliases(const std::vector<std::string> &SL, std::string &res
 // If 2 it's a tex file, and the file is converted later.
 // If 3, no conversion  done
 // If 4, its is the main file, log not yet open.
-void LineList::read(const std::string &x, int spec) { // \todo take a std::filesystem::path
+void LineList::read(const std::string &x, int spec) { // TODO: take a std::filesystem::path
     reset(x);
     if (LineList::pool_position) {
         insert(LineList::file_pool[*LineList::pool_position]);

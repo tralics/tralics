@@ -23,7 +23,7 @@ namespace {
         "\nall characters up to next `=' ignored.\n"                 // 8
     };
 
-    // Finds the type of an entry (or comment, string, preamble). \todo without the_names?
+    // Finds the type of an entry (or comment, string, preamble). TODO: without the_names?
     auto find_type(const std::string &s) -> entry_type {
         if (s.empty()) return type_comment; // in case of error.
 

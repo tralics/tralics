@@ -2,7 +2,7 @@
 #include <ostream>
 #include <string>
 
-// A class to count words... \todo where is that used? \todo chained list???
+// A class to count words... TODO: where is that used? TODO: chained list???
 struct WordList {
     WordList   *next;
     std::string name;

@@ -10,7 +10,7 @@
 
 class SaveAuxEnv;
 
-// \todo next are global functions, should we do something with them?
+// TODO: next are global functions, should we do something with them?
 
 auto        next_label_id() -> std::string;
 inline auto math_to_sub(math_list_type x) -> subtypes { return subtypes(x - fml_offset); }
@@ -28,7 +28,7 @@ namespace arith_ns {
 } // namespace arith_ns
 
 namespace main_ns {
-    auto search_in_confdir(const std::string &s) -> std::optional<std::filesystem::path>; ///< Searches for a file in conf_path
+    auto search_in_confdir(const std::string &s) -> std::optional<std::filesystem::path>; // Searches for a file in conf_path
 } // namespace main_ns
 
 namespace math_ns {
@@ -49,7 +49,7 @@ namespace math_ns {
     void fill_single_char();
     auto next_math_style(math_style x) -> math_style;
     auto next_frac_style(math_style x) -> math_style;
-    auto special_fence(subtypes s, size_t &open, size_t &close) -> bool; // \todo return a pair?
+    auto special_fence(subtypes s, size_t &open, size_t &close) -> bool; // TODO: return a pair?
     auto style_level(subtypes tt) -> math_style;
     auto make_math_char(uchar c, size_t n) -> Xml *;
     auto xml2sons(std::string elt, Xml *first_arg, Xml *second_arg) -> Xml *;

@@ -643,7 +643,7 @@ void Parser::T_atdocument(subtypes c) {
         end_document_hook.splice(end_document_hook.end(), L);
 }
 
-/// Translates `\begin{glossaire}`
+// Translates `\begin{glossaire}`
 void Parser::T_glossaire() {
     leave_h_mode();
     the_stack.push1(the_names["gloss_type"], the_names["list"]);
@@ -652,7 +652,7 @@ void Parser::T_glossaire() {
     the_stack.set_no_mode();
 }
 
-/// Translates `\end{glossaire}`
+// Translates `\end{glossaire}`
 void Parser::T_glossaire_end() {
     auto n = the_stack.top_stack()->size();
     the_stack.pop(the_names["gloss_type"]);

@@ -46,7 +46,7 @@ void Stack::implement_cit(const std::string &b1, const std::string &b2, const st
     add_att_to_last(the_names["userid"], std::string(b1));
     add_att_to_last(the_names["id"], b2);
     add_att_to_last(the_names["key"], std::string(a));
-    add_att_to_last(the_names["from"], std::string(c)); // \todo c is always "year"
+    add_att_to_last(the_names["from"], std::string(c)); // TODO: c is always "year"
 }
 
 // This starts or ends a cell, or does both
@@ -365,7 +365,7 @@ void Stack::check_font() {
         Buffer aux;
         bool   nonempty = false;
         s               = the_parser.cur_font.size_change();
-        if (s != "cst_empty") { // \todo empty string or something
+        if (s != "cst_empty") { // TODO: empty string or something
             aux += encode(the_names[s]);
             nonempty = true;
         }

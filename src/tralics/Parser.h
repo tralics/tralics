@@ -22,7 +22,7 @@ class SaveAuxEnv;
 
 // This file holds the definition of the Parser class, which is the main
 // data structure of the Tralics translator.
-// \todo this should be broken up
+// TODO: this should be broken up
 
 struct Parser {
     Mactab                                    mac_table;          // the table of macros
@@ -131,7 +131,7 @@ struct Parser {
     [[nodiscard]] auto cur_line_to_istring() const -> std::string;
     void               decr_cur_level() { cur_level--; }
     [[nodiscard]] auto get_cur_filename() const -> std::string { return lines.file_name; }
-    [[nodiscard]] auto get_cur_file_pos() const -> long { return cur_file_pos; } // \todo remove
+    [[nodiscard]] auto get_cur_file_pos() const -> long { return cur_file_pos; } // TODO: remove
     [[nodiscard]] auto get_cur_level() const -> int { return cur_level; }
     [[nodiscard]] auto get_cur_line() const -> int { return cur_line; }
     auto               get_cur_val() -> SthInternal               &{ return cur_val; }
@@ -898,8 +898,8 @@ struct Parser {
     auto   get_token() -> bool;
     auto   T_fonts(const std::string &x) -> bool;
 
-    // \todo specific methods used in packages, belong there
-    // \todo static methods that would fit better elsewhere
+    // TODO: specific methods used in packages, belong there
+    // TODO: static methods that would fit better elsewhere
     static auto ileave_v_mode() -> Xml *;
     static auto last_att_list() -> AttList &;
     static void add_bib_marker(bool force);

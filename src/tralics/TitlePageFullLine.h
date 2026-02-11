@@ -1,7 +1,7 @@
 #pragma once
 #include "TpiOneItem.h"
 
-// temporary class, will bew copied into a TitlePageAux \todo do
+// temporary class, will bew copied into a TitlePageAux TODO: do
 struct TitlePageFullLine {
     TpiOneItem item1, item2, item3, item4; // the four items
     size_t     flags{};                    // the flags

@@ -8,7 +8,7 @@
 #include <spdlog/spdlog.h>
 
 namespace tralics_ns {
-    auto math_env_props(subtypes c) -> int; // \todo elsewhere
+    auto math_env_props(subtypes c) -> int; // TODO: elsewhere
 } // namespace tralics_ns
 
 using tralics_ns::math_env_props;

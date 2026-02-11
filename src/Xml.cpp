@@ -269,7 +269,7 @@ void Xml::add_bottom_rule() {
 
 void Xml::add_span(long n) {
     if (n == 1) return;
-    errbuf = std::to_string(n); // \todo errbuf??
+    errbuf = std::to_string(n); // TODO: errbuf??
     add_att(the_names["cols"], errbuf);
 }
 
@@ -689,7 +689,7 @@ void Xml::unbox(Xml *x) {
     if (x->is_element()) {
         push_back_list(x);
     } else {
-        Buffer &b = scbuf; // \todo without scbuf
+        Buffer &b = scbuf; // TODO: without scbuf
         b.clear();
         b.append(encode(x->name));
         add_last_string(encode(x->name));
@@ -879,12 +879,12 @@ void Xml::add_nl() {
 
 // This returns the span of the current cell; -1 in case of trouble
 // the default value is 1
-auto Xml::get_cell_span() const -> long { // \todo std::optional<size_t>
+auto Xml::get_cell_span() const -> long { // TODO: std::optional<size_t>
     if (!is_element()) return 0;
     if (!has_name(the_names["cell"])) return -1; // not a cell
     auto a = fetch_att(const_cast<Xml *>(this), the_names["cols"]);
     if (!a) return 1;              // no property, default is 1
-    auto o = Buffer(*a).int_val(); // \todo without Buffer
+    auto o = Buffer(*a).int_val(); // TODO: without Buffer
     return o ? to_signed(*o) : -1;
 }
 

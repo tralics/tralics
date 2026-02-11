@@ -14,7 +14,7 @@ struct Indexer {
     [[nodiscard]] auto is_same(int l, const std::string &k) const -> bool { return level == l && aux == k; }
 };
 
-struct OneIndex : public std::vector<Indexer> { // \todo unordered_map
+struct OneIndex : public std::vector<Indexer> { // TODO: unordered_map
     std::string name;
     std::string title;
     Xml        *AL;         // Pre-allocated element for index attributes

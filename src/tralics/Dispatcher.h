@@ -38,6 +38,6 @@ public:
     static void register_action_plain(symcodes x, parser_fn_with_xc_void f);     // x triggers the_parser.f(x,c)
     static void register_action_plain(symcodes x, parser_fn_with_cmdchr_void f); // x triggers the_parser.f({x,c})
 
-    static void boot(); // \todo this method is too big, but easier to split up than translate03 was, do that
+    static void boot(); // TODO: this method is too big, but easier to split up than translate03 was, do that
     static void boot_math();
 };

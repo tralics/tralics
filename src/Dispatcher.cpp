@@ -377,7 +377,7 @@ void Dispatcher::boot() {
     register_action(begin_cmd, &Parser::T_beginend);
     register_action(end_cmd, &Parser::T_beginend);
 
-    // \todo wrap the next ones in functions to fit on one line
+    // TODO: wrap the next ones in functions to fit on one line
 
     register_action_plain(end_ignore_content_cmd, [] {
         the_parser.parse_error(the_parser.cur_tok, "missing \\begin environment ", the_parser.cur_tok.tok_to_str(), "missing begin");
@@ -408,7 +408,7 @@ void Dispatcher::boot() {
         the_parser.unprocessed_xml += the_parser.T_xmllatex();
     });
 
-    register_action_plain(aparaitre_cmd, [] { // \todo multilingual stuff somewhere
+    register_action_plain(aparaitre_cmd, [] { // TODO: multilingual stuff somewhere
         the_parser.LC();
         if (eqtb_int_table[language_code].val == 1) {
             the_parser.process_char(char32_t(0xE0U));

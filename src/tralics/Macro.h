@@ -17,7 +17,7 @@ public:
     [[nodiscard]] auto is_same(const Macro &aux) const -> bool;
     [[nodiscard]] auto operator[](size_t n) const -> const TokenList & { return delimiters[n]; }
 
-    void set_nbargs(size_t n) { nbargs = n; } // \todo remove
+    void set_nbargs(size_t n) { nbargs = n; } // TODO: remove
     void set_type(def_type n) { type = n; }
     void set_delimiters(size_t k, TokenList L) { delimiters[k] = std::move(L); }
     void correct_type();

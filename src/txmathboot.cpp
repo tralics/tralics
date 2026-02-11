@@ -19,7 +19,7 @@ std::array<Xml *, 128> single_chars{};
 // #define LANGLE "&#x27E8;"
 // #define RANGLE "&#x27E9;"
 
-auto math_ns::get_builtin_alt(size_t p) -> Xml * { return math_data.get_builtin_alt(p); } // \todo Why a global function?
+auto math_ns::get_builtin_alt(size_t p) -> Xml * { return math_data.get_builtin_alt(p); } // TODO: Why a global function?
 
 inline void eval_let(std::string_view a, std::string_view b) { hash_table.eval_let(std::string(a), std::string(b)); }
 void        math_ns::fill_single_char() {
@@ -1250,7 +1250,7 @@ void MathDataP::boot_xml_lr_tables() {
     fill_lr(del_bracevert, "");
 
     mc_table[0]  = mk_mo("error unknown control sequence");
-    mc_table[1]  = mk_mo(no_ent_names ? "&#xAF;" : "&OverBar;"); // \todo big table of entities and codepoints
+    mc_table[1]  = mk_mo(no_ent_names ? "&#xAF;" : "&OverBar;"); // TODO: big table of entities and codepoints
     mc_table[2]  = mk_mo(no_ent_names ? "&#x0FE37;" : "&OverBrace;");
     mc_table[3]  = mk_mo(no_ent_names ? "&#x332;" : "&UnderBar;");
     mc_table[4]  = mk_mo(no_ent_names ? "&#x0FE38;" : "&UnderBrace;");
@@ -1293,7 +1293,7 @@ auto math_ns::make_math_char(uchar c, size_t n) -> Xml * {
 void MathDataP::boot_chars() {
     for (unsigned i = 0; i <= 9; i++) {
         std::string K = the_names[std::to_string(i)];
-        init_builtin(i + math_dig_loc, new Xml(the_names["mn"], new Xml(K))); // \todo useless?
+        init_builtin(i + math_dig_loc, new Xml(the_names["mn"], new Xml(K))); // TODO: useless?
     }
 
     for (uchar i = 'A'; i <= 'Z'; i++) init_builtin(i + math_char_normal_loc, make_math_char(i, 0));
@@ -1386,7 +1386,7 @@ void MathDataP::boot() {
     if (!no_ent_names) fill_math_char_slots_ent();
     boot_chars();
 
-    Dispatcher::boot(); // \todo move to a more reasonable and robust place
+    Dispatcher::boot(); // TODO: move to a more reasonable and robust place
 
     mk_icb("alpha", "&alpha;", "&#x3B1;", alpha_code);
     mk_icb("beta", "&beta;", "&#x3B2;", beta_code);

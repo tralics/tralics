@@ -1384,8 +1384,8 @@ Hashtab::Hashtab() {
     headercr_token       = locate("@headercr");
     lbrace_token         = locate("lbrace");
     rbrace_token         = locate("rbrace");
-    locate("@tag");  // \todo useless alone?
-    locate("qquad"); // \todo useless alone?
+    locate("@tag");  // TODO: useless alone?
+    locate("qquad"); // TODO: useless alone?
     nocase_e_token           = locate("NoCaseChange");
     nocase_i_token           = locate("@NoCaseChange");
     cite_e_token             = locate("cite");
@@ -1398,7 +1398,7 @@ Hashtab::Hashtab() {
     CurrentOption_token      = locate("CurrentOption");
     CurrentOptionKey_token   = locate("CurrentOptionKey");
     CurrentOptionValue_token = locate("CurrentOptionValue");
-    locate("incr@eqnum"); // \todo useless alone?
+    locate("incr@eqnum"); // TODO: useless alone?
     at_zero_token = locate("z@");
     at_one_token  = locate("@ne");
 }

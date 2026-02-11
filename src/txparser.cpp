@@ -832,7 +832,7 @@ void Parser::T_verb(char32_t t) {
         return;
     }
 
-    auto saved = verbatim_chars[uchar(' ')]; // \todo use Saver for this
+    auto saved = verbatim_chars[uchar(' ')]; // TODO: use Saver for this
     if (special_space) verbatim_chars[uchar(' ')] = hash_table.textvisiblespace_token;
     if (vb_tokens(t, TL, true)) verb_error(T, 2);
     verbatim_chars[uchar(' ')] = saved;
@@ -1424,7 +1424,7 @@ void Parser::expand_mac(Macro &X) {
         }
         if (tracing_macros()) spdlog::trace("#{}<-{}", i, fmt::streamed(arguments[i]));
     }
-    TokenList res = X.body.expand_mac_inner(arguments.data()); // \todo pass the array instead
+    TokenList res = X.body.expand_mac_inner(arguments.data()); // TODO: pass the array instead
     if (spec == dt_brace) res.push_back(hash_table.OB_token);
     back_input(res);
 }
@@ -3669,7 +3669,7 @@ void Parser::calc_ratio_eval(long num, long den, SthInternal &res) {
         A        = num / den;
         table[k] = A;
     }
-    val.convert_decimal_part(10, table.data()); // \todo pass the std::array instead
+    val.convert_decimal_part(10, table.data()); // TODO: pass the std::array instead
     calc_spec_mul(val, res);
 }
 

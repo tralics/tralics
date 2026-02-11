@@ -52,7 +52,7 @@ Parser::~Parser() = default;
 
 auto operator<<(std::ostream &fp, const boundary_type &x) -> std::ostream & { return fp << bt_to_string(x); }
 
-// This adds a new element to the save stack. \todo inline
+// This adds a new element to the save stack. TODO: inline
 void Parser::push_save_stack(SaveAuxBase *v) { save_stack.emplace_back(v); }
 
 // This is done when we evaluate { or \begingroup.
@@ -192,7 +192,7 @@ void Parser::glue_define(size_t a, Glue c, bool gbl) {
     if (tracing_assigns()) {
         CmdChr tmp(assign_glue_cmd, subtypes(a));
         Thbuf1.clear();
-        Thbuf1 << W.val; // \todo make Glue formattable
+        Thbuf1 << W.val; // TODO: make Glue formattable
         if (a >= thinmuskip_code) Thbuf1.pt_to_mu();
         std::string msg = fmt::format("{{{}\\{}={}", gbl_or_assign(gbl, reassign), tmp.name().value_or(""), fmt::streamed(Thbuf1));
         if (!reassign) {

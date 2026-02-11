@@ -12,7 +12,7 @@ struct TokenList : public std::list<Token> {
     void append(TokenList &L) { splice(end(), L); }
     void brace_me();
     void expand_star();
-    void fast_get_block(TokenList &res); // \todo rename
+    void fast_get_block(TokenList &res); // TODO: rename
     void latex_ctr_fnsymbol(long n);
     void normalise();
     void prepend(TokenList &L) { splice(begin(), L); }

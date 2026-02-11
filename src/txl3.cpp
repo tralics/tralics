@@ -776,7 +776,7 @@ void Parser::L3_set_num_code(subtypes c) {
         back_input(L1);
         cur_tok = T;
         auto m  = scan_char_num();
-        word_define(m + offset, N, false); // \todo is offset always >=0?
+        word_define(m + offset, N, false); // TODO: is offset always >=0?
         return;
     }
     auto m = l3_read_int(T);

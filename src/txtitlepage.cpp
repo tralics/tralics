@@ -224,7 +224,7 @@ void Buffer::find_top_atts() {
         std::string bs = std::string(substr(ptrs.b + 1));
         the_stack.elt_from_id(1)->add_att(as, bs);
     } else if (substr(ptrs.b) == "\\specialyear") {
-        // \todo RA remove
+        // TODO: RA remove
     } else if (substr(ptrs.b) == "\\tralics") {
         auto as = std::string(a);
         clear();

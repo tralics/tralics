@@ -84,7 +84,7 @@ found at http://www.cecill.info.)";
     std::filesystem::path out_dir;
     std::filesystem::path no_ext;
 
-    std::string dtd_uri; ///< the external location of the DTD
+    std::string dtd_uri; // the external location of the DTD
     std::string log_name;
     std::string machine;
     std::string opt_doctype;
@@ -98,7 +98,7 @@ found at http://www.cecill.info.)";
         for (size_t i = 0; i < V.size(); i += 2) the_names.assign(V[i], V[i + 1]);
     }
 
-    /// Display usage message, then exit the program \todo Manage this centrally
+    // Display usage message, then exit the program TODO: Manage this centrally
     void usage_and_quit(int v) {
         std::cout << usage << "\n";
         exit(v);
@@ -109,7 +109,7 @@ found at http://www.cecill.info.)";
             spdlog::critical("Argument missing for option {}", argv[p]);
             usage_and_quit(1);
         }
-        if (std::string(argv[p + 1]) == "=") { // \todo this allows weird syntax
+        if (std::string(argv[p + 1]) == "=") { // TODO: this allows weird syntax
             if (p >= argc - 2) {
                 spdlog::critical("Argument missing for option {}", argv[p]);
                 usage_and_quit(1);
@@ -123,13 +123,13 @@ found at http://www.cecill.info.)";
         return a;
     }
 
-    /// Initialises encoding tables
+    // Initialises encoding tables
     void check_for_encoding() {
         for (auto &i : the_main.custom_table)
             for (unsigned j = 0; j < lmaxchar; ++j) i[j] = char32_t(j);
     }
 
-    /// Sometimes, we want `bar` if `\jobname` is `foo/bar`
+    // Sometimes, we want `bar` if `\jobname` is `foo/bar`
     auto hack_for_input(const std::filesystem::path &s) -> std::string {
         std::filesystem::path path = s.parent_path();
         the_parser.set_job_name(no_ext.string());
@@ -148,8 +148,8 @@ found at http://www.cecill.info.)";
         exit(v);
     }
 
-    /// Locate the config dir, using a few standard sources \todo this should be
-    /// managed by CMake, or by kpathsea
+    // Locate the config dir, using a few standard sources TODO: this should be
+    // managed by CMake, or by kpathsea
     void find_conf_path() {
         static const std::array<std::filesystem::path, 7> paths{"/usr/share/tralics", "/usr/lib/tralics/confdir",
                                                                 "/usr/local/lib/tralics/confdir", "/sw/share/tralics/confdir",
@@ -167,7 +167,7 @@ found at http://www.cecill.info.)";
         spdlog::error("Configuration folder not found");
     }
 
-    /// Split a `:`-separated path list into paths
+    // Split a `:`-separated path list into paths
     void new_in_dir(const std::string &s) {
         std::string b;
         for (char c : s) {
@@ -343,7 +343,7 @@ void MainClass::check_for_input() {
     spdlog::trace("++ Input encoding: {} ({}) for the main file", wc, wa);
 }
 
-void MainClass::open_log() { // \todo spdlog etc
+void MainClass::open_log() { // TODO: spdlog etc
     auto base = std::filesystem::path(out_dir) / log_name;
     auto f    = base;
     f.replace_extension("log");
@@ -355,7 +355,7 @@ void MainClass::open_log() { // \todo spdlog etc
     file_sink->set_level(spdlog::level::trace);
     spdlog::default_logger()->sinks().push_back(file_sink);
     if (!spdlog::default_logger()->sinks().empty()) {
-        spdlog::default_logger()->sinks()[0]->set_level(spdlog::level::info); // \todo Link this with verbose (later in startup)
+        spdlog::default_logger()->sinks()[0]->set_level(spdlog::level::info); // TODO: Link this with verbose (later in startup)
     }
     spdlog::info("Transcript written to {}", f.string());
 
@@ -379,7 +379,7 @@ void MainClass::open_log() { // \todo spdlog etc
     }
 
     spdlog::info("Starting translation of file {}", infile.string());
-    check_for_encoding(); // \todo this does not feel like it belongs here
+    check_for_encoding(); // TODO: this does not feel like it belongs here
 }
 
 void MainClass::set_ent_names(const std::string &s) { no_entnames = (s == "false") || (s == "no"); }
@@ -679,7 +679,7 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
     usage_and_quit(1);
 }
 
-void MainClass::set_tpa_status(const std::string &s) { // \todo Erk this is not good
+void MainClass::set_tpa_status(const std::string &s) { // TODO: Erk this is not good
     if (s.empty()) return;
     if (s[0] == 'a' || s[0] == 'A')
         tpa_mode = 1; // case 'all'
@@ -729,7 +729,7 @@ void MainClass::open_config_file(std::filesystem::path f) {
         spdlog::warn("Dummy default configuration file used.");
         return;
     }
-    config_file.read(f.string(), 0); // \todo fs::path
+    config_file.read(f.string(), 0); // TODO: fs::path
     config_file.normalise_final_cr();
     spdlog::info("Read configuration file {}", f.string());
     if (f.extension() != ".tcf") return;
@@ -960,7 +960,7 @@ void MainClass::run(int argc, char **argv) {
 void MainClass::out_xml() {
     auto p    = out_dir / (out_name + ".xml");
     auto fp   = open_file(p.string(), true);
-    auto utf8 = output_encoding == en_utf8 || output_encoding == en_ascii8; // \todo make this always true
+    auto utf8 = output_encoding == en_utf8 || output_encoding == en_ascii8; // TODO: make this always true
 
     fmt::print(fp, "<?xml version='1.0' encoding='{}'?>\n", utf8 ? "UTF-8" : "iso-8859-1");
     if (auto sl = the_names["stylesheet"]; !sl.empty())

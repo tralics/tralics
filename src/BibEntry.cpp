@@ -271,7 +271,7 @@ void BibEntry::parse_crossref() {
     if (name[0] == 0) return;
     bib_creator bc = the_bibtex.nocitestar ? because_all : because_crossref;
     BibEntry   *Y  = the_bibtex.find_entry(name, true, bc);
-    if (this == Y) return; /// should not happen
+    if (this == Y) return; // should not happen
     crossref = Y;
     if (Y->crossref_from == nullptr) Y->crossref_from = this;
 }
@@ -417,7 +417,7 @@ void BibEntry::call_type() {
     bbl.format("{{{}}}", label);
     bbl.format("{{{}}}", cite_key.full_key);
     bbl.format("{{{}}}", unique_id);
-    bbl.format("{{{}}}", "year"); // \todo [[deprecated]]
+    bbl.format("{{{}}}", "year"); // TODO: [[deprecated]]
     const auto &my_name = (is_extension > 0) ? the_main.bibtex_extensions[is_extension - 1] : the_names[type_to_string(type_int)];
     bbl.format("{{{}}}", my_name);
     bbl.append(aux_label);

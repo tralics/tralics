@@ -9,8 +9,8 @@ auto TexFonts::find_font(const TexFont &f) -> size_t {
     return size() - 1;
 }
 
-/// True if k is a valid font ID
-/// \todo Replace that with size_t or std::optional<size_t>
+// True if k is a valid font ID
+// TODO: Replace that with size_t or std::optional<size_t>
 auto TexFonts::is_valid(long k) -> bool { return (k >= 0) && (k < to_signed(size())); }
 
 // Returns name of font

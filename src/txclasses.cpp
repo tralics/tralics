@@ -74,7 +74,7 @@ auto classes_ns::make_keyval(TokenList &key_val) -> KeyAndVal {
     if (have_equals) {
         Buffer &B = txclasses_local_buf;
         B         = key_name;
-        B << key_val; // \todo make TokenList formattable
+        B << key_val; // TODO: make TokenList formattable
         key_full = B;
     }
     return {key_name, key_val, key_full};
@@ -246,7 +246,7 @@ void classes_ns::add_to_filelist(const std::string &s, const std::string &date) 
     auto n = s.size();
     long k = -1;
     for (size_t i = 0; i < n; i++)
-        if (s[i] == '/') k = to_signed(i); // last slash \todo std::filesystem
+        if (s[i] == '/') k = to_signed(i); // last slash TODO: std::filesystem
     auto S = s.substr(to_unsigned(k + 1));
     the_main.file_list += fmt::format("{:>12}   {}\n", S, date);
 }
@@ -527,7 +527,7 @@ void Parser::T_inputclass() {
         parse_error(err_tok, "Cannot input " + name + ".clt", "");
     } else {
         auto k = cur_file_pos;
-        open_tex_file(res->string(), true); // \todo fs::path
+        open_tex_file(res->string(), true); // TODO: fs::path
         if (k > 0) k = -k;
         set_cur_file_pos(k);
     }
@@ -1132,7 +1132,7 @@ void Parser::kvo_comp_opt() {
     Token T2 = hash_table.locate(fam + '@' + arg + "false");
     Token T3 = hash_table.locate(fam + '@' + comp + "false");
     Token T4 = hash_table.locate(fam + '@' + arg + "true");
-    B        = fam + '@' + arg + "true"; // \todo useless?
+    B        = fam + '@' + arg + "true"; // TODO: useless?
     if (!Hashtab::the_eqtb()[T2.eqtb_loc()].val.is_undef_or_relax()) { parse_error(err_tok, "Cannot redefine ", T2, "", "bad redef"); }
     if (!Hashtab::the_eqtb()[T4.eqtb_loc()].val.is_undef_or_relax()) { parse_error(err_tok, "Cannot redefine ", T4, "", "bad redef"); }
     M_let_fast(T2, T1, true);

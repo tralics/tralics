@@ -15,7 +15,7 @@ namespace {
             char32_t c = T.char_val();
             if (c == 0) return "^^@";
             Buffer B;
-            B.append_with_xml_escaping(c); // \todo without Buffer
+            B.append_with_xml_escaping(c); // TODO: without Buffer
             return std::move(B);
         }
 
@@ -121,7 +121,7 @@ void Parser::parse_error(Token T, const std::string &s1, const std::string &s2, 
     signal_error(T, s3);
 }
 
-/// Useful error. Here s2 is a token.
+// Useful error. Here s2 is a token.
 void Parser::parse_error(Token T, const std::string &s1, Token s2, const std::string &s3, const std::string &s4) {
     err_buf = s1 + s2.tok_to_str() + s3;
     signal_error(T, s4);

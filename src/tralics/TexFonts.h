@@ -5,7 +5,7 @@
 struct TexFonts : public std::vector<TexFont> {
     TexFonts() { emplace_back("nullfont", 0, 0); }
 
-    auto is_valid(long k) -> bool; // \todo unsigned parameter
+    auto is_valid(long k) -> bool; // TODO: unsigned parameter
     auto name(long k) -> std::string;
     void full_name(Buffer &B, long k);
     auto get_int_param(long ft, subtypes pos) -> long;

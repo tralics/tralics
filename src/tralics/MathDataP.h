@@ -77,4 +77,4 @@ public:
     auto        mk_gen(std::string_view name, std::string_view ent, std::string_view ent2, math_loc pos, const std::string &bl, symcodes t, bool hack) -> Token;
 };
 
-inline MathDataP math_data; // \todo unique instance, should we use static stuff?
+inline MathDataP math_data; // TODO: unique instance, should we use static stuff?

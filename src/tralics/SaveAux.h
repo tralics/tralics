@@ -5,7 +5,7 @@
 
 // This is a virtual class for saving an object that is in an EQTB table
 // In general we have a level field, a position field and a value field
-// \todo this needs some overhaul...
+// TODO: this needs some overhaul...
 class SaveAuxBase {
 public:
     save_type type; // the type of the real thing

@@ -14,7 +14,7 @@
 #include <utf8.h>
 
 namespace {
-    /// Look for a file in the pool
+    // Look for a file in the pool
     auto search_in_pool(const std::string &name) -> std::optional<size_t> {
         for (size_t i = 0; i < LineList::file_pool.size(); i++)
             if (LineList::file_pool[i].file_name == name) return i;
@@ -36,7 +36,7 @@ auto Buffer::next_utf8_char() -> char32_t {
     auto     it = begin() + to_signed(ptrs.b), it0 = it;
     char32_t cp = 0;
     try {
-        cp = it == end() ? char32_t(0U) : char32_t(utf8::next(it, end())); // \todo just if
+        cp = it == end() ? char32_t(0U) : char32_t(utf8::next(it, end())); // TODO: just if
     } catch (utf8::invalid_utf8 &) {
         the_main.bad_chars++;
         spdlog::warn("{}:{}:{}: UTF-8 parsing error, ignoring char", the_parser.cur_file_name, the_parser.cur_file_line, ptrs.b + 1);
@@ -49,7 +49,7 @@ auto Buffer::next_utf8_char() -> char32_t {
         spdlog::error("UTF-8 parsing overflow (char U+{:04X}, line {}, file {})", size_t(cp), the_parser.cur_file_line,
                       the_parser.cur_file_name);
         the_main.bad_chars++;
-        return char32_t(); // \todo nullopt
+        return char32_t(); // TODO: nullopt
     }
     return cp;
 }
@@ -177,7 +177,7 @@ auto Buffer::convert_to_log_encoding() const -> std::string {
 
 // --------------------------------------------
 
-// This exits if the file cannot be opened and argument is true \todo fs::path
+// This exits if the file cannot be opened and argument is true TODO: fs::path
 auto open_file(const std::string &name, bool fatal) -> std::ofstream {
     std::ofstream fp(name);
     if (!fp && fatal) {
@@ -244,7 +244,7 @@ auto Parser::T_filecontents(subtypes spec) -> bool {
     return true;
 }
 
-// \todo the next three function are kind of misleadingly named
+// TODO: the next three function are kind of misleadingly named
 
 auto main_ns::search_in_confdir(const std::string &s) -> std::optional<std::filesystem::path> {
     for (auto i = the_main.conf_path.size(); i != 0; i--) {

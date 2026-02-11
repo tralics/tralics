@@ -12,7 +12,7 @@
 
 namespace {
     // The  date parser
-    class FormatDate { // \todo c++ standard class for date?
+    class FormatDate { // TODO: c++ standard class for date?
         Token       err_tok;
         auto        scan_a_field(Buffer &B, int &res) -> bool;
         static auto scan_a_month(Buffer &B, int &res) -> bool;

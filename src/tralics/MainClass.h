@@ -7,8 +7,8 @@
 class Stack;
 
 class MainClass {
-    std::filesystem::path                infile;   ///< file argument given to the program
-    std::optional<std::filesystem::path> tcf_file; ///< File name of the `tcf` to use, if found
+    std::filesystem::path                infile;   // file argument given to the program
+    std::optional<std::filesystem::path> tcf_file; // File name of the `tcf` to use, if found
 
     std::string no_year;     // is miaou
     std::string raclass;     // is ra2003
@@ -41,29 +41,29 @@ class MainClass {
     bool etex_enabled{true};
     bool multi_math_label{false};
     bool load_l3{false};
-    bool verbose{false}; ///< Are we verbose ?
+    bool verbose{false}; // Are we verbose ?
 
 public:
     std::vector<std::filesystem::path> conf_path{"../confdir"};
     std::vector<std::filesystem::path> input_path;
     std::string                        file_name; // Job name, without directory
-    std::string                        file_list; // \todo vector of std::fs::path
+    std::string                        file_list; // TODO: vector of std::fs::path
 
     std::array<std::array<char32_t, lmaxchar>, max_encoding - 2> custom_table{};
 
     std::string tralics_version{"2.15.4"};
 
-    std::string default_class; ///< The default class
-    std::string short_date;    ///< Date of start of run (short format)
+    std::string default_class; // The default class
+    std::string short_date;    // Date of start of run (short format)
 
     std::vector<std::string> bibtex_fields_s;
     std::vector<std::string> bibtex_fields;
     std::vector<std::string> bibtex_extensions;
     std::vector<std::string> bibtex_extensions_s;
 
-    size_t               input_encoding{1};        ///< Encoding of the input file \todo one type to rule all encodings
-    output_encoding_type log_encoding{en_boot};    ///< Encoding of the log file \todo this should always be UTF-8
-    output_encoding_type output_encoding{en_boot}; ///< Encoding of the XML output \todo this should always be UTF-8
+    size_t               input_encoding{1};        // Encoding of the input file TODO: one type to rule all encodings
+    output_encoding_type log_encoding{en_boot};    // Encoding of the log file TODO: this should always be UTF-8
+    output_encoding_type output_encoding{en_boot}; // Encoding of the XML output TODO: this should always be UTF-8
 
     line_iterator doc_class_pos;
 
@@ -71,13 +71,13 @@ public:
     int init_file_pos{0}; // position in init file
     int bad_chars{0};
 
-    bool     double_quote_att{false}; ///< double quote as attribute value delimitor
-    bool     dverbose{false};         ///< Are we verbose at begin document ?
-    bool     footnote_hack{true};     ///< Not sure what this activates
+    bool     double_quote_att{false}; // double quote as attribute value delimitor
+    bool     dverbose{false};         // Are we verbose at begin document ?
+    bool     footnote_hack{true};     // Not sure what this activates
     bool     math_variant{false};
     bool     no_entnames{false};
     bool     no_undef_mac{false};
-    bool     no_xml{false}; ///< Are we in syntax-only mode (no XML output)?
+    bool     no_xml{false}; // Are we in syntax-only mode (no XML output)?
     bool     no_zerowidthelt{false};
     bool     no_zerowidthspace{false};
     bool     pack_font_elt{false};
@@ -93,34 +93,34 @@ public:
     char32_t leftquote_val{'`'};
     char32_t rightquote_val{'\''};
 
-    auto check_for_tcf(const std::string &s) -> bool; ///< Look for a `.tcf` file, and if found set `tcf_file` and `use_tcf`
+    auto check_for_tcf(const std::string &s) -> bool; // Look for a `.tcf` file, and if found set `tcf_file` and `use_tcf`
 
-    void add_to_from_config(int n, const std::string &b); ///< Add contents to `from_config`
-    void run(int argc, char **argv);                      ///< Do everything
-    void set_ent_names(const std::string &s);             ///< Set no_entnames from a string saying yes or no
-    void set_input_encoding(size_t wc);                   ///< Set default input file encoding and log the action \todo remove?
+    void add_to_from_config(int n, const std::string &b); // Add contents to `from_config`
+    void run(int argc, char **argv);                      // Do everything
+    void set_ent_names(const std::string &s);             // Set no_entnames from a string saying yes or no
+    void set_input_encoding(size_t wc);                   // Set default input file encoding and log the action TODO: remove?
 
 private:
-    void parse_args(int argc, char **argv);           ///< Parse the command-line arguments
-    void parse_option(int &p, int argc, char **argv); ///< Interprets one command-line option, advances p
-    void read_config_and_other();                     ///< Read the config file and extract all relevant information
+    void parse_args(int argc, char **argv);           // Parse the command-line arguments
+    void parse_option(int &p, int argc, char **argv); // Interprets one command-line option, advances p
+    void read_config_and_other();                     // Read the config file and extract all relevant information
     void set_tpa_status(const std::string &s);
     auto check_for_alias_type(bool vb) -> bool;
-    auto find_config_file() -> std::optional<std::filesystem::path>; // \todo static in MainClass.cpp
+    auto find_config_file() -> std::optional<std::filesystem::path>; // TODO: static in MainClass.cpp
     auto find_document_type() -> bool;
     void boot_bibtex();
     void check_for_input();
     void find_dtd();
-    void get_doc_type();         ///< Determine document type from various sources
-    void get_os();               ///< Sets cur_os to the current OS as a symbolic string
+    void get_doc_type();         // Determine document type from various sources
+    void get_os();               // Sets cur_os to the current OS as a symbolic string
     void get_type_from_config();
-    void more_boot() const; ///< Finish bootstrapping
+    void more_boot() const; // Finish bootstrapping
     void open_config_file(std::filesystem::path f);
     void open_log();
     void out_xml();
-    void see_name(std::filesystem::path s); ///< Extract versions of a filename with and without ext
+    void see_name(std::filesystem::path s); // Extract versions of a filename with and without ext
     void show_input_size();
-    auto trans0() -> bool; ///< Start the latex to XML translation
+    auto trans0() -> bool; // Start the latex to XML translation
 };
 
 inline MainClass the_main;

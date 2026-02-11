@@ -911,7 +911,7 @@ namespace {
         special_double[19]                  = hash_table.locate("textbottomtiebar");
     }
 
-    /// This creates the table with all the names.
+    // This creates the table with all the names.
     void make_names() { the_names.boot(); }
 
     auto special_double_acc(unsigned chr, unsigned acc) -> Token {

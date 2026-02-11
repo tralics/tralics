@@ -1253,8 +1253,8 @@ auto Parser::T_save_box(bool simple) -> bool {
         d.brace_me();
         if (!T_translate(d)) return false;
         the_stack.pop(the_names["mbox"]);
-        if (ipos && ipos->empty()) ipos.reset();       // \todo this is ugly
-        if (iwidth && iwidth->empty()) iwidth.reset(); // \todo this is ugly
+        if (ipos && ipos->empty()) ipos.reset();       // TODO: this is ugly
+        if (iwidth && iwidth->empty()) iwidth.reset(); // TODO: this is ugly
         if (ipos) mbox->add_att(the_names["box_pos"], *ipos);
         if (iwidth) mbox->add_att(the_names["box_width"], *iwidth);
     }
@@ -1357,8 +1357,8 @@ auto Parser::T_fbox(subtypes cc) -> bool {
         }
         return true;
     }
-    if (iwidth && iwidth->empty()) iwidth.reset(); // \todo That is ugly
-    if (ipos && ipos->empty()) ipos.reset();       // \todo That is ugly
+    if (iwidth && iwidth->empty()) iwidth.reset(); // TODO: That is ugly
+    if (ipos && ipos->empty()) ipos.reset();       // TODO: That is ugly
     if ((aux != nullptr) && aux->has_name(the_names["figure"])) {
         aux->add_att(the_names["framed"], the_names["true"]);
         cur->kill_name();
@@ -1392,7 +1392,7 @@ auto Parser::T_url() -> bool {
         token_from_list(T);
     }
     TokenList Y;
-    bool      in_href = the_stack.is_frame2("hanl"); // \todo what is hanl?
+    bool      in_href = the_stack.is_frame2("hanl"); // TODO: what is hanl?
     if (!in_href) {
         Y = X;
         Y.brace_me();

@@ -420,7 +420,7 @@ void XmlIO::expect(std::string_view s) {
         cur_char = next_char();
         if (cur_char != uchar(s[i])) {
             Buffer b{fmt::format("Expected {} got ", s[i])};
-            b << cur_char; // \todo make codepoint formattable
+            b << cur_char; // TODO: make codepoint formattable
             error(b);
         }
     }

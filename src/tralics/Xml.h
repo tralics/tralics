@@ -6,11 +6,11 @@
 
 struct XmlAction;
 
-class Xml : public std::vector<Xml *> { // \todo value semantics
+class Xml : public std::vector<Xml *> { // TODO: value semantics
 public:
-    size_t      id{0};  ///< id of the object
-    std::string name;   ///< name of the element
-    AttList     att;    ///< attributes of the element
+    size_t      id{0};  // id of the object
+    std::string name;   // name of the element
+    AttList     att;    // attributes of the element
 
     explicit Xml(const std::string &n) : name(std::string(n)) {}
     Xml(const std::string &s, size_t n) : id(n), name(the_names[s]) {}

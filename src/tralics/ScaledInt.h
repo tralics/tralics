@@ -7,7 +7,7 @@ struct ScaledInt {
     long value; // the integer, considered as a scaled number
 
     explicit ScaledInt(long v = 0) : value(v) {}
-    explicit ScaledInt(subtypes v) : value(int(v)) {} // \todo This is a bit hackish, but it works (going through `long` fails).
+    explicit ScaledInt(subtypes v) : value(int(v)) {} // TODO: This is a bit hackish, but it works (going through `long` fails).
 
     auto operator==(ScaledInt X) const { return value == X.value; }
     auto operator-() const -> ScaledInt { return ScaledInt(-value); }

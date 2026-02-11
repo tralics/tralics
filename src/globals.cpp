@@ -36,7 +36,7 @@ auto first_boundary() -> boundary_type {
 auto is_env_on_stack(const std::string &s) -> SaveAuxEnv * {
     for (size_t i = the_parser.save_stack.size(); i > 0; i--) {
         auto &p = the_parser.save_stack[i - 1];
-        if (!p) continue; // \todo this should never happen but it does on linux+clang9
+        if (!p) continue; // TODO: this should never happen but it does on linux+clang9
         if (p->type != st_env) continue;
         auto *q = dynamic_cast<SaveAuxEnv *>(p.get());
         if (q->name == s) return q;

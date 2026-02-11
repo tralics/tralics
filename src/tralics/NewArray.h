@@ -29,7 +29,7 @@ class NewArray {
     bool                            have_token_list{};
     Token                           current_token;
     TokenList                       current_list;
-    Parser                         *P{}; // \todo always the_parser, remove
+    Parser                         *P{}; // TODO: always the_parser, remove
     ArrayInfo                      *AI{};
     Xml                            *id{};
     TokenList                       u_list, v_list;

@@ -10,7 +10,7 @@
  *
  * Good inclusion is tested by testhtml in the test suite.
  *
- * \todo find a way to remove ipa_cmd from enums.h
+ * TODO: find a way to remove ipa_cmd from enums.h
  *
  * Reference: https://www.bfilipek.com/2018/02/static-vars-static-lib.html
  */
