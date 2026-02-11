@@ -34,7 +34,7 @@ namespace {
         if (!action) {
             spdlog::trace("++ Cannot open file {} for input", file);
         } else {
-            lines.read(fn.string(), 1);
+            lines.read(fn, 1);
             is_open = true;
             cur_line.clear();
             line_no = 0;

@@ -202,7 +202,6 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
 
 - src/LineList.cpp
   - 39: regexp?
-  - 418: take a std::filesystem::path
 
 - src/txio.cpp
   - 55: nullopt
@@ -277,7 +276,6 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
   - 358: Link this with verbose (later in startup)
   - 382: this does not feel like it belongs here
   - 682: Erk this is not good
-  - 732: fs::path
   - 963: make this always true
 
 - src/txtrees.cpp

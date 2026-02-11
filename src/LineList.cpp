@@ -415,7 +415,7 @@ auto LineList::find_aliases(const std::vector<std::string> &SL, std::string &res
 // If 2 it's a tex file, and the file is converted later.
 // If 3, no conversion  done
 // If 4, its is the main file, log not yet open.
-void LineList::read(const std::string &x, int spec) { // TODO: take a std::filesystem::path
+void LineList::read(const std::string &x, int spec) {
     reset(x);
     if (LineList::pool_position) {
         insert(LineList::file_pool[*LineList::pool_position]);
@@ -467,5 +467,7 @@ void LineList::read(const std::string &x, int spec) { // TODO: take a std::files
         if (c == EOF) break;
     }
 }
+
+void LineList::read(const std::filesystem::path &x, int spec) { read(x.string(), spec); }
 
 void LineList::register_file() { LineList::file_pool.push_back(std::move(*this)); }

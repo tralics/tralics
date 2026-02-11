@@ -729,7 +729,7 @@ void MainClass::open_config_file(std::filesystem::path f) {
         spdlog::warn("Dummy default configuration file used.");
         return;
     }
-    config_file.read(f.string(), 0); // TODO: fs::path
+    config_file.read(f, 0);
     config_file.normalise_final_cr();
     spdlog::info("Read configuration file {}", f.string());
     if (f.extension() != ".tcf") return;
@@ -782,7 +782,7 @@ auto MainClass::check_for_alias_type(bool vb) -> bool {
         if (!config_file.find_aliases(all_config_types, dtype)) return false;
     }
     if (tcf_file) {
-        config_file.read(tcf_file->string(), 0);
+        config_file.read(*tcf_file, 0);
         config_file.normalise_final_cr();
         spdlog::info("Read tcf file {}", tcf_file->string());
     }

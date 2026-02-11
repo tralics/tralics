@@ -1,5 +1,6 @@
 #pragma once
 #include "Line.h"
+#include <filesystem>
 #include <optional>
 
 struct LineList : public std::list<Line> {           // TODO: use a vector instead
@@ -33,6 +34,7 @@ struct LineList : public std::list<Line> {           // TODO: use a vector inste
     auto parse_and_extract(std::string_view s) const -> LineList;
     void print(std::ostream &outfile);
     void read(const std::string &x, int spec);
+    void read(const std::filesystem::path &x, int spec);
     void register_file();
     void reset(std::string x);
     auto skip_env(line_iterator_const C, Buffer &B) -> line_iterator_const;
