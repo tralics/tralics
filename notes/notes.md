@@ -199,7 +199,6 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
 
 - src/txio.cpp
   - 55: nullopt
-  - 250: the next three function are kind of misleadingly named
 
 - src/BibEntry.cpp
   - 420: [[deprecated]]

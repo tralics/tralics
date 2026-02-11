@@ -249,7 +249,7 @@ auto Parser::T_filecontents(subtypes spec) -> bool {
     return true;
 }
 
-// TODO: the next three function are kind of misleadingly named
+// Note: the next three function are kind of misleadingly named
 
 auto main_ns::search_in_confdir(const std::string &s) -> std::optional<std::filesystem::path> {
     for (auto i = the_main.conf_path.size(); i != 0; i--) {
