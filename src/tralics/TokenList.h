@@ -1,11 +1,15 @@
 #pragma once
 #include "Token.h"
+#include <array>
 
 struct Hashtab;
 
 struct TokenList : public std::list<Token> {
     [[nodiscard]] auto block_size() const -> int;
-    [[nodiscard]] auto expand_mac_inner(TokenList *arguments) const -> TokenList;
+    [[nodiscard]] auto expand_mac_inner(const TokenList *arguments) const -> TokenList;
+    template <size_t N> [[nodiscard]] auto expand_mac_inner(const std::array<TokenList, N> &arguments) const -> TokenList {
+        return expand_mac_inner(arguments.data());
+    }
 
     void add_env(const std::string &name);
     void add_verbatim_number(const Hashtab &H, long n);

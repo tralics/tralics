@@ -1426,7 +1426,7 @@ void Parser::expand_mac(Macro &X) {
         }
         if (tracing_macros()) spdlog::trace("#{}<-{}", i, fmt::streamed(arguments[i]));
     }
-    TokenList res = X.body.expand_mac_inner(arguments.data()); // TODO: pass the array instead
+    TokenList res = X.body.expand_mac_inner(arguments);
     if (spec == dt_brace) res.push_back(hash_table.OB_token);
     back_input(res);
 }

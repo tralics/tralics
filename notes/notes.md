@@ -354,7 +354,6 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
   - 77: make TokenList formattable
   - 249: std::filesystem
   - 530: fs::path
-  - 1135: useless?
 
 - src/txparser2.cpp
   - 15: c++ standard class for date?

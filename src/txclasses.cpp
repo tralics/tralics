@@ -1132,7 +1132,6 @@ void Parser::kvo_comp_opt() {
     Token T2 = hash_table.locate(fam + '@' + arg + "false");
     Token T3 = hash_table.locate(fam + '@' + comp + "false");
     Token T4 = hash_table.locate(fam + '@' + arg + "true");
-    B        = fam + '@' + arg + "true"; // TODO: useless?
     if (!Hashtab::the_eqtb()[T2.eqtb_loc()].val.is_undef_or_relax()) { parse_error(err_tok, "Cannot redefine ", T2, "", "bad redef"); }
     if (!Hashtab::the_eqtb()[T4.eqtb_loc()].val.is_undef_or_relax()) { parse_error(err_tok, "Cannot redefine ", T4, "", "bad redef"); }
     M_let_fast(T2, T1, true);
