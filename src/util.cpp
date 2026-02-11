@@ -7,6 +7,11 @@
 
 namespace {
     auto counter_val(int k) -> int { return (0 <= k && k < to_signed(nb_registers)) ? k : -1; }
+
+    auto split_at_char(const std::string &s, char sep) -> std::optional<std::pair<std::string, std::string>> {
+        if (auto pos = s.find(sep); pos != std::string::npos) return {{s.substr(0, pos), s.substr(pos + 1)}};
+        return {};
+    }
 } // namespace
 
 auto only_space(const std::string &s) -> bool {
@@ -40,12 +45,10 @@ auto split_commas(const std::string &S) -> std::vector<std::string> {
     return res;
 }
 
-auto split_assign(std::string s) -> std::pair<std::string, std::string> { // TODO: similar to split_at_colon
-    size_t i = 0;
-    while ((s[i] != 0) && (s[i] != '=')) i++;
-    std::string key = without_end_spaces(std::string(s).substr(0, i));
-    std::string val = (s[i] == '=') ? without_end_spaces(std::string(s).substr(i + 1)) : "";
-    return {key, val};
+auto split_assign(std::string s) -> std::pair<std::string, std::string> {
+    auto out = split_at_char(s, '=');
+    if (!out) return {without_end_spaces(std::move(s)), ""};
+    return {without_end_spaces(out->first), without_end_spaces(out->second)};
 }
 
 // Hack. Returns -1 in case no counter was given
@@ -131,8 +134,7 @@ auto convert_to_utf8(const std::string &s, size_t wc) -> std::string {
 
 // splits foo:bar into foo and bar
 auto split_at_colon(const std::string &s) -> std::optional<std::pair<std::string, std::string>> {
-    if (auto i = s.find(':'); i != std::string::npos) return {{s.substr(0, i), s.substr(i + 1)}};
-    return {};
+    return split_at_char(s, ':');
 }
 
 auto encode(const std::string &s) -> std::string {

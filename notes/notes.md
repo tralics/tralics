@@ -309,7 +309,6 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
   - 19: merge all these
 
 - src/util.cpp
-  - 43: similar to split_at_colon
   - 70: std::optional<std::string>
 
 - src/tralics/LatexPackage.h
