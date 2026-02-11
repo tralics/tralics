@@ -209,10 +209,6 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
   - 183: fs::path
   - 250: the next three function are kind of misleadingly named
 
-- src/txparser.cpp
-  - 1429: pass the array instead
-  - 3674: pass the std::array instead
-
 - src/BibEntry.cpp
   - 420: [[deprecated]]
 
@@ -235,7 +231,6 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
   - 822: use optional better
   - 853: use optional better
   - 887: should ch be unsigned?
-  - 1501: pass the array instead
   - 1506: std::optional<size_t>
 
 - src/packages/tipa.cpp
@@ -276,9 +271,6 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
 
 - src/txmath1.cpp
   - 849: why not go through all the machinery here?
-
-- src/TokenList.cpp
-  - 9: res.append()
 
 - src/MainClass.cpp
   - 101: Manage this centrally

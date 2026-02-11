@@ -3671,7 +3671,7 @@ void Parser::calc_ratio_eval(long num, long den, SthInternal &res) {
         A        = num / den;
         table[k] = A;
     }
-    val.convert_decimal_part(10, table.data()); // TODO: pass the std::array instead
+    val.convert_decimal_part(10, table);
     calc_spec_mul(val, res);
 }
 

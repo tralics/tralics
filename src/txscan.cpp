@@ -1498,7 +1498,7 @@ void Parser::scan_double(RealNumber &res) {
         }
     }
     back_input_unless_space();
-    res.convert_decimal_part(k, table.data()); // TODO: pass the array instead
+    res.convert_decimal_part(k, table);
 }
 
 // This is a bit more efficient then a lot of scan_keyword...
