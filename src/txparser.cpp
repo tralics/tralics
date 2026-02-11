@@ -832,10 +832,12 @@ void Parser::T_verb(char32_t t) {
         return;
     }
 
-    auto saved = verbatim_chars[uchar(' ')]; // TODO: use Saver for this
-    if (special_space) verbatim_chars[uchar(' ')] = hash_table.textvisiblespace_token;
+    if (special_space) {
+        auto save_space = Saver(verbatim_chars[uchar(' ')], hash_table.textvisiblespace_token);
+        if (vb_tokens(t, TL, true)) verb_error(T, 2);
+        return;
+    }
     if (vb_tokens(t, TL, true)) verb_error(T, 2);
-    verbatim_chars[uchar(' ')] = saved;
 }
 
 // Case of the \SaveVerb command

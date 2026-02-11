@@ -1177,7 +1177,7 @@ void SthInternal::change_level(internal_type level) {
 
 void Parser::scan_something_internal(internal_type level) {
     subtypes m = cur_cmd_chr.chr;
-    size_t   v = 0; // TODO: size_t?
+    size_t   v = 0;
     switch (cur_cmd_chr.cmd) {
     case char_given_cmd: // result of \chardef
     case math_given_cmd: cur_val.set_int(m); return;
