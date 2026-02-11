@@ -180,7 +180,7 @@ auto Buffer::convert_to_log_encoding() const -> std::string {
 
 // --------------------------------------------
 
-// This exits if the file cannot be opened and argument is true TODO: fs::path
+// This exits if the file cannot be opened and argument is true
 auto open_file(const std::string &name, bool fatal) -> std::ofstream {
     std::ofstream fp(name);
     if (!fp && fatal) {
@@ -190,6 +190,8 @@ auto open_file(const std::string &name, bool fatal) -> std::ofstream {
     if (!fp) spdlog::error("Cannot open file {} for output.", name);
     return fp;
 }
+
+auto open_file(const std::filesystem::path &name, bool fatal) -> std::ofstream { return open_file(name.string(), fatal); }
 
 // This implements the filecontent environment.
 // \begin{filecontents}{name} some lines of code \end{filecontents}
@@ -214,7 +216,7 @@ auto Parser::T_filecontents(subtypes spec) -> bool {
         spdlog::warn("File {} already exists, not generating from source.", of->string());
     } else {
         auto fn = get_out_dir(filename);
-        outfile = open_file(fn.string(), false);
+        outfile = open_file(fn, false);
         spdlog::info("Writing file `{}`", fn.string());
         if (!outfile)
             parse_error("unable to open file for writing");

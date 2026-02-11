@@ -959,7 +959,7 @@ void MainClass::run(int argc, char **argv) {
 
 void MainClass::out_xml() {
     auto p    = out_dir / (out_name + ".xml");
-    auto fp   = open_file(p.string(), true);
+    auto fp   = open_file(p, true);
     auto utf8 = output_encoding == en_utf8 || output_encoding == en_ascii8; // TODO: make this always true
 
     fmt::print(fp, "<?xml version='1.0' encoding='{}'?>\n", utf8 ? "UTF-8" : "iso-8859-1");
