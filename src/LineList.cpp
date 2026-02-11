@@ -36,20 +36,13 @@ namespace {
         return {};
     }
 
-    void find_one_type(const std::string &s, std::vector<std::string> &S) { // TODO: regexp?
-        if (!s.starts_with("BeginType")) return;
-
-        size_t b = 9;
-        while (s[b] == ' ' || s[b] == '\t') b++;
-        if (b == 9) return; // bad
-
-        size_t a = b;
-        while (std::isalpha(s[b]) != 0) b++;
-        if (b == a) return; // bad
-
-        auto str = s.substr(a, b - a);
-        S.push_back(str);
-        spdlog::trace("Defined type: {}", str);
+    void find_one_type(const std::string &s, std::vector<std::string> &S) {
+        static constexpr auto pattern = ctll::fixed_string{"^BeginType[ \\t]+([A-Za-z]+).*"};
+        if (auto match = ctre::match<pattern>(s)) {
+            auto str = match.get<1>().to_string();
+            S.push_back(str);
+            spdlog::trace("Defined type: {}", str);
+        }
     }
 
     // Returns 0, unless we see A="B", fills the buffers A and B.

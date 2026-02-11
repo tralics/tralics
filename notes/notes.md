@@ -197,12 +197,6 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
   - 241: without Buffer
   - 246: without Buffer
 
-- src/txaccent.cpp
-  - 5: The first 256 characters of Unicode are identical to Latin-1. So in
-
-- src/LineList.cpp
-  - 39: regexp?
-
 - src/txio.cpp
   - 55: nullopt
   - 250: the next three function are kind of misleadingly named
@@ -252,13 +246,6 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
 - src/txerr.cpp
   - 18: without Buffer
 
-- src/txtranslate.cpp
-  - 1256: this is ugly
-  - 1257: this is ugly
-  - 1360: That is ugly
-  - 1361: That is ugly
-  - 1395: what is hanl?
-
 - src/Dispatcher.cpp
   - 380: wrap the next ones in functions to fit on one line
   - 411: multilingual stuff somewhere
@@ -282,9 +269,6 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
 
 - src/Bibtex.cpp
   - 26: without the_names?
-
-- src/txcommands.cpp
-  - 316: in the softcover fork, the next line becomes
 
 - src/Buffer.cpp
   - 24: regexp
@@ -402,9 +386,6 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
 
 - src/tralics/OneIndex.h
   - 17: unordered_map
-
-- src/tralics/AttList.h
-  - 9: use map API
 
 - src/tralics/Macro.h
   - 20: remove

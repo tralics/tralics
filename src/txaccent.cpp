@@ -2,7 +2,7 @@
 // for instance, \'e expands to the character 0351 (internal encoding is
 // iso-8859-1)
 
-// TODO: The first 256 characters of Unicode are identical to Latin-1. So in
+// Note: The first 256 characters of Unicode are identical to Latin-1. So in
 // fact internal encoding is always unicode, latin1 is a red herring here.
 
 #include "tralics/Parser.h"

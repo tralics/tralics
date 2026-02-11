@@ -5,8 +5,8 @@
 #include <string>
 #include <vector>
 
-struct AttList : public std::map<std::string, std::string> {          // map and not unordered_map for reproducible XML output
-    [[nodiscard]] auto lookup(const std::string &x) -> std::string *; // TODO: use map API
+struct AttList : public std::map<std::string, std::string> { // map and not unordered_map for reproducible XML output
+    [[nodiscard]] auto lookup(const std::string &x) -> std::string *;
     [[nodiscard]] auto lookup(const std::string &x) const -> const std::string *;
 };
 

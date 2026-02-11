@@ -313,7 +313,7 @@ void Parser::T_cst1(subtypes c) {
         ;
     case SS_code: process_string("SS"); return;
     case dots_code: // process_string("..."); return;
-    // TODO: in the softcover fork, the next line becomes
+    // Note: in the softcover fork, the next line becomes
     // case ldots_code: process_string("&#x85;"); return;
     case ldots_code: process_string("..."); return;
     case space_code: process_string(" "); return;
