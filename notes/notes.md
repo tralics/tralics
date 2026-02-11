@@ -225,7 +225,6 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
   - 21: shared_ptr or something RAII?
 
 - src/txscan.cpp
-  - 66: is that just std::filesystem::exists, or is the side-effect necessary?
   - 1506: std::optional<size_t>
 
 - src/packages/tipa.cpp

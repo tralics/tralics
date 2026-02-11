@@ -62,10 +62,10 @@ namespace {
     bool                                        every_eof   = false; // true if every_eof can been inserted for the current file
     bool                                        require_eof = true;  // eof is an outer token
 
-    auto find_no_path(const std::string &s)
-        -> std::optional<std::filesystem::path> { // TODO: is that just std::filesystem::exists, or is the side-effect necessary?
+    auto find_no_path(const std::string &s) -> std::optional<std::filesystem::path> {
         if (s.empty()) return {};
-        if (std::filesystem::exists(s)) return s;
+        auto path = std::filesystem::path(s);
+        if (std::filesystem::exists(path)) return path;
         return {};
     }
 
