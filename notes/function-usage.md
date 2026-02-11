@@ -1,0 +1,41 @@
+# Function usage (src/)
+
+Heuristic: file-scope static or anonymous-namespace functions in src/*.cpp; references and calls counted within the same file after stripping comments/strings.
+
+## Never called
+- None found.
+
+## Called once
+- src/BibEntry.cpp:32 `handle_the_names` (call at line 235)
+- src/BibEntry.cpp:50 `handle_one_name` (call at line 42)
+- src/MainClass.cpp:77 `check_for_encoding` (call at line 332)
+- src/MainClass.cpp:103 `find_conf_path` (call at line 349)
+- src/MainClass.cpp:121 `new_in_dir` (call at line 430)
+- src/MainClass.cpp:199 `Titlepage_create` (call at line 816)
+- src/Parser.cpp:89 `make_uclc_table` (call at line 1152)
+- src/Parser.cpp:105 `finish_index` (call at line 1982)
+- src/Parser.cpp:147 `create_aux_file_and_run_pgm` (call at line 1965)
+- src/Parser.cpp:321 `boot_accents` (call at line 1719)
+- src/Parser.cpp:915 `make_names` (call at line 1724)
+- src/Parser.cpp:942 `make_constants` (call at line 1726)
+- src/Parser.cpp:962 `check_all_ids` (call at line 1983)
+- src/Parser.cpp:985 `finish_color` (call at line 1981)
+- src/Xml.cpp:61 `table_subfigure` (call at line 162)
+- src/Xml.cpp:75 `raw_subfigure` (call at line 160)
+- src/Xml.cpp:118 `postprocess_figure` (call at line 731)
+- src/Xml.cpp:181 `remove_label` (call at line 481)
+- src/Xml.cpp:201 `postprocess_table` (call at line 733)
+- src/packages/xkeyval.cpp:58 `set_inpox` (call at line 345)
+- src/packages/xkeyval.cpp:329 `xkv_execute_options` (call at line 838)
+- src/packages/xkeyval.cpp:340 `xkv_process_options` (call at line 837)
+- src/packages/xkeyval.cpp:363 `xkv_ns_remove` (call at line 430)
+- src/packages/xkeyval.cpp:382 `xkv_ns_merge` (call at line 428)
+- src/packages/xkeyval.cpp:435 `key_ifundefined` (call at line 787)
+- src/packages/xkeyval.cpp:468 `internal_choice_key` (call at line 785)
+- src/packages/xkeyval.cpp:544 `xkv_declare_option` (call at line 836)
+- src/packages/xkeyval.cpp:587 `disable_keys` (call at line 786)
+- src/packages/xkeyval.cpp:615 `define_bool_key` (call at line 783)
+- src/packages/xkeyval.cpp:680 `T_define_key` (call at line 779)
+- src/packages/xkeyval.cpp:689 `define_choice_key` (call at line 784)
+- src/packages/xkeyval.cpp:732 `define_cmd_key` (call at line 781)
+- src/packages/xkeyval.cpp:971 `xkeyval` (call at line 1002)

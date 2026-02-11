@@ -36,15 +36,6 @@ namespace {
         return {};
     }
 
-    void find_one_type(const std::string &s, std::vector<std::string> &S) {
-        static constexpr auto pattern = ctll::fixed_string{"^BeginType[ \\t]+([A-Za-z]+).*"};
-        if (auto match = ctre::match<pattern>(s)) {
-            auto str = match.get<1>().to_string();
-            S.push_back(str);
-            spdlog::trace("Defined type: {}", str);
-        }
-    }
-
     // Returns 0, unless we see A="B", fills the buffers A and B.
     // return 2 if there is a space in A, 1 otherwise.
     auto see_an_assignment(Buffer &in, Buffer &key, Buffer &val) -> int {
@@ -70,12 +61,6 @@ namespace {
     }
 
     // This is called for all lines, outside groups.
-    void see_main_a(Buffer &in, Buffer &val) {
-        Buffer B;
-        val.clear();
-        int k = see_an_assignment(in, B, val);
-        if (k == 1) the_names.assign(B, val);
-    }
 } // namespace
 
 void LineList::change_encoding(long wc) {
@@ -277,11 +262,16 @@ void LineList::find_top_atts() {
 
 // A loop to find all types  and put them in res.
 void LineList::find_all_types(std::vector<std::string> &res) {
+    static constexpr auto pattern = ctll::fixed_string{"^BeginType[ \\t]+([A-Za-z]+).*"};
     Buffer &B = local_buf;
     for (auto C = cbegin(); C != cend(); C = skip_env(C, B)) {
         the_main.init_file_pos = C->number;
         B                      = *C;
-        find_one_type(*C, res);
+        if (auto match = ctre::match<pattern>(*C)) {
+            auto str = match.get<1>().to_string();
+            res.push_back(str);
+            spdlog::trace("Defined type: {}", str);
+        }
     }
 }
 
@@ -364,7 +354,12 @@ void LineList::parse_conf_toplevel() const {
         B                      = C;
         the_main.init_file_pos = C.number;
         b += B.see_config_env();
-        if (b == 0) see_main_a(B, local_buf);
+        if (b == 0) {
+            Buffer key;
+            local_buf.clear();
+            int k = see_an_assignment(B, key, local_buf);
+            if (k == 1) the_names.assign(key, local_buf);
+        }
     }
 }
 
