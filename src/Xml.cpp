@@ -8,9 +8,11 @@
 #include "tralics/XmlAction.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
+#include <charconv>
 #include <spdlog/fmt/ostr.h>
 #include <fstream>
 #include <spdlog/spdlog.h>
+#include <system_error>
 
 namespace {
     std::ofstream decoy_fp;
@@ -269,8 +271,8 @@ void Xml::add_bottom_rule() {
 
 void Xml::add_span(long n) {
     if (n == 1) return;
-    errbuf = std::to_string(n); // TODO: errbuf??
-    add_att(the_names["cols"], errbuf);
+    auto span = std::to_string(n);
+    add_att(the_names["cols"], span);
 }
 
 void Xml::add_ref(const std::string &s) { tralics_ns::add_ref(to_signed(id), s, false); }
@@ -301,10 +303,10 @@ auto Xml::try_cline(bool action) -> bool {
             return false;
         }
         auto c = k->get_cell_span();
-        if (c == -1) return false;
-        if (c == 0) continue; // ignore null span cells
+        if (!c) return false;
+        if (*c == 0) continue; // ignore null span cells
         if (a_ok && action) k->add_bottom_rule();
-        a = a - c;
+        a -= to_signed(*c);
         if (a < 0) return false;
     }
     return false; // list too small
@@ -320,8 +322,8 @@ auto Xml::total_span(long &res) const -> bool {
             return false;
         }
         auto c = k->get_cell_span();
-        if (c == -1) return false;
-        r += c;
+        if (!c) return false;
+        r += to_signed(*c);
     }
     res = r;
     return true;
@@ -344,7 +346,8 @@ auto Xml::try_cline_again(bool action) -> bool {
             if (std::string(N) == "\n") continue;
             return false;
         }
-        if (at(k)->get_cell_span() != 1) return false;
+        auto span = at(k)->get_cell_span();
+        if (!span || *span != 1) return false;
         if (!at(k)->has_att(the_names["cell_topborder"]).empty()) return false;
         if (seen_cell) return false;
         if (!at(k)->is_whitespace()) return false;
@@ -879,13 +882,17 @@ void Xml::add_nl() {
 
 // This returns the span of the current cell; -1 in case of trouble
 // the default value is 1
-auto Xml::get_cell_span() const -> long { // TODO: std::optional<size_t>
-    if (!is_element()) return 0;
-    if (!has_name(the_names["cell"])) return -1; // not a cell
+auto Xml::get_cell_span() const -> std::optional<size_t> {
+    if (!is_element()) return std::nullopt;
+    if (!has_name(the_names["cell"])) return std::nullopt; // not a cell
     auto a = fetch_att(const_cast<Xml *>(this), the_names["cols"]);
-    if (!a) return 1;              // no property, default is 1
-    auto o = Buffer(*a).int_val(); // TODO: without Buffer
-    return o ? to_signed(*o) : -1;
+    if (!a) return size_t{1}; // no property, default is 1
+    size_t span = 0;
+    auto   data = a->data();
+    auto   last = data + a->size();
+    auto   res  = std::from_chars(data, last, span);
+    if (res.ec != std::errc() || res.ptr != last || span > 1000000) return std::nullopt;
+    return span;
 }
 
 auto Xml::tail_is_anchor() const -> bool { return !empty() && back()->is_anchor(); }

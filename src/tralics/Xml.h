@@ -3,6 +3,7 @@
 #include "Buffer.h"
 #include "NameMapper.h"
 #include <cassert>
+#include <optional>
 
 struct XmlAction;
 
@@ -22,7 +23,7 @@ public:
 
     [[nodiscard]] auto all_empty() const -> bool;
     [[nodiscard]] auto back_or_nullptr() const -> Xml * { return empty() ? nullptr : back(); }
-    [[nodiscard]] auto get_cell_span() const -> long;
+    [[nodiscard]] auto get_cell_span() const -> std::optional<size_t>;
     [[nodiscard]] auto has_name(const std::string &s) const -> bool { return name == s; }
     [[nodiscard]] auto has_name_of(const std::string &s) const -> bool { return name == the_names[s]; }
     [[nodiscard]] auto is_anchor() const -> bool { return is_element() && name == the_names["anchor"]; }
