@@ -1054,8 +1054,7 @@ auto Math::chars_to_mb3() -> std::string {
         }
     }
     if (sz == 0 || bc != 2) {
-        Buffer tmp;
-        tmp.clear();
+        std::string tmp;
         tmp += "Error scanning width, so far got '" + B + "'";
         the_parser.parse_error(the_parser.err_tok, tmp, "bad dimension");
         B = "0pt";

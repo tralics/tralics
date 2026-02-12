@@ -172,8 +172,8 @@ namespace {
     // the arguments of the function are foot and Knuth; the `p.25' will be
     // considered elsewhere.
     auto make_cit_ref(const std::string &type, const std::string &ref) -> Xml * {
-        auto        n  = *the_bibliography.find_citation_item(type, ref, true);
-        std::string id = the_bibliography.citation_table[n].get_id();
+        auto        n   = *the_bibliography.find_citation_item(type, ref, true);
+        std::string id  = the_bibliography.citation_table[n].get_id();
         auto       *res = new Xml(the_names["ref"], nullptr);
         res->add_att(the_names["target"], id);
         return res;
@@ -1762,7 +1762,7 @@ void Parser::E_accent() {
     }
     const char *msg1 = "Error in accent, command = ";
     const char *msg2 = "bad accent";
-    Token  tfe  = cur_tok;
+    Token       tfe  = cur_tok;
     // Fetch the accent
     TokenList y = read_arg();
     if (y.empty()) {
@@ -2153,7 +2153,7 @@ void Parser::solve_cite(bool user) {
     auto key = std::string(fetch_name0_nopar());
     if (user) insert_every_bib();
     if (n == 0) return;
-    Xml          *N  = the_stack.elt_from_id(n);
+    Xml *N = the_stack.elt_from_id(n);
     if (N == nullptr) return;
     Bibliography &B  = the_bibliography;
     size_t        nn = 0;
@@ -2264,9 +2264,9 @@ void Parser::T_newcolumn_type() {
             c = 0;
         }
     }
-    Buffer B;
-    B.append("newcolumtype@");
-    B.push_back(static_cast<char>(c)); // special hack if c=0 !
+    std::string B;
+    B += "newcolumtype@";
+    B += static_cast<char>(c); // special hack if c=0 !
     cur_tok = hash_table.locate(B);
     new_array_object.add_a_type(static_cast<uchar>(c), cur_tok);
     back_input();

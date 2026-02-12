@@ -392,8 +392,8 @@ void XmlIO::parse_pi() {
 
 // Scans a declaration. We test the first or second letter
 void XmlIO::parse_dec() {
-    cur_char   = next_char();
-    auto c = peek_char();
+    cur_char = next_char();
+    auto c   = peek_char();
     if (!c) throw Eof{};
     reread_list.push_back(cur_char);
     if (*c == '-')
@@ -570,10 +570,10 @@ void XmlIO::parse_dec_entity() {
 
 // We might have <!ELEMENT %foo; %bar;>
 void XmlIO::parse_dec_element() {
-    Buffer tmp;
+    std::string tmp;
     aux.clear();
     aux.clear();
-    tmp.append("ELEMENT");
+    tmp += "ELEMENT";
     expect("ELEMENT");
     bool        ok            = true;
     bool        is_first      = true;
@@ -619,10 +619,10 @@ void XmlIO::parse_dec_element() {
 
 void XmlIO::parse_dec_attlist() {
     expect("ATTLIST");
-    Buffer tmp;
+    std::string tmp;
     aux.clear();
     aux.clear();
-    tmp.append("ATTLIST");
+    tmp += "ATTLIST";
     bool        ok            = true;
     bool        is_first      = true;
     bool        prev_is_space = false;
