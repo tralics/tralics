@@ -692,8 +692,8 @@ void Xml::unbox(Xml *x) {
     if (x->is_element()) {
         push_back_list(x);
     } else {
-        Buffer b;
-        b.append(encode(x->name));
+        std::string b;
+        b += encode(x->name);
         add_last_string(b);
     }
 }

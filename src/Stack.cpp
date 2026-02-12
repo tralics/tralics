@@ -83,9 +83,7 @@ void Stack::T_hline() {
 // Increases xid, makes sure that the attribute table is big enough
 auto Stack::next_xid(Xml *elt) -> size_t {
     auto idx = next_id++;
-    if (elt == nullptr) {
-        elt = new Xml("", idx);
-    }
+    if (elt == nullptr) { elt = new Xml("", idx); }
     id_map[idx] = elt;
     last_xml    = elt;
     return idx;
@@ -266,8 +264,8 @@ auto Stack::push_hbox(std::string name) -> Xml * {
 // The number of the element is 2. No other element has 2 as number
 // (see Stack::Stack).
 auto Stack::temporary() -> Xml * {
-    Xml *res = new Xml("temporary", size_t(2));
-    id_map[2]   = res;
+    Xml *res  = new Xml("temporary", size_t(2));
+    id_map[2] = res;
     ipush(the_names["argument"], res);
     cur_mode = mode_argument;
     push_trace();
@@ -282,8 +280,8 @@ void Stack::init_all(const std::string &a) {
     cur_lid  = std::string("uid1");
     Xml *V   = new Xml(std::string(a), nullptr);
     V->push_back_unless_nullptr(nullptr); // Make a hole for the color pool
-    V->att = std::move(elt_from_id(1)->att);
-    V->id = 1;
+    V->att    = std::move(elt_from_id(1)->att);
+    V->id     = 1;
     id_map[1] = V;
     ipush(the_names["document"], V);
     newline_xml = new Xml("\n");
@@ -351,7 +349,7 @@ auto Stack::push_par(size_t k) -> Xml * {
 
 // Fonts without argument like \it, (still ok ?)
 void Stack::fonts0(const std::string &x) {
-    Xml *res                                 = fonts1(x);
+    Xml *res                        = fonts1(x);
     res->att[the_names["'hi_flag"]] = "";
     push(std::string(" "), res);
 }
@@ -362,33 +360,33 @@ void Stack::check_font() {
     bool        w = the_main.pack_font_elt;
     std::string s;
     if (w) {
-        Buffer aux;
-        bool   nonempty = false;
-        s               = the_parser.cur_font.size_change();
+        std::string aux;
+        bool        nonempty = false;
+        s                    = the_parser.cur_font.size_change();
         if (s != "cst_empty") { // TODO: empty string or something
             aux += encode(the_names[s]);
             nonempty = true;
         }
         s = the_parser.cur_font.shape_change();
         if (s != "cst_empty") {
-            if (nonempty) aux.append(",");
+            if (nonempty) aux += ",";
             aux += encode(the_names[s]);
             nonempty = true;
         }
         s = the_parser.cur_font.family_change();
         if (s != "cst_empty") {
-            if (nonempty) aux.append(",");
+            if (nonempty) aux += ",";
             aux += encode(the_names[s]);
             nonempty = true;
         }
         s = the_parser.cur_font.series_change();
         if (s != "cst_empty") {
-            if (nonempty) aux.append(",");
+            if (nonempty) aux += ",";
             aux += encode(the_names[s]);
             nonempty = true;
         }
         if (nonempty) {
-            auto     a           = std::string(aux);
+            auto     a           = aux;
             Xml     *res         = new Xml(the_names["hi"], nullptr);
             AttList &W           = res->att;
             W[the_names["rend"]] = a;
@@ -517,7 +515,7 @@ void Stack::delete_table_atts() {
 }
 
 auto Stack::get_u_or_v(bool u_or_v) -> TokenList {
-    Xml       *unused = nullptr;
+    Xml       *unused  = nullptr;
     ArrayInfo *A       = get_my_table(unused);
     auto       cell_no = A->cell_no;
     return A->get_u_or_v(u_or_v, cell_no);
@@ -526,7 +524,7 @@ auto Stack::get_u_or_v(bool u_or_v) -> TokenList {
 // Adds positions attributes to the current cell, given the current
 // table info.
 void Stack::finish_cell(int w) {
-    Xml       *cid = nullptr;
+    Xml       *cid     = nullptr;
     ArrayInfo *A       = get_my_table(cid);
     auto       cell_no = A->cell_no;
     AttList    atts    = A->get_cell_atts(cell_no);
