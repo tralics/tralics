@@ -9,8 +9,8 @@
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include <charconv>
-#include <spdlog/fmt/ostr.h>
 #include <fstream>
+#include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <system_error>
 
@@ -380,7 +380,7 @@ auto Xml::spec_copy() const -> Xml * {
     if (name != the_names["mo"]) return nullptr;
     const AttList &X = att;
     if (X.find(the_names["movablelimits"]) == X.end()) return nullptr;
-    Xml *res                                               = new Xml(name, nullptr);
+    Xml *res                                = new Xml(name, nullptr);
     static_cast<std::vector<Xml *> &>(*res) = *this;
     res->add_att(X, true);
     return res;
@@ -692,10 +692,9 @@ void Xml::unbox(Xml *x) {
     if (x->is_element()) {
         push_back_list(x);
     } else {
-        Buffer &b = scbuf; // TODO: without scbuf
-        b.clear();
+        Buffer b;
         b.append(encode(x->name));
-        add_last_string(encode(x->name));
+        add_last_string(b);
     }
 }
 
@@ -759,12 +758,12 @@ void Xml::add_non_empty_to(Xml *res) {
 }
 
 // This is used by sT_translate. It converts an XML element
-// to a string, using scbuf as temporary. clears the object
+// to a string, using a local buffer as temporary. clears the object
 auto Xml::convert_to_string() -> std::string {
-    scbuf.clear();
-    convert_to_string(scbuf);
+    Buffer b;
+    convert_to_string(b);
     clear();
-    return scbuf;
+    return b;
 }
 
 // This converts the content to a string. May be recursive

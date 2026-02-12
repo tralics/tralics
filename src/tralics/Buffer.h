@@ -2,9 +2,9 @@
 #include "TokenList.h"
 #include "enums.h"
 #include <cstring>
-#include <spdlog/fmt/fmt.h>
 #include <iostream>
 #include <optional>
+#include <spdlog/fmt/fmt.h>
 #include <string_view>
 #include <utility>
 #include <vector>
@@ -151,5 +151,5 @@ template <typename T> auto operator<<(Buffer &B, const T &t) -> Buffer & {
     return B;
 }
 
-inline Buffer err_buf, name_buffer, field_buf, shbuf, scbuf, Thbuf1, errbuf, Trace, sec_buffer, tp_main_buf, aux_buffer,
-    txparser2_local_buf, tp_local_buf, tkbuf, Tbuf, tpa_buffer, buffer_for_log;
+inline Buffer err_buf, name_buffer, field_buf, shbuf, Thbuf1, errbuf, Trace, sec_buffer, tp_main_buf, aux_buffer, txparser2_local_buf,
+    tp_local_buf, tkbuf, Tbuf, tpa_buffer, buffer_for_log;
