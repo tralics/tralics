@@ -1,4 +1,5 @@
 *.bak
+/.cache
 /.vscode
 /build
 /build-asan
