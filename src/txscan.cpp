@@ -10,10 +10,10 @@
 #include "tralics/TexRule.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
+#include <iostream>
 #include <spdlog/fmt/fmt.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
-#include <iostream>
 #include <string>
 
 namespace {
@@ -240,7 +240,7 @@ void Parser::close_all() {
 // A file name is a special thing in TeX.
 // We read until we find a non-char, or a space.
 auto Parser::scan_file_name() -> std::string {
-    Buffer fn;
+    std::string fn;
 
     if (name_in_progress) return "sabotage!"; // recursion killer.
     name_in_progress = true;
@@ -248,9 +248,9 @@ auto Parser::scan_file_name() -> std::string {
     for (;;) {
         if (get_x_token()) break;
         if (cur_cmd_chr.is_letter_other())
-            fn.push_back(cur_cmd_chr.char_val());
+            fn += cur_cmd_chr.char_val();
         else if (cur_cmd_chr.cmd == underscore_catcode) // allow foo_bar
-            fn.push_back(cur_cmd_chr.char_val());
+            fn += cur_cmd_chr.char_val();
         else if (cur_cmd_chr.is_space())
             break;
         else {
@@ -807,16 +807,16 @@ void Parser::insert_endline_char() {
 
 auto Parser::new_line_for_read(bool spec) -> bool {
     state = state_N;
-    int                           n = 0;
+    int n = 0;
     scratch.clear();
     input_line.clear();
     if (cur_in_chan == nb_input_channels) {
-        static int tty_line_no = 0;
+        static int  tty_line_no = 0;
         std::string line;
         if (!std::getline(std::cin, line)) {
             n = -1;
         } else {
-            n = ++tty_line_no;
+            n       = ++tty_line_no;
             scratch = line;
         }
     } else {

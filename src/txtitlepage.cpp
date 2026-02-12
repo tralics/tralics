@@ -86,7 +86,8 @@ auto tpage_ns::scan_item(Buffer &in, Buffer &out, char del) -> bool {
 bool Parser::T_titlepage_finish(size_t v) {
     Buffer B;
     auto   kmax = Titlepage.bigtable.size();
-    for (size_t k = 0; k < kmax; k++) if (!Titlepage.bigtable[k].exec_post()) return false;
+    for (size_t k = 0; k < kmax; k++)
+        if (!Titlepage.bigtable[k].exec_post()) return false;
     add_language_att();
     TitlePageAux &tpa      = Titlepage.bigtable[v];
     std::string   tmp      = tpa.T4;
@@ -191,7 +192,7 @@ auto Buffer::is_begin_something(const std::string &s) -> int {
     skip_letter();
     if (ptrs.b == ptrs.a) return 2;
     resize(ptrs.b);
-    if (substring() == s) return 4;
+    if (substr(ptrs.a, ptrs.b - ptrs.a) == s) return 4;
     return 2;
 }
 
@@ -214,7 +215,7 @@ void Buffer::find_top_atts() {
     if (!see_equals("DocAttrib")) return;
     ptrs.a = ptrs.b;
     skip_letter();
-    std::string a = substring();
+    std::string a = substr(ptrs.a, ptrs.b - ptrs.a);
     skip_sp_tab();
     if (head() != '\\' && head() != '\"') return;
     remove_space_at_end();
@@ -254,7 +255,7 @@ auto Buffer::find_alias(const std::vector<std::string> &SL, std::string &res) ->
     ptrs.a = ptrs.b;
     skip_letter_dig();
     if (ptrs.a == ptrs.b) return true; // this is bad
-    std::string pot_res      = substring();
+    std::string pot_res      = substr(ptrs.a, ptrs.b - ptrs.a);
     bool        local_potres = false;
     if (std::find(SL.begin(), SL.end(), pot_res) != SL.end()) local_potres = true;
     for (;;) {
@@ -263,7 +264,7 @@ auto Buffer::find_alias(const std::vector<std::string> &SL, std::string &res) ->
         ptrs.a = ptrs.b;
         skip_letter_dig();
         if (ptrs.a == ptrs.b) break;
-        std::string a  = substring();
+        std::string a  = substr(ptrs.a, ptrs.b - ptrs.a);
         bool        ok = a == res;
         if (ok) {
             spdlog::trace("Potential type {} aliased to {}", res, pot_res);

@@ -536,7 +536,7 @@ auto Buffer::fetch_spec_arg() -> bool {
 auto Buffer::contains_braced(const std::string &s) -> bool {
     auto k = ptrs.a;
     if (!fetch_spec_arg()) return false;
-    if (substring() != s) return false;
+    if (substr(ptrs.a, ptrs.b - ptrs.a) != s) return false;
     ptrs.a = k;
     advance();
     return true;
@@ -548,7 +548,7 @@ auto Buffer::contains_env(const std::string &env) -> bool {
     skip_sp_tab_nl();
     ptrs.a = ptrs.b;
     ptrs.b = ptrs.a + 4;
-    if (substring() != "\\end") return false;
+    if (substr(ptrs.a, ptrs.b - ptrs.a) != "\\end") return false;
     skip_sp_tab_nl();
     if (!(contains_braced(env))) return false;
     skip_sp_tab_nl();

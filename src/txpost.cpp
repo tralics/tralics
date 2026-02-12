@@ -101,9 +101,9 @@ void tralics_ns::find_index_labels(std::vector<std::string> &W) {
         auto       *L = labinfo(V);
         if (!L->defined) continue; // should not happen
         std::string B = L->id;
-        Buffer      b(W[E]);
+        std::string b = W[E];
         if (!b.empty()) b.push_back(' ');
-        b.append(encode(B));
+        b += encode(B);
         W[E] = b;
     }
 }

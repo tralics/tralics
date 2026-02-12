@@ -92,10 +92,10 @@ auto Parser::index_aux(TokenList &L, std::optional<size_t> father, OneIndex &g) 
     auto n = IR.size();
     for (size_t i = 0; i < n; i++)
         if (IR[i].is_same(level, aux)) return i;
-    Buffer B;
+    std::string B;
     if (father) B += IR[*father].key + "____";
     B += key;
-    B.lowercase();
+    std::transform(B.begin(), B.end(), B.begin(), [](unsigned char c) { return std::tolower(c); });
     std::replace(B.begin(), B.end(), '\n', ' ');
     Xml *res = translate_list(L);
     Xml *x   = new Xml(the_names["index"], res);

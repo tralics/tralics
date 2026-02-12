@@ -851,8 +851,8 @@ auto Parser::T_math(subtypes type) -> bool {
     Xml        *alter{nullptr};
     std::string textype = math_data.get_list(0).get_name();
     if (nm == -3) {
-        Math &w   = math_data.get_list(loc_of_cp);
-        alter     = w.convert_math_noML(false);
+        Math &w = math_data.get_list(loc_of_cp);
+        alter   = w.convert_math_noML(false);
         alter->take_id(cmi.cur_texmath_id);
     }
     loc_of_cp = math_data.get_list(0).duplicate(false);
@@ -917,7 +917,8 @@ auto Parser::T_math(subtypes type) -> bool {
             aux = bt_brace;
     }
     push_level(aux);
-    if (m == 0 && cmi.eqnum_status == 3) if (!refstepcounter("equation", false)) return false;
+    if (m == 0 && cmi.eqnum_status == 3)
+        if (!refstepcounter("equation", false)) return false;
     if (!scan_math(x, t)) return false;
     if (m == 0 && (cmi.eqnum_status == 2 || cmi.eqnum_status == 1)) {
         if (!cmi.end_of_row()) {
@@ -1912,7 +1913,7 @@ auto Math::trivial_math_index(symcodes cmd) -> Xml * {
     bool        have_font = false;
     std::string font_pos  = "cst_empty";
     if (w.is_letter() || w.is_other())
-        B.push_back(w.char_val());
+        B += w.char_val();
     else if (L->is_list()) {
         const Math &A = L->get_list();
         auto        C = A.begin();
@@ -2202,10 +2203,10 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         return {CmdChr(error_cmd, zero_code), zero_code};
     }
     case mathlabel_code: {
-        std::string s1  = L.get_arg1().convert_this_to_string(math_buffer);
-        std::string s2  = L.get_arg2().convert_this_to_string(math_buffer);
-        Xml        *x   = new Xml(the_names["mrow"], nullptr);
-        std::string id  = next_label_id();
+        std::string s1 = L.get_arg1().convert_this_to_string(math_buffer);
+        std::string s2 = L.get_arg2().convert_this_to_string(math_buffer);
+        Xml        *x  = new Xml(the_names["mrow"], nullptr);
+        std::string id = next_label_id();
         the_stack.create_new_anchor(x, id, std::string(s1));
         the_parser.create_label(s2, id);
         return {x, mt_flag_small};
