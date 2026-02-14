@@ -259,7 +259,7 @@ auto Parser::scan_file_name() -> std::string {
         }
     }
     name_in_progress = false;
-    return std::move(fn);
+    return fn;
 }
 
 // This implements \endinput, \scantokens
