@@ -472,13 +472,6 @@ auto Buffer::string_delims() -> bool {
 // Assumes the buffer is of the form foo/bar/etc,
 // with a final slash; returns the next item; Retval false if no string found
 
-void Buffer::push_back_unless_punct(char c) {
-    if (ends_with("&nbsp;")) return;
-    if (!empty() && (std::isspace(back()) != 0)) return;
-    if (!empty() && back() == '(') return;
-    push_back(c);
-}
-
 // Tries to read an argument. Sets ptrs.a to after the opening brace
 // ptrs.b to the closing brace.
 auto Buffer::fetch_spec_arg() -> bool {

@@ -114,7 +114,6 @@ public:
     void push_back_roman(long n);
     void push_back_Roman(long n);
     void push_back_special_att(Xml &x);
-    void push_back_unless_punct(char c);
     void push_back_xml_char(char c);
     void remove_last_space();
     void remove_space_at_end();

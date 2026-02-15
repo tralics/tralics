@@ -28,5 +28,6 @@ auto split_commas(const std::string &S) -> std::vector<std::string>;
 auto split_at_colon(const std::string &s) -> std::optional<std::pair<std::string, std::string>>;
 auto to_utf8(char32_t c) -> std::string;
 auto without_end_spaces(std::string s) -> std::string;
+void append_unless_punct(std::string &s, char c);
 
 auto operator<<(std::ostream &fp, const boundary_type &x) -> std::ostream &;

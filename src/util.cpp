@@ -32,6 +32,13 @@ auto without_end_spaces(std::string s) -> std::string {
     return s.substr(k, l - k);
 }
 
+void append_unless_punct(std::string &s, char c) {
+    if (s.size() >= 6 && s.ends_with("&nbsp;")) return;
+    if (!s.empty() && (std::isspace(static_cast<unsigned char>(s.back())) != 0)) return;
+    if (!s.empty() && s.back() == '(') return;
+    s.push_back(c);
+}
+
 auto split_commas(const std::string &S) -> std::vector<std::string> {
     std::vector<std::string> res;
     size_t                   pos = 0;

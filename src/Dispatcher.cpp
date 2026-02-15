@@ -4,6 +4,7 @@
 #include "tralics/Parser.h"
 #include "tralics/Symcode.h"
 #include "tralics/globals.h"
+#include "tralics/util.h"
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 
@@ -196,7 +197,7 @@ void Dispatcher::boot() {
     register_action(float_cmd, &Parser::T_float);
     register_action_plain(fnhack_cmd, &Parser::fnhack);
     register_action_plain(fontsize_cmd, &Parser::translate_font_size);
-    register_action_plain(footcitepre_cmd, [] { the_parser.unprocessed_xml.push_back_unless_punct(' '); });
+    register_action_plain(footcitepre_cmd, [] { append_unless_punct(the_parser.unprocessed_xml, ' '); });
     register_action(footnote_cmd, [] {
         return the_parser.T_cap_or_note(false);
     });
