@@ -197,8 +197,8 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
   - 241: without Buffer
   - 246: without Buffer
 
-- src/txio.cpp
-  - 55: nullopt
+- [x] src/txio.cpp
+  - 55: nullopt (done 2026-02-15)
 
 - src/BibEntry.cpp
   - 420: [[deprecated]]
@@ -211,8 +211,8 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
   - 1388: useless alone?
   - 1401: useless alone?
 
-- src/TexFonts.cpp
-  - 13: Replace that with size_t or std::optional<size_t>
+- [x] src/TexFonts.cpp
+  - 13: Replace that with size_t or std::optional<size_t> (done 2026-02-15)
 
 - src/Mactab.cpp
   - 21: shared_ptr or something RAII?
