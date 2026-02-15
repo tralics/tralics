@@ -91,7 +91,6 @@ public:
     auto see_equals(const std::string &s) -> bool;
     auto skip_string(const std::string &s) -> bool;
     auto skip_word_ci(const std::string &s) -> bool;
-    auto slash_separated() -> std::optional<std::string>;
     auto special_convert(bool init) -> std::string;
     auto str_toks(nl_to_tok nl) -> TokenList;
     auto str_toks11(bool nl) -> TokenList;

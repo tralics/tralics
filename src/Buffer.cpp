@@ -487,30 +487,6 @@ auto Buffer::string_delims() -> bool {
 // Assumes the buffer is of the form foo/bar/etc,
 // with a final slash; returns the next item; Retval false if no string found
 
-auto Buffer::slash_separated() -> std::optional<std::string> {
-    std::string res;
-    size_t      p = 0;
-    skip_sp_tab();
-    if (head() == 0) return {};
-    for (;;) {
-        char c = head();
-        if (c == 0) return {};
-        advance();
-        if (c == '/') break;
-        if (c == '\\') {
-            if (head() == 0) return {};
-            if (head() == ' ') { p = res.size() + 1; }
-            c = head();
-            advance();
-        }
-        res.push_back(c);
-    }
-    auto b = res.size();
-    while (b > p && (std::isspace(res[b - 1]) != 0)) b--;
-    res.resize(b);
-    return res;
-}
-
 void Buffer::push_back_unless_punct(char c) {
     if (ends_with("&nbsp;")) return;
     if (!empty() && (std::isspace(back()) != 0)) return;
