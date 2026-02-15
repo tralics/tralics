@@ -29,5 +29,7 @@ auto split_at_colon(const std::string &s) -> std::optional<std::pair<std::string
 auto to_utf8(char32_t c) -> std::string;
 auto without_end_spaces(std::string s) -> std::string;
 void append_unless_punct(std::string &s, char c);
+void append_roman_upper(std::string &s, long n);
+void append_roman_lower(std::string &s, long n);
 
 auto operator<<(std::ostream &fp, const boundary_type &x) -> std::ostream &;

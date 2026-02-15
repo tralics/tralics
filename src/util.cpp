@@ -39,6 +39,68 @@ void append_unless_punct(std::string &s, char c) {
     s.push_back(c);
 }
 
+void append_roman_upper(std::string &s, long n) {
+    while (n >= 1000) {
+        s.push_back('M');
+        n -= 1000;
+    }
+    if (n <= 0) return;
+    if (n >= 900) {
+        s.append("CM");
+        n -= 900;
+    }
+    if (n >= 500) {
+        s.push_back('D');
+        n -= 500;
+    }
+    if (n >= 400) {
+        s.append("CD");
+        n -= 400;
+    }
+    while (n >= 100) {
+        s.push_back('C');
+        n -= 100;
+    }
+    if (n >= 90) {
+        s.append("XC");
+        n -= 90;
+    }
+    if (n >= 50) {
+        s.push_back('L');
+        n -= 50;
+    }
+    if (n >= 40) {
+        s.append("XL");
+        n -= 40;
+    }
+    while (n >= 10) {
+        s.push_back('X');
+        n -= 10;
+    }
+    if (n >= 9) {
+        s.append("IX");
+        n -= 9;
+    }
+    if (n >= 5) {
+        s.push_back('V');
+        n -= 5;
+    }
+    if (n >= 4) {
+        s.append("IV");
+        n -= 4;
+    }
+    while (n > 0) {
+        s.push_back('I');
+        n--;
+    }
+}
+
+void append_roman_lower(std::string &s, long n) {
+    auto k = s.size();
+    append_roman_upper(s, n);
+    for (size_t i = k; i < s.size(); i++) s[i] = char(s[i] + 'a' - 'A');
+}
+
 auto split_commas(const std::string &S) -> std::vector<std::string> {
     std::vector<std::string> res;
     size_t                   pos = 0;

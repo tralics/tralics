@@ -111,8 +111,6 @@ public:
     void push_back_math_token(const CmdChr &x, bool space);
     void push_back_newline();
     void append_with_xml_escaping(char32_t c);
-    void push_back_roman(long n);
-    void push_back_Roman(long n);
     void push_back_special_att(Xml &x);
     void push_back_xml_char(char c);
     void remove_last_space();

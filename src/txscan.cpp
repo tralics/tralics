@@ -2128,11 +2128,11 @@ void Parser::E_convert() {
         break;
     case romannumeral_code:
         n = scan_int(T);
-        B.push_back_roman(n);
+        append_roman_lower(static_cast<std::string &>(B), n);
         break;
     case Romannumeral_code:
         n = scan_int(T);
-        B.push_back_Roman(n);
+        append_roman_upper(static_cast<std::string &>(B), n);
         break;
     case l3string_code: // like \string sans escapechar
     case string_code:
