@@ -43,7 +43,6 @@ public:
     [[nodiscard]] auto next_non_space(size_t j) const -> size_t;           // Locate next non-space char after `j`
     [[nodiscard]] auto see_config_env() const -> int;                      // Do we start with `Begin` or `End`?
     [[nodiscard]] auto single_char() const -> char;                        // If only one (non-space) char, return it
-    [[nodiscard]] auto substring() const -> std::string;                   // Get the slice [ptrs.a,ptrs.b)
 
     // Mutating methods, affecting the data but not ptrs
     void dump_prefix(bool err, bool gbl, symcodes K); // Insert def qualifiers (`\global` etc.)
@@ -71,7 +70,6 @@ public:
 
     // Those are not const and have a return value, mostly they leave some
     // crucial info in ptrs.b and ptrs.a or just reset. TODO: refactor all that
-    [[nodiscard]] auto backup_space() -> bool;                        // Remove trailing spaces
     [[nodiscard]] auto contains_braced(const std::string &s) -> bool; // Do we contain s with braces? (sets ptrs.b after `}`)
     [[nodiscard]] auto contains_env(const std::string &env) -> bool;  // Do we contain `\end{env}`?
     [[nodiscard]] auto fetch_spec_arg() -> bool;                      // Try to read a braced argument

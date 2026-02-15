@@ -112,9 +112,6 @@ auto Buffer::lowercase() -> Buffer & {
     return *this;
 }
 
-// Returns the part of the buffer between ptrs.a (included) and ptrs.b (excluded).
-auto Buffer::substring() const -> std::string { return substr(ptrs.a, ptrs.b - ptrs.a); }
-
 // Replaces trailing cr-lf by lf.
 void Buffer::push_back_newline() {
     if (!empty() && back() == '\r') pop_back();
@@ -456,18 +453,6 @@ auto Buffer::find_equals() -> bool {
     ptrs.a = ptrs.b;
     while (ptrs.b < size() && head() != '=') advance();
     return ptrs.b < size() && head() == '=';
-}
-
-// Ignores character at ptrs.b, and following ones.
-// removes the spaces just before.
-// leaves ptrs.b on the last non-space.
-// returns false in case of trouble (only spaces).
-auto Buffer::backup_space() -> bool {
-    size_t j = ptrs.b;
-    while (j > ptrs.a && is_spaceh(j - 1)) j--;
-    if (j == ptrs.a) return false;
-    ptrs.b = j;
-    return true;
 }
 
 // If there is 'foobar' at ptrs.b, then puts ptrs.a to the char after
