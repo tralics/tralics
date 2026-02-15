@@ -5,6 +5,7 @@
 #include "tralics/NameMapper.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
+#include <spdlog/fmt/fmt.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 
@@ -240,7 +241,7 @@ namespace {
     }
 
     void out_something_s(field_pos p, const std::string &s) {
-        bbl.format("\\cititem{{{}}}{{{}}}", bib_xml_name[p], s);
+        bbl.buffer += fmt::format("\\cititem{{{}}}{{{}}}", bib_xml_name[p], s);
         bbl.flush();
     }
 } // namespace
@@ -403,24 +404,24 @@ void BibEntry::format_author(bool au) {
     field_pos p = au ? fp_author : fp_editor;
     if (all_fields[p].empty()) return;
     std::string data = au ? author_data.value : editor_data.value;
-    bbl.append("\\" + bib_xml_name[p]);
-    bbl.format("{{{}}}", data);
+    bbl.buffer.append("\\" + bib_xml_name[p]);
+    bbl.buffer += fmt::format("{{{}}}", data);
     bbl.flush();
 }
 
 void BibEntry::call_type() {
-    bbl.clear();
-    bbl.append("%");
+    bbl.buffer.clear();
+    bbl.buffer.append("%");
     bbl.flush();
     //  bbl.push_back("%%%");bbl.push_back(sort_label); bbl.newline();
-    bbl.append("\\citation");
-    bbl.format("{{{}}}", label);
-    bbl.format("{{{}}}", cite_key.full_key);
-    bbl.format("{{{}}}", unique_id);
-    bbl.format("{{{}}}", "year"); // TODO: [[deprecated]]
+    bbl.buffer.append("\\citation");
+    bbl.buffer += fmt::format("{{{}}}", label);
+    bbl.buffer += fmt::format("{{{}}}", cite_key.full_key);
+    bbl.buffer += fmt::format("{{{}}}", unique_id);
+    bbl.buffer += fmt::format("{{{}}}", "year"); // TODO: [[deprecated]]
     const auto &my_name = (is_extension > 0) ? the_main.bibtex_extensions[is_extension - 1] : the_names[type_to_string(type_int)];
-    bbl.format("{{{}}}", my_name);
-    bbl.append(aux_label);
+    bbl.buffer += fmt::format("{{{}}}", my_name);
+    bbl.buffer.append(aux_label);
     bbl.flush();
     if (type_int == type_extension || the_bibtex.raw_bib)
         call_type_all();
@@ -430,24 +431,24 @@ void BibEntry::call_type() {
     out_something(fp_doi);
     std::string s = all_fields[fp_url];
     if (!s.empty()) {
-        bbl.append("\\csname @href\\endcsname");
+        bbl.buffer.append("\\csname @href\\endcsname");
         //    string S = hack_bib_space(s);
-        bbl.format("{{{}}}", remove_space(s));
-        bbl.append(insert_break(s));
+        bbl.buffer += fmt::format("{{{}}}", remove_space(s));
+        bbl.buffer.append(insert_break(s));
         bbl.flush();
     }
     std::vector<std::string> &Bib = the_main.bibtex_fields;
     for (size_t i = 0; i < Bib.size(); i++) {
         auto ss = user_fields[i];
         if (!ss.empty()) {
-            bbl.append("\\cititem");
-            bbl.format("{{{}}}", Bib[i]);
-            bbl.format("{{{}}}", ss);
+            bbl.buffer.append("\\cititem");
+            bbl.buffer += fmt::format("{{{}}}", Bib[i]);
+            bbl.buffer += fmt::format("{{{}}}", ss);
             bbl.flush();
         }
     }
     out_something(fp_note);
-    bbl.append("\\endcitation");
+    bbl.buffer.append("\\endcitation");
     bbl.flush();
 }
 

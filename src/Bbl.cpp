@@ -1,8 +1,10 @@
 #include "tralics/Bbl.h"
+#include "tralics/Buffer.h"
 
 void Bbl::flush() {
-    append("\n");
-    file << convert_to_log_encoding();
-    lines.insert(*this, true);
-    clear();
+    buffer.append("\n");
+    Buffer tmp(buffer);
+    file << tmp.convert_to_log_encoding();
+    lines.insert(buffer, true);
+    buffer.clear();
 }

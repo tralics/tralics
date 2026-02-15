@@ -2,8 +2,9 @@
 #include "LineList.h"
 #include "util.h"
 #include <fstream>
+#include <string>
 
-class Bbl : public Buffer {
+class Bbl {
 private:
     std::ofstream file;
 
@@ -11,6 +12,7 @@ public:
     bool        too_late{false};
     std::string name;
     LineList    lines;
+    std::string buffer;
 
     void flush();
     void open() {

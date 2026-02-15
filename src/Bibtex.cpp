@@ -5,6 +5,7 @@
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
+#include <spdlog/fmt/fmt.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 
@@ -113,14 +114,14 @@ namespace {
 void Bibtex::read_bib_file(const std::string &s) {
     if (auto of = find_in_path(s + (s.ends_with(".bib") ? "" : ".bib")); of) {
         spdlog::trace("Found BIB file: {}", of->string());
-        bbl.format("% reading source {}", of->string());
+        bbl.buffer += fmt::format("% reading source {}", of->string());
         bbl.flush();
         in_lines.read(*of, 1);
         last_ok_line = 0;
         reset_input();
         while (parse_one_item()) {};
-        if (!bbl.empty()) {
-            bbl.append("%");
+        if (!bbl.buffer.empty()) {
+            bbl.buffer.append("%");
             bbl.flush();
         }
     } else
@@ -444,7 +445,7 @@ auto Bibtex::parse_one_item() -> bool {
     if (cn == type_comment) return true;
     if (cn == type_preamble) {
         if (!read_field(true)) return false;
-        bbl.append(field_buf);
+        bbl.buffer.append(field_buf);
     } else if (cn == type_string) {
         res = scan_identifier(2);
         if (!res) return false;
@@ -611,7 +612,7 @@ auto Bibtex::find_entry(const std::string &s, bib_creator bc) -> BibEntry * {
 // This is the main function.
 void Bibtex::work() {
     if (all_entries.empty()) return;
-    if (!bbl.empty()) bbl.flush();
+    if (!bbl.buffer.empty()) bbl.flush();
     all_entries_table.reserve(all_entries.size());
     for (auto &all_entrie : all_entries) all_entrie->un_crossref();
     for (size_t i = 0; i < all_entries.size(); i++) all_entries[i]->work(to_signed(i));
