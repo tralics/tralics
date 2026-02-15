@@ -193,9 +193,9 @@ and the enum maintenance burden.
 ## TODO backlog (2026-02-11)
 Items below need deeper refactoring or design work; copied from TODO markers in src/.
 
-- src/NameMapper.cpp
-  - 241: without Buffer
-  - 246: without Buffer
+- [x] src/NameMapper.cpp
+  - 241: without Buffer (done 2026-02-15)
+  - 246: without Buffer (done 2026-02-15)
 
 - [x] src/txio.cpp
   - 55: nullopt (done 2026-02-15)

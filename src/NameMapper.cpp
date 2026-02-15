@@ -3,12 +3,47 @@
 #include "tralics/MainClass.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
+#include <cctype>
 #include <spdlog/fmt/fmt.h>
 #include <spdlog/spdlog.h>
 
-namespace config_ns {
-    auto start_interpret(Buffer &B, std::string_view s) -> bool;
-} // namespace config_ns
+namespace {
+    void interpret_bibtex_list(std::string_view input, std::vector<std::string> &bib, std::vector<std::string> &bib2, std::string_view label) {
+        bool   reset = true;
+        size_t i     = 0;
+        if (i < input.size() && input[i] == '+') {
+            reset = false;
+            ++i;
+        }
+        std::string log_line(label);
+        if (!reset) log_line += "+";
+        if (reset) {
+            bib.clear();
+            bib2.clear();
+        }
+        while (i < input.size()) {
+            while (i < input.size() && std::isspace(static_cast<unsigned char>(input[i])) != 0) ++i;
+            if (i >= input.size()) break;
+            bool keep = true;
+            if (input[i] == '-') {
+                keep = false;
+                ++i;
+                if (i >= input.size()) break; // final dash ignored
+                log_line += "--";
+            }
+            size_t start = i;
+            while (i < input.size() && std::isspace(static_cast<unsigned char>(input[i])) == 0) ++i;
+            std::string k(input.substr(start, i - start));
+            if (keep)
+                bib.emplace_back(k);
+            else
+                bib2.emplace_back(k);
+            log_line += k;
+            log_line += " ";
+        }
+        if (!log_line.empty()) spdlog::trace("{}", log_line);
+    }
+} // namespace
 
 auto NameMapper::operator[](const std::string &name) const -> std::string {
     if (auto i = dict.find(name); i != dict.end()) return i->second;
@@ -238,12 +273,12 @@ void NameMapper::assign(const std::string &sa, const std::string &sb) {
     if (sa == "bibtex_fields") {
         std::vector<std::string> &bib  = the_main.bibtex_fields;
         std::vector<std::string> &bib1 = the_main.bibtex_fields_s;
-        Buffer(sb).interpret_aux(bib, bib1, "bibtex_fields: "); // TODO: without Buffer
+        interpret_bibtex_list(sb, bib, bib1, "bibtex_fields: ");
     }
     if (sa == "bibtex_extensions") {
         std::vector<std::string> &bib  = the_main.bibtex_extensions;
         std::vector<std::string> &bib2 = the_main.bibtex_extensions_s;
-        Buffer(sb).interpret_aux(bib, bib2, "bibtex_extensions: "); // TODO: without Buffer
+        interpret_bibtex_list(sb, bib, bib2, "bibtex_extensions: ");
     }
     if (sa == "mfenced_separator_val") {
         if (sb == "NONE")
