@@ -7,12 +7,6 @@
 #include <spdlog/fmt/fmt.h>
 #include <spdlog/spdlog.h>
 
-namespace tralics_ns {
-    auto math_env_props(subtypes c) -> int; // TODO: elsewhere
-} // namespace tralics_ns
-
-using tralics_ns::math_env_props;
-
 // Implements \cellattribute
 void MathHelper::add_attribute(const std::string &a, const std::string &b, subtypes c) const {
     Xml *w = nullptr;
@@ -60,7 +54,7 @@ void MathHelper::set_type(bool b) {
 // Defines how many equation numbers are to be created
 // If multi is true, more than one is allowed
 void MathHelper::check_for_eqnum(subtypes type, bool multi) {
-    int fl = math_env_props(type);
+    int fl = tralics_ns::math_env_props(type);
     if ((fl & 2) != 0)
         eqnum_status = 1;
     else if ((fl & 4) != 0)

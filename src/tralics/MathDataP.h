@@ -78,3 +78,7 @@ public:
 };
 
 inline MathDataP math_data; // TODO: unique instance, should we use static stuff?
+
+namespace tralics_ns {
+    auto math_env_props(subtypes c) -> int;
+}

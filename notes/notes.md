@@ -203,8 +203,8 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
 - src/BibEntry.cpp
   - 420: [[deprecated]]
 
-- src/MathHelper.cpp
-  - 11: elsewhere
+- [x] src/MathHelper.cpp
+  - 11: elsewhere (done 2026-02-15)
 
 - src/Hashtab_boot.cpp
   - 1387: useless alone?

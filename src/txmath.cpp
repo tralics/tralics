@@ -243,10 +243,6 @@ namespace math_ns {
                            int denalign, int style, size_t open, size_t close) -> Xml *;
 } // namespace math_ns
 
-namespace tralics_ns {
-    auto math_env_props(subtypes c) -> int;
-} // namespace tralics_ns
-
 using tralics_ns::math_env_props;
 
 auto math_env_needs_display_style(subtypes sname) -> bool {
