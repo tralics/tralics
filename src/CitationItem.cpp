@@ -4,6 +4,7 @@
 #include "tralics/Bibtex.h"
 #include "tralics/Parser.h"
 #include "tralics/util.h"
+#include <spdlog/fmt/fmt.h>
 
 // This returns a bid. It may create one.
 auto CitationItem::get_id() -> std::string {
@@ -13,8 +14,8 @@ auto CitationItem::get_id() -> std::string {
 
 // This prints an unsolved reference in a buffer, we will put it in
 // the aux file.
-void CitationItem::dump(Buffer &b) const {
-    if (!is_solved()) b.format("\\citation{{{}}}\n", encode(key));
+void CitationItem::dump(std::string &b) const {
+    if (!is_solved()) b += fmt::format("\\citation{{{}}}\n", encode(key));
 }
 
 // This prints an unsolved reference for use by Tralics.

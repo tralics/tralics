@@ -9,7 +9,7 @@ struct CitationItem {
 
     CitationItem(std::string A, std::string B) : key(std::move(A)), from(std::move(B)) {}
 
-    void dump(Buffer &b) const;
+    void dump(std::string &b) const;
 
     [[nodiscard]] auto is_solved() const -> bool { return solved != nullptr; }
     [[nodiscard]] auto match(const std::string &A, const std::string &B) const -> bool;

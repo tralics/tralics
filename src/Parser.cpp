@@ -149,7 +149,7 @@ namespace {
             spdlog::warn("Cannot call external program unless using option -shell-escape");
             return;
         }
-        Buffer B;
+        std::string B;
         bbl.lines.clear();
         Bibliography &T = the_bibliography;
         T.dump(B);

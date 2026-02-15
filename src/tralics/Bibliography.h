@@ -15,9 +15,9 @@ private:
     int                      last_bid{-1};            // current number for unique_bid
 
 public:
-    void               dump(Buffer &b);
+    void               dump(std::string &b);
     void               dump_bibtex();
-    void               dump_data(Buffer &b);
+    void               dump_data(std::string &b);
     auto               get_bid(size_t n) { return citation_table[n].get_id(); }
     auto               find_citation_item(const std::string &from, const std::string &key, bool insert) -> std::optional<size_t>;
     auto               find_citation_star(const std::string &from, const std::string &key) -> size_t;

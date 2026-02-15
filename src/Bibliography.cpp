@@ -10,7 +10,7 @@
 auto Bibliography::unique_bid() -> std::string { return std::string(fmt::format("bid{}", ++last_bid)); }
 
 // This creates the full aux file, for use with bibtex.
-void Bibliography::dump(Buffer &b) {
+void Bibliography::dump(std::string &b) {
     if (seen_nocite()) b.append("\\citation{*}\n");
     for (auto &i : citation_table) i.dump(b);
 }
@@ -34,8 +34,8 @@ void Bibliography::stats() {
 }
 
 // This dumps the whole biblio for use by bibtex.
-void Bibliography::dump_data(Buffer &b) {
-    b.format("\\bibstyle{{{}}}\n", bib_style);
+void Bibliography::dump_data(std::string &b) {
+    b += fmt::format("\\bibstyle{{{}}}\n", bib_style);
     b.append("\\bibdata{");
     if (biblio_src.empty()) b.append(the_main.file_name);
     for (size_t i = 0; i < biblio_src.size(); i++) {
