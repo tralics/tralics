@@ -155,7 +155,7 @@ struct Parser {
     Parser();
     ~Parser();
 
-    void               add_buffer_to_document_hook(const Buffer &b, const std::string &name);
+    void               add_buffer_to_document_hook(std::string_view b, const std::string &name);
     void               add_language_att() const;
     bool               after_main_text();
     void               boot();

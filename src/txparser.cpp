@@ -572,8 +572,8 @@ void Parser::read_toks_edef(TokenList &L) {
 // --------------------------------------------------
 
 // Adds the content of the buffer to the document-hook token list.
-void Parser::add_buffer_to_document_hook(const Buffer &b, const std::string &name) {
-    TokenList L = tokenize_buffer(b, name);
+void Parser::add_buffer_to_document_hook(std::string_view b, const std::string &name) {
+    TokenList L = tokenize_buffer(std::string(b), name);
     document_hook.splice(document_hook.end(), L);
 }
 

@@ -3,6 +3,7 @@
 #include "tralics/Parser.h"
 #include "tralics/TitlePage.h"
 #include "tralics/TitlePageFullLine.h"
+#include <spdlog/fmt/fmt.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <sstream>
@@ -27,11 +28,8 @@ auto TitlePageAux::classify(tpi_vals w, int &state) -> bool {
         T3    = T2;
         idx   = Titlepage.increase_data();
         if (get_flags2() == tp_A_flag) {
-            Buffer B;
-            B = "\\" + T1;
-            B.format("{{{}}}", T4);
-            B.append("%\n");
-            the_main.add_to_from_config(1, B);
+            std::string b = fmt::format("\\{}{{{}}}%\n", T1, T4);
+            the_main.add_to_from_config(1, b);
         }
         return true;
     case tpi_CEES: // \author +<aulist> <au> "default"
@@ -119,16 +117,14 @@ void TitlePageAux::exec_start(size_t k) {
         Titlepage[idx] = convert(2, std::string(T4));
         return;
     }
-    Buffer &B = tp_local_buf;
-    B         = "\\" + T1;
-    B.format("{{{}}}", T4);
+    std::string b = fmt::format("\\{}{{{}}}", T1, T4);
     Titlepage[idx] = new Xml(std::string("empty"));
-    B.append("%\n");
+    b.append("%\n");
     if (fl == tp_A_flag) {
     } else if (fl == tp_B_flag)
-        the_parser.add_buffer_to_document_hook(B, "(tpa init)");
+        the_parser.add_buffer_to_document_hook(b, "(tpa init)");
     else
-        T4 = B;
+        T4 = b;
 }
 
 // This is executed when we see the \Titlepage cmd
