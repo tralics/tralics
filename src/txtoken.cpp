@@ -162,15 +162,15 @@ auto Buffer::str_toks(nl_to_tok nl) -> TokenList {
     auto      NL = Token(other_t_offset + '\n'); // is ^^J
     ptrs.b       = 0;
     for (; !at_eol();) {
-        char32_t c = next_utf8_char();
-        if (c == 0) {
+        auto c = next_utf8_char();
+        if (!c || *c == 0) {
         } // ignore bad chars
-        else if (c == ' ')
+        else if (*c == ' ')
             L.push_back(SP);
-        else if (c == '\n')
+        else if (*c == '\n')
             L.push_back(nl == nlt_space ? SP : (nl == nlt_cr ? CR : NL));
         else
-            L.push_back(Token(other_t_offset, c));
+            L.push_back(Token(other_t_offset, *c));
     }
     return L;
 }
@@ -183,17 +183,17 @@ auto Buffer::str_toks11(bool nl) -> TokenList {
     ptrs.b = 0;
     for (;;) {
         if (at_eol()) return L;
-        char32_t c = next_utf8_char();
-        if (c == 0) {
+        auto c = next_utf8_char();
+        if (!c || *c == 0) {
         } // ignore bad chars
-        else if (c == ' ')
+        else if (*c == ' ')
             L.push_back(SP);
-        else if (c == '\n')
+        else if (*c == '\n')
             L.push_back(nl ? SP : NL);
-        else if ((std::isalpha(static_cast<int>(c)) != 0) || c == '@')
-            L.push_back(Token(letter_t_offset, c));
+        else if ((std::isalpha(static_cast<int>(*c)) != 0) || *c == '@')
+            L.push_back(Token(letter_t_offset, *c));
         else
-            L.push_back(Token(other_t_offset, c));
+            L.push_back(Token(other_t_offset, *c));
     }
 }
 

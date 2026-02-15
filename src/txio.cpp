@@ -32,7 +32,7 @@ namespace io_ns {
 
 // Returns 0 at end of line or error
 // This complains if the character is greater than 1FFFF
-auto Buffer::next_utf8_char() -> char32_t {
+auto Buffer::next_utf8_char() -> std::optional<char32_t> {
     auto     it = begin() + to_signed(ptrs.b), it0 = it;
     char32_t cp = 0;
     try {
@@ -44,7 +44,7 @@ auto Buffer::next_utf8_char() -> char32_t {
         the_main.bad_chars++;
         spdlog::warn("{}:{}:{}: UTF-8 parsing error, ignoring char", the_parser.cur_file_name, the_parser.cur_file_line, ptrs.b + 1);
         ++ptrs.b;
-        return char32_t();
+        return std::nullopt;
     }
     auto nn = to_unsigned(it - it0);
     ptrs.b += nn;
@@ -52,7 +52,7 @@ auto Buffer::next_utf8_char() -> char32_t {
         spdlog::error("UTF-8 parsing overflow (char U+{:04X}, line {}, file {})", size_t(cp), the_parser.cur_file_line,
                       the_parser.cur_file_name);
         the_main.bad_chars++;
-        return char32_t(); // TODO: nullopt
+        return std::nullopt;
     }
     return cp;
 }
@@ -166,14 +166,16 @@ auto Buffer::convert_to_log_encoding() const -> std::string {
     B.ptrs.b = 0;
     Buffer utf8_out;
     for (;;) {
-        char32_t c = B.next_utf8_char();
-        if (c == 0) {
+        auto c = B.next_utf8_char();
+        if (!c)
+            utf8_out += "<null>";
+        else if (*c == 0) {
             if (B.at_eol()) break;
             utf8_out += "<null>";
-        } else if (c == '\r')
+        } else if (*c == '\r')
             utf8_out += "^^M";
         else
-            utf8_out.out_log(c, T);
+            utf8_out.out_log(*c, T);
     }
     return std::move(utf8_out);
 }

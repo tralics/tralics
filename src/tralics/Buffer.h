@@ -84,7 +84,7 @@ public:
 
     auto is_begin_something(const std::string &s) -> int;
     auto look_at_space(const std::string &s) -> bool;
-    auto next_utf8_char() -> char32_t;
+    auto next_utf8_char() -> std::optional<char32_t>;
     auto push_back_newline_spec() -> bool;
     auto reverse_horner() -> size_t;
     auto see_config_kw(const std::string &s, bool c) -> std::optional<std::string>;
