@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE std SYSTEM 'classes.dtd'>
-<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2026/02/16 -->
 <std>
 <p>This file contains a number of error
 <error c='Undefined environment' l='5' n='\undefined-env'/>
 Undefined environment</p>
-<p>Now we have <error c='Undefined command' l='11' n='\fooa'/><error c='Undefined command' l='11' n='\foob'/><error c='Undefined command' l='11' n='\fooc'/><error c='Undefined command' l='11' n='\food'/><error c='Undefined command' l='11' n='\fooe'/>We have also <error c='Undefined command' l='12' n='\&#xAB;ok&#xBB;'/><error c='Undefined command' l='12' n='\&#x20AC;'/>!</p>
+<p>Now we have <error c='Undefined command' l='11' n='\fooa'/><error c='Undefined command' l='11' n='\foob'/><error c='Undefined command' l='11' n='\fooc'/><error c='Undefined command' l='11' n='\food'/><error c='Undefined command' l='11' n='\fooe'/>We have also <error c='Undefined command' l='12' n='\«ok»'/><error c='Undefined command' l='12' n='\€'/>!</p>
 </std>

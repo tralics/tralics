@@ -30,7 +30,7 @@ namespace {
         if (c == '\\') return "csname\\endcsname";
         if (c > 0 && c < int(nb_characters)) {
             Buffer B = "csname";
-            B.out_log(char32_t(c), the_main.log_encoding);
+            B.out_log(char32_t(c));
             B.append("endcsname");
             return std::move(B);
         }
@@ -139,7 +139,7 @@ void Buffer::remove_space_at_end() {
 void Buffer::insert_escape_char() {
     auto c = current_escape_char();
     if (c >= 0 && c < int(nb_characters))
-        out_log(char32_t(char32_t(c)), the_main.log_encoding);
+        out_log(char32_t(char32_t(c)));
     else if (c == 0)
         append("^^@");
 }
@@ -157,7 +157,6 @@ void Buffer::insert_escape_char_raw() {
 
 // returns true if a space could be added after the token
 auto Buffer::push_back(Token T) -> bool {
-    output_encoding_type enc = the_main.log_encoding;
     if (T.is_null()) {
         append("\\invalid.");
         return false;
@@ -169,15 +168,15 @@ auto Buffer::push_back(Token T) -> bool {
             push_back('#');
             push_back(static_cast<char>(c + '0')); // parameter
         } else if (cmd == parameter_catcode) {
-            out_log(c, enc);
-            out_log(c, enc);
+            out_log(c);
+            out_log(c);
         } else
-            out_log(c, enc);
+            out_log(c);
         return false;
     }
     if (!T.char_or_active()) insert_escape_char();
     if (T.active_or_single()) {
-        out_log(T.char_val(), enc);
+        out_log(T.char_val());
         return get_catcode(T.char_val()) == letter_catcode;
     }
     if (T.is_in_hash()) {

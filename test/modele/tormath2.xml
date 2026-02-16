@@ -1,11 +1,11 @@
-<?xml version='1.0' encoding='iso-8859-1'?>
+<?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE ramain SYSTEM 'raweb.dtd'>
-<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2026/02/16 -->
 <ramain creator='Tralics version 2.15.4'>
 <p>DOCSTART</p>
 <texmath textype='display' type='display'>x6</texmath>
 <div0 id='cid1' id-text='1'><head>simple math</head>
-<p><texmath textype='inline' type='inline'><sharp/></texmath> &#x266F;</p>
+<p><texmath textype='inline' type='inline'><sharp/></texmath> ♯</p>
 <p><texmath textype='inline' type='inline'>
 <i/><j/><elt name='$'/> ~<elt name=','/> <elt name='_'/> <elt name='&amp;'/> <lbrace/> <rbrace/> <elt name='%'/> <elt name=' '/><elt name='!'/> <quad/><qquad/><dots/><ldots/><elt name='#'/> <sharp/><natural/><flat/></texmath>
 =
@@ -13,8 +13,8 @@
 <texmath textype='inline' type='inline'><hspace>-24.0pt</hspace> <vspace>-24.0pt</vspace> <hspace>-3.0pt</hspace><vspace>4.0pt</vspace><hspace star='true'>-5.0pt</hspace><vspace star='true'>-6.0pt</vspace></texmath>
 <texmath textype='inline' type='inline'>abcdefghijklmnopqrstuvwxyz</texmath>
 <texmath textype='inline' type='inline'>ABCDEFGHIJKLMNOPQRSTUVWXYZ</texmath>
-<texmath textype='inline' type='inline'>&lt;&gt;,?;./:+=-<subscript>"</subscript><superscript><arg><prime/></arg></superscript>()�!` <superscript><arg><prime/></arg></superscript>"</texmath>
-<texmath textype='inline' type='inline'>&#x1234;a�</texmath></p>
+<texmath textype='inline' type='inline'>&lt;&gt;,?;./:+=-<subscript>"</subscript><superscript><arg><prime/></arg></superscript>()§!` <superscript><arg><prime/></arg></superscript>"</texmath>
+<texmath textype='inline' type='inline'>ሴaà</texmath></p>
 <p><texmath textype='inline' type='inline'><alpha/><beta/><gamma/><delta/><epsilon/><varepsilon/><zeta/><eta/><theta/><iota/><kappa/><lambda/><mu/><nu/><xi/><pi/><rho/><sigma/><tau/><upsilon/><phi/><chi/><psi/><omega/><varpi/><varrho/><varsigma/><varphi/><varkappa/><vartheta/></texmath>
 <texmath textype='inline' type='inline'><Gamma/><Delta/><Theta/><Lambda/><Xi/><Sigma/><Upsilon/><Phi/><Pi/><Psi/><Omega/></texmath></p>
 <p><texmath textype='inline' type='inline'><hbar/><ell/><wp/><Re/><Im/><partial/><infty/><emptyset/><nabla/><surd/><top/><bottom/><bot/><angle/><triangle/></texmath></p>
@@ -134,11 +134,11 @@ u&amp; = v+1 <hspace>10.0pt</hspace>(n<superscript>2</superscript>) <elt name='\
 <texmath textype='display' type='display'><frac><arg>1</arg><arg>2</arg></frac> <dfrac><arg>1</arg><arg>2</arg></dfrac> <tfrac><arg>1</arg><arg>2</arg></tfrac> <qquad/><arg></arg><superscript><arg><frac><arg>1</arg><arg>2</arg></frac> <dfrac><arg>1</arg><arg>2</arg></dfrac> <tfrac><arg>1</arg><arg>2</arg></tfrac></arg></superscript></texmath>
 <texmath textype='display' type='display'><frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice><frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice>+m</arg><arg>2</arg></frac></arg><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg></frac><quad/><tfrac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice><frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice>+m</arg><arg>2</arg></frac></arg><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg></tfrac><quad/><dfrac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice><frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice>+m</arg><arg>2</arg></frac></arg><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg></dfrac></texmath>
 <p><texmath textype='inline' type='inline'><bar><dot><rm/>o</dot></bar></texmath>
-a - b &#x2013; c &#x2014; d</p>
+a - b – c — d</p>
 <texmath textype='display' type='display'><binom><arg><frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice>+m</arg><arg>2</arg></frac></arg><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg></binom><quad/><tbinom><arg><frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice>+m</arg><arg>2</arg></frac></arg><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg></tbinom><quad/><dbinom><arg><frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice>+m</arg><arg>2</arg></frac></arg><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg></dbinom><qquad/><arg></arg><superscript><arg><binom><arg><frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice>+m</arg><arg>2</arg></frac></arg><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg></binom><quad/><tbinom><arg><frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice>+m</arg><arg>2</arg></frac></arg><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg></tbinom><quad/><dbinom><arg><frac><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice>+m</arg><arg>2</arg></frac></arg><arg><mathchoice><arg>a</arg><arg>b</arg><arg>c</arg><arg>d</arg></mathchoice></arg></dbinom></arg></superscript></texmath>
 <texmath textype='display' type='display'>a<over/><arg>b<over/>c</arg>
 </texmath>
-<p>y�<texmath textype='inline' type='inline'>x<superscript><arg><prime/></arg></superscript> x<superscript><arg><prime/><prime/></arg></superscript> x<superscript><arg><prime/><prime/><prime/></arg></superscript> x<superscript><arg><prime/><prime/><prime/><prime/></arg></superscript> u<subscript>2</subscript><superscript><arg><prime/></arg></superscript> v<superscript><arg><prime/>3</arg></superscript><subscript>4</subscript></texmath></p>
+<p>y´<texmath textype='inline' type='inline'>x<superscript><arg><prime/></arg></superscript> x<superscript><arg><prime/><prime/></arg></superscript> x<superscript><arg><prime/><prime/><prime/></arg></superscript> x<superscript><arg><prime/><prime/><prime/><prime/></arg></superscript> u<subscript>2</subscript><superscript><arg><prime/></arg></superscript> v<superscript><arg><prime/>3</arg></superscript><subscript>4</subscript></texmath></p>
 <p><texmath textype='inline' type='inline'><min/><subscript>x</subscript>f(x) &gt;<operatorname>dmin</operatorname><subscript>x</subscript>f(x)</texmath>.</p>
 <p><texmath textype='inline' type='inline'><min/><subscript>x</subscript>f(x) &gt;<mathmo>dmin</mathmo><mathattribute><arg>form</arg><arg>prefix</arg></mathattribute><mathattribute><arg>movablelimits</arg><arg>true</arg></mathattribute><subscript>x</subscript>f(x)</texmath>.</p>
 <texmath id='uid8' id-text='8' textype='equation' type='display'><env name='split'>
@@ -274,7 +274,7 @@ y &amp; = &amp; Cx <elt name='\'/>
 </texmath></p>
 <texmath textype='display' type='display'><binom><arg><frac><arg>n+m</arg><arg>2</arg></frac></arg><arg>n</arg></binom> <quad/><tbinom><arg><frac><arg>n+m</arg><arg>2</arg></frac></arg><arg>n</arg></tbinom> <quad/><dbinom><arg><frac><arg>n+m</arg><arg>2</arg></frac></arg><arg>n</arg></dbinom><qquad/><arg></arg><superscript><arg><binom><arg><frac><arg>n+m</arg><arg>2</arg></frac></arg><arg>n</arg></binom> <quad/><tbinom><arg><frac><arg>n+m</arg><arg>2</arg></frac></arg><arg>n</arg></tbinom> <quad/><dbinom><arg><frac><arg>n+m</arg><arg>2</arg></frac></arg><arg>n</arg></dbinom></arg></superscript></texmath>
 <p><texmath textype='inline' type='inline'><Leftrightarrow/></texmath></p>
-<p>1<font-super>st</font-super> x<font-super>i�me</font-super> y<font-sub>some text</font-sub>.</p>
+<p>1<font-super>st</font-super> x<font-super>ième</font-super> y<font-sub>some text</font-sub>.</p>
 <texmath textype='display' type='display'><genfrac><arg>1</arg><arg>2</arg></genfrac>
 <genfrac left='[' right=']' size='2.0pt' style='2'><arg>aaa</arg><arg>bbb</arg></genfrac>
 <genfrac left='(' right=')' size='0.0pt' style='0'><arg>n</arg><arg>m</arg></genfrac>
@@ -302,7 +302,7 @@ y &amp; = &amp; Cx <elt name='\'/>
 <texmath textype='inline' type='inline'><genfrac style='3'><arg>abc</arg><arg>def</arg></genfrac></texmath></p>
 <p><texmath textype='inline' type='inline'><tilde>a</tilde>,<tilde>z</tilde>, <tilde>a+b</tilde></texmath></p>
 <p><texmath textype='inline' type='inline'><overline><tt/>P</overline> P</texmath></p>
-<p>� ��� � &#xE1; &aacute;
+<p>á ááá á &#xE1; &aacute;
 <texmath textype='inline' type='inline'><hat>a</hat> <acute>a</acute> <bar>a</bar> <dot>a</dot> <breve>a</breve>
 <check>a</check> <grave>a</grave> <vec>a</vec> <ddot>a</ddot> <tilde>a</tilde>
 </texmath></p>
@@ -336,7 +336,7 @@ y &amp; = &amp; Cx <elt name='\'/>
 <p noindent='true'><texmath textype='inline' type='inline'><int/>f<mathopen/>)a+b<mathclose/>(=c+d</texmath>
 <texmath textype='inline' type='inline'><int/>f(a+b)=c+d</texmath></p>
 <p><texmath textype='inline' type='inline'>a<limits/><displaylimits/><nolimits/>b</texmath></p>
-<p>wwwwwwwwwwwwa...b...c���d������e f$g%h&amp;ij�k{l}m&#x131;n&#x266F;o&#x266E;p&#x266D;q_</p>
+<p>wwwwwwwwwwwwa...b...c   d      e f$g%h&amp;ij k{l}mın♯o♮p♭q_</p>
 <p noindent='true'><texmath textype='inline' type='inline'>a<dots/>b<ldots/>c<quad/>d<qquad/>e f<elt name='$'/>g<elt name='%'/>h<elt name='&amp;'/>i<elt name='!'/>j<elt name=','/>k<lbrace/>l<rbrace/>m<i/>n<sharp/>o<natural/>p<flat/>q<elt name='_'/></texmath></p>
 <p>Math spacing</p>
 <p noindent='true'><texmath textype='inline' type='inline'>xxxxx</texmath></p>
@@ -359,83 +359,83 @@ x<superscript><arg>y<superscript>z</superscript></arg></superscript> = <arg>x<su
 <texmath id='uid12' id-text='12' textype='equation' type='display'>
 0=<hspace>11.38092pt</hspace>1
 </texmath>
-<p><texmath textype='inline' type='inline'> � � &#x1EA4; &#x1EA5; &#x1EA6; &#x1EA7; &#x1EA8; &#x1EA9; &#x1EAA; &#x1EAB;
-&#x1EAC; &#x1EAD; &#x108; &#x109;</texmath>
-<texmath textype='inline' type='inline'> � � &#x1EBE; &#x1EBF; &#x1EC0; &#x1EC1; &#x1EC2;
-&#x1EC3; &#x1EC4; &#x1EC5; &#x1EC6; &#x1EC7; &#x11C; &#x11D; &#x124; &#x125; � � &#x134; &#x135; </texmath>
+<p><texmath textype='inline' type='inline'> Â â Ấ ấ Ầ ầ Ẩ ẩ Ẫ ẫ
+Ậ ậ Ĉ ĉ</texmath>
+<texmath textype='inline' type='inline'> Ê ê Ế ế Ề ề Ể
+ể Ễ ễ Ệ ệ Ĝ ĝ Ĥ ĥ Î î Ĵ ĵ </texmath>
 <texmath textype='inline' type='inline'>
-� � &#x1ED0; &#x1ED1; &#x1ED2; &#x1ED3; &#x1ED4; &#x1ED5; &#x1ED6; &#x1ED7;
-&#x1ED8; &#x1ED9; &#x15C; &#x15D; � � &#x174; &#x175; &#x176; &#x177; &#x1E90; &#x1E91;
-� � &#x1FA; &#x1FB; &#x1FC; &#x1FD; &#x1EA4; &#x1EA5; &#x1EAE; &#x1EAF;
-&#x106; &#x107; &#x1E08; &#x1E09; � � &#x1E16;
-&#x1E17; &#x1EBE; &#x1EBF; &#x1F4; &#x1F5; � � </texmath>
-<texmath textype='inline' type='inline'>&#x1E2E; &#x1E2F; &#x1E30; &#x1E31; &#x139; &#x13A; &#x1E3E;
-&#x1E3F; &#x143; &#x144; � � &#x1FE; &#x1FF; &#x1E4C; &#x1E4D; &#x1E52; &#x1E53; &#x1ED0;
-&#x1ED1; &#x1EDA; &#x1EDB;</texmath>
-<texmath textype='inline' type='inline'> &#x1E54; &#x1E55; &#x154; &#x155; &#x15A; &#x15B;
-&#x1E64; &#x1E65; � � &#x1D7; &#x1D8; &#x1E78; &#x1E79; &#x1EE8; &#x1EE9;
-&#x1E82; &#x1E83; � � &#x179; &#x17A;
-� � &#x1EA6; &#x1EA7; &#x1EB0; &#x1EB1; � � &#x1E14; &#x1E15; &#x1EC0;
-&#x1EC1; � � &#x1F8; &#x1F9; </texmath>
-<texmath textype='inline' type='inline'>� � &#x1E50; &#x1E51; &#x1ED2; &#x1ED3;
-&#x1EDC; &#x1EDD; � � &#x1DB; &#x1DC; &#x1EEA; &#x1EEB; &#x1E80; &#x1E81; &#x1EF2;&#x1EF3;
-� � &#x1DE; &#x1DF; � � &#x1E26; &#x1E27; � � &#x1E2E; &#x1E2F; � �
-&#x22A; &#x22B; &#x1E4E; &#x1E4F; &#x1E97;</texmath>
-<texmath textype='inline' type='inline'> � � &#x1E7A; &#x1E7B; &#x1DB; &#x1DC;
-&#x1D7; &#x1D8; &#x1D9; &#x1DA; &#x1E84; &#x1E85; &#x1E8C; &#x1E8D; &#x178; �
-� � &#x1E08; &#x1E09; &#x1E10; &#x1E11; &#x228; &#x229; &#x1E1C; &#x1E1D; </texmath>
+Ô ô Ố ố Ồ ồ Ổ ổ Ỗ ỗ
+Ộ ộ Ŝ ŝ Û û Ŵ ŵ Ŷ ŷ Ẑ ẑ
+Á á Ǻ ǻ Ǽ ǽ Ấ ấ Ắ ắ
+Ć ć Ḉ ḉ É é Ḗ
+ḗ Ế ế Ǵ ǵ Í í </texmath>
+<texmath textype='inline' type='inline'>Ḯ ḯ Ḱ ḱ Ĺ ĺ Ḿ
+ḿ Ń ń Ó ó Ǿ ǿ Ṍ ṍ Ṓ ṓ Ố
+ố Ớ ớ</texmath>
+<texmath textype='inline' type='inline'> Ṕ ṕ Ŕ ŕ Ś ś
+Ṥ ṥ Ú ú Ǘ ǘ Ṹ ṹ Ứ ứ
+Ẃ ẃ Ý ý Ź ź
+À à Ầ ầ Ằ ằ È è Ḕ ḕ Ề
+ề Ì ì Ǹ ǹ </texmath>
+<texmath textype='inline' type='inline'>Ò ò Ṑ ṑ Ồ ồ
+Ờ ờ Ù ù Ǜ ǜ Ừ ừ Ẁ ẁ Ỳỳ
+Ä ä Ǟ ǟ Ë ë Ḧ ḧ Ï ï Ḯ ḯ Ö ö
+Ȫ ȫ Ṏ ṏ ẗ</texmath>
+<texmath textype='inline' type='inline'> Ü ü Ṻ ṻ Ǜ ǜ
+Ǘ ǘ Ǚ ǚ Ẅ ẅ Ẍ ẍ Ÿ ÿ
+Ç ç Ḉ ḉ Ḑ ḑ Ȩ ȩ Ḝ ḝ </texmath>
 <texmath textype='inline' type='inline'>
-&#x1E28; &#x1E29; &#x122; &#x123; &#x136; &#x137; &#x13B; &#x13C; &#x145; &#x146; &#x156; &#x157; &#x15E; &#x15F; &#x162; &#x163;
-&#x200; &#x201; &#x204; &#x205; &#x208; &#x209; &#x20C; &#x20D; &#x210; &#x211; &#x214; &#x215;
-&#x102; &#x103; &#x1EB0; &#x1EB1; &#x1EAE; &#x1EAF; &#x1EB2; &#x1EB3; &#x1EB4; &#x1EB5;
-&#x1EB6; &#x1EB7;</texmath>
-<texmath textype='inline' type='inline'> &#x114; &#x115; &#x1E1C; &#x1E1D; &#x11E; &#x11F; &#x12C; &#x12D;
-&#x14E; &#x14F; &#x16C; &#x16D;
-&#x1CD; &#x1CE; &#x10C; &#x10D; &#x10E; &#x10F; &#x11A; &#x11B; &#x1E6; &#x1E7; &#x21E; &#x21F; &#x1E8; &#x1E9;
-&#x1CF; &#x1D0; &#x1F0; &#x13D; &#x13E; &#x147; &#x148; </texmath>
-<texmath textype='inline' type='inline'> &#x1D1;
-&#x1D2; &#x158; &#x159; &#x160; &#x161; &#x164; &#x165; &#x1D3; &#x1D4; &#x1D9; &#x1DA; &#x1E66;
-&#x1E67; &#x17D; &#x17E;
-&#x150; &#x151; &#x170; &#x171;</texmath>
+Ḩ ḩ Ģ ģ Ķ ķ Ļ ļ Ņ ņ Ŗ ŗ Ş ş Ţ ţ
+Ȁ ȁ Ȅ ȅ Ȉ ȉ Ȍ ȍ Ȑ ȑ Ȕ ȕ
+Ă ă Ằ ằ Ắ ắ Ẳ ẳ Ẵ ẵ
+Ặ ặ</texmath>
+<texmath textype='inline' type='inline'> Ĕ ĕ Ḝ ḝ Ğ ğ Ĭ ĭ
+Ŏ ŏ Ŭ ŭ
+Ǎ ǎ Č č Ď ď Ě ě Ǧ ǧ Ȟ ȟ Ǩ ǩ
+Ǐ ǐ ǰ Ľ ľ Ň ň </texmath>
+<texmath textype='inline' type='inline'> Ǒ
+ǒ Ř ř Š š Ť ť Ǔ ǔ Ǚ ǚ Ṧ
+ṧ Ž ž
+Ő ő Ű ű</texmath>
 <texmath textype='inline' type='inline'>
-&#x1EDA; &#x1EDB; &#x1EDC; &#x1EDD; &#x1EDE; &#x1EDF; &#x1EE0; &#x1EE1;
-&#x1EE2; &#x1EE3;</texmath>
-<texmath textype='inline' type='inline'> &#x1EE8; &#x1EE9; &#x1EEA; &#x1EEB; &#x1EEC; &#x1EED; &#x1EEE;
-&#x1EEF; &#x1EF0; &#x1EF1;
-&#x1EA2; &#x1EA3; &#x1EA8; &#x1EA9; &#x1EB2; &#x1EB3; &#x1EBA; &#x1EBB; &#x1EC2; &#x1EC3; &#x1EC8;
-&#x1EC9;</texmath>
-<texmath textype='inline' type='inline'> &#x1ECE; &#x1ECF; &#x1ED4; &#x1ED5; &#x1EDE; &#x1EDF; &#x1EE6; &#x1EE7;
-&#x1EEC; &#x1EED; &#x1EF6; &#x1EF7;
-&#x104; &#x105; &#x118; &#x119; &#x12E; &#x12F; &#x1EA; &#x1EB; &#x1EC; &#x1ED; &#x172; &#x173;
-� � &#x16E; &#x16F; &#x1E98; &#x1E99;
-&#x1EA0; &#x1EA1; &#x1EAC; &#x1EAD; &#x1EB6; &#x1EB7; &#x1E04; &#x1E05; &#x1E0C; &#x1E0D; &#x1EB8; &#x1EB9;
-&#x1EC6; &#x1EC7; &#x1E24; &#x1E25; &#x1ECA; &#x1ECB; &#x1E32; &#x1E33; &#x1E36; &#x1E37; &#x1E38; &#x1E39;</texmath>
+Ớ ớ Ờ ờ Ở ở Ỡ ỡ
+Ợ ợ</texmath>
+<texmath textype='inline' type='inline'> Ứ ứ Ừ ừ Ử ử Ữ
+ữ Ự ự
+Ả ả Ẩ ẩ Ẳ ẳ Ẻ ẻ Ể ể Ỉ
+ỉ</texmath>
+<texmath textype='inline' type='inline'> Ỏ ỏ Ổ ổ Ở ở Ủ ủ
+Ử ử Ỷ ỷ
+Ą ą Ę ę Į į Ǫ ǫ Ǭ ǭ Ų ų
+Å å Ů ů ẘ ẙ
+Ạ ạ Ậ ậ Ặ ặ Ḅ ḅ Ḍ ḍ Ẹ ẹ
+Ệ ệ Ḥ ḥ Ị ị Ḳ ḳ Ḷ ḷ Ḹ ḹ</texmath>
 <texmath textype='inline' type='inline'>
-&#x1E42; &#x1E43; &#x1E46; &#x1E47; &#x1ECC; &#x1ECD; &#x1ED8; &#x1ED9; &#x1EE2; &#x1EE3;
-&#x1E5A; &#x1E5B; &#x1E5C; &#x1E5D; &#x1E62; &#x1E63; &#x1E68; &#x1E69; &#x1E6C;</texmath>
+Ṃ ṃ Ṇ ṇ Ọ ọ Ộ ộ Ợ ợ
+Ṛ ṛ Ṝ ṝ Ṣ ṣ Ṩ ṩ Ṭ</texmath>
 <texmath textype='inline' type='inline'>
-&#x1E6D; &#x1EE4; &#x1EE5; &#x1EF0; &#x1EF1; &#x1E7E;
-&#x1E7F; &#x1E88; &#x1E89; &#x1EF4; &#x1EF5; &#x1E92; &#x1E93;
-&#x1E00; &#x1E01;
-&#x1E06; &#x1E07; &#x1E0E; &#x1E0F; &#x1E96; &#x1E34; &#x1E35; &#x1E3A; &#x1E3B;
-&#x1E48; &#x1E49; &#x1E5E; &#x1E5F; &#x1E6E; &#x1E6F; &#x1E94; &#x1E95;
-&#x202; &#x203; &#x206; &#x207; &#x20A; &#x20B; &#x20E; &#x20F; &#x212; &#x213; &#x216; &#x217;
-&#x1E1A; &#x1E1B; &#x1E2C; &#x1E2D; &#x1E74; &#x1E75;
-&#x1E12; &#x1E13; &#x1E18; &#x1E19; &#x1E3C; &#x1E3D; &#x1E4A; &#x1E4B; &#x1E70; &#x1E71; &#x1E76; &#x1E77;
-&#x100; &#x101; &#x1DE; &#x1DF; &#x1E0; &#x1E1; &#x1E2;&#x1E3;&#x112; &#x113; &#x1E16; &#x1E17;
-&#x1E14; &#x1E15; &#x1E20; &#x1E21; &#x126; &#x127;</texmath>
+ṭ Ụ ụ Ự ự Ṿ
+ṿ Ẉ ẉ Ỵ ỵ Ẓ ẓ
+Ḁ ḁ
+Ḇ ḇ Ḏ ḏ ẖ Ḵ ḵ Ḻ ḻ
+Ṉ ṉ Ṟ ṟ Ṯ ṯ Ẕ ẕ
+Ȃ ȃ Ȇ ȇ Ȋ ȋ Ȏ ȏ Ȓ ȓ Ȗ ȗ
+Ḛ ḛ Ḭ ḭ Ṵ ṵ
+Ḓ ḓ Ḙ ḙ Ḽ ḽ Ṋ ṋ Ṱ ṱ Ṷ ṷ
+Ā ā Ǟ ǟ Ǡ ǡ ǢǣĒ ē Ḗ ḗ
+Ḕ ḕ Ḡ ḡ Ħ ħ</texmath>
 <texmath textype='inline' type='inline'>
-&#x12A; &#x12B; &#x1E38; &#x1E39; &#x14C; &#x14D; &#x1EC; &#x1ED; &#x22A; &#x22B; &#x22C;
-&#x22D; &#x230; &#x231; &#x1E50; &#x1E51; &#x1E52; &#x1E53;</texmath>
-<texmath textype='inline' type='inline'> &#x1E5C; &#x1E5D;
-&#x166; &#x167; &#x16A; &#x16B; &#x1E7A; &#x1E7B; &#x232; &#x233;
-&#x226; &#x227; &#x1E0; &#x1E1; &#x1E02; &#x1E03; &#x10A; &#x10B; &#x1E0A; &#x1E0B; &#x116; &#x117; &#x1E1E; &#x1E1F; &#x120; &#x121; &#x1E22;
-&#x1E23; &#x130; </texmath>
-<texmath textype='inline' type='inline'>&#x13F; &#x140; &#x1E40; &#x1E41; &#x1E44; &#x1E45; &#x22E; &#x22F; &#x230; &#x231; &#x1E56; &#x1E57; &#x1E58; &#x1E59; </texmath>
+Ī ī Ḹ ḹ Ō ō Ǭ ǭ Ȫ ȫ Ȭ
+ȭ Ȱ ȱ Ṑ ṑ Ṓ ṓ</texmath>
+<texmath textype='inline' type='inline'> Ṝ ṝ
+Ŧ ŧ Ū ū Ṻ ṻ Ȳ ȳ
+Ȧ ȧ Ǡ ǡ Ḃ ḃ Ċ ċ Ḋ ḋ Ė ė Ḟ ḟ Ġ ġ Ḣ
+ḣ İ </texmath>
+<texmath textype='inline' type='inline'>Ŀ ŀ Ṁ ṁ Ṅ ṅ Ȯ ȯ Ȱ ȱ Ṗ ṗ Ṙ ṙ </texmath>
 <texmath textype='inline' type='inline'>
-&#x1E60;
-&#x1E61; &#x1E68; &#x1E69; &#x1E66; &#x1E67; &#x1E64; &#x1E65; &#x1E6A; &#x1E6B; &#x1E86; &#x1E87; &#x1E8A;
-&#x1E8B; &#x1E8E; &#x1E8F; &#x17B; &#x17C;
+Ṡ
+ṡ Ṩ ṩ Ṧ ṧ Ṥ ṥ Ṫ ṫ Ẇ ẇ Ẋ
+ẋ Ẏ ẏ Ż ż
 </texmath></p>
 <p><texmath textype='inline' type='inline'>B</texmath></p>
 <p><texmath textype='inline' type='inline'> <font name='mml@font@normal'/> ab+2c=DE<font name='mml@font@upright'/> ab+2c=DE<font name='mml@font@bold'/> ab+2c=DE<font name='mml@font@italic'/> ab+2c=DE<font name='mml@font@bolditalic'/> ab+2c=DE<font name='mml@font@script'/> ab+2c=DE<font name='mml@font@boldscript'/> ab+2c=DE<font name='mml@font@fraktur'/> ab+2c=DE<font name='mml@font@doublestruck'/> ab+2c=DE<font name='mml@font@boldfraktur'/> ab+2c=DE<font name='mml@font@sansserif'/> ab+2c=DE<font name='mml@font@boldsansserif'/> ab+2c=DE<font name='mml@font@sansserifitalic'/> ab+2c=DE<font name='mml@font@sansserifbolditalic'/> ab+2c=DE<font name='mml@font@monospace'/> ab+2c=DE</texmath></p>

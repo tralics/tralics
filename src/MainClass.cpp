@@ -210,16 +210,6 @@ found at http://www.cecill.info.)";
         }
     }
 
-    auto print_enc(output_encoding_type enc) -> std::string {
-        switch (enc) {
-        case en_utf8: return "UTF-8";
-        case en_latin: return "ISO-8859-1";
-        case en_ascii7: return "ISO-8859-1 on 7 bits";
-        case en_ascii8: return "UTF-8 on 7 bits"; // whatever that means
-        default: return "Unknown";
-        }
-    }
-
     auto split_one_arg(const char *a, int &p) -> std::string {
         Buffer B;
         p     = 0;
@@ -347,8 +337,6 @@ void MainClass::open_log() { // TODO: spdlog etc
     auto base = std::filesystem::path(out_dir) / log_name;
     auto f    = base;
     f.replace_extension("log");
-    if (output_encoding == en_boot) output_encoding = en_utf8;
-    if (log_encoding == en_boot) log_encoding = output_encoding;
 
     spdlog::set_level(spdlog::level::trace);
     auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_st>(f.string(), true);
@@ -362,8 +350,8 @@ void MainClass::open_log() { // TODO: spdlog etc
     spdlog::trace("Transcript file of tralics {} for file {}", the_main.tralics_version, infile.string());
     spdlog::trace("Tralics is licensed under the CeCILL Free Software Licensing Agreement");
     spdlog::trace("OS: {} running on {}", print_os(cur_os), machine);
-    spdlog::trace("Output encoding: {}", print_enc(output_encoding));
-    spdlog::trace("Transcript encoding: {}", print_enc(log_encoding));
+    spdlog::trace("Output encoding: UTF-8");
+    spdlog::trace("Transcript encoding: UTF-8");
     spdlog::trace("Left quote is '{}', right quote is '{}'", to_utf8(char32_t(the_main.leftquote_val)),
                   to_utf8(char32_t(the_main.rightquote_val)));
     if (trivial_math != 0) spdlog::trace("\\notrivialmath={}", trivial_math);
@@ -516,40 +504,9 @@ void MainClass::parse_option(int &p, int argc, char **argv) {
         input_encoding = 0;
         return;
     }
-    if (s == "utf8output") {
-        log_encoding = output_encoding = en_utf8;
-        return;
-    }
-    if (s == "oe8") {
-        output_encoding = en_utf8;
-        return;
-    }
-    if (s == "oe8a") {
-        output_encoding = en_ascii8;
-        return;
-    }
-    if (s == "oe1") {
-        output_encoding = en_latin;
-        return;
-    }
-    if (s == "oe1a") {
-        output_encoding = en_ascii7;
-        return;
-    }
-    if (s == "te8") {
-        log_encoding = en_utf8;
-        return;
-    }
-    if (s == "te8a") {
-        log_encoding = en_ascii8;
-        return;
-    }
-    if (s == "te1") {
-        log_encoding = en_latin;
-        return;
-    }
-    if (s == "te1a") {
-        log_encoding = en_ascii7;
+    if (s == "utf8output" || s == "oe8" || s == "oe8a" || s == "oe1" || s == "oe1a" || s == "te8" || s == "te8a" || s == "te1" ||
+        s == "te1a") {
+        obsolete(s);
         return;
     }
     if (s == "latin1") {
@@ -960,9 +917,8 @@ void MainClass::run(int argc, char **argv) {
 void MainClass::out_xml() {
     auto p    = out_dir / (out_name + ".xml");
     auto fp   = open_file(p, true);
-    auto utf8 = output_encoding == en_utf8 || output_encoding == en_ascii8; // TODO: make this always true
 
-    fmt::print(fp, "<?xml version='1.0' encoding='{}'?>\n", utf8 ? "UTF-8" : "iso-8859-1");
+    fmt::print(fp, "<?xml version='1.0' encoding='UTF-8'?>\n");
     if (auto sl = the_names["stylesheet"]; !sl.empty())
         fmt::print(fp, "<?xml-stylesheet href=\"{}\" type=\"{}\"?>\n", sl, the_names["stylesheettype"]);
     fmt::print(fp, "<!DOCTYPE {} SYSTEM '{}'>\n", dtd, dtd_uri);

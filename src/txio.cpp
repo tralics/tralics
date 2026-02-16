@@ -108,7 +108,7 @@ void Parser::process_char(uchar c) {
 }
 
 // This dumps a single character using log method
-void Buffer::out_log(char32_t ch, output_encoding_type T) {
+void Buffer::out_log(char32_t ch) {
     if (ch == '\n')
         push_back('\n');
     else if (ch == '\r')
@@ -119,17 +119,12 @@ void Buffer::out_log(char32_t ch, output_encoding_type T) {
         append(four_hats(ch));
     else if (ch < 128)
         push_back(static_cast<char>(ch));
-    else if (T == en_utf8)
-        push_back(ch);
-    else if (ch < 256 && T == en_latin)
-        push_back(static_cast<char>(ch));
     else
-        append(four_hats(ch));
+        push_back(ch);
 }
 
 auto Buffer::convert_to_log_encoding() const -> std::string {
-    auto T = the_main.log_encoding;
-    if (T == en_utf8 || is_all_ascii(*this)) return data();
+    if (is_all_ascii(*this)) return data();
 
     Buffer B = *this;
     B.ptrs.b = 0;
@@ -144,7 +139,7 @@ auto Buffer::convert_to_log_encoding() const -> std::string {
         } else if (*c == '\r')
             utf8_out += "^^M";
         else
-            utf8_out.out_log(*c, T);
+            utf8_out.out_log(*c);
     }
     return std::move(utf8_out);
 }

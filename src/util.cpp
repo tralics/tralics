@@ -294,9 +294,7 @@ auto split_at_colon(const std::string &s) -> std::optional<std::pair<std::string
 }
 
 auto encode(const std::string &s) -> std::string {
-    auto T = the_main.output_encoding;
-    if (T == en_boot || T == en_utf8 || is_all_ascii(s)) return s;
-    return convert_to_latin1(s, T == en_latin);
+    return s;
 }
 
 // returns true if only ascii 7 bits in the buffer

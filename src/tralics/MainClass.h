@@ -61,9 +61,7 @@ public:
     std::vector<std::string> bibtex_extensions;
     std::vector<std::string> bibtex_extensions_s;
 
-    size_t               input_encoding{1};        // Encoding of the input file TODO: one type to rule all encodings
-    output_encoding_type log_encoding{en_boot};    // Encoding of the log file TODO: this should always be UTF-8
-    output_encoding_type output_encoding{en_boot}; // Encoding of the XML output TODO: this should always be UTF-8
+    size_t               input_encoding{1}; // Encoding of the input file TODO: one type to rule all encodings
 
     line_iterator doc_class_pos;
 
