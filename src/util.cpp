@@ -157,6 +157,37 @@ auto is_noopsort(std::string_view s, size_t i) -> bool {
     return false;
 }
 
+auto four_hats(char32_t ch) -> std::string {
+    std::string out;
+    if (ch == '\n') {
+        out.push_back('\n');
+        return out;
+    }
+    if (ch == '\r') {
+        out.push_back('\r');
+        return out;
+    }
+    if (ch == '\t') {
+        out.push_back('\t');
+        return out;
+    }
+    unsigned c = ch;
+    if (ch < 32) {
+        out.append("^^");
+        out.push_back(static_cast<char>(c + 64));
+    } else if (ch == 127)
+        out.append("^^?");
+    else if (ch < 128)
+        out.push_back(static_cast<char>(ch));
+    else {
+        auto s = fmt::format("{:x}", c);
+        for (size_t i = 0; i < s.size(); ++i) out.push_back('^');
+        if (s.size() == 3) out.append("^0");
+        out.append(s);
+    }
+    return out;
+}
+
 auto split_commas(const std::string &S) -> std::vector<std::string> {
     std::vector<std::string> res;
     size_t                   pos = 0;

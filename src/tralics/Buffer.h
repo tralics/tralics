@@ -102,7 +102,6 @@ public:
     void l3_fabricate_cond(const std::string &base, const std::string &sig, subtypes w);
     void next_bibtex_char();
     void normalise_for_bibtex(std::string_view s);
-    void out_four_hats(char32_t ch);
     void out_log(char32_t ch, output_encoding_type T);
     void pt_to_mu();
     void push_back_math_aux(std::string s);

@@ -91,37 +91,6 @@ auto io_ns::get_enc_param(long enc, long pos) -> long {
 // This puts x into the buffer in utf8 form
 void Buffer::push_back(char32_t c) { utf8::append(c, std::back_inserter(*this)); }
 
-// This puts a 16bit char in the form ^^^^abcd in the buffer.
-// Uses ^^ab notation if better
-void Buffer::out_four_hats(char32_t ch) {
-    if (ch == '\n') {
-        push_back('\n');
-        return;
-    }
-    if (ch == '\r') {
-        push_back('\r');
-        return;
-    }
-    if (ch == '\t') {
-        push_back('\t');
-        return;
-    }
-    unsigned c = ch;
-    if (ch < 32) {
-        append("^^");
-        push_back(static_cast<char>(c + 64));
-    } else if (ch == 127)
-        append("^^?");
-    else if (ch < 128)
-        push_back(static_cast<char>(c));
-    else {
-        auto s = fmt::format("{:x}", c);
-        for (size_t i = 0; i < s.size(); ++i) push_back('^');
-        if (s.size() == 3) append("^0");
-        append(s);
-    }
-}
-
 // This is the function that puts a character into the buffer  as XML
 // We must handle some character. We use entities in case of big values
 // or control characters.
@@ -147,7 +116,7 @@ void Buffer::out_log(char32_t ch, output_encoding_type T) {
     else if (ch == '\t')
         push_back('\t');
     else if (ch < 32)
-        out_four_hats(ch);
+        append(four_hats(ch));
     else if (ch < 128)
         push_back(static_cast<char>(ch));
     else if (T == en_utf8)
@@ -155,7 +124,7 @@ void Buffer::out_log(char32_t ch, output_encoding_type T) {
     else if (ch < 256 && T == en_latin)
         push_back(static_cast<char>(ch));
     else
-        out_four_hats(ch);
+        append(four_hats(ch));
 }
 
 auto Buffer::convert_to_log_encoding() const -> std::string {

@@ -33,5 +33,6 @@ void append_roman_upper(std::string &s, long n);
 void append_roman_lower(std::string &s, long n);
 auto special_title(std::string_view s) -> std::string;
 auto is_noopsort(std::string_view s, size_t i) -> bool;
+auto four_hats(char32_t ch) -> std::string;
 
 auto operator<<(std::ostream &fp, const boundary_type &x) -> std::ostream &;
