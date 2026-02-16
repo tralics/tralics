@@ -608,7 +608,7 @@ void BibEntry::presort(long serial) {
     }
     B.clear();
     B.format("{}{}    {}    ", label, lab2, y);
-    B.special_title(all_fields[fp_title]);
+    B.append(special_title(all_fields[fp_title]));
     B.lowercase();
     B.format("{:05d}", serial);
     sort_label = B;

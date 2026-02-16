@@ -101,6 +101,62 @@ void append_roman_lower(std::string &s, long n) {
     for (size_t i = k; i < s.size(); i++) s[i] = char(s[i] + 'a' - 'A');
 }
 
+auto special_title(std::string_view s) -> std::string {
+    std::string out;
+    int         level  = 0;
+    int         blevel = 0;
+    auto        n      = s.size();
+    for (size_t i = 0; i < n; i++) {
+        char c = s[i];
+        if (c == '\\') {
+            out.push_back(c);
+            i++;
+            if (i < n) out.push_back(s[i]);
+            continue;
+        }
+        if (c == '}') {
+            if (level != blevel)
+                out.push_back(c);
+            else
+                blevel = 0;
+            if (level > 0) level--;
+            continue;
+        }
+        if (c == '{') level++;
+        if (c != '{' || i == n - 1 || (blevel != 0) || level != 1) {
+            out.push_back(c);
+            continue;
+        }
+        char cc = s[i + 1];
+        if ((std::isupper(static_cast<unsigned char>(cc)) != 0) || cc == '$') {
+            blevel = level;
+            continue;
+        }
+        if (is_noopsort(s, i)) {
+            i += 10;
+            while (i < n && (std::isspace(static_cast<unsigned char>(s[i])) != 0)) i++;
+            i--;
+            blevel = level;
+        } else
+            out.push_back(c);
+    }
+    return out;
+}
+
+auto is_noopsort(std::string_view s, size_t i) -> bool {
+    auto n = s.size();
+    if (i + 10 >= n) return false;
+    if (s[i + 10] != '{' && (std::isspace(static_cast<unsigned char>(s[i + 10])) == 0)) return false;
+    if (s[i + 1] != '\\') return false;
+    if (s[i + 3] != 'o') return false;
+    if (s[i + 7] != 'o') return false;
+    if (s[i + 2] == 'n' && s[i + 4] == 'o' && s[i + 5] == 'p' && s[i + 6] == 's' && s[i + 8] == 'r' && s[i + 9] == 't') return true;
+    if ((s[i + 2] == 's' || s[i + 2] == 'S') && s[i + 4] == 'r' && s[i + 5] == 't' && (s[i + 6] == 'n' || s[i + 6] == 'N') &&
+        s[i + 8] == 'o' && s[i + 9] == 'p')
+        return true;
+    return false;
+}
+
 auto split_commas(const std::string &S) -> std::vector<std::string> {
     std::vector<std::string> res;
     size_t                   pos = 0;
