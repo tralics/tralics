@@ -293,10 +293,6 @@ auto split_at_colon(const std::string &s) -> std::optional<std::pair<std::string
     return split_at_char(s, ':');
 }
 
-auto encode(const std::string &s) -> std::string {
-    return s;
-}
-
 // returns true if only ascii 7 bits in the buffer
 auto is_all_ascii(const std::string &s) -> bool {
     auto wrong = [](char c) { return static_cast<uchar>(c) >= 128 || (c < 32 && c != '\t' && c != '\n'); };

@@ -595,15 +595,15 @@ void Xml::insert_bib(Xml *bib, Xml *match) {
 void Xml::print_on(std::ostream &o) const {
     if (!is_element()) {
         if (id == 0)
-            o << encode(name);
+            o << name;
         else if (id == size_t(-1))
-            fmt::print(o, "<!--{}-->", encode(name));
+            fmt::print(o, "<!--{}-->", name);
         else if (id == size_t(-2)) {
-            fmt::print(o, "<!{}", encode(name));
+            fmt::print(o, "<!{}", name);
             for (const auto &e : *this) o << e;
             o << ">";
         } else if (id == size_t(-3))
-            fmt::print(o, "<?{}?>", encode(name));
+            fmt::print(o, "<?{}?>", name);
         return;
     }
 
@@ -693,7 +693,7 @@ void Xml::unbox(Xml *x) {
         push_back_list(x);
     } else {
         std::string b;
-        b += encode(x->name);
+        b += x->name;
         add_last_string(b);
     }
 }
@@ -780,13 +780,13 @@ void Xml::convert_to_string(Buffer &b) {
     if (is_font_change()) {
         std::string w = has_att(the_names["rend"]);
         if (!w.empty()) {
-            err_buf += "unexpected font change " + encode(w);
+            err_buf += "unexpected font change " + w;
             the_parser.unexpected_font();
             the_parser.signal_error();
             return;
         }
     }
-    err_buf += "unexpected element " + encode(name);
+    err_buf += "unexpected element " + name;
     the_parser.signal_error();
 }
 
@@ -795,11 +795,11 @@ void Xml::convert_to_string(Buffer &b) {
 void Xml::put_in_buffer(Buffer &b) {
     for (size_t k = 0; k < size(); k++) {
         if (!at(k)->is_element())
-            b += encode(at(k)->name);
+            b += at(k)->name;
         else if (at(k)->has_name_of("hi"))
             at(k)->put_in_buffer(b);
         else
-            b += "<" + encode(at(k)->name) + "/>";
+            b += "<" + at(k)->name + "/>";
     }
 }
 
@@ -830,7 +830,7 @@ auto Xml::last_is_string() const -> bool { return !empty() && back()->id == 0; }
 
 auto fetch_att(Xml *x, const std::string &m) -> std::optional<std::string> {
     if (x == nullptr) return {};
-    if (auto *k = x->att.lookup(m)) return encode(*k);
+    if (auto *k = x->att.lookup(m)) return *k;
     return {};
 }
 

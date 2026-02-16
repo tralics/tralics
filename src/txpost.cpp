@@ -103,7 +103,7 @@ void tralics_ns::find_index_labels(std::vector<std::string> &W) {
         std::string B = L->id;
         std::string b = W[E];
         if (!b.empty()) b.push_back(' ');
-        b += encode(B);
+        b += B;
         W[E] = b;
     }
 }

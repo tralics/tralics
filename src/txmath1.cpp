@@ -792,7 +792,7 @@ void MathElt::cv_noML() {
         auto w = the_names.mml(c);
         if (w.empty()) return;
         mathml_buffer.append("\\");
-        mathml_buffer.append(encode(w));
+        mathml_buffer.append(w);
         mathml_buffer.push_back(' ');
         return;
     }
@@ -846,7 +846,7 @@ void MathElt::cv_noMLt() {
         if (c >= 15) c = 0;
         auto w = the_names.mml(c);
         if (w.empty()) return;
-        mathml_buffer += "<font name='" + encode(w) + "'/>"; // TODO: why not go through all the machinery here?
+        mathml_buffer += "<font name='" + w + "'/>"; // TODO: why not go through all the machinery here?
         return;
     }
     case left_cmd: // left or right

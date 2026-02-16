@@ -320,7 +320,7 @@ void Stack::pop(const std::string &a) {
         pop_back();
     }
     if (a != back().frame) {
-        err_buf = fmt::format("Error in pop; stack holds {}; trying to pop ", encode(back().frame), encode(a));
+        err_buf = fmt::format("Error in pop; stack holds {}; trying to pop ", back().frame, a);
         the_parser.signal_error();
         return;
     }
@@ -328,7 +328,7 @@ void Stack::pop(const std::string &a) {
     cur_lid  = back().uid;
     pop_back();
     if (empty()) {
-        err_buf = "Error in pop; stack empty; trying to pop " + encode(a);
+        err_buf = "Error in pop; stack empty; trying to pop " + a;
         the_parser.signal_error();
         std::string S = the_names["document"];
         ipush(S, new Xml(S, nullptr)); // stack should never be empty
@@ -364,25 +364,25 @@ void Stack::check_font() {
         bool        nonempty = false;
         s                    = the_parser.cur_font.size_change();
         if (s != "cst_empty") { // TODO: empty string or something
-            aux += encode(the_names[s]);
+            aux += the_names[s];
             nonempty = true;
         }
         s = the_parser.cur_font.shape_change();
         if (s != "cst_empty") {
             if (nonempty) aux += ",";
-            aux += encode(the_names[s]);
+            aux += the_names[s];
             nonempty = true;
         }
         s = the_parser.cur_font.family_change();
         if (s != "cst_empty") {
             if (nonempty) aux += ",";
-            aux += encode(the_names[s]);
+            aux += the_names[s];
             nonempty = true;
         }
         s = the_parser.cur_font.series_change();
         if (s != "cst_empty") {
             if (nonempty) aux += ",";
-            aux += encode(the_names[s]);
+            aux += the_names[s];
             nonempty = true;
         }
         if (nonempty) {

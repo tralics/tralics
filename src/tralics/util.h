@@ -9,7 +9,6 @@ auto bt_to_string(boundary_type v) -> std::optional<std::string>;
 auto codepoints(const std::string &s) -> std::vector<char32_t>;
 auto convert_to_latin1(const std::string &s, bool latin1) -> std::string;
 auto convert_to_utf8(const std::string &s, size_t wc) -> std::string;
-auto encode(const std::string &s) -> std::string;
 auto find_counter(const std::string &s) -> int;
 auto find_in_confdir(const std::string &s) -> std::optional<std::filesystem::path>;
 auto find_in_path(const std::string &s) -> std::optional<std::filesystem::path>;

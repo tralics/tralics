@@ -1990,14 +1990,6 @@ enum {
     nb_output_channels = 19
 };
 
-enum output_encoding_type {
-    en_boot,
-    en_utf8,
-    en_ascii7,
-    en_ascii8,
-    en_latin,
-};
-
 enum math_style { ms_D, ms_T, ms_S, ms_SS };
 
 // symbolic code for the unit in a case like: \vskip 3cm

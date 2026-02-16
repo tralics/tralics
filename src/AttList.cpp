@@ -21,7 +21,7 @@ auto operator<<(std::ostream &o, const AttList &l) -> std::ostream & {
         const char  quote = the_main.double_quote_att ? '\"' : '\'';
         const char *repl  = the_main.double_quote_att ? "&quot;" : "&apos;";
         std::string out;
-        for (char c : encode(value)) {
+        for (char c : value) {
             if (c == quote)
                 out += repl;
             else

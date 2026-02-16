@@ -15,7 +15,7 @@ auto CitationItem::get_id() -> std::string {
 // This prints an unsolved reference in a buffer, we will put it in
 // the aux file.
 void CitationItem::dump(std::string &b) const {
-    if (!is_solved()) b += fmt::format("\\citation{{{}}}\n", encode(key));
+    if (!is_solved()) b += fmt::format("\\citation{{{}}}\n", key);
 }
 
 // This prints an unsolved reference for use by Tralics.
