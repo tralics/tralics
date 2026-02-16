@@ -2,6 +2,7 @@
 #include "tralics/MainClass.h"
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
+#include <ctre.hpp>
 #include <sstream>
 #include <utf8.h>
 
@@ -144,17 +145,9 @@ auto special_title(std::string_view s) -> std::string {
 }
 
 auto is_noopsort(std::string_view s, size_t i) -> bool {
-    auto n = s.size();
-    if (i + 10 >= n) return false;
-    if (s[i + 10] != '{' && (std::isspace(static_cast<unsigned char>(s[i + 10])) == 0)) return false;
-    if (s[i + 1] != '\\') return false;
-    if (s[i + 3] != 'o') return false;
-    if (s[i + 7] != 'o') return false;
-    if (s[i + 2] == 'n' && s[i + 4] == 'o' && s[i + 5] == 'p' && s[i + 6] == 's' && s[i + 8] == 'r' && s[i + 9] == 't') return true;
-    if ((s[i + 2] == 's' || s[i + 2] == 'S') && s[i + 4] == 'r' && s[i + 5] == 't' && (s[i + 6] == 'n' || s[i + 6] == 'N') &&
-        s[i + 8] == 'o' && s[i + 9] == 'p')
-        return true;
-    return false;
+    if (i + 1 >= s.size()) return false;
+    static constexpr auto pattern = ctll::fixed_string{R"(^\\(?:noopsort|[sS]ort[nN]oop)(?:\{|[ \t\r\n]))"};
+    return ctre::match<pattern>(s.substr(i + 1));
 }
 
 auto four_hats(char32_t ch) -> std::string {
