@@ -349,7 +349,7 @@ auto Stack::push_par(size_t k) -> Xml * {
 
 // Fonts without argument like \it, (still ok ?)
 void Stack::fonts0(const std::string &x) {
-    Xml *res                        = fonts1(x);
+    Xml *res                        = Parser::fonts1(x);
     res->att[the_names["'hi_flag"]] = "";
     push(std::string(" "), res);
 }

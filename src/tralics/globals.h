@@ -13,9 +13,6 @@ class SaveAuxEnv;
 // TODO: next are global functions, should we do something with them?
 
 inline auto math_to_sub(math_list_type x) -> subtypes { return subtypes(x - fml_offset); }
-auto        fonts1(const std::string &x) -> Xml *;
-auto        first_boundary() -> boundary_type;
-auto        is_env_on_stack(const std::string &s) -> SaveAuxEnv *;
 
 namespace arith_ns {
     auto nx_plus_y(long n, long x, long y) -> long;

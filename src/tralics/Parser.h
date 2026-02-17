@@ -57,6 +57,7 @@ struct Parser {
     bool                                             global_in_load{false};
     bool                                             global_in_url{false};
     bool                                             in_hlinee{false};
+    bool                                             name_in_progress{false}; // recursion guard for filename scanning
     bool                                             have_above{false};
     bool                                             have_below{false};
     int                                              old_nberrs{};      // previous number of errors
@@ -157,6 +158,7 @@ struct Parser {
     ~Parser();
 
     void               add_buffer_to_document_hook(std::string_view b, const std::string &name);
+    static auto        fonts1(const std::string &x) -> Xml *;
     void               add_language_att() const;
     bool               after_main_text();
     void               boot();
@@ -229,6 +231,7 @@ struct Parser {
     auto               E_the(subtypes c) -> TokenList;
     auto               edef_aux(TokenList &L) -> bool;
     auto               env_helper(const std::string &s) -> SaveAuxEnv *;
+    auto               first_boundary() -> boundary_type;
     auto               eval_condition(subtypes test) -> bool;
     auto               false_end_tabular(const std::string &s) -> bool;
     auto               fetch_csname(bool exp) -> Token;
@@ -255,6 +258,7 @@ struct Parser {
     auto               group_to_string() -> std::string;
     auto               index_aux(TokenList &L, std::optional<size_t> father, OneIndex &g) -> size_t;
     auto               internal_makebox() -> Xml *;
+    auto               is_env_on_stack(const std::string &s) -> SaveAuxEnv *;
     auto               is_input_open() -> bool;
     auto               is_verbatim_end() -> bool;
     auto               kvo_getfam() -> std::optional<std::string>;

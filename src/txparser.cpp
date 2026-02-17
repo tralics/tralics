@@ -2154,6 +2154,18 @@ auto Parser::env_helper(const std::string &s) -> SaveAuxEnv * {
     return new SaveAuxEnv(cur_e_name, s, cl, t, cur_cmd_chr);
 }
 
+// Returns the saved slot associated to environment `s`.
+auto Parser::is_env_on_stack(const std::string &s) -> SaveAuxEnv * {
+    for (size_t i = save_stack.size(); i > 0; i--) {
+        auto &p = save_stack[i - 1];
+        if (!p) continue; // should not happen, but observed on linux+clang9
+        if (p->type != st_env) continue;
+        auto *q = dynamic_cast<SaveAuxEnv *>(p.get());
+        if (q->name == s) return q;
+    }
+    return nullptr;
+}
+
 // This implements \begin{foo}
 [[nodiscard]] auto Parser::T_begin(const std::string &s) -> bool {
     SaveAuxEnv *X = env_helper(s);

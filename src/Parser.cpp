@@ -994,6 +994,14 @@ namespace {
     }
 } // namespace
 
+auto Parser::fonts1(const std::string &x) -> Xml * {
+    bool     w   = the_main.use_font_elt;
+    Xml     *res = new Xml(the_names[w ? x : "hi"], nullptr);
+    AttList &W   = res->att;
+    if (!w) W[the_names["rend"]] = the_names[x];
+    return res;
+}
+
 // This command puts a double accent on a letter.
 // The result is a token (character or command) from
 // the other_accent table defined above; or empty token in case of failure.

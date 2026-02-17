@@ -1945,10 +1945,10 @@ auto Math::trivial_math_index(symcodes cmd) -> Xml * {
         }
     } else
         return nullptr;
-    Xml *tmp  = fonts1(loc);
+    Xml *tmp  = Parser::fonts1(loc);
     Xml *xval = new Xml(std::string(B));
     if (have_font) {
-        Xml *tmp2 = fonts1(font_pos);
+        Xml *tmp2 = Parser::fonts1(font_pos);
         tmp2->push_back_unless_nullptr(xval);
         xval = tmp2;
     }

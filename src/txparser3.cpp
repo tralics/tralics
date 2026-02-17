@@ -2,7 +2,6 @@
 
 #include "tralics/Parser.h"
 #include "tralics/SaveAux.h"
-#include "tralics/globals.h"
 #include "tralics/util.h"
 #include <spdlog/fmt/fmt.h>
 #include <spdlog/fmt/ostr.h>
@@ -268,6 +267,17 @@ void Parser::dump_save_stack() const {
         --L;
     }
     spdlog::trace("### bottom level");
+}
+
+auto Parser::first_boundary() -> boundary_type {
+    for (size_t i = save_stack.size(); i > 0; i--) {
+        auto &p = save_stack[i - 1];
+        if (!p) continue;
+        if (p->type != st_boundary) continue;
+        first_boundary_loc = p->line;
+        return dynamic_cast<SaveAuxBoundary *>(p.get())->val;
+    }
+    return bt_impossible;
 }
 
 // The function called when we see a closing brace or \endgroup.

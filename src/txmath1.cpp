@@ -1132,7 +1132,7 @@ auto Math::remove_req_arg() -> std::string {
 
 // This realises the \textsuperscript, given the translation of the argument
 auto math_ns::make_sup(Xml *xval) -> Xml * {
-    Xml *tmp = fonts1("sup");
+    Xml *tmp = Parser::fonts1("sup");
     tmp->push_back_unless_nullptr(xval);
     return tmp;
 }

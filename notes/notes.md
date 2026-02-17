@@ -278,8 +278,9 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
   - 227: RA remove
 
 - src/globals.cpp
+  - fonts1: moved into Parser helper (done 2026-02-17)
   - next_label_id: moved into Parser state (done 2026-02-17)
-  - 39: this should never happen but it does on linux+clang9
+  - 39: this should never happen but it does on linux+clang9 (done 2026-02-17; moved with is_env_on_stack into Parser)
 
 - src/tralics/CitationKey.h
   - 19: merge all these

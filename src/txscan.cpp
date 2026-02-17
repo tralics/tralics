@@ -54,7 +54,6 @@ namespace {
     Buffer                                      scratch;                  // See insert_without_crlf
     TexFonts                                    tfonts;                   // the font table
     std::vector<InputStack *>                   cur_input_stack;          // the input streams
-    bool                                        name_in_progress = false; // see the source of TeX
     std::array<FileForInput, nb_input_channels> tex_input_files;          // the input files
     bool                                        scan_glue_opt = false;    // true if optional glue as found
     std::array<std::vector<long>, 4>            penalties;
@@ -82,7 +81,7 @@ namespace {
     // Implements \currentgrouptype.
     // (see online doc for the meaning of the numbers).
     auto cur_group_type() -> int {
-        auto V = first_boundary();
+        auto V = the_parser.first_boundary();
         switch (V) {
         case bt_impossible: return 0;
         case bt_brace: return 1;
