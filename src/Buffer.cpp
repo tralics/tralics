@@ -479,32 +479,6 @@ auto Buffer::see_equals(const std::string &s) -> bool {
     return true;
 }
 
-// Returns the buffer without initial and final space, if init is true.
-// In any case, a tab is converted into a space, multiple space chars
-// are replaced by single ones.
-// We can safely assume that buffer is ASCII
-auto Buffer::special_convert(bool init) -> std::string {
-    ptrs.b = 0;
-    if (init) skip_sp_tab_nl();
-    std::string bb1;
-    bool        space = true;
-    for (;;) {
-        auto c = next_char();
-        if (c == 0) break;
-        if (std::isspace(uchar(c)) != 0) {
-            if (!space) {
-                bb1.push_back(' ');
-                space = true;
-            }
-        } else {
-            bb1.push_back(c);
-            space = false;
-        }
-    }
-    if (init && !bb1.empty() && bb1.back() == ' ') bb1.pop_back();
-    return bb1;
-}
-
 // In case of Lo{\"i}c, repeated calls will set head() to L, o, { and c.
 // It works also in the case of non-ascii characters
 void Buffer::next_bibtex_char() {

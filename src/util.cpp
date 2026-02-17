@@ -270,6 +270,29 @@ auto insert_space_here(std::string_view s, size_t k) -> bool {
     return true;
 }
 
+auto special_convert_ascii_space(std::string_view s, bool trim_edges) -> std::string {
+    size_t i = 0;
+    if (trim_edges) {
+        while (i < s.size() && std::isspace(static_cast<uchar>(s[i])) != 0) i++;
+    }
+    std::string out;
+    bool        space = true;
+    for (; i < s.size(); ++i) {
+        auto c = s[i];
+        if (std::isspace(static_cast<uchar>(c)) != 0) {
+            if (!space) {
+                out.push_back(' ');
+                space = true;
+            }
+        } else {
+            out.push_back(c);
+            space = false;
+        }
+    }
+    if (trim_edges && !out.empty() && out.back() == ' ') out.pop_back();
+    return out;
+}
+
 auto codepoints(const std::string &s) -> std::vector<char32_t> {
     the_parser.cur_file_line = the_parser.get_cur_line();
     std::vector<char32_t> res;

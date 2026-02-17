@@ -454,7 +454,7 @@ auto Bibtex::parse_one_item() -> bool {
         auto X = *find_a_macro(token_buf, true, std::nullopt, "");
         mac_def_val(X);
         if (!read_field(true)) return false;
-        mac_set_val(X, field_buf.special_convert(false));
+        mac_set_val(X, special_convert_ascii_space(field_buf, false));
     } else {
         cur_entry_line = cur_bib_line;
         Buffer A;

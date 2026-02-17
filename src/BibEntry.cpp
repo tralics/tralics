@@ -251,14 +251,14 @@ namespace {
 auto BibEntry::store_field(field_pos where) -> bool {
     if (where < fp_unknown) {
         if (all_fields[where].empty()) {
-            all_fields[where] = field_buf.special_convert(true);
+            all_fields[where] = special_convert_ascii_space(field_buf, true);
             return true;
         }
         return false;
     }
     auto k = size_t(where - fp_unknown - 1);
     if (user_fields[k].empty()) {
-        user_fields[k] = field_buf.special_convert(true);
+        user_fields[k] = special_convert_ascii_space(field_buf, true);
         return true;
     }
     return false;
