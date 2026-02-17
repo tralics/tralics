@@ -48,9 +48,6 @@ All options start with a single or double hyphen, they are:
   -noconfig: no configuration file is used
   -utf8: says that the source is encoded in utf8 instead of latin1
   -latin1: overrides -utf8
-  -utf8output: same as -oe8
-  -oe8, -oe1, -oe8a -oe1a: specifies output encoding
-  -te8, -te1, -te8a -te1a: terminal and transcript encoding
   -(no)trivialmath: special math hacking
   -(no)etex; enable or disable e-TeX extensions
   -nozerowidthelt: Use  &#x200B; rather than <zws/>
@@ -930,6 +927,13 @@ void MainClass::out_xml() {
 
 void MainClass::set_input_encoding(size_t wc) {
     if (wc < max_encoding) {
+        if (wc >= 2) {
+            static bool warned_custom_input_encoding = false;
+            if (!warned_custom_input_encoding) {
+                warned_custom_input_encoding = true;
+                spdlog::warn("Input encoding tables >1 are deprecated; prefer UTF-8 or ISO-8859-1 source files.");
+            }
+        }
         input_encoding = wc;
         spdlog::trace("++ Default input encoding changed to {}", wc);
     }

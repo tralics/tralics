@@ -65,6 +65,13 @@ namespace {
 
 void LineList::change_encoding(long wc) {
     if (wc >= 0 && wc < to_signed(max_encoding)) {
+        if (wc >= 2) {
+            static bool warned_custom_input_encoding = false;
+            if (!warned_custom_input_encoding) {
+                warned_custom_input_encoding = true;
+                spdlog::warn("Input encoding tables >1 are deprecated; prefer UTF-8 or ISO-8859-1 source files.");
+            }
+        }
         encoding = to_unsigned(wc);
         spdlog::trace("++ Input encoding changed to {} for {}", wc, file_name);
     }

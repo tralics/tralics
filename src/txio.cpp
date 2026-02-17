@@ -70,6 +70,11 @@ void io_ns::set_enc_param(long enc, long pos, long v) {
         the_parser.parse_error(fmt::format("Illegal encoding {}", enc));
         return;
     }
+    static bool warned_custom_input_encoding = false;
+    if (!warned_custom_input_encoding) {
+        warned_custom_input_encoding = true;
+        spdlog::warn("Input encoding tables >1 are deprecated; prefer UTF-8 or ISO-8859-1 source files.");
+    }
     enc -= 2;
     if (!(pos >= 0 && pos < lmaxchar)) {
         the_parser.parse_error(fmt::format("Illegal encoding position {}", pos));
