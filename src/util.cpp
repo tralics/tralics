@@ -253,6 +253,23 @@ auto remove_digits(std::string s) -> std::string {
     return s;
 }
 
+auto single_non_space_char(std::string_view s) -> char {
+    size_t j = 0;
+    while (j < s.size() && std::isspace(static_cast<uchar>(s[j])) != 0) j++;
+    if (j >= s.size()) return 0;
+    char c = s[j++];
+    while (j < s.size() && std::isspace(static_cast<uchar>(s[j])) != 0) j++;
+    return (j == s.size()) ? c : 0;
+}
+
+auto insert_space_here(std::string_view s, size_t k) -> bool {
+    if (k == 0 || k + 1 >= s.size()) return false;
+    if (s[k] != '.') return false;
+    if (std::isupper(static_cast<uchar>(s[k + 1])) == 0) return false;
+    if (std::isupper(static_cast<uchar>(s[k - 1])) == 0) return false;
+    return true;
+}
+
 auto codepoints(const std::string &s) -> std::vector<char32_t> {
     the_parser.cur_file_line = the_parser.get_cur_line();
     std::vector<char32_t> res;

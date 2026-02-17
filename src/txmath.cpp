@@ -1788,7 +1788,7 @@ auto Math::convert_cell(size_t &n, std::vector<AttList> &table, math_style W) ->
             n += to_unsigned(k);
         }
         L.get_arg2().convert_this_to_string(math_buffer);
-        auto c = math_buffer.single_char();
+        auto c = single_non_space_char(math_buffer);
         if (c == 'l') tbl_align = 1;
         if (c == 'r') tbl_align = 2;
         args = L.get_arg3();

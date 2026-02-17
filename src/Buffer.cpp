@@ -45,11 +45,6 @@ namespace {
     }
 } // namespace
 
-auto Buffer::next_non_space(size_t j) const -> size_t {
-    while (is_spaceh(j)) j++;
-    return j;
-}
-
 void Buffer::push_back(uchar c) { push_back(static_cast<char>(c)); }
 
 // Same code, but takes a 7 bit character as argument.
@@ -340,29 +335,6 @@ auto Buffer::skip_word_ci(const std::string &s) -> bool {
     if (std::isalpha(uchar(c)) != 0) return false;
     ptrs.b += s.size();
     return true;
-}
-
-// If the buffer holds a single char (plus space) returns it.
-// Note: this returns 0 in case of a non-7bit character
-auto Buffer::single_char() const -> char {
-    auto j = next_non_space(0);
-    if (at(j) == 0) return 0;
-    char c = at(j);
-    j      = next_non_space(j + 1);
-    if ((*this)[j] != 0) return 0;
-    return c;
-}
-
-// If the buffer contains a small positive number returns it.
-auto Buffer::int_val() const -> std::optional<size_t> {
-    size_t n = 0;
-    for (size_t p = 0;; p++) {
-        auto c = (*this)[p];
-        if (c == 0) return n;
-        if (std::isdigit(c) == 0) return {};
-        n = 10 * n + to_unsigned(c - '0');
-        if (n > 1000000) return {};
-    }
 }
 
 // Sets ptrs.a to the first non-space
@@ -724,15 +696,6 @@ auto Buffer::find_and(const bchar_type *table) -> bool { // TODO: regexp "\s*[aA
         c = (*this)[ptrs.b + 3];
         if ((c == ' ') || (c == '\t') || (c == '\n')) return false;
     }
-}
-
-// In J.G. Grimm,only the first dot matches.
-auto Buffer::insert_space_here(size_t k) const -> bool {
-    if (k == 0) return false;
-    if (at(k) != '.') return false;
-    if (std::isupper(at(k + 1)) == 0) return false;
-    if (std::isupper(at(k - 1)) == 0) return false;
-    return true;
 }
 
 // This is the TeX command \string ; if esc is false, no escape char is inserted

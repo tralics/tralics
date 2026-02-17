@@ -39,7 +39,7 @@ auto Bchar::find_a_lower() const -> size_t {
 
 void Bchar::invent_spaces() const {
     for (auto i = first; i < last; i++)
-        if (table[i] == bct_normal && name_buffer.insert_space_here(i)) table[i] = bct_dot;
+        if (table[i] == bct_normal && insert_space_here(name_buffer, i)) table[i] = bct_dot;
 }
 
 // Returns true if character can be removed (between names)

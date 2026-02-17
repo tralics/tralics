@@ -1200,7 +1200,7 @@ auto MathElt::is_e_grave() const -> bool {
     Math   &A = get_list();
     Buffer &B = mathml_buffer; // not aux_buffer !!
     if (!A.get_arg1().chars_to_mb(B, false)) return false;
-    if (B.single_char() != 'e') return false;
+    if (single_non_space_char(B) != 'e') return false;
     return true;
 }
 
