@@ -1,8 +1,6 @@
 #pragma once
 #include "Xml.h"
 #include "enums.h"
-#include <array>
-#include <filesystem>
 #include <optional>
 #include <string>
 #include <string_view>
@@ -14,17 +12,11 @@ inline auto math_to_sub(math_list_type x) -> subtypes { return subtypes(x - fml_
 
 namespace arith_ns {
     auto nx_plus_y(long n, long x, long y) -> long;
-    auto n_times_x(int n, ScaledInt x) -> ScaledInt;
-    void scaled_div(ScaledInt &x, int n);
     auto xn_over_d(long x, long n, long d, long &remainder) -> long;
-    auto quotient(int n, int d) -> int;
-    auto add_ovf(ScaledInt x, ScaledInt y) -> int;
 } // namespace arith_ns
 
 namespace math_ns {
     void add_attribute_spec(const std::string &a, const std::string &b);
-    auto handle_hspace(Buffer &B) -> Xml *;
-    auto handle_space(Buffer &) -> Xml *;
     void insert_delimiter(del_pos k);
     void insert_delimiter_t(del_pos k);
     auto math_space_code(subtypes c) -> bool;
