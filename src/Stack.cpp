@@ -556,7 +556,7 @@ void Stack::create_new_anchor(Xml *x, const std::string &id, const std::string &
 
 // mark current element as target for a label.
 auto Stack::add_new_anchor() -> std::string {
-    std::string id = next_label_id();
+    std::string id = the_parser.next_label_id();
     set_cur_id(id);
     create_new_anchor(last_xml, id, get_cur_label());
     return id;
@@ -573,7 +573,7 @@ auto Stack::add_new_anchor_spec() -> std::string {
 // Add an anchor if needed.
 auto Stack::add_anchor(const std::string &s, bool spec) -> std::string {
     if (!spec && (top_stack()->tail_is_anchor())) return get_cur_id();
-    std::string id = next_label_id();
+    std::string id = the_parser.next_label_id();
     set_cur_id(id);
     if (!spec) {
         add_newid0("anchor");

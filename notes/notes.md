@@ -278,6 +278,7 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
   - 227: RA remove
 
 - src/globals.cpp
+  - next_label_id: moved into Parser state (done 2026-02-17)
   - 39: this should never happen but it does on linux+clang9
 
 - src/tralics/CitationKey.h

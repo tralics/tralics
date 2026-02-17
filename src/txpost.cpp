@@ -69,6 +69,8 @@ void Parser::user_XML_modify(subtypes c) {
 // We enter foo in the hashtab, and look at the LabelInfo value.
 // If the label is undefined, we define it,
 
+auto Parser::next_label_id() -> std::string { return std::string(fmt::format("uid{}", ++last_label_id)); }
+
 void Parser::create_label(const std::string &X, const std::string &S) {
     auto  m = std::string(X);
     auto *V = labinfo(m);

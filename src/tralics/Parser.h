@@ -68,6 +68,7 @@ struct Parser {
     int                                              default_language_num{0};          // default language
     int                                              cur_level{1};                     // current level on the execution stack
     size_t                                           equation_ctr_pos{};               // position in the table of the counter equation
+    size_t                                           last_label_id{};                  // counter for generated uid labels
     states                                           state{};                          // current state of the scanner
     Token                                            after_assignment_token;           // token for \afterassignment
     subtypes                                         sectionning_offset{section_code}; // what is the main section, part, chapter ?
@@ -208,6 +209,7 @@ struct Parser {
     void               expand_nct(TokenList &L);
     void               token_for_show(const CmdChr &val);
     [[nodiscard]] auto token_for_show_str(const CmdChr &val) -> std::string;
+    auto               next_label_id() -> std::string;
     void               create_label(const std::string &X, const std::string &S);
     void               LC();
 

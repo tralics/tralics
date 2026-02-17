@@ -4,14 +4,8 @@
 #include "tralics/MainClass.h"
 #include "tralics/Parser.h"
 #include "tralics/SaveAux.h"
-#include <spdlog/fmt/fmt.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
-
-auto next_label_id() -> std::string {
-    static size_t last_label_id = 0;
-    return std::string(fmt::format("uid{}", ++last_label_id));
-}
 
 auto fonts1(const std::string &x) -> Xml * {
     bool     w   = the_main.use_font_elt;

@@ -197,7 +197,7 @@ void MathHelper::ml_second_pass(Xml *row, bool vb) {
         if (stag) spdlog::trace("tag on row {} {}.", N, tag);
     }
     if (stag) {
-        std::string id = next_label_id();
+        std::string id = the_parser.next_label_id();
         the_stack.create_new_anchor(row, id, std::string(tag));
         if (slabel) the_parser.create_label(label, id);
     } else if (slabel)

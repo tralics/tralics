@@ -536,7 +536,7 @@ void Parser::add_math_label(Xml *res) {
         cmi.ml_last_pass(tracing_math());
         if (cmi.tag.empty()) return;
     }
-    std::string my_id = next_label_id();
+    std::string my_id = the_parser.next_label_id();
     if (cmi.tag.empty()) {
         static int mid = 0;
         mid++;
@@ -2202,7 +2202,7 @@ auto MathElt::cv_special(math_style cms) -> MathElt {
         std::string s1 = L.get_arg1().convert_this_to_string(math_buffer);
         std::string s2 = L.get_arg2().convert_this_to_string(math_buffer);
         Xml        *x  = new Xml(the_names["mrow"], nullptr);
-        std::string id = next_label_id();
+        std::string id = the_parser.next_label_id();
         the_stack.create_new_anchor(x, id, std::string(s1));
         the_parser.create_label(s2, id);
         return {x, mt_flag_small};

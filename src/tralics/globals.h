@@ -12,7 +12,6 @@ class SaveAuxEnv;
 
 // TODO: next are global functions, should we do something with them?
 
-auto        next_label_id() -> std::string;
 inline auto math_to_sub(math_list_type x) -> subtypes { return subtypes(x - fml_offset); }
 auto        fonts1(const std::string &x) -> Xml *;
 auto        first_boundary() -> boundary_type;
