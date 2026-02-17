@@ -1217,13 +1217,13 @@ auto Parser::M_new_thm() -> bool {
     TokenList aux = toks_registers[theorem_bodyfont_code].val;
     aux.brace_me();
     text.splice(text.end(), aux);
-    aux = token_ns::string_to_list(name, true);
+    aux = TokenList(name, true);
     text.splice(text.end(), aux);
     if (which_case == 3) {
         aux = ctr;
         aux.brace_me();
     } else
-        aux = token_ns::string_to_list(name, true);
+        aux = TokenList(name, true);
     text.splice(text.end(), aux);
     aux = toks_registers[theorem_style_code].val;
     aux.brace_me();
@@ -1244,7 +1244,7 @@ auto Parser::M_new_thm() -> bool {
         new_macro(R, thename_cmd, true);
         return true;
     }
-    TokenList the_value = token_ns::string_to_list(name, true);
+    TokenList the_value = TokenList(name, true);
     TokenList V         = the_value;
     the_value.push_front(hash_table.arabic_token);
     if (which_case == 2) {
@@ -1854,7 +1854,7 @@ auto Parser::counter_aux(const std::string &name, std::optional<std::string_view
     }
     // evaluate: \xdef\cl@bar{\cl@bar\noexpand\@elt{foo}}
     // We know that \cl@bar can be expanded only once.
-    TokenList foo_list = token_ns::string_to_list(name, true);
+    TokenList foo_list = TokenList(name, true);
     Token     cl_token = cur_tok; // \cl@bar
     get_token();                  // get the \cl@bar token
     if (!M_cons(cl_token, foo_list)) return std::nullopt;

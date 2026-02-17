@@ -531,7 +531,7 @@ void Parser::check_module_title(TokenList &L) {
     L.remove_initial_spaces();
     if (!L.empty()) return;
     signal_error("Empty module name replaced!");
-    L = token_ns::string_to_list(ctr == 1 ? "Overall Objectives" : "Introduction", false);
+    L = TokenList(ctr == 1 ? "Overall Objectives" : "Introduction", false);
 }
 
 // Translates \frontmatter, \mainmatter, \backmatter
@@ -1122,7 +1122,7 @@ void Parser::T_color(subtypes c) {
 void Parser::add_vspace(Token T, ScaledInt dimen, Xml *x) {
     auto *K = x->att.lookup(the_names["space_before"]);
     if (K != nullptr) {
-        TokenList La = token_ns::string_to_list(*K, false);
+        TokenList La = TokenList(*K, false);
         list_to_glue(it_glue, T, La);
         dimen += cur_val.get_glue_width();
     }

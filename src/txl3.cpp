@@ -28,7 +28,7 @@ namespace l3_ns {
 void Parser::E_pdfstrcmp() {
     auto      s1 = sE_arg(), s2 = sE_arg();
     auto      cmp = s1.compare(s2);
-    TokenList L   = token_ns::string_to_list(cmp == 0 ? "0" : (cmp < 0 ? "-1" : "1"), false);
+    TokenList L(cmp == 0 ? "0" : (cmp < 0 ? "-1" : "1"), false);
     if (tracing_macros()) { spdlog::trace("{}{}=={}->{}", fmt::streamed(cur_tok), s1, s2, fmt::streamed(L)); }
     back_input(L);
 }

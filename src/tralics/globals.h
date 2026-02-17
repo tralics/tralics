@@ -50,10 +50,6 @@ namespace math_ns {
 } // namespace math_ns
 
 namespace token_ns {
-    auto posint_to_list(long n) -> TokenList;
-    void push_back_i(TokenList &L, long n);
-    void show(const TokenList &);
-    auto string_to_list(const std::string &s, bool b) -> TokenList;
     auto is_sublist(TokenList::iterator A, TokenList::iterator B, int n) -> bool;
     auto check_brace(Token x, int &bl) -> bool;
     auto compare(const TokenList &A, const TokenList &B) -> bool;

@@ -6,11 +6,11 @@
 void TokenList::add_env(const std::string &name) {
     TokenList res;
     res.push_back(hash_table.locate("begin"));
-    auto name_tokens = token_ns::string_to_list(name, true);
+    auto name_tokens = TokenList(name, true);
     res.append(name_tokens);
     res.splice(res.end(), *this);
     res.push_back(hash_table.locate("end"));
-    auto end_tokens = token_ns::string_to_list(name, true);
+    auto end_tokens = TokenList(name, true);
     res.append(end_tokens);
     swap(res);
 }
@@ -20,7 +20,7 @@ void TokenList::add_verbatim_number(const Hashtab &H, long n) {
     push_back(H.OB_token);
     push_back(H.verbatim_number_font);
     push_back(H.OB_token);
-    token_ns::push_back_i(*this, n);
+    push_back_i(n);
     push_back(H.CB_token);
     push_back(H.CB_token);
     push_back(H.space_token);

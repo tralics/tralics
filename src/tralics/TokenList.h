@@ -1,10 +1,15 @@
 #pragma once
 #include "Token.h"
 #include <array>
+#include <string_view>
 
 struct Hashtab;
 
 struct TokenList : public std::list<Token> {
+    TokenList() = default;
+    explicit TokenList(long n); // decimal digits as catcode-12 tokens
+    TokenList(std::string_view s, bool braced);
+
     [[nodiscard]] auto block_size() const -> int;
     [[nodiscard]] auto expand_mac_inner(const TokenList *arguments) const -> TokenList;
     template <size_t N> [[nodiscard]] auto expand_mac_inner(const std::array<TokenList, N> &arguments) const -> TokenList {
@@ -23,7 +28,9 @@ struct TokenList : public std::list<Token> {
     void remove_ext_braces();
     void remove_first_last_space();
     void remove_initial_spaces();
+    void show() const;
     void replace_at_toplevel(Token x1, Token x2);
+    void push_back_i(long n);
     void sanitize_toplevel(uchar c);
     void sanitize_chars_only();
     void sanitize_with_chars(TokenList &s, long n);

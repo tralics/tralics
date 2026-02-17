@@ -1313,7 +1313,7 @@ void Parser::scan_something_internal(internal_type level) {
             return;
         }
         std::string s = math_data.math_chars[uchar(vv)][k];
-        cur_val.set_toks(token_ns::string_to_list(s, false));
+        cur_val.set_toks(TokenList(s, false));
         return;
     }
     case set_aux_cmd: // \spacefactor etc
@@ -1371,7 +1371,7 @@ void Parser::scan_something_internal(internal_type level) {
             back_input(); // push back, and use scan_font_ident as parser.
             auto               k = scan_font_ident();
             const std::string &s = tfonts.name(k);
-            cur_val.set_toks(token_ns::string_to_list(s, false));
+            cur_val.set_toks(TokenList(s, false));
         }
         return;
     case register_cmd: // \count, \dimen, etc

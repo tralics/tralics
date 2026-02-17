@@ -4,7 +4,7 @@
 
 // Reverse function
 auto KeyAndVal::to_list() const -> TokenList {
-    TokenList u = token_ns::string_to_list(name, false);
+    TokenList u = TokenList(name, false);
     if (val.empty()) return u;
     TokenList aux = val;
     u.splice(u.end(), aux);

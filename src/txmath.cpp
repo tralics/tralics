@@ -1026,10 +1026,10 @@ auto Parser::scan_math(size_t res, math_list_type type) -> bool {
                 std::string a = special_next_arg();
                 if (h) {
                     c           = mathlabel_code;
-                    TokenList L = token_ns::string_to_list(a, true);
+                    TokenList L = TokenList(a, true);
                     // L.brace_me();
                     back_input(L);
-                    TokenList L1 = token_ns::string_to_list(s, true);
+                    TokenList L1 = TokenList(s, true);
                     // L1.brace_me();
                     back_input(L1);
                     math_list_type cc = sub_to_math(c);
@@ -1280,7 +1280,7 @@ auto Parser::scan_math_env(size_t res, math_list_type type) -> bool {
     // Case \end{foo}
     bool at_level_zero = cmi.all_env_ctr == -1;
     if (at_level_zero && cmi.has_tag()) {
-        TokenList L = token_ns::string_to_list(s, true);
+        TokenList L = TokenList(s, true);
         back_input(L);
         back_input(hash_table.locate("end"));
         cmi.handle_tags();

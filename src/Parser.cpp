@@ -2117,10 +2117,10 @@ void Parser::T_cite(subtypes sw) {
             TokenList tmp;
             res.push_back(my_cmd);
             if (!is_natbib) {
-                tmp = token_ns::string_to_list(type, true);
+                tmp = TokenList(type, true);
                 res.splice(res.end(), tmp);
             }
-            tmp = token_ns::string_to_list(cur, true);
+            tmp = TokenList(cur, true);
             res.splice(res.end(), tmp);
             if (!is_natbib) {
                 res.push_back(hash_table.OB_token);
@@ -2532,7 +2532,7 @@ void Parser::T_hline(subtypes c) {
 // and we have to push back the `\end{tabular}' tokens
 auto Parser::false_end_tabular(const std::string &s) -> bool {
     if (the_stack.is_frame("cell")) {
-        TokenList L = token_ns::string_to_list(s, true);
+        TokenList L = TokenList(s, true);
         back_input(L);
         back_input(hash_table.locate("end"));
         finish_a_cell(hash_table.cr_token, std::string());

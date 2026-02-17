@@ -6,26 +6,21 @@
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 
-// Converts an integer into a token list, catcode 12
-// Assumes n>0, otherwise result is empty.
-auto token_ns::posint_to_list(long n) -> TokenList {
-    TokenList L;
-    if (n <= 0) return L;
+TokenList::TokenList(long n) {
+    if (n <= 0) return;
     while (n != 0) {
         auto k  = n % 10;
         n       = n / 10;
         Token t = Token(other_t_offset, uchar(k + '0'));
-        L.push_front(t);
+        push_front(t);
     }
-    return L;
 }
 
-// Adds an integer to the end of the token list.
-// Uses a temporary list, since we get digits from right to left.
-// Noting done if n<0. This is used for inserting verbatim line numbers.
-void token_ns::push_back_i(TokenList &L, long n) {
-    TokenList tmp = posint_to_list(n);
-    L.splice(L.end(), tmp);
+TokenList::TokenList(std::string_view s, bool braced) {
+    Buffer &B = buffer_for_log;
+    B         = std::string(s);
+    *this     = B.str_toks(nlt_space);
+    if (braced) brace_me();
 }
 
 // Finds the first M, not escaped by E in the list L.
@@ -151,6 +146,13 @@ void TokenList::remove_initial_spaces() {
     }
 }
 
+void TokenList::show() const { spdlog::info("{}", fmt::streamed(*this)); }
+
+void TokenList::push_back_i(long n) {
+    TokenList tmp(n);
+    splice(end(), tmp);
+}
+
 // Converts the string in the buffer into a token list.
 // Everything is of \catcode 12, except space.
 // If the switch is true, \n is converted to space, otherwise newline
@@ -195,16 +197,6 @@ auto Buffer::str_toks11(bool nl) -> TokenList {
         else
             L.push_back(Token(other_t_offset, *c));
     }
-}
-
-// Converts a string to a token list. If b is true, we add braces.
-// NOTE:  in every case converts newline to space
-auto token_ns::string_to_list(const std::string &s, bool b) -> TokenList {
-    Buffer &B   = buffer_for_log;
-    B           = s;
-    TokenList L = B.str_toks(nlt_space);
-    if (b) L.brace_me();
-    return L;
 }
 
 // Prints a token list.
