@@ -1086,7 +1086,7 @@ auto Parser::read_mac_nbargs() -> size_t {
     if (!L.empty() && L.front().is_plus_token()) L.pop_front();
     while (!L.empty() && L.front().is_zero_token()) L.pop_front();
     if (L.empty()) return 0; // case of \newcommand\x[]{x}
-    Token t = token_ns::get_unique(L);
+    Token t = L.get_unique();
     if (t.is_null()) {
         bad_nbargs(-1);
         return 0;
@@ -1646,7 +1646,7 @@ void Parser::E_ifempty() {
     TokenList L = read_arg();
     TokenList a = read_arg();
     TokenList b = read_arg();
-    if (c != 0U) token_ns::remove_first_last_space(L);
+    if (c != 0U) L.remove_first_last_space();
     bool ok = L.empty();
     if (tracing_commands()) spdlog::trace("{{{} {}}}", fmt::streamed(T), boolean(ok));
     one_of_two(a, b, ok);
@@ -2652,7 +2652,7 @@ auto Parser::expand() -> bool {
     case zapspace_cmd:
         if (c != 0U) {
             TokenList a = read_arg();
-            token_ns::remove_first_last_space(a);
+            a.remove_first_last_space();
             back_input(a);
         } else
             E_zapspace();
@@ -2960,7 +2960,7 @@ auto Parser::get_r_token(bool br) -> Token {
             get_new_command_aux(L); // signals an error
             cur_tok = hash_table.frozen_protection;
         } else
-            cur_tok = token_ns::get_unique(L);
+            cur_tok = L.get_unique();
     }
     if (cur_tok.not_a_cmd()) {
         bad_redefinition(2, cur_tok);

@@ -1527,7 +1527,7 @@ auto Parser::math_argument(int w, Token t) -> std::optional<subtypes> {
 // It returns \relax otherwise. Should we call scanint ?
 auto Parser::scan_style() -> Token {
     TokenList L = read_arg();
-    Token     t = token_ns::get_unique(L);
+    Token     t = L.get_unique();
     size_t    p = 4;
     if (t.cmd_val() == other_catcode) {
         auto tt = t.val_as_digit();

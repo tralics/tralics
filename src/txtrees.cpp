@@ -68,19 +68,19 @@ auto Parser::index_aux(TokenList &L, std::optional<size_t> father, OneIndex &g) 
     std::string        key, encap;
     bool               have_key = false;
     TokenList          z;
-    if (token_ns::split_at(escape_t, actual_t, actualb_t, L, z, false)) {
+    if (L.split_at(escape_t, actual_t, actualb_t, z, false)) {
         have_key = true;
-        token_ns::remove_first_last_space(z);
+        z.remove_first_last_space();
         key = to_stringE(z);
     }
-    if (token_ns::split_at(escape_t, encap_t, encap_t, L, z, false)) {
-        token_ns::remove_first_last_space(L);
+    if (L.split_at(escape_t, encap_t, encap_t, z, false)) {
+        L.remove_first_last_space();
         encap = to_stringE(L);
         swap(L, z);
     }
     if (!have_key) {
         z = L;
-        token_ns::remove_first_last_space(z);
+        z.remove_first_last_space();
         key = to_stringE(z);
     }
     z               = L;
@@ -134,8 +134,8 @@ void Parser::T_index(subtypes c) {
     static const Token level_t(other_t_offset, '!');
     flush_buffer();
     int level = 1;
-    if (token_ns::split_at(escape_t, level_t, level_t, L, z1, true)) {
-        if (token_ns::split_at(escape_t, level_t, level_t, L, z2, true))
+    if (L.split_at(escape_t, level_t, level_t, z1, true)) {
+        if (L.split_at(escape_t, level_t, level_t, z2, true))
             level = 3; // z1, z2, L
         else
             level = 2; // z1, L
@@ -316,14 +316,14 @@ void Parser::T_gloss(bool c) {
     TokenList third_line;
     int       n1 = 0, n2 = 0, n3 = 0;
     if (!c) third_line = read_until(BS);
-    n1 = token_ns::replace_space(first_line, amp, A);
+    n1 = first_line.replace_space(amp, A);
     first_line.push_front(A);
     first_line.push_back(BS);
-    n2 = token_ns::replace_space(second_line, amp, B);
+    n2 = second_line.replace_space(amp, B);
     second_line.push_front(B);
     second_line.push_back(BS);
     if (!c) {
-        n3 = token_ns::replace_space(third_line, amp, C);
+        n3 = third_line.replace_space(amp, C);
         third_line.push_front(C);
         third_line.push_back(BS);
     }

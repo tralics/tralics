@@ -246,7 +246,7 @@ auto Parser::nT_optarg_nopar() -> std::optional<std::string> {
 auto Parser::get_ctb_opt() -> std::optional<std::string> {
     auto L = read_optarg_nopar().value_or(TokenList{});
     if (L.empty()) return {};
-    Token t = token_ns::get_unique(L);
+    Token t = L.get_unique();
     if (t.is_null()) return {};
     if (t.cmd_val() != letter_catcode) return {};
     auto c = t.val_as_letter();
@@ -264,7 +264,7 @@ auto Parser::get_trees_opt() -> std::optional<std::string> {
     auto L = read_optarg_nopar().value_or(TokenList{});
     if (L.empty()) return {};
     Token t1, t2;
-    token_ns::get_unique(L, t1, t2);
+    L.get_unique(t1, t2);
     if (t1.is_null()) return {};
     if (t1.cmd_val() != letter_catcode) return {};
     auto c = t1.val_as_letter();
@@ -528,7 +528,7 @@ auto Parser::start_paras(int y, const std::string &Y, bool star) -> bool {
 void Parser::check_module_title(TokenList &L) {
     static int ctr = 0;
     ++ctr;
-    token_ns::remove_initial_spaces(L);
+    L.remove_initial_spaces();
     if (!L.empty()) return;
     signal_error("Empty module name replaced!");
     L = token_ns::string_to_list(ctr == 1 ? "Overall Objectives" : "Introduction", false);
@@ -804,7 +804,7 @@ auto Parser::T_keywords() -> bool {
     for (;;) {
         TokenList v;
         bool      seen_end = grab_env_comma(v);
-        token_ns::remove_first_last_space(v);
+        v.remove_first_last_space();
         if (!v.empty() && v.back().is_dot()) v.pop_back();
         the_stack.push1(the_names["term"]);
         the_stack.set_arg_mode();
@@ -902,13 +902,13 @@ auto Parser::includegraphics(subtypes C) -> bool {
     if (ic) no_extension(AL, file_name_2);
     Buffer &B = tpa_buffer;
     while (!W.empty()) {
-        token_ns::split_at(comma, W, val);
-        token_ns::remove_initial_spaces(val);
+        W.split_at(comma, val);
+        val.remove_initial_spaces();
         if (val.empty()) continue;
-        token_ns::split_at(equals, val, key);
-        token_ns::remove_first_last_space(key);
+        val.split_at(equals, key);
+        key.remove_first_last_space();
         if (key.empty()) continue;
-        token_ns::remove_first_last_space(val);
+        val.remove_first_last_space();
         std::string skey = list_to_string_c(key, bkey);
         B.clear();
         if (!ic && (skey == "file" || skey == "figure")) {
@@ -941,9 +941,9 @@ auto Parser::includegraphics(subtypes C) -> bool {
             TokenList aux;
             auto      SP = Token(space_token_val);
             for (int i = 0; i < 4; i++) {
-                token_ns::remove_initial_spaces(val);
+                val.remove_initial_spaces();
                 val.push_back(SP);
-                token_ns::split_at(SP, val, aux);
+                val.split_at(SP, aux);
                 default_bp(B, T, aux);
                 if (i < 3) B.push_back(' ');
             }

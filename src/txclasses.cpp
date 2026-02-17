@@ -66,9 +66,9 @@ using namespace token_ns;
 auto classes_ns::make_keyval(TokenList &key_val) -> KeyAndVal {
     TokenList key;
     Token     equals      = Token(other_t_offset, '=');
-    bool      have_equals = split_at(equals, key_val, key);
-    remove_first_last_space(key_val);
-    remove_first_last_space(key);
+    bool      have_equals = key_val.split_at(equals, key);
+    key_val.remove_first_last_space();
+    key.remove_first_last_space();
     if (have_equals) key_val.push_front(equals);
     std::string key_name = the_parser.list_to_string_c(key, "Invalid option");
     std::string key_full = key_name;
@@ -87,8 +87,8 @@ auto classes_ns::make_options(TokenList &L) -> OptionList {
     TokenList  key;
     Token      comma = hash_table.comma_token;
     while (!L.empty()) {
-        token_ns::split_at(comma, L, key);
-        token_ns::remove_first_last_space(key);
+        L.split_at(comma, key);
+        key.remove_first_last_space();
         if (key.empty()) continue;
         res.push_back(make_keyval(key));
     }

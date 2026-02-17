@@ -313,7 +313,7 @@ auto NewArray::ac_next() -> bool {
     }
     if (current_token.is_a_left_brace()) {
         current_list = preamble.fast_get_block();
-        token_ns::remove_ext_braces(current_list);
+        current_list.remove_ext_braces();
         have_token_list = true;
     } else {
         have_token_list = false;

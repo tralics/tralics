@@ -112,7 +112,7 @@ namespace {
                 xkv_is_global = true;
             }
         }
-        token_ns::remove_ext_braces(x);
+        x.remove_ext_braces();
         return the_parser.list_to_string_c(x, "Invalid key name");
     }
 
@@ -144,7 +144,7 @@ namespace {
                 break;
             }
             TokenList key = L.fast_get_block();
-            token_ns::remove_ext_braces(key);
+            key.remove_ext_braces();
             std::string Key           = the_parser.list_to_string_c(key, "Argument of \\savevalue");
             auto        xkv_local_buf = "XKV@" + xkv_header + Key + "@value";
             if (hash_table.is_defined(xkv_local_buf)) {
@@ -165,8 +165,8 @@ namespace {
         XkvToken  cur;
         for (;;) {
             if (W.empty()) return;
-            token_ns::split_at(hash_table.comma_token, W, val);
-            token_ns::remove_initial_spaces(val);
+            W.split_at(hash_table.comma_token, val);
+            val.remove_initial_spaces();
             if (val.empty()) continue;
             cur.initial = std::move(val);
             cur.extract();
@@ -230,15 +230,15 @@ namespace {
     void XkvToken::extract() {
         TokenList key;
         value   = initial;
-        has_val = token_ns::split_at(Token(other_t_offset, '='), value, key);
-        token_ns::remove_first_last_space(key);
-        token_ns::remove_first_last_space(value);
-        token_ns::remove_ext_braces(value);
-        token_ns::remove_ext_braces(value);
+        has_val = value.split_at(Token(other_t_offset, '='), key);
+        key.remove_first_last_space();
+        value.remove_first_last_space();
+        value.remove_ext_braces();
+        value.remove_ext_braces();
         keyname   = xkv_find_key_of(key, 1);
         has_save  = xkv_is_save;
         is_global = xkv_is_global;
-        token_ns::remove_first_last_space(value);
+        value.remove_first_last_space();
     }
 
     void XkvSetkeys::check_preset(std::string_view s) {
@@ -311,7 +311,7 @@ namespace {
             return;
         }
         Buffer xkv_local_buf;
-        token_ns::remove_first_last_space(*opt);
+        opt->remove_first_last_space();
         if (the_parser.list_to_string(*opt, xkv_local_buf)) {
             the_parser.parse_error(the_parser.err_tok, "Bad command ", the_parser.cur_tok, " in XKV prefix (more errors may follow)",
                                    "bad kv prefix");
@@ -367,7 +367,7 @@ namespace {
         TokenList key;
         W.swap(tmp);
         while (!tmp.empty()) {
-            token_ns::split_at(comma, tmp, key);
+            tmp.split_at(comma, key);
             std::string key_name      = xkv_find_key_of(key, type);
             auto        xkv_local_buf = "," + key_name + ",";
             if (B.find(xkv_local_buf) == std::string::npos) {
@@ -385,22 +385,22 @@ namespace {
         TokenList tmp;
         if (W.empty()) {
             while (!L.empty()) {
-                token_ns::split_at(comma, L, key);
-                token_ns::remove_first_last_space(key);
+                L.split_at(comma, key);
+                key.remove_first_last_space();
                 if (!W.empty()) W.push_back(comma);
                 W.splice(W.end(), key);
             }
             return;
         }
         while (!L.empty()) {
-            token_ns::split_at(comma, L, key);
-            token_ns::remove_first_last_space(key);
+            L.split_at(comma, key);
+            key.remove_first_last_space();
             std::string key_name = xkv_find_key_of(key, type);
             bool        found    = false; // Was key in W ?
             TokenList   z;
             W.swap(tmp);
             while (!tmp.empty()) {
-                token_ns::split_at(comma, tmp, z);
+                tmp.split_at(comma, z);
                 std::string zname = xkv_find_key_of(z, type);
                 if (!W.empty()) W.push_back(comma);
                 if (key_name == zname) {
@@ -420,8 +420,8 @@ namespace {
     // the keys in L from the variable depending on type
     // Implements preset or save depending on type
     void xkv_merge(bool gbl, int type, TokenList &L, bool mg) {
-        token_ns::sanitize_one(L, '=');
-        token_ns::sanitize_one(L, ',');
+        L.sanitize_toplevel('=');
+        L.sanitize_toplevel(',');
         Token     T = hash_table.locate(xkv_find_aux(type));
         TokenList W = the_parser.get_mac_value(T);
         if (mg)
@@ -529,7 +529,7 @@ namespace {
     }
 
     void xkv_makehd(TokenList &L) {
-        token_ns::remove_first_last_space(L);
+        L.remove_first_last_space();
         Buffer xkv_local_buf{xkv_prefix};
         auto   k = xkv_local_buf.size();
         if (the_parser.list_to_string(L, xkv_local_buf)) {
@@ -870,7 +870,7 @@ namespace {
             L.pop_front();
             token_ns::check_brace(x, bl);
             if (bl == 0 && x.is_a_char() && x.char_val() == ',') {
-                token_ns::remove_first_last_space(z);
+                z.remove_first_last_space();
                 if (z.empty()) continue;
                 std::string s = xkv_find_key_of(z, 1);
                 R.push_back(s);
@@ -895,7 +895,7 @@ namespace {
         TokenList W = the_parser.get_mac_value(hash_table.locate(xkv_local_buf));
         TokenList key;
         while (!W.empty()) {
-            token_ns::split_at(hash_table.comma_token, W, key);
+            W.split_at(hash_table.comma_token, key);
             std::string key_name = xkv_find_key_of(key, 0);
             if (key_name == keyname) return true;
         }

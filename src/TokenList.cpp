@@ -87,8 +87,8 @@ void TokenList::expand_star() {
             pop_front();
             TokenList u = fast_get_block();
             TokenList v = fast_get_block();
-            token_ns::remove_ext_braces(u);
-            token_ns::remove_ext_braces(v);
+            u.remove_ext_braces();
+            v.remove_ext_braces();
             size_t n = 0;
             while (!u.empty()) {
                 Token q = u.front();
@@ -135,7 +135,7 @@ auto TokenList::get_a_param() -> TokenList {
         Token t = front();
         if (t.is_a_left_brace()) {
             TokenList w = fast_get_block();
-            token_ns::remove_ext_braces(w);
+            w.remove_ext_braces();
             return w;
         }
         pop_front();

@@ -399,7 +399,7 @@ void Parser::T_typein() {
     Token cmd     = hash_table.relax_token;
     bool  has_opt = false;
     if (auto res = read_optarg_nopar()) {
-        Token Q = token_ns::get_unique(*res);
+        Token Q = res->get_unique();
         back_input(Q);
         cmd     = get_r_token();
         has_opt = true;
@@ -470,11 +470,11 @@ auto Parser::T_xkv_for(subtypes c) -> bool {
         TokenList remainder  = read_until(doubleat);
         Token     cmd        = get_r_token();
         TokenList function   = read_arg();
-        if (token_ns::has_a_single_token(entry, nil)) break;
+        if (entry.has_a_single_token(nil)) break;
         new_macro(entry, cmd);
         TokenList aux = function;
         res.splice(res.end(), aux);
-        if (token_ns::has_a_single_token(next_entry, nil)) break;
+        if (next_entry.has_a_single_token(nil)) break;
         next_entry.brace_me();
         TokenList aux2 = function;
         function.brace_me();
@@ -494,7 +494,7 @@ auto Parser::T_xkv_for(subtypes c) -> bool {
         back_input(hash_table.space_token);
         TokenList L        = read_until(hash_table.do_token);
         TokenList function = read_arg();
-        if (token_ns::has_a_single_token(L, hash_table.space_token)) break;
+        if (L.has_a_single_token(hash_table.space_token)) break;
         function.brace_me();
         res.push_back(hash_table.tforloop_token);
         res.splice(res.end(), L);
@@ -526,7 +526,7 @@ auto Parser::T_xkv_for(subtypes c) -> bool {
         TokenList remainder = read_until(doubleat);
         Token     cmd       = get_r_token();
         TokenList function  = read_arg();
-        if (token_ns::has_a_single_token(entry, nil)) break;
+        if (entry.has_a_single_token(nil)) break;
         new_macro(entry, cmd);
         TokenList aux = function;
         res.splice(res.end(), aux);
@@ -562,7 +562,7 @@ auto Parser::T_xkv_for(subtypes c) -> bool {
         Token     cmd      = get_r_token(); // the command
         TokenList function = read_arg();    // the code
         TokenList entry    = read_until(comma);
-        if (token_ns::has_a_single_token(entry, nil)) break;
+        if (entry.has_a_single_token(nil)) break;
         new_macro(entry, cmd);
         TokenList aux = function;
         function.brace_me();
@@ -692,11 +692,11 @@ void Parser::selective_sanitize() {
     auto  nb = read_optarg_nopar().value_or(TokenList{});
     if (!nb.empty()) n = scan_int(nb, T);
     TokenList chars = read_arg();
-    token_ns::sanitize_one(chars);
+    chars.sanitize_chars_only();
     Token res = get_r_token(true);
     if (chars.empty()) return;
     TokenList L = get_mac_value(res);
-    token_ns::sanitize_one(L, chars, n);
+    L.sanitize_with_chars(chars, n);
     new_macro(L, res);
 }
 

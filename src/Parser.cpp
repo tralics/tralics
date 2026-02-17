@@ -1739,11 +1739,11 @@ void Parser::boot() {
 void Parser::E_accent_a() {
     if (tracing_macros()) { spdlog::trace("{{{}}}", fmt::streamed(cur_tok)); }
     TokenList y = read_arg();
-    if (!token_ns::has_a_single_token(y)) {
+    if (!y.has_a_single_token()) {
         parse_error("wanted a single token as argument to \\a");
         return;
     }
-    Token t = token_ns::get_unique(y);
+    Token t = y.get_unique();
     if (!t.is_a_char()) { // latex says \csname\string #1 \endcsname
         parse_error(err_tok, "Bad syntax of \\a, argument not a character ", t, "", "bad accent");
         return;
@@ -1817,7 +1817,7 @@ void Parser::E_accent() {
             return;
         }
     }
-    Token Y = token_ns::get_unique(y);
+    Token Y = y.get_unique();
     token_from_list(Y);
     unsigned int achar = cur_cmd_chr.chr;
     if (achar <= 8)

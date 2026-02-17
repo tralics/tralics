@@ -459,7 +459,7 @@ bool Parser::E_l3str_case(subtypes c) {
     if (exp == l3expo_code) exp = l3expn_code;
     if (tracing_macros()) { spdlog::trace("{} compares {}", fmt::streamed(caller), s1); }
     for (;;) {
-        token_ns::remove_initial_spaces(clauses);
+        clauses.remove_initial_spaces();
         if (clauses.empty()) break;
         TokenList as2 = clauses.get_a_param();
         // should we check for bad termination?

@@ -72,7 +72,7 @@ void MathHelper::add_tag(TokenList &L) {
 // passes the list of tag as argument to \x@tag or \y@tag
 void MathHelper::handle_tags() {
     TokenList L = tag_list;
-    token_ns::remove_first_last_space(L);
+    L.remove_first_last_space();
     L.brace_me();
     L.push_front(is_tag_starred ? hash_table.locate("y@tag") : hash_table.locate("x@tag"));
     the_parser.back_input(L);
