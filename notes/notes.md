@@ -263,7 +263,7 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
   - 26: without the_names?
 
 - src/Buffer.cpp
-  - 24: regexp
+  - 24: regexp (done 2026-02-17; converted/removed during cleanup)
   - 883: regexp "\\s*[aA][nN][dD]\\s"
 
 - src/txl3.cpp
@@ -292,8 +292,8 @@ Items below need deeper refactoring or design work; copied from TODO markers in 
 - src/tralics/MainClass.h
   - 50: vector of std::fs::path
   - 64: one type to rule all encodings
-  - 65: this should always be UTF-8
-  - 66: this should always be UTF-8
+  - 65: this should always be UTF-8 (done 2026-02-17; output encoding removed)
+  - 66: this should always be UTF-8 (done 2026-02-17; transcript encoding removed)
   - 101: remove?
   - 109: static in MainClass.cpp
 
