@@ -8,8 +8,6 @@
 #include <string_view>
 #include <vector>
 
-class SaveAuxEnv;
-
 // TODO: next are global functions, should we do something with them?
 
 inline auto math_to_sub(math_list_type x) -> subtypes { return subtypes(x - fml_offset); }
@@ -22,10 +20,6 @@ namespace arith_ns {
     auto quotient(int n, int d) -> int;
     auto add_ovf(ScaledInt x, ScaledInt y) -> int;
 } // namespace arith_ns
-
-namespace main_ns {
-    auto search_in_confdir(const std::string &s) -> std::optional<std::filesystem::path>; // Searches for a file in conf_path
-} // namespace main_ns
 
 namespace math_ns {
     void add_attribute_spec(const std::string &a, const std::string &b);
@@ -48,12 +42,6 @@ namespace math_ns {
     auto make_math_char(uchar c, size_t n) -> Xml *;
     auto xml2sons(std::string elt, Xml *first_arg, Xml *second_arg) -> Xml *;
 } // namespace math_ns
-
-namespace token_ns {
-    auto is_sublist(TokenList::iterator A, TokenList::iterator B, int n) -> bool;
-    auto check_brace(Token x, int &bl) -> bool;
-    auto compare(const TokenList &A, const TokenList &B) -> bool;
-} // namespace token_ns
 
 namespace tralics_ns {
     auto math_env_name(subtypes c) -> std::optional<std::string_view>;

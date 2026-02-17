@@ -2,13 +2,25 @@
 #include "tralics/globals.h"
 
 namespace ra_ns {
+    auto check_brace(Token x, int &bl) -> bool {
+        if (x.is_a_brace()) {
+            if (x.is_a_left_brace()) {
+                bl++;
+            } else {
+                bl--;
+                if (bl == 0) return true;
+            }
+        }
+        return false;
+    }
+
     void fnhack(TokenList &c, TokenList &d, TokenList &aux) {
         Hashtab &H  = hash_table;
         int      bl = 0;
         while (!c.empty()) {
             Token x = c.front();
             c.pop_front();
-            token_ns::check_brace(x, bl);
+            check_brace(x, bl);
             if (x == H.footnote_token && bl == 0) {
                 if (!d.empty()) {
                     d.push_front(H.space_token);

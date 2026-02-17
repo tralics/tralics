@@ -97,6 +97,7 @@ public:
     void run(int argc, char **argv);                      // Do everything
     void set_ent_names(const std::string &s);             // Set no_entnames from a string saying yes or no
     void set_input_encoding(size_t wc);                   // Set default input file encoding and log the action TODO: remove?
+    auto search_in_confdir(const std::string &s) const -> std::optional<std::filesystem::path>; // Search for a file in conf_path
 
 private:
     void parse_args(int argc, char **argv);           // Parse the command-line arguments

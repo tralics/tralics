@@ -3,6 +3,30 @@
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 
+namespace {
+    auto check_brace(Token x, int &bl) -> bool {
+        if (x.is_a_brace()) {
+            if (x.is_a_left_brace()) {
+                bl++;
+            } else {
+                bl--;
+                if (bl == 0) return true;
+            }
+        }
+        return false;
+    }
+
+    auto is_sublist(TokenList::iterator A, TokenList::iterator B, int n) -> bool {
+        while (n > 0) {
+            if (*A != *B) return false;
+            ++A;
+            ++B;
+            --n;
+        }
+        return true;
+    }
+} // namespace
+
 void TokenList::add_env(const std::string &name) {
     TokenList res;
     res.push_back(hash_table.locate("begin"));
@@ -36,7 +60,7 @@ auto TokenList::block_size() const -> int {
     for (auto C = begin(); C != end();) {
         Token t = *(C++);
         ++res;
-        if (token_ns::check_brace(t, bl)) return (C == end()) ? -1 : res;
+        if (check_brace(t, bl)) return (C == end()) ? -1 : res;
     }
     return -2;
 }
@@ -244,7 +268,7 @@ auto TokenList::contains(TokenList &A, bool remove, int &is_in_skipped) -> bool 
     Token to_skip = A.front();
     while (k >= 0) {
         if (*BB == to_skip) ++skipped;
-        if (token_ns::is_sublist(AA, BB, n)) {
+        if (is_sublist(AA, BB, n)) {
             found = true;
             break;
         }

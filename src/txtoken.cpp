@@ -50,16 +50,31 @@ auto TokenList::split_at(Token e, Token m, Token m1, TokenList &z, bool s) -> bo
 
 // Checks that x is a brace, increases or decreases brace level
 // returns true if this is the toplevel closing brace
-auto token_ns::check_brace(Token x, int &bl) -> bool {
-    if (x.is_a_brace()) {
-        if (x.is_a_left_brace()) {
-            bl++;
-        } else {
-            bl--;
-            if (bl == 0) return true;
+namespace {
+    auto check_brace(Token x, int &bl) -> bool {
+        if (x.is_a_brace()) {
+            if (x.is_a_left_brace()) {
+                bl++;
+            } else {
+                bl--;
+                if (bl == 0) return true;
+            }
         }
+        return false;
     }
-    return false;
+} // namespace
+
+auto TokenList::same_tokens_as(const TokenList &other) const -> bool {
+    auto C1 = begin();
+    auto E1 = end();
+    auto C2 = other.begin();
+    auto E2 = other.end();
+    for (;;) {
+        if (C1 == E1 || C2 == E2) return C1 == E1 && C2 == E2;
+        if (!(*C1).is_same_token(*C2)) return false;
+        ++C1;
+        ++C2;
+    }
 }
 
 // Replace x1 by x2 at toplevel in the list a
@@ -69,7 +84,7 @@ void TokenList::replace_at_toplevel(Token x1, Token x2) {
     int  bl = 0;
     while (C != E) {
         Token x = *C;
-        token_ns::check_brace(x, bl);
+        check_brace(x, bl);
         if (bl == 0 && x == x1) *C = x2;
         ++C;
     }
@@ -87,7 +102,7 @@ auto TokenList::replace_space(Token x2, Token x3) -> int {
     bool prev_is_space = false;
     while (C != E) {
         Token x = *C;
-        token_ns::check_brace(x, bl);
+        check_brace(x, bl);
         if (bl == 0 && x.is_space_token()) {
             if (!prev_is_space) {
                 insert(C, x2);
@@ -100,19 +115,6 @@ auto TokenList::replace_space(Token x2, Token x3) -> int {
         ++C;
     }
     return n;
-}
-
-auto token_ns::compare(const TokenList &A, const TokenList &B) -> bool {
-    auto C1 = A.begin();
-    auto E1 = A.end();
-    auto C2 = B.begin();
-    auto E2 = B.end();
-    for (;;) {
-        if (C1 == E1 || C2 == E2) return C1 == E1 && C2 == E2;
-        if (!(*C1).is_same_token(*C2)) return false;
-        ++C1;
-        ++C2;
-    }
 }
 
 // Removes the external braces in {foo}, but not in {foo}{bar}.
@@ -337,7 +339,7 @@ auto TokenList::split_at(Token m, TokenList &z) -> bool {
     while (!empty()) {
         Token x = front();
         pop_front();
-        token_ns::check_brace(x, bl);
+        check_brace(x, bl);
         if (bl == 0 && x == m) return true;
         z.push_back(x);
     }
@@ -352,7 +354,7 @@ void TokenList::sanitize_toplevel(uchar c) {
     int   bl = 0;
     while (C != E) {
         Token x = *C;
-        token_ns::check_brace(x, bl);
+        check_brace(x, bl);
         if (bl == 0 && x.is_a_char() && x.char_val() == c) *C = T;
         ++C;
     }
@@ -377,7 +379,7 @@ void TokenList::sanitize_chars_only() {
 void TokenList::sanitize_with_chars(TokenList &s, long n) {
     int bl = 0;
     for (auto &x : *this) {
-        token_ns::check_brace(x, bl);
+        check_brace(x, bl);
         if (bl <= n && x.is_a_char() && !s.empty() && s.begin()->char_val() == x.char_val()) x = *s.begin();
     }
 }
@@ -421,14 +423,4 @@ void Parser::E_split() {
     }
     if (tracing_macros()) { spdlog::trace("{}->{}", fmt::streamed(T), fmt::streamed(R)); }
     back_input(R);
-}
-
-auto token_ns::is_sublist(TokenList::iterator A, TokenList::iterator B, int n) -> bool {
-    while (n > 0) {
-        if (*A != *B) return false;
-        ++A;
-        ++B;
-        --n;
-    }
-    return true;
 }

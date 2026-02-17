@@ -663,8 +663,8 @@ auto MainClass::find_config_file() -> std::optional<std::filesystem::path> {
             if (std::filesystem::exists(user_config_file)) return user_config_file;
             return {};
         }
-        if (!user_config_file.ends_with(".tcf")) return main_ns::search_in_confdir(user_config_file + ".tcf");
-        return main_ns::search_in_confdir(user_config_file);
+        if (!user_config_file.ends_with(".tcf")) return search_in_confdir(user_config_file + ".tcf");
+        return search_in_confdir(user_config_file);
     }
     std::string xclass = input_content.find_configuration();
     if (!xclass.empty()) {
@@ -674,7 +674,7 @@ auto MainClass::find_config_file() -> std::optional<std::filesystem::path> {
     }
     std::string rc = (cur_os == st_windows) ? "tralics_rc" : ".tralics_rc";
     if (std::filesystem::exists(rc)) return rc;
-    return main_ns::search_in_confdir(rc);
+    return search_in_confdir(rc);
 }
 
 void MainClass::open_config_file(std::filesystem::path f) {

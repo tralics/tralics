@@ -57,7 +57,6 @@ namespace classes_ns {
 } // namespace classes_ns
 
 using namespace classes_ns;
-using namespace token_ns;
 
 // ---------------------------------------------------------
 // Functions dealing with option lists
@@ -123,7 +122,7 @@ auto classes_ns::is_in_option(const OptionList &V, const KeyAndVal &slot) -> boo
     const std::string &s = slot.name;
     auto               n = V.size();
     for (size_t i = 0; i < n; i++)
-        if (V[i].name == s) return compare(slot.val, V[i].val);
+        if (V[i].name == s) return slot.val.same_tokens_as(V[i].val);
     return false;
 }
 

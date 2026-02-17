@@ -222,7 +222,7 @@ auto Parser::T_filecontents(subtypes spec) -> bool {
 
 // Note: the next three function are kind of misleadingly named
 
-auto main_ns::search_in_confdir(const std::string &s) -> std::optional<std::filesystem::path> {
+auto MainClass::search_in_confdir(const std::string &s) const -> std::optional<std::filesystem::path> {
     for (auto i = the_main.conf_path.size(); i != 0; i--) {
         auto f = the_main.conf_path[i - 1] / s;
         if (std::filesystem::exists(f)) {
@@ -239,7 +239,7 @@ auto find_in_confdir(const std::string &s) -> std::optional<std::filesystem::pat
     if (LineList::pool_position) return s;
     if (std::filesystem::exists(s)) return s;
     if (s.empty() || s[0] == '.' || s[0] == '/') return {};
-    return main_ns::search_in_confdir(s);
+    return the_main.search_in_confdir(s);
 }
 
 auto find_in_path(const std::string &s) -> std::optional<std::filesystem::path> {

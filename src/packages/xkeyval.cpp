@@ -14,6 +14,18 @@ namespace classes_ns {
 } // namespace classes_ns
 
 namespace {
+    auto check_brace(Token x, int &bl) -> bool {
+        if (x.is_a_brace()) {
+            if (x.is_a_left_brace()) {
+                bl++;
+            } else {
+                bl--;
+                if (bl == 0) return true;
+            }
+        }
+        return false;
+    }
+
     bool        xkv_is_global, xkv_is_save;
     std::string xkv_header, xkv_prefix;
 
@@ -868,7 +880,7 @@ namespace {
             if (L.empty()) break;
             Token x = L.front();
             L.pop_front();
-            token_ns::check_brace(x, bl);
+            check_brace(x, bl);
             if (bl == 0 && x.is_a_char() && x.char_val() == ',') {
                 z.remove_first_last_space();
                 if (z.empty()) continue;

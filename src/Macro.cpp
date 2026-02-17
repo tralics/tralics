@@ -1,6 +1,5 @@
 #include "tralics/Macro.h"
 #include "tralics/Parser.h"
-#include "tralics/globals.h"
 
 // Changes the type of a trivial macro.
 void Macro::correct_type() {
@@ -22,8 +21,8 @@ void Macro::correct_type() {
 auto Macro::is_same(const Macro &aux) const -> bool {
     if (nbargs != aux.nbargs) return false;
     if (type != aux.type) return false;
-    if (!token_ns::compare(body, aux.body)) return false;
+    if (!body.same_tokens_as(aux.body)) return false;
     for (size_t i = 0; i < 10; i++)
-        if (!token_ns::compare(delimiters[i], aux.delimiters[i])) return false;
+        if (!delimiters[i].same_tokens_as(aux.delimiters[i])) return false;
     return true;
 }

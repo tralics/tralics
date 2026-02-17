@@ -46,6 +46,7 @@ struct TokenList : public std::list<Token> {
     void get_unique(Token &t1, Token &t2);
     [[nodiscard]] auto has_a_single_token() const -> bool;
     [[nodiscard]] auto has_a_single_token(Token t) const -> bool;
+    [[nodiscard]] auto same_tokens_as(const TokenList &other) const -> bool;
     auto replace_space(Token x2, Token x3) -> int;
     auto split_at(Token e, Token m, Token m1, TokenList &z, bool s) -> bool;
     auto split_at(Token m, TokenList &z) -> bool;
