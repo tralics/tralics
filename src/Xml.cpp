@@ -184,7 +184,7 @@ namespace {
             auto       *li = labinfo(V);
             if (li->id != n) continue;
             if (!li->used) continue;
-            spdlog::error("Error signaled by postprocessor\nRemoving `{}` made the following label disappear: {}", s, V);
+            spdlog::error("Error signaled by postprocessor. Removing `{}` made the following label disappear: {}", s, V);
             the_parser.nb_errs++;
         }
         for (auto &defined_label : the_parser.defined_labels) {

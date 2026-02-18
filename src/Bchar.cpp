@@ -47,7 +47,7 @@ auto Bchar::is_junk(size_t i) const -> bool {
     bchar_type b = table[i];
     if (b == bct_comma) {
         Bibtex::err_in_entry("misplaced comma in bibtex name\n");
-        spdlog::warn("you should say \"{{}},{{}},foo\", instead of  \",,foo\" in \n{}.", fmt::streamed(name_buffer));
+        spdlog::warn("you should say \"{{}},{{}},foo\", instead of \",,foo\" in {}.", fmt::streamed(name_buffer));
     }
     if (b == bct_space || b == bct_tilde || b == bct_dash || b == bct_comma) return true;
     if (b == bct_bad || b == bct_continuation) return true;

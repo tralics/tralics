@@ -1461,7 +1461,7 @@ auto Parser::T_hanl(subtypes c) -> bool {
     std::string b      = B->convert_to_string();
     bool        failed = e != the_parser.nb_errs;
     if (unexpected_seen_hi && failed)
-        spdlog::warn("you should perhaps use \\Href{{\\url{{x}}}}{{y}}\n  instead of \\Href{{y}}{{\\url{{x}}}}");
+        spdlog::warn("you should perhaps use \\Href{{\\url{{x}}}}{{y}} instead of \\Href{{y}}{{\\url{{x}}}}");
     new_xref(val, b, !failed);
     return true;
 }
@@ -1954,7 +1954,7 @@ void Parser::LC() {
     if (the_stack.in_no_mode() || the_stack.in_bib_mode()) {
         signal_error("Text found in a mode where no text is allowed");
         if (the_stack.first_frame() == the_names["gloss_type"]) {
-            spdlog::warn("Maybe \\glo is missing?\nHope for the best");
+            spdlog::warn("Maybe \\glo is missing? Hope for the best");
             the_stack.set_arg_mode();
             return;
         }

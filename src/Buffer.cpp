@@ -40,8 +40,8 @@ namespace {
 
     void err_in_name(std::string_view a, long i) {
         Bibtex::err_in_entry(a);
-        spdlog::error("\nbad syntax in author or editor name\n");
-        spdlog::error("error occurred at character position {} in the string\n{}.", i, fmt::streamed(name_buffer));
+        spdlog::error("bad syntax in author or editor name.");
+        spdlog::error("error occurred at character position {} in the string: {}.", i, fmt::streamed(name_buffer));
     }
 } // namespace
 

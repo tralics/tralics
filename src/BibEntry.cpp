@@ -63,7 +63,7 @@ namespace {
                 first_name.init(lc + 1, L);
                 if (hm > 2) {
                     Bibtex::err_in_entry("");
-                    spdlog::warn("too many commas (namely {}) in name\n{}.", hm, fmt::streamed(name_buffer));
+                    spdlog::warn("too many commas (namely {}) in name: {}.", hm, fmt::streamed(name_buffer));
                 }
             } else if (hm == 1) {
                 first_name.init(fc + 1, L);

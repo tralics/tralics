@@ -185,7 +185,7 @@ found at http://www.cecill.info.)";
         }
     }
 
-    void obsolete(const std::string &s) { spdlog::warn("Obsolete option `-{}' ignored\n", s); }
+    void obsolete(const std::string &s) { spdlog::warn("Obsolete option `-{}' ignored", s); }
 
     auto param_hack(const std::string &a) -> bool {
         Buffer B(a);
@@ -907,7 +907,7 @@ void MainClass::run(int argc, char **argv) {
     if (the_parser.seen_enddocument) the_stack.add_nl();
     the_parser.final_checks();
     if (!no_xml) {
-        if (the_parser.get_list_files()) { spdlog::info(" *File List*\n{} ***********", the_main.file_list); }
+        if (the_parser.get_list_files()) { spdlog::info(" *File List* {} ***********", the_main.file_list); }
         if (the_main.bad_chars != 0)
             spdlog::warn("Input conversion errors: {} char{}.", the_main.bad_chars, the_main.bad_chars > 1 ? "s" : "");
         the_parser.finish_images();

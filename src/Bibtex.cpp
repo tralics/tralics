@@ -209,18 +209,18 @@ auto Bibtex::exec_bibitem(const std::string &b) -> std::string {
 void Bibtex::err_in_file(std::string_view s, bool last) const {
     the_parser.nb_errs++;
     if (!cur_entry_name.empty())
-        spdlog::error("Error detected at line {} of bibliography file {}\nin entry {} started at line {}\n{}{}", cur_bib_line,
+        spdlog::error("Error detected at line {} of bibliography file {} in entry {} started at line {}: {}{}", cur_bib_line,
                       in_lines.file_name, cur_entry_name, last_ok_line, s, last ? "." : "");
     else
-        spdlog::error("Error detected at line {} of bibliography file {}\n{}{}", cur_bib_line, in_lines.file_name, s, last ? "." : "");
+        spdlog::error("Error detected at line {} of bibliography file {}: {}{}", cur_bib_line, in_lines.file_name, s, last ? "." : "");
 }
 
 void Bibtex::err_in_entry(std::string_view a) {
     the_parser.nb_errs++;
     if (the_bibtex.cur_entry_line >= 0)
-        spdlog::error("Error signaled while handling entry {} (line {})\n{}", the_bibtex.cur_entry_name, the_bibtex.cur_entry_line, a);
+        spdlog::error("Error signaled while handling entry {} (line {}): {}", the_bibtex.cur_entry_name, the_bibtex.cur_entry_line, a);
     else
-        spdlog::error("Error signaled while handling entry {}\n{}", the_bibtex.cur_entry_name, a);
+        spdlog::error("Error signaled while handling entry {}: {}", the_bibtex.cur_entry_name, a);
 }
 
 // Returns next line of the .bib file. Error if EOF and what.
@@ -318,10 +318,10 @@ auto Bibtex::scan_identifier0(size_t what) -> std::optional<int> {
 auto Bibtex::wrong_first_char(char32_t c, size_t what) const -> int {
     err_in_file(scan_msgs[what], false);
     if (std::isdigit(static_cast<int>(c)) != 0)
-        spdlog::error("\nit cannot start with a digit");
+        spdlog::error("it cannot start with a digit");
     else
-        spdlog::error("\nit cannot start with `{}`", to_utf8(c));
-    if (c == '%') spdlog::error("\n(A percent sign is not a comment character in bibtex)");
+        spdlog::error("it cannot start with `{}`", to_utf8(c));
+    if (c == '%') spdlog::error("(A percent sign is not a comment character in bibtex)");
     if (what == 1 || what == 2) return 5;
     if (what == 0) {
         if (c == '}') { // this brace might be the end of the entry
@@ -340,7 +340,7 @@ auto Bibtex::check_entry_end() -> std::optional<int> {
     char32_t c = cur_char();
     if (c == '(' || c == '{') return check_entry_end(0);
     err_in_file(scan_msgs[1], false);
-    spdlog::error("\nexpected `('  or `{'");
+    spdlog::error("expected `('  or `{'");
     for (;;) {
         c = cur_char();
         if (c == '(' || c == '{') return check_entry_end(-7);
@@ -368,7 +368,7 @@ auto Bibtex::check_field_end(size_t what) -> std::optional<int> {
         return 0;
     }
     err_in_file(scan_msgs[what], false);
-    spdlog::error("\nexpected `=' sign");
+    spdlog::error("expected `=' sign");
     for (;;) {
         if (at_eol()) return what == 2 ? 5 : -4;
         if (cur_char() == '=') {
@@ -389,7 +389,7 @@ auto Bibtex::check_val_end() -> int {
     char32_t c = cur_char();
     if ((std::isspace(static_cast<int>(c)) != 0) || c == '#' || c == ',' || c == char32_t(right_outer_delim)) return 0;
     err_in_file(scan_msgs[0], false);
-    spdlog::error("\nit cannot end with `{}'\nexpecting `,', `#' or `{}`", to_utf8(c), right_outer_delim);
+    spdlog::error("it cannot end with `{}`; expecting `,', `#' or `{}`", to_utf8(c), right_outer_delim);
     return 4;
 }
 

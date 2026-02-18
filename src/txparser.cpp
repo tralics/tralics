@@ -2923,7 +2923,7 @@ auto Parser::E_ifx() -> bool {
 void Parser::E_afterfi() {
     Token     T = hash_table.fi_token;
     TokenList L = read_until(T);
-    if (tracing_macros()) spdlog::trace("{}#1\\fi->\\fi#1\n#1<-{}", fmt::streamed(cur_tok), fmt::streamed(L));
+    if (tracing_macros()) spdlog::trace("{}#1\\fi->\\fi#1 #1<-{}", fmt::streamed(cur_tok), fmt::streamed(L));
     back_input(L);
     back_input(T);
 }
@@ -2934,7 +2934,7 @@ void Parser::E_afterelsefi() {
     TokenList L1 = read_until(T1);
     TokenList L2 = read_until(T2);
     if (tracing_macros())
-        spdlog::trace("{}#1\\else#2\\fi->\\fi#1\n#1<-{}#2<-{}", fmt::streamed(cur_tok), fmt::streamed(L1), fmt::streamed(L2));
+        spdlog::trace("{}#1\\else#2\\fi->\\fi#1 #1<-{} #2<-{}", fmt::streamed(cur_tok), fmt::streamed(L1), fmt::streamed(L2));
     back_input(L1);
     back_input(T2);
 }
@@ -2982,7 +2982,7 @@ void Parser::M_let(Token A, bool global, bool redef) {
         std::string_view action = global ? "globally " : "";
         auto   before = token_for_show_str(Hashtab::the_eqtb()[pos].val);
         auto   after  = token_for_show_str(cur_cmd_chr);
-        spdlog::trace("{{{}changing {}={}}}\n{{into {}={}}}", action, fmt::streamed(A), before, fmt::streamed(A), after);
+        spdlog::trace("{{{}changing {}={}}} {{into {}={}}}", action, fmt::streamed(A), before, fmt::streamed(A), after);
     }
     eq_define(pos, cur_cmd_chr, global);
 }

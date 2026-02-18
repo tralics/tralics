@@ -235,8 +235,7 @@ void Parser::insert_hook(long n) {
     if (!C->seen_process && !C->Uoptions.empty()) spdlog::warn("Warning: {}{} has no \\ProcessOptions", C->pack_or_class(), C->real_name());
     back_input(C->hook);
     if (parse_version(C->date) < parse_version(C->req_date)) {
-        spdlog::warn("Warning: You have requested, on line {}, version\n`{}' of {}{},\n"
-                     "but only version\n`{}' is available",
+        spdlog::warn("Warning: You have requested, on line {}, version `{}' of {}{}, but only version `{}' is available",
                      get_cur_line(), C->req_date, C->pack_or_class(), C->real_name(), C->date);
     }
 }
@@ -263,7 +262,7 @@ void Parser::T_provides_package(bool c) // True for a file
     auto S = cur->real_name();
     if (name != S && !the_class_data.using_default_class) { spdlog::warn("Warning: {}{} claims to be {}.", cur->pack_or_class(), S, name); }
     Buffer &b = txclasses_local_buf;
-    b         = fmt::format(fmt::runtime(cur->is_class() ? "Document class: {} {}\n" : "Package: {} {}\n"), name, date);
+    b         = fmt::format(fmt::runtime(cur->is_class() ? "Document class: {} {}" : "Package: {} {}"), name, date);
     if (cur->is_class())
         spdlog::info("{}", fmt::streamed(b));
     else
@@ -728,7 +727,7 @@ void ClassesData::show_unused() {
         B += i.full_name;
     }
     if (k == 0) return;
-    spdlog::warn("Tralics Warning: Unused global option{}\n   {}.", (k == 1 ? "" : "s"), fmt::streamed(B));
+    spdlog::warn("Tralics Warning: Unused global option{}: {}.", (k == 1 ? "" : "s"), fmt::streamed(B));
 }
 
 // Implements \AtEndOfPackage \AtEndOfClass
