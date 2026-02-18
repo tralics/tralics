@@ -9,6 +9,7 @@ class Stack;
 class MainClass {
     std::filesystem::path                infile;   // file argument given to the program
     std::optional<std::filesystem::path> tcf_file; // File name of the `tcf` to use, if found
+    std::filesystem::path                executable_path; // path to argv[0], normalized if possible
 
     std::string no_year;     // is miaou
     std::string raclass;     // is ra2003
@@ -44,7 +45,7 @@ class MainClass {
     bool verbose{false}; // Are we verbose ?
 
 public:
-    std::vector<std::filesystem::path> conf_path{"../confdir"};
+    std::vector<std::filesystem::path> conf_path;
     std::vector<std::filesystem::path> input_path;
     std::string                        file_name; // Job name, without directory
     std::string                        file_list; // TODO: vector of std::fs::path
@@ -92,6 +93,7 @@ public:
     char32_t rightquote_val{'\''};
 
     auto check_for_tcf(const std::string &s) -> bool; // Look for a `.tcf` file, and if found set `tcf_file` and `use_tcf`
+    [[nodiscard]] auto get_executable_path() const -> const std::filesystem::path & { return executable_path; }
 
     void add_to_from_config(int n, const std::string &b); // Add contents to `from_config`
     void run(int argc, char **argv);                      // Do everything

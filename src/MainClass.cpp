@@ -13,6 +13,7 @@
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include <ctre.hpp>
+#include <cstdio>
 #include <filesystem>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/sinks/basic_file_sink.h>
@@ -145,23 +146,64 @@ found at http://www.cecill.info.)";
         exit(v);
     }
 
+    auto shell_quote(std::string_view s) -> std::string {
+        std::string out;
+        out.reserve(s.size() + 8);
+        out.push_back('\'');
+        for (char c : s) {
+            if (c == '\'')
+                out += "'\\''";
+            else
+                out.push_back(c);
+        }
+        out.push_back('\'');
+        return out;
+    }
+
+    auto trim_eol(std::string s) -> std::string {
+        while (!s.empty() && (s.back() == '\n' || s.back() == '\r')) s.pop_back();
+        return s;
+    }
+
+    // Resolve one file through kpathsea via kpsewhich.
+    auto kpsewhich_lookup(const std::string &name) -> std::optional<std::filesystem::path> {
+        std::string cmd = "kpsewhich -- " + shell_quote(name) + " 2>/dev/null";
+        FILE       *fp  = popen(cmd.c_str(), "r");
+        if (fp == nullptr) return {};
+        char              buffer[1024];
+        std::string       out;
+        while (fgets(buffer, sizeof(buffer), fp) != nullptr) out += buffer;
+        [[maybe_unused]] int status = pclose(fp);
+        out                         = trim_eol(out);
+        if (out.empty()) return {};
+        auto path = std::filesystem::path(out);
+        if (!std::filesystem::exists(path)) return {};
+        return path;
+    }
+
     // Locate the config dir, using a few standard sources TODO: this should be
     // managed by CMake, or by kpathsea
     void find_conf_path() {
-        static const std::array<std::filesystem::path, 7> paths{"/usr/share/tralics", "/usr/lib/tralics/confdir",
-                                                                "/usr/local/lib/tralics/confdir", "/sw/share/tralics/confdir",
-                                                                "../../confdir"};
-        auto                                              ps = the_main.conf_path;
-        std::copy(paths.begin(), paths.end(), std::back_inserter(ps));
-
-        auto s = std::find_if(ps.begin(), ps.end(), [](const auto &S) { return exists(S / "book.clt"); });
-        if (s != ps.end()) {
-            the_main.conf_path.emplace_back(*s);
+        // 1) already-configured paths (user options/environment defaults)
+        if (auto s = std::find_if(the_main.conf_path.begin(), the_main.conf_path.end(),
+                                  [](const auto &S) { return exists(S / "article.clt"); });
+            s != the_main.conf_path.end()) {
             spdlog::info("Found configuration folder: {}", s->string());
             return;
         }
 
-        spdlog::error("Configuration folder not found");
+        // 2) one-time kpathsea probe; add containing folder for fast subsequent lookups
+        if (auto p = kpsewhich_lookup("article.clt")) {
+            auto dir = p->parent_path();
+            if (!dir.empty()) {
+                if (std::find(the_main.conf_path.begin(), the_main.conf_path.end(), dir) == the_main.conf_path.end())
+                    the_main.conf_path.emplace_back(dir);
+                spdlog::info("Found configuration folder via kpathsea: {}", dir.string());
+                return;
+            }
+        }
+
+        spdlog::error("Configuration folder not found (set TEXINPUTS or use -confdir)");
     }
 
     // Split a `:`-separated path list into paths
@@ -372,6 +414,11 @@ void MainClass::set_ent_names(const std::string &s) { no_entnames = (s == "false
 void MainClass::add_to_from_config(int n, const std::string &b) { from_config.emplace_back(n, b + "\n", true); }
 
 void MainClass::parse_args(int argc, char **argv) {
+    if (argc > 0 && argv != nullptr && argv[0] != nullptr) {
+        executable_path = std::filesystem::path(argv[0]);
+        if (executable_path.is_relative()) executable_path = std::filesystem::absolute(executable_path);
+        executable_path = executable_path.lexically_normal();
+    }
     if (argc == 1) end_with_help(0);
     if ((argc == 2) && (std::string(argv[1]) == "-?")) usage_and_quit(0);
     for (int i = 1; i < argc; i++) {

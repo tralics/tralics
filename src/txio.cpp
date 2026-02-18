@@ -223,13 +223,14 @@ auto Parser::T_filecontents(subtypes spec) -> bool {
 // Note: the next three function are kind of misleadingly named
 
 auto MainClass::search_in_confdir(const std::string &s) const -> std::optional<std::filesystem::path> {
-    for (auto i = the_main.conf_path.size(); i != 0; i--) {
-        auto f = the_main.conf_path[i - 1] / s;
+    for (auto i = conf_path.size(); i != 0; i--) {
+        auto f = conf_path[i - 1] / s;
         if (std::filesystem::exists(f)) {
             spdlog::trace("Found in configuration path: {}", f.string());
             return f;
         }
     }
+
     spdlog::warn("File {} not found in configuration path", s);
     return {};
 }
