@@ -3,6 +3,7 @@
 #include "tralics/Parser.h"
 #include "tralics/globals.h"
 #include <ctre.hpp>
+#include <cstdio>
 #include <spdlog/spdlog.h>
 #include <sstream>
 #include <utf8.h>
@@ -14,7 +15,41 @@ namespace {
         if (auto pos = s.find(sep); pos != std::string::npos) return {{s.substr(0, pos), s.substr(pos + 1)}};
         return {};
     }
+
+    auto shell_quote(std::string_view s) -> std::string {
+        std::string out;
+        out.reserve(s.size() + 8);
+        out.push_back('\'');
+        for (char c : s) {
+            if (c == '\'')
+                out += "'\\''";
+            else
+                out.push_back(c);
+        }
+        out.push_back('\'');
+        return out;
+    }
+
+    auto trim_eol(std::string s) -> std::string {
+        while (!s.empty() && (s.back() == '\n' || s.back() == '\r')) s.pop_back();
+        return s;
+    }
 } // namespace
+
+auto find_in_kpathsea(const std::string &name) -> std::optional<std::filesystem::path> {
+    std::string cmd = "kpsewhich -- " + shell_quote(name) + " 2>/dev/null";
+    FILE       *fp  = popen(cmd.c_str(), "r");
+    if (fp == nullptr) return {};
+    char              buffer[1024];
+    std::string       out;
+    while (fgets(buffer, sizeof(buffer), fp) != nullptr) out += buffer;
+    [[maybe_unused]] int status = pclose(fp);
+    out                         = trim_eol(out);
+    if (out.empty()) return {};
+    auto path = std::filesystem::path(out);
+    if (!std::filesystem::exists(path)) return {};
+    return path;
+}
 
 auto only_space(const std::string &s) -> bool {
     for (size_t i = 0; i < s.length(); ++i) {

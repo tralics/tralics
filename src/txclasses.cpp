@@ -606,6 +606,8 @@ void Parser::use_a_package(const std::string &name, bool type, const std::string
         }
     }
     if (!res) {
+        // Intentionally no automatic fallback to `<name>.sty`/`.cls` here:
+        // Tralics package/class loading is driven by `.plt`/`.clt` files.
         if (builtin) cur->date = "2006/01/01";
         spdlog::trace("{} {}{}", fmt::streamed(T), name, (builtin ? " builtin" : " unknown"));
         return;

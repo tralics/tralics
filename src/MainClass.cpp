@@ -13,7 +13,6 @@
 #include "tralics/globals.h"
 #include "tralics/util.h"
 #include <ctre.hpp>
-#include <cstdio>
 #include <filesystem>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/sinks/basic_file_sink.h>
@@ -146,41 +145,6 @@ found at http://www.cecill.info.)";
         exit(v);
     }
 
-    auto shell_quote(std::string_view s) -> std::string {
-        std::string out;
-        out.reserve(s.size() + 8);
-        out.push_back('\'');
-        for (char c : s) {
-            if (c == '\'')
-                out += "'\\''";
-            else
-                out.push_back(c);
-        }
-        out.push_back('\'');
-        return out;
-    }
-
-    auto trim_eol(std::string s) -> std::string {
-        while (!s.empty() && (s.back() == '\n' || s.back() == '\r')) s.pop_back();
-        return s;
-    }
-
-    // Resolve one file through kpathsea via kpsewhich.
-    auto kpsewhich_lookup(const std::string &name) -> std::optional<std::filesystem::path> {
-        std::string cmd = "kpsewhich -- " + shell_quote(name) + " 2>/dev/null";
-        FILE       *fp  = popen(cmd.c_str(), "r");
-        if (fp == nullptr) return {};
-        char              buffer[1024];
-        std::string       out;
-        while (fgets(buffer, sizeof(buffer), fp) != nullptr) out += buffer;
-        [[maybe_unused]] int status = pclose(fp);
-        out                         = trim_eol(out);
-        if (out.empty()) return {};
-        auto path = std::filesystem::path(out);
-        if (!std::filesystem::exists(path)) return {};
-        return path;
-    }
-
     // Locate the config dir, using a few standard sources TODO: this should be
     // managed by CMake, or by kpathsea
     void find_conf_path() {
@@ -193,7 +157,7 @@ found at http://www.cecill.info.)";
         }
 
         // 2) one-time kpathsea probe; add containing folder for fast subsequent lookups
-        if (auto p = kpsewhich_lookup("article.clt")) {
+        if (auto p = find_in_kpathsea("article.clt")) {
             auto dir = p->parent_path();
             if (!dir.empty()) {
                 if (std::find(the_main.conf_path.begin(), the_main.conf_path.end(), dir) == the_main.conf_path.end())

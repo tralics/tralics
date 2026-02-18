@@ -59,6 +59,8 @@ Last updated: 2026-02-11
 ### Notes
 - Most translation logic lives in tx*.cpp (e.g., txtranslate.cpp for the main
   translation loop), with package-specific behavior under src/packages/.
+- `\usepackage`/class loading currently resolves Tralics `.plt`/`.clt` files;
+  there is no automatic fallback to `<name>.sty`/`.cls` when these are absent.
 
 ## Build & test reference
 - `ninja -C build` runs and includes tests.

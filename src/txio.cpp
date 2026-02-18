@@ -255,5 +255,9 @@ auto find_in_path(const std::string &s) -> std::optional<std::filesystem::path> 
         auto ss = p.empty() ? std::filesystem::path(s) : p / s;
         if (std::filesystem::exists(ss)) return ss;
     }
+    if (auto kpse = find_in_kpathsea(s)) {
+        spdlog::trace("Found in kpathsea: {}", kpse->string());
+        return kpse;
+    }
     return {};
 }
