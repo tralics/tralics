@@ -14,12 +14,16 @@ namespace {
 } // namespace
 
 namespace tpage_ns {
-    void init_error();
+    void init_error(std::string_view line);
     auto scan_item(Buffer &in, Buffer &out, char del) -> bool;
 } // namespace tpage_ns
 
 // This is called in case of trouble.
-void tpage_ns::init_error() { spdlog::error("Syntax error in init file (line {})", the_main.init_file_pos); }
+void tpage_ns::init_error(std::string_view line) {
+    while (!line.empty() && (line.back() == '\n' || line.back() == '\r')) line.remove_suffix(1);
+    std::string_view file = the_parser.cur_file_name.empty() ? std::string_view("<unknown>") : std::string_view(the_parser.cur_file_name);
+    spdlog::error("Syntax error in init file (line {}) in {}: {}", the_main.init_file_pos, file, line);
+}
 
 // return tl_end if seen End, tl_empty if empty (or comment),
 // tl_normal otherwise
@@ -29,7 +33,7 @@ auto Buffer::tp_fetch_something() -> tpa_line {
     skip_sp_tab();
     if (is_special_end()) return tl_empty;
     if (ptrs.b == 0) {
-        tpage_ns::init_error();
+        tpage_ns::init_error(*this);
         spdlog::error("{}Wanted End, or line starting with space", fmt::streamed(data()));
         return tl_empty;
     }
@@ -70,7 +74,7 @@ auto tpage_ns::scan_item(Buffer &in, Buffer &out, char del) -> bool {
     if (del == '<') del = '>'; // else del is ""
     while (in.head() != del) {
         if (in.head() == 0) {
-            tpage_ns::init_error();
+            tpage_ns::init_error(in);
             spdlog::error("could not find end delimiter");
             out = "notfound";
             return false;

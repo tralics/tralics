@@ -25,7 +25,7 @@
 #endif
 
 namespace tpage_ns {
-    void init_error();
+    void init_error(std::string_view line);
 } // namespace tpage_ns
 
 namespace {
@@ -241,6 +241,7 @@ found at http://www.cecill.info.)";
     // from a list of lines
     void Titlepage_create(LineList &lines) {
         if (lines.empty()) return;
+        the_parser.cur_file_name = lines.file_name;
         Titlepage.make_valid();
         for (;;) {
             tp_main_buf.clear();
@@ -253,13 +254,13 @@ found at http://www.cecill.info.)";
             int      w0 = tpfl.read();
             tpi_vals w  = tpfl.classify(w0, Titlepage.state);
             if (w == tpi_err) {
-                tpage_ns::init_error();
+                tpage_ns::init_error(tp_main_buf);
                 continue;
             }
             TitlePageAux tpa(tpfl);
             bool         res = tpa.classify(w, Titlepage.state);
             if (!res) {
-                tpage_ns::init_error();
+                tpage_ns::init_error(tp_main_buf);
                 continue;
             }
             Titlepage.bigtable.push_back(tpa);
