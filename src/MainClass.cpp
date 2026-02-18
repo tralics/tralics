@@ -361,6 +361,7 @@ void MainClass::check_for_input() {
         exit(1);
     }
     open_log();
+    find_conf_path();
     input_content.read(s, 4);
     if (input_content.empty()) {
         spdlog::critical("Fatal: Empty input file {}", s);
@@ -428,7 +429,6 @@ void MainClass::parse_args(int argc, char **argv) {
         else
             see_name(s);
     }
-    find_conf_path();
     if (infile.empty()) {
         spdlog::critical("Fatal: no source file given");
         end_with_help(1);
