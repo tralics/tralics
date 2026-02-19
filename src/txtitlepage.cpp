@@ -29,6 +29,7 @@ void tpage_ns::init_error(std::string_view line) {
 // tl_normal otherwise
 auto Buffer::tp_fetch_something() -> tpa_line {
     ptrs.b = 0;
+    if (empty()) return tl_empty;
     if (starts_with("End")) return tl_end;
     skip_sp_tab();
     if (is_special_end()) return tl_empty;

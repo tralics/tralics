@@ -333,6 +333,8 @@ void LineList::parse_and_extract_clean(const std::string &s) {
 // Returns all line in a begin/end block named s
 auto LineList::parse_and_extract(std::string_view s) const -> LineList {
     LineList res;
+    res.file_name = file_name;
+    res.encoding  = encoding;
     int      b    = 0;
     bool     keep = false;
     for (const auto &C : *this) {
