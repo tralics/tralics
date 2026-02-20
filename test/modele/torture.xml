@@ -2,7 +2,7 @@
 <!DOCTYPE ramain SYSTEM 'raweb.dtd'>
 <!-- Translated from LaTeX by tralics 2.15.4, date: 2026/02/20 -->
 <ramain creator='Tralics version 2.15.4'>
-<p>The time is 22h 42min, 20th February 2026.</p>
+<p>The time is 23h 07min, 20th February 2026.</p>
 <p>DOCSTART</p>
 <div0 id='cid1' id-text='1'><head>First</head>
 <p>31.5pt0.0pt0.0mu1717.0pt17.0pt plus 1.0pt minus 2.0pt17.0mu plus 1.0mu minus 2.0mu3.0mu plus 4.0fil minus 17.0mu0.0mu119811711.0pt
@@ -33,7 +33,7 @@ abc=abc
 <p>=Textetexte=</p>
 <p>aaaa bbbb<font-typewriter-family>aaaa bbbb</font-typewriter-family> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>a</mi><mspace width='3.33333pt'/><mi>b</mi></mrow></math></formula></p>
 <p>=_#&amp;<xref url='a~&amp;#&amp; _'><font-large1>a~&amp;#&amp; _</font-large1></xref>=</p>
-<p>27<font-super>e</font-super>
+<p>27<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mrow/> <mrow><mi>i</mi><mover accent='true'><mi>e</mi> <mo>&grave;</mo></mover><mi>m</mi><mi>e</mi></mrow> </msup></math></formula>
 27<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mrow/> <mrow><mi>j</mi><mi>i</mi><mover accent='true'><mi>e</mi> <mo>&grave;</mo></mover><mi>m</mi><mi>e</mi></mrow> </msup></math></formula></p>
 </div3>
 <div3 id='uid2' id-text='0.0.0.2'><head>hathat</head>
@@ -407,10 +407,10 @@ c)</p>
 <p>Some text <font-sansserif-family>Some text</font-sansserif-family> <font-typewriter-family>Some text</font-typewriter-family>
 <font-bold-series>Some text</font-bold-series> <font-italic-shape>Some text</font-italic-shape> <font-small-caps-shape>Some text</font-small-caps-shape> <font-slanted-shape>Some text</font-slanted-shape></p>
 <p>1<font-super>st</font-super> x<font-super>ième</font-super> y<font-sub>some text</font-sub>
-1<font-super>e</font-super><font-overline>foo</font-overline><font-underline>bar</font-underline>.</p>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mn>1</mn> <mi>e</mi> </msup></math></formula><font-overline>foo</font-overline><font-underline>bar</font-underline>.</p>
 <p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&notin;</mo></math></formula></p>
 <p>1<font-super>st</font-super> x<font-super>ième</font-super> y<font-sub>some text</font-sub>
-1<font-super>e</font-super><font-overline>foo</font-overline><font-underline>bar</font-underline>.
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mn>1</mn> <mi>e</mi> </msup></math></formula><font-overline>foo</font-overline><font-underline>bar</font-underline>.
 <font-small-caps-shape>Foo</font-small-caps-shape><font-small-caps-shape>Bar</font-small-caps-shape></p>
 <p>rmmdup 
 Textrm <font-sansserif-family>Textsf</font-sansserif-family> <font-typewriter-family>Texttt</font-typewriter-family>
@@ -893,7 +893,7 @@ F<pic-framebox height='6' position='5' width='1.79999'>text</pic-framebox></p>
 <keywords>
 <term>first</term>
 <term>second</term>
-</keywords><p><mbox><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>a</mi></math></formula></mbox><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math></formula> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>c</mi></math></formula> 0 xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+</keywords><p><mbox><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>a</mi></math></formula></mbox><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>b</mi></math></formula> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>c</mi></math></formula> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mn>0</mn></math></formula> xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 <topic num='10'><t_titre>foo</t_titre></topic>
 <caption>ok</caption><alt_head>opt</alt_head>
 <note id='uid55' id-text='2' place='foot'>anote</note>
@@ -1285,7 +1285,7 @@ This is a sentence typeset in the theorem environment </font-italic-shape></font
 <p>m</p>
 <p>1 2 
 1 2 
-2 1</p>
+2 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mn>1</mn></math></formula></p>
 <formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mn>1</mn></math></formula>
 <p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mo>=</mo><mn>0123456789</mn></mrow></math></formula>
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mroot><mn>4</mn> <mn>3</mn></mroot></math></formula> <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mroot><mn>4</mn> <mn>3</mn></mroot><mi>̡</mi><mi>䌡</mi><mi>&#x54321;</mi><mi>&#x654321;</mi><mi>&#x7654321;</mi></mrow></math></formula>

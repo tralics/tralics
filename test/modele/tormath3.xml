@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE ramain SYSTEM 'raweb.dtd'>
-<!-- Translated from LaTeX by tralics 2.15.4, date: 2026/02/16 -->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2026/02/20 -->
 <ramain creator='Tralics version 2.15.4'>
 <p>DOCSTART</p>
 <formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mn>6</mn></mrow></math><texmath>x6</texmath></formula>
@@ -224,8 +224,8 @@ c)</p>
 <p noindent='true' spacebefore='8.53581pt'>text C</p>
 <p rend='center'>line one</p>
 <p rend='center'>this is the second line</p>
-<p>1<font-super>e</font-super><font-overline>foo</font-overline><font-underline>bar</font-underline>.</p>
-<p>1<font-super>e</font-super><font-overline>foo</font-overline><font-underline>bar</font-underline>.
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mn>1</mn> <mi>e</mi> </msup></math><texmath>1^e</texmath></formula><font-overline>foo</font-overline><font-underline>bar</font-underline>.</p>
+<p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msup><mn>1</mn> <mi>e</mi> </msup></math><texmath>1^e</texmath></formula><font-overline>foo</font-overline><font-underline>bar</font-underline>.
 <font-small-caps-shape>Foo</font-small-caps-shape><font-small-caps-shape>Bar</font-small-caps-shape></p>
 <formula id='uid10' id-text='10' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable><mtr><mtd columnalign='left'><mover accent='true'><mi>x</mi> <mo>&dot;</mo></mover></mtd><mtd><mo>=</mo></mtd><mtd columnalign='left'><mrow><mi>A</mi><mi>x</mi><mo>+</mo><mi>g</mi><mo>(</mo><mi>x</mi><mo>,</mo><mi>u</mi><mo>)</mo></mrow></mtd></mtr><mtr><mtd columnalign='left'><mi>y</mi></mtd><mtd><mo>=</mo></mtd><mtd columnalign='left'><mrow><mi>C</mi><mi>x</mi></mrow></mtd></mtr><mtr><mtd columnalign='left' columnspan='3'><mrow><mi>x</mi><mo>&Element;</mo><msup><mi>R</mi> <mi>n</mi> </msup></mrow></mtd></mtr></mtable></math><texmath>
 \begin{array}{lcl}

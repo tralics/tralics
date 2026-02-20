@@ -176,7 +176,7 @@ x<error c='Illegal end of environment' l='333' n='\end'/><hi rend='it'>x</hi>
 <error c='bad unless' l='336' n='\unless'/>x<error c='bad unless' l='336' n='\unless'/>2</p>
 <error c='missing endcsname' l='351' n='\csname'/><error c='Undefined command' l='351' n='\foo'/><error c='Extra \endcsname' l='351' n='\endcsname'/><p>01 2xyz
 <error c='missing unit' l='363' n='\dimen'/>.5pt</p>
-<error c='number too big' l='392' n='\count'/><error c='number too big (infinite recursion?)' l='392' n='\count'/><error c='Missing number' l='394' n='\count'/><cleaders><rule width='0.4pt'/></cleaders><cleaders><rule depth='0.0pt' height='0.4pt'/></cleaders><p>A0B1C14<hi rend='it'/>D18E9 xy<minipage pos='t' width='2.0pt'><p>plus 2 fillabc</p></minipage>
+<error c='number too big' l='392' n='\count'/><error c='number too big (infinite recursion?)' l='392' n='\count'/><error c='Missing number' l='394' n='\count'/><cleaders><rule width='0.4pt'/></cleaders><cleaders><rule depth='0.0pt' height='0.4pt'/></cleaders><p>A0B1C14<hi rend='it'/>D18E<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mn>9</mn></math></formula> xy<minipage pos='t' width='2.0pt'><p>plus 2 fillabc</p></minipage>
 <minipage pos='t' width='2.0pt'><p>plusabc</p></minipage></p>
 <table rend='inline'><row><cell halign='center'>x<error c='bad math' l='415' n='$'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow/></math></formula></cell>
 <cell>y</cell>
@@ -216,7 +216,7 @@ Table</p>
 <table rend='inline'><row><cell halign='center'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>u</mi><mi>w</mi><mi>w</mi><mi>v</mi></mrow></math></formula></cell>
 </row></table><p id='uid2' id-text='bar'>
 xx <anchor id='uid1' id-text='1'/> yy <ref target='uid1'/><ref target='uid2'/>
-<error c='Illegal anchor in math mode' l='435' n='$'/><error c='Illegal anchor in math mode' l='435' n='$'/><error c='Illegal anchor in math mode' l='435' n='$'/><error c='Illegal anchor in math mode' l='435' n='$'/>12345</p>
+<error c='Illegal anchor in math mode' l='435' n='$'/><error c='Illegal anchor in math mode' l='435' n='$'/><error c='Illegal anchor in math mode' l='435' n='$'/><error c='Illegal anchor in math mode' l='435' n='$'/><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mn>12345</mn></math></formula></p>
 <error c='bad end' l='438' n='$'/><p><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>A</mi></math></formula> <error c='bad end' l='438' n='$'/></p>
 <formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mi>B</mi></math></formula>
 <p noindent='true'>3ok

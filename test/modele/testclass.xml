@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE std SYSTEM 'classes.dtd'>
-<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2026/02/20 -->
 <std>
 <p>OK
 ok
@@ -15,10 +15,10 @@ Reference to second subfigure: <ref target='uid3'/></p>
 </figure>
 <div0 id='cid1' id-text='1'><head>foo</head>
 </div0>
-<div0 id='cid2' id-text='1'><head>sec1</head><alt_head>Sec</alt_head>
+<div0 id='cid2' id-text='1'><head>sec<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mn>1</mn></math></formula></head><alt_head>Sec</alt_head>
 </div0>
-<div0 id='cid3' id-text='2'><head>foo2</head><alt_head>chapter two</alt_head>
+<div0 id='cid3' id-text='2'><head>foo<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mn>2</mn></math></formula></head><alt_head>chapter two</alt_head>
 </div0>
-<div0 rend='nonumber'><head>sec2</head>
+<div0 rend='nonumber'><head>sec<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mn>2</mn></math></formula></head>
 </div0>
 </std>

@@ -23,7 +23,7 @@ class MainClass {
 
     int year{9876};      // current year
     int dft{3}; // default dtd for standard classes
-    int trivial_math{1};
+    int trivial_math{0};
 
     LineList input_content; // content of the tex source
     LineList tex_source;    // the data to be translated
