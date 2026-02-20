@@ -657,6 +657,8 @@ We test also trees\par % Check that a new paragraph is created
 \expandafter\showthe\csname c@xyz\endcsname
 \ifnum\value{xyz}=11102\else \bad\fi
 
+\xbox{x}{\XMLaddatt{na m\&}{value}}
+
 Now checking runaway
 \def\nohope#1\bad{}\nohope
 This line is ignored

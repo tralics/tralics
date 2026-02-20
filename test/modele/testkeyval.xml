@@ -88,22 +88,22 @@ PREFIXsecond line</Warning><error c='uerror' l='589' n='\GenericError'/></div0>
 
 
 <NewRef rend='NewPage' target='cid2'/></p>
-<p>Now checking runaway
-<error c='Runaway argument' l='664' n='\nohope'/>Second test
-<error c='Runaway argument' l='668' n='\@car'/>tLine of text.</p>
-<Warning c='Warning' l='674'>Tralics Warning: Command \par has changed
-</Warning><Warning c='Warning' l='677'>Tralics Warning: Command \foo has changed
-</Warning><Warning c='Warning' l='678'>Tralics Warning: Command \foo has changed
+<x><error c='invalid XML attribute name' l='660' n='\XMLaddatt'/></x><p>Now checking runaway
+<error c='Runaway argument' l='666' n='\nohope'/>Second test
+<error c='Runaway argument' l='670' n='\@car'/>tLine of text.</p>
+<Warning c='Warning' l='676'>Tralics Warning: Command \par has changed
+</Warning><Warning c='Warning' l='679'>Tralics Warning: Command \foo has changed
 </Warning><Warning c='Warning' l='680'>Tralics Warning: Command \foo has changed
-</Warning><error c='Runaway argument' l='686' n='\@addtoreset'/><p><hi a='b' b='a' id='bid5' rend='it'>x
-<error c='Runaway argument' l='687' n='\newcounter'/>x
-<error c='Runaway argument' l='688' n='\nocite'/>x
-<error c='Runaway argument' l='689' n='\XMLsolvecite'/>x
-<error c='Runaway argument' l='690' n='\cite'/><cit><NewRef target='bid2'/></cit>x
-<error c='Runaway argument' l='691' n='\cite@one'/><cit rend='a '><NewRef target='bid3'>b</NewRef></cit>x
-<error c='Runaway argument' l='692' n='\cite@one'/><cit rend='year'><NewRef target='bid4'>b</NewRef></cit>x
-<error c='Runaway argument' l='693' n='\bibliographystyle'/>x
-<error c='Runaway argument' l='694' n='\bibliography'/><biblio>
+</Warning><Warning c='Warning' l='682'>Tralics Warning: Command \foo has changed
+</Warning><error c='Runaway argument' l='688' n='\@addtoreset'/><p><hi a='b' b='a' id='bid5' rend='it'>x
+<error c='Runaway argument' l='689' n='\newcounter'/>x
+<error c='Runaway argument' l='690' n='\nocite'/>x
+<error c='Runaway argument' l='691' n='\XMLsolvecite'/>x
+<error c='Runaway argument' l='692' n='\cite'/><cit><NewRef target='bid2'/></cit>x
+<error c='Runaway argument' l='693' n='\cite@one'/><cit rend='a '><NewRef target='bid3'>b</NewRef></cit>x
+<error c='Runaway argument' l='694' n='\cite@one'/><cit rend='year'><NewRef target='bid4'>b</NewRef></cit>x
+<error c='Runaway argument' l='695' n='\bibliographystyle'/>x
+<error c='Runaway argument' l='696' n='\bibliography'/><biblio>
 <citation from='year' id='bid0' key='Lou88' type='article' userid='cite:louarn88'>
 <bauteurs><bpers nom='Louarn' prenom='P.' prenomcomplet='Philippe'/></bauteurs>
 <btitle>Une expérience d’utilisation de LaTeX : le Rapport d’act ivité de l’INRIA</btitle>
@@ -113,17 +113,17 @@ PREFIXsecond line</Warning><error c='uerror' l='589' n='\GenericError'/></div0>
 <byear>1988</byear>
 <bpages>17-24</bpages>
 </citation></biblio>x
-<error c='Runaway argument' l='695' n='\cititem'/><error c='Command \cititem should occur in bibliographic mode only' l='695' n='\cititem'/><aa>val</aa>
-x<error c='Runaway argument' l='696' n='\XMLsolvecite'/>x
-<error c='Runaway argument' l='697' n='\XMLaddatt'/>x
-<error c='Runaway argument' l='698' n='\XMLaddatt'/> x
-<error c='Runaway argument' l='699' n='\newtheorem'/> x
-<error c='Runaway argument' l='700' n='\newtheorem'/>x</hi></p>
+<error c='Runaway argument' l='697' n='\cititem'/><error c='Command \cititem should occur in bibliographic mode only' l='697' n='\cititem'/><aa>val</aa>
+x<error c='Runaway argument' l='698' n='\XMLsolvecite'/>x
+<error c='Runaway argument' l='699' n='\XMLaddatt'/>x
+<error c='Runaway argument' l='700' n='\XMLaddatt'/> x
+<error c='Runaway argument' l='701' n='\newtheorem'/> x
+<error c='Runaway argument' l='702' n='\newtheorem'/>x</hi></p>
 <p noindent='true'><hi rend='it'><bibitem id='bid6'/>X</hi></p>
 <p noindent='true'><hi rend='it'><bibitem id='bid2'/>X</hi></p>
 <p noindent='true'><hi rend='it'><bibitem id='bid3'/>X</hi></p>
-<p noindent='true'><hi rend='it'><bibitem id='bid7'/>X</hi><Warning c='Info' l='703'>Non-closed \begingroup started at line 683.
-Non-closed brace started at line 683.
-Non-closed environment `it' started at line 683.
+<p noindent='true'><hi rend='it'><bibitem id='bid7'/>X</hi><Warning c='Info' l='705'>Non-closed \begingroup started at line 685.
+Non-closed brace started at line 685.
+Non-closed environment `it' started at line 685.
 </Warning></p></div0>
 </std>

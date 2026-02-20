@@ -5,6 +5,7 @@
 #include "tralics/SaveAux.h"
 #include "tralics/Saver.h"
 #include "tralics/globals.h"
+#include "tralics/util.h"
 #include <spdlog/fmt/fmt.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
@@ -2013,6 +2014,10 @@ void Parser::T_xmladdatt(subtypes c) {
         Xml *e = the_stack.elt_from_id(n);
         if (e == nullptr) return;
         e->name = val;
+        return;
+    }
+    if (!is_valid_xml_name(key)) {
+        parse_error(err_tok, "Invalid XML attribute name ", key, "invalid XML attribute name");
         return;
     }
     if (n != 0) {

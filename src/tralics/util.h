@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <optional>
 #include <string>
+#include <string_view>
 #include <vector>
 
 auto bt_to_string(boundary_type v) -> std::optional<std::string>;
@@ -14,6 +15,7 @@ auto find_in_confdir(const std::string &s) -> std::optional<std::filesystem::pat
 auto find_in_path(const std::string &s) -> std::optional<std::filesystem::path>;
 auto get_out_dir(const std::string &name) -> std::filesystem::path;
 auto is_all_ascii(const std::string &s) -> bool;
+auto is_valid_xml_name(std::string_view s) -> bool;
 auto is_leap_year(long y) -> bool; // TODO: std::chrono::year::is_leap
 auto is_m_font(symcodes cmd) -> bool;
 auto insert_space_here(std::string_view s, size_t k) -> bool;

@@ -62,6 +62,20 @@ auto only_space(const std::string &s) -> bool {
     return true;
 }
 
+auto is_valid_xml_name(std::string_view s) -> bool {
+    if (s.empty()) return false;
+    auto is_start = [](unsigned char c) {
+        return std::isalpha(c) != 0 || c == '_' || c == ':' || c >= 0x80;
+    };
+    auto is_name_char = [&](unsigned char c) {
+        return is_start(c) || std::isdigit(c) != 0 || c == '-' || c == '.';
+    };
+    if (!is_start(static_cast<unsigned char>(s.front()))) return false;
+    for (size_t i = 1; i < s.size(); ++i)
+        if (!is_name_char(static_cast<unsigned char>(s[i]))) return false;
+    return true;
+}
+
 auto without_end_spaces(std::string s) -> std::string {
     size_t k = 0, l = s.size();
     while (std::isspace(s[k]) != 0) ++k;
