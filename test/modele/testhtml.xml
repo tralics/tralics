@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE unknown SYSTEM 'unknown.dtd'>
-<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2026/02/20 -->
 <unknown page-numbering='false'>
 <abstract pos='center'>
 <p><hi rend='small'>This file tests the html package.</hi></p>
@@ -58,7 +58,7 @@ a</p>
 </citation>
 <citation from='year' id='bid1' key='HP99' type='inproceedings' userid='cite:place99'>
 <bauteurs><bpers nom='Haralambous' prenom='Y.' prenomcomplet='Yannis'/><bpers nom='Place' prenom='J.' prenomcomplet='John'/></bauteurs>
-<btitle>Produire du MathML et autres ...ML à partir d'<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Omega;</mi></math></formula> : <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Omega;</mi></math></formula> se généralise</btitle>
+<btitle>Produire du MathML et autres ...ML à partir d’<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Omega;</mi></math></formula> : <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Omega;</mi></math></formula> se généralise</btitle>
 <bbooktitle>Cahiers Gutenberg</bbooktitle>
 <bnumber>33-34</bnumber>
 <bpages>173-182</bpages>
@@ -72,7 +72,7 @@ a</p>
 </citation>
 <citation from='year' id='bid3' key='Lou88' type='article' userid='cite:louarn88'>
 <bauteurs><bpers nom='Louarn' prenom='P.' prenomcomplet='Philippe'/></bauteurs>
-<btitle>Une expérience d'utilisation de LaTeX : le Rapport d'activité de l'INRIA</btitle>
+<btitle>Une expérience d’utilisation de LaTeX : le Rapport d’activité de l’INRIA</btitle>
 <bjournal>Cahiers Gutenberg</bjournal>
 <bnumber>0</bnumber>
 <bmonth>apr</bmonth>

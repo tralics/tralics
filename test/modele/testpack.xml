@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE std SYSTEM 'classes.dtd'>
-<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2026/02/20 -->
 <std><colorpool><color id='colid3' model='rgb' name='red' value='1,0,0'/>
 <color id='colid4' model='rgb' name='green' value='0,1,0'/>
 <color id='colid10' model='cmyk' name='Yellow' value='0,0,1,0'/>
@@ -75,7 +75,7 @@ blabla. (taratata)
 
 <fbox rend='boxed'><minipage width='200.0pt'><p>blah</p></minipage></fbox>
 
-<fbox rend='boxed'><minipage width='150.0pt'><p>Since the former doesn't use braces to delimit
+<fbox rend='boxed'><minipage width='150.0pt'><p>Since the former doesn’t use braces to delimit
 the context of the box, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>...</mo></math></formula>
 </p></minipage></fbox></p>
 <formula id='uid3' id-text='1' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mstyle displaystyle='true' scriptlevel='0'><mo>&int;</mo></mstyle></math></formula>

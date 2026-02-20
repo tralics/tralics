@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE std SYSTEM 'classes.dtd'>
-<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2026/02/20 -->
 <std><colorpool><color id='colid3' model='rgb' name='red' value='1,0,0'/>
 <color id='colid5' model='rgb' name='blue' value='0,0,1'/>
 </colorpool><p>Test of bordermatrix</p>
@@ -89,7 +89,7 @@ after large</p>
 <p>texte fin3.</p>
 <p>Liens <ref target='uid8'/> et <ref target='uid10'/> et <ref target='uid12'/>. Lien
 <ref rend='page' target='uid12'/></p>
-<p>3  ok'3
+<p>3  ok’3
  <it id='uid14' id-text='5'>4</it> ok4
  <it>5</it>  ok5
  <it>6</it>  OK6</p>

@@ -398,8 +398,8 @@ void MainClass::parse_args(int argc, char **argv) {
         spdlog::critical("Fatal: no source file given");
         end_with_help(1);
     }
-    if (the_main.leftquote_val == 0 || the_main.leftquote_val >= (1 << 16)) the_main.leftquote_val = '`';
-    if (the_main.rightquote_val == 0 || the_main.rightquote_val >= (1 << 16)) the_main.rightquote_val = '\'';
+    if (the_main.leftquote_val == 0 || the_main.leftquote_val >= (1 << 16)) the_main.leftquote_val = 0x2018;
+    if (the_main.rightquote_val == 0 || the_main.rightquote_val >= (1 << 16)) the_main.rightquote_val = 0x2019;
 }
 
 enum param_args {

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE std SYSTEM 'classes.dtd'>
-<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/13 -->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2026/02/20 -->
 <std>
 <p>2008/02/15 Package for testing keyval</p>
 <error c='Undefined command' l='95' n='\bad'/><error c='Undefined command' l='96' n='\bad'/><error c='Undefined command' l='99' n='\Error'/><p>epW=5.opE.badpack5a.CuCvLaD=Lb.Lcxyz</p>
@@ -106,7 +106,7 @@ PREFIXsecond line</Warning><error c='uerror' l='589' n='\GenericError'/></div0>
 <error c='Runaway argument' l='694' n='\bibliography'/><biblio>
 <citation from='year' id='bid0' key='Lou88' type='article' userid='cite:louarn88'>
 <bauteurs><bpers nom='Louarn' prenom='P.' prenomcomplet='Philippe'/></bauteurs>
-<btitle>Une expérience d'utilisation de LaTeX : le Rapport d'act ivité de l'INRIA</btitle>
+<btitle>Une expérience d’utilisation de LaTeX : le Rapport d’act ivité de l’INRIA</btitle>
 <bjournal>Cahiers Gutenberg</bjournal>
 <bnumber>0</bnumber>
 <bmonth>apr</bmonth>

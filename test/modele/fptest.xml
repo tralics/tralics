@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE ramain SYSTEM 'raweb.dtd'>
-<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2026/02/20 -->
 <ramain creator='Tralics version 2.15.4'>
 <p>DOCSTART</p>
 <div0 id='cid1' id-text='I'><head>testing fp</head>
@@ -703,7 +703,7 @@
 <cell halign='center'>$</cell>
 <cell halign='center'>%</cell>
 <cell halign='center'>&amp;</cell>
-<cell halign='center'>'</cell>
+<cell halign='center'>’</cell>
 <cell halign='center'>(</cell>
 <cell halign='center'>)</cell>
 <cell halign='center'>*</cell>
@@ -760,7 +760,7 @@
 <cell halign='center'>]</cell>
 <cell halign='center'>^</cell>
 <cell halign='center'>_</cell>
-</row><row><cell halign='center'>`</cell>
+</row><row><cell halign='center'>‘</cell>
 <cell halign='center'>a</cell>
 <cell halign='center'>b</cell>
 <cell halign='center'>c</cell>

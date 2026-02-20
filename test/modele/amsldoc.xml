@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE std SYSTEM 'classes.dtd'>
-<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/12/08 -->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2026/02/20 -->
 <std equation-number='left'>
-<frontmatter><maketitle><title>User's Guide for the <EM r='pkg'>amsmath</EM> Package (Version 2.0)</title><author>American Mathematical Society</author><date>1999-12-13 (revised 2002-02-25)</date></maketitle><p><pagestyle style='headings'/></p>
+<frontmatter><maketitle><title>User’s Guide for the <EM r='pkg'>amsmath</EM> Package (Version 2.0)</title><author>American Mathematical Society</author><date>1999-12-13 (revised 2002-02-25)</date></maketitle><p><pagestyle style='headings'/></p>
 <tableofcontents depth='1'/><cleardoublepage/></frontmatter>
 <mainmatter>
 <div0 id='cid1' id-text='1'><head>Introduction</head>
@@ -34,7 +34,7 @@ and <xref url='http://www.ams.org/tex/amsfonts.html'>http://<allowbreak/>www.<al
 you write, then you may recognize solutions for some familiar problems
 in this list of <EM r='pkg'>amsmath</EM> features:</p>
 <list type='simple'>
-<item id='uid1' id-text='1'><p noindent='true'>A convenient way to define new `operator name' commands analogous
+<item id='uid1' id-text='1'><p noindent='true'>A convenient way to define new ‘operator name’ commands analogous
 to <EM r='cn'>sin</EM> and <EM r='cn'>lim</EM>, including proper side spacing and automatic
 selection of the correct font style and size (even when used in
 sub- or superscripts).</p>
@@ -67,7 +67,7 @@ displayed equations and other mathematical constructs.</p>
 typesetting a fragment of text inside a display.</p>
 </item><label><EM r='pkg'>amsopn</EM></label>
 <item id='uid10' id-text='3'><p noindent='true'>Provides <EM r='cn'>DeclareMathOperator</EM> for defining new
-`operator names' like <EM r='cn'>sin</EM> and <EM r='cn'>lim</EM>.</p>
+‘operator names’ like <EM r='cn'>sin</EM> and <EM r='cn'>lim</EM>.</p>
 </item><label><EM r='pkg'>amsbsy</EM></label>
 <item id='uid11' id-text='4'><p noindent='true'>For backward compatibility this package continues
 to exist but use of the newer <EM r='pkg'>bm</EM> package that comes with <LaTeX/>
@@ -91,7 +91,7 @@ are available only by invoking those packages separately.</p>
 numbers<anchor id='uid15' id-text='lid1'/> vertically centered
 on the total height of the equation.</p>
 </item><label><EM r='opt'>tbtags</EM></label>
-<item id='uid16' id-text='2'><p noindent='true'>`Top-or-bottom tags': For a split equation, place
+<item id='uid16' id-text='2'><p noindent='true'>‘Top-or-bottom tags’: For a split equation, place
 equation numbers<anchor id='uid17' id-text='lid2'/> level with
 the last (resp. first) line, if numbers are on the right (resp.
 left).</p>
@@ -111,7 +111,7 @@ integral<anchor id='uid22' id-text='lid5'/> symbols.</p>
 <item id='uid23' id-text='6'><p noindent='true'>(default) Opposite of <EM r='opt'>intlimits</EM>.</p>
 </item><label><EM r='opt'>namelimits</EM></label>
 <item id='uid24' id-text='7'><p noindent='true'>(default) Like <EM r='opt'>sumlimits</EM>, but for certain
-`operator names' such as <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix' movablelimits='true'>det</mo></math><texmath>\det </texmath></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix' movablelimits='true'>inf</mo></math><texmath>\inf </texmath></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix' movablelimits='true'>lim</mo></math><texmath>\lim </texmath></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix' movablelimits='true'>max</mo></math><texmath>\max </texmath></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix' movablelimits='true'>min</mo></math><texmath>\min </texmath></formula>, that
+‘operator names’ such as <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix' movablelimits='true'>det</mo></math><texmath>\det </texmath></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix' movablelimits='true'>inf</mo></math><texmath>\inf </texmath></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix' movablelimits='true'>lim</mo></math><texmath>\lim </texmath></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix' movablelimits='true'>max</mo></math><texmath>\max </texmath></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix' movablelimits='true'>min</mo></math><texmath>\min </texmath></formula>, that
 traditionally have subscripts <anchor id='uid25' id-text='lid6'/> placed underneath when they occur in a displayed
 equation.</p>
 </item><label><EM r='opt'>nonamelimits</EM></label>
@@ -147,7 +147,7 @@ provided in basic <LaTeX/>. The augmented set includes:</p>
 it is better to use <EM r='cls'>align</EM> or <EM r='cls'>equation</EM>+<EM r='cls'>split</EM> instead.)</p>
 <p>Except for <EM r='cls'>split</EM>, each environment has both starred and unstarred
 forms, where the unstarred forms have automatic numbering using
-<LaTeX/>'s <EM r='cls'>equation</EM> counter. You can suppress the number on any
+<LaTeX/>’s <EM r='cls'>equation</EM> counter. You can suppress the number on any
 particular line by putting <EM r='cn'>notag</EM> before the <EM r='cn'>\\</EM>; you can also
 override<anchor id='uid33' id-text='lid11'/> it with a tag of your own
 using <EM r='cn'>tag</EM><hi rend='tt'>{</hi><hi rend='it'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&langle;</mo></math><texmath>\langle </texmath></formula>label<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&rangle;</mo></math><texmath>\rangle </texmath></formula></hi><hi rend='tt'>}</hi>, where <hi rend='it'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&langle;</mo></math><texmath>\langle </texmath></formula>label<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&rangle;</mo></math><texmath>\rangle </texmath></formula></hi> means arbitrary text such
@@ -257,13 +257,13 @@ a_{22}&amp; =b_{22}+c_{22}
 <div0 id='cid5' id-text='2'><head>Single equations</head>
 <p>The <EM r='cls'>equation</EM> environment is for a single equation with an
 automatically generated number. The <EM r='cls'>equation*</EM> environment is the
-same except for omitting the number.<note id='uid41' id-text='1' place='foot'>Basic <LaTeX/> doesn't provide an <EM r='cls'>equation*</EM> environment,
+same except for omitting the number.<note id='uid41' id-text='1' place='foot'>Basic <LaTeX/> doesn’t provide an <EM r='cls'>equation*</EM> environment,
 but rather a functionally equivalent environment named
 <EM r='cls'>displaymath</EM>.</note></p>
 </div0>
 <div0 id='cid6' id-text='3'><head>Split equations without alignment</head>
 <p>The <EM r='cls'>multline</EM> environment is a variation of the <EM r='cls'>equation</EM>
-environment used for equations that don't fit on a single line. The
+environment used for equations that don’t fit on a single line. The
 first line of a <EM r='cls'>multline</EM> will be at the left margin and the last
 line at the right margin, except for an indention on both sides in the
 amount of <EM r='cn'>multlinegap</EM>. Any additional lines in between will be
@@ -274,7 +274,7 @@ option is in effect).</p>
 The equation number is placed on the last line (<EM r='opt'>reqno</EM> option) or
 first line (<EM r='opt'>leqno</EM> option); vertical centering as for <EM r='cls'>split</EM>
 is not supported by <EM r='cls'>multline</EM>.</p>
-<p>It's possible to force one of the middle lines to the left or right with
+<p>It’s possible to force one of the middle lines to the left or right with
 commands <EM r='cn'>shoveleft</EM>, <EM r='cn'>shoveright</EM>. These commands take the entire
 line as an argument, up to but not including the final <EM r='cn'>\\</EM>; for
 example</p>
@@ -425,7 +425,7 @@ displays. The environments of the <EM r='pkg'>amsmath</EM> package try hard to
 avoid overprinting an equation number on the equation contents, if
 necessary moving the number down or up to a separate line. Difficulties
 in accurately calculating the profile of an equation can occasionally
-result in number movement that doesn't look right. There is a
+result in number movement that doesn’t look right. There is a
 <EM r='cn'>raisetag</EM> command provided to adjust the vertical position of the
 current equation number, if it has been shifted away from its normal
 position. To move a particular number up by six points, write
@@ -443,7 +443,7 @@ the philosophy is that page breaks in such material should receive
 individual attention from the author. To get an individual page break
 inside a particular displayed equation, a <EM r='cn'>displaybreak</EM> command is
 provided. <EM r='cn'>displaybreak</EM> is best placed immediately before the
-<hi rend='tt'>\\</hi> where it is to take effect. Like <LaTeX/>'s <EM r='cn'>pagebreak</EM>,
+<hi rend='tt'>\\</hi> where it is to take effect. Like <LaTeX/>’s <EM r='cn'>pagebreak</EM>,
 <EM r='cn'>displaybreak</EM> takes an optional argument between 0 and 4 denoting
 the desirability of the pagebreak. <hi rend='tt'>\displaybreak[0]</hi> means “it is
 permissible to break here” without encouraging a break;
@@ -493,7 +493,7 @@ equation numbers (1.1), (1.2), ..., (2.1), (2.2),
 ..., in sections 1, 2, and so forth—you could redefine
 <EM r='cn'>theequation</EM> as suggested in the <LaTeX/> manual <cit><ref target='bid0'>§6.3, §C.8.4</ref></cit>:</p>
 <p noindent='true'><hi rend='tt'>\renewcommand{\theequation}{\thesection.\arabic{equation}}</hi></p>
-<p>This works pretty well, except that the equation counter won't be reset
+<p>This works pretty well, except that the equation counter won’t be reset
 to zero at the beginning of a new section or chapter, unless you do it
 yourself using <EM r='cn'>setcounter</EM>. To make this a little more convenient,
 the <EM r='pkg'>amsmath</EM> package provides a command<anchor id='uid51' id-text='lid14'/> <EM r='cn'>numberwithin</EM>. To have equation numbering tied to
@@ -545,10 +545,10 @@ and <EM r='cls'>Vmatrix</EM> have (respectively) <formula type='inline'><math xm
 with the <EM r='cls'>array</EM> environment; the matrix environments all use more
 economical horizontal spacing than the rather prodigal spacing of the
 <EM r='cls'>array</EM> environment. Also, unlike the <EM r='cls'>array</EM> environment, you
-don't have to give column specifications for any of the matrix
+don’t have to give column specifications for any of the matrix
 environments; by default you can have up to 10 centered columns.<note id='uid57' id-text='2' place='foot'>More precisely: The maximum number of columns in a matrix is determined
 by the counter <EM r='cn'>MaxMatrixCols</EM> (normal value = 10), which you can change
-if necessary using <LaTeX/>'s <EM r='cn'>setcounter</EM> or <EM r='cn'>addtocounter</EM>
+if necessary using <LaTeX/>’s <EM r='cn'>setcounter</EM> or <EM r='cn'>addtocounter</EM>
 commands.</note> (If you need left or right alignment in a column or other special
 formats you must resort to <EM r='cls'>array</EM>.)</p>
 <p>To produce a small matrix suitable for use in text, there is a
@@ -629,7 +629,7 @@ and they can also be used outside of math.</p>
 <cell halign='left' right-border='true'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mrow><mo>&Rightarrow;</mo><mspace width='-0.55542pt'/></mrow><mspace width='2.em'/><mrow><mspace width='-0.55542pt'/><mo>&Leftarrow;</mo></mrow></mrow></math><texmath>\mathord {\Rightarrow \hspace{-0.55542pt}}\qquad \mathord {\hspace{-0.55542pt}\Leftarrow }</texmath></formula></cell>
 </row></table><p>
 For the greatest possible control over math spacing, use <EM r='cn'>mspace</EM>
-and `math units'. One math unit, or <hi rend='tt'>mu</hi>, is equal to 1/18 em. Thus to
+and ‘math units’. One math unit, or <hi rend='tt'>mu</hi>, is equal to 1/18 em. Thus to
 get a negative <EM r='cn'>quad</EM> you could write <hi rend='tt'>\mspace{-<zws/>18.0mu}</hi>.</p>
 </div0>
 <div0 id='cid18' id-text='3'><head>Dots</head>
@@ -670,10 +670,10 @@ and the infinite integral</p>
 <div0 id='cid19' id-text='4'><head>Nonbreaking dashes</head>
 <p>A command <EM r='cn'>nobreakdash</EM> is provided to suppress the possibility
 of a linebreak after the following hyphen or dash. For example, if you
-write `pages 1–9' as <hi rend='tt'>pages 1\nobreakdash-<zws/>-<zws/>9</hi> then a linebreak will
+write ‘pages 1–9’ as <hi rend='tt'>pages 1\nobreakdash-<zws/>-<zws/>9</hi> then a linebreak will
 never occur between the dash and the 9. You can also use
 <EM r='cn'>nobreakdash</EM> to prevent undesirable hyphenations in combinations
-like <hi rend='tt'>$p$-<zws/>adic</hi>. For frequent use, it's advisable to make abbreviations,
+like <hi rend='tt'>$p$-<zws/>adic</hi>. For frequent use, it’s advisable to make abbreviations,
 e.g.,</p>
 <p noindent='true'><hi rend='tt'>\newcommand{\p}{$p$\nobreakdash}% for "\p-<zws/>adic"</hi></p>
 <p noindent='true'><hi rend='tt'>\newcommand{\Ndash}{\nobreakdash-<zws/>-<zws/>}% for "pages 1\Ndash 9"</hi></p>
@@ -744,7 +744,7 @@ A\xleftarrow{}B \xrightarrow[T]{n\pm i-1}C
 superscript<anchor id='uid69' id-text='lid23'/> above a binary relation.
 In the <EM r='pkg'>amsmath</EM> package there are somewhat more general commands,
 <EM r='cn'>overset</EM> and <EM r='cn'>underset</EM>, that can be used to place one symbol
-above or below another symbol, whether it's a relation or something
+above or below another symbol, whether it’s a relation or something
 else. The input <hi rend='tt'>\overset{*}{X}</hi> will place a superscript-size <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>*</mo></math><texmath>*</texmath></formula> above
 the <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>X</mi></math><texmath>X</texmath></formula>: <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mover><mi>X</mi> <mo>*</mo></mover></math><texmath>\overset{*}{X}</texmath></formula>; <EM r='cn'>underset</EM> is the analog for adding a
 symbol underneath.</p>
@@ -777,14 +777,14 @@ and<EM r='indexcs'>textstyle</EM><EM r='indexcs'>displaystyle</EM> <hi rend='tt'
 <div1 id='uid76' id-text='3'><head>The <EM r='cn'>genfrac</EM> command</head>
 <p>The capabilities of <EM r='cn'>frac</EM>, <EM r='cn'>binom</EM>, and their variants are
 subsumed by a generalized fraction command <EM r='cn'>genfrac</EM> with six
-arguments. The last two correspond to <EM r='cn'>frac</EM>'s numerator and
+arguments. The last two correspond to <EM r='cn'>frac</EM>’s numerator and
 denominator; the first two are optional delimiters (as seen in
 <EM r='cn'>binom</EM>); the third is a line thickness override (<EM r='cn'>binom</EM> uses
 this to set the fraction line thickness to 0—i.e., invisible); and
 the fourth argument is a mathstyle override: integer values 0–3 select
 respectively <EM r='cn'>displaystyle</EM>, <EM r='cn'>textstyle</EM>, <EM r='cn'>scriptstyle</EM>, and
 <EM r='cn'>scriptscriptstyle</EM>. If the third argument is left empty, the line
-thickness defaults to `normal'.</p>
+thickness defaults to ‘normal’.</p>
 <p rend='center'><minipage width='362.9526pt'><p rend='flushed-left'><hi rend='tt'>\genfrac{</hi><hi rend='it'>left-delim</hi><hi rend='tt'>}{</hi><hi rend='it'>right-delim</hi><hi rend='tt'>}{</hi><hi rend='it'>thickness</hi><hi rend='tt'>}{</hi><hi rend='it'>mathstyle</hi><hi rend='tt'>}{</hi><hi rend='it'>numerator</hi><hi rend='tt'>}{</hi><hi rend='it'>denominator</hi><hi rend='tt'>}</hi></p></minipage></p>
 <p>To illustrate, here is how <EM r='cn'>frac</EM>, <EM r='cn'>tfrac</EM>, and
 <EM r='cn'>binom</EM> might be defined.</p>
@@ -820,7 +820,7 @@ accomplished by using <EM r='cn'>cfrac</EM><hi rend='tt'>[l]</hi> or <EM r='cn'>
 </div0>
 <div0 id='cid28' id-text='13'><head>Smash options</head>
 <p>The command <EM r='cn'>smash</EM> is used to typeset a subformula with an effective height and depth of zero, which is sometimes
-useful in adjusting the subformula's position with respect to adjacent
+useful in adjusting the subformula’s position with respect to adjacent
 symbols. With the <EM r='pkg'>amsmath</EM> package <EM r='cn'>smash</EM> has optional
 arguments <hi rend='tt'>t</hi> and <hi rend='tt'>b</hi>, because occasionally it is advantageous to be
 able to “smash” only the top or only the bottom of something while
@@ -843,7 +843,7 @@ quantum jumps. This means that a math fragment that is infinitesimally
 too large for a given delimiter size will get the next larger size, a
 jump of 3pt or so in normal-sized text. There are two or three
 situations where the delimiter size is commonly adjusted, using a set of
-commands that have `big' in their names.</p>
+commands that have ‘big’ in their names.</p>
 <table rend='inline'><row><cell halign='left' right-border='true'>Delimiter</cell>
 <cell halign='left'>text</cell>
 <cell halign='left'><EM r='ncn'>left</EM></cell>
@@ -900,7 +900,7 @@ delimiters that are slightly larger than the base size but still able to
 fit within the normal line spacing:
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfenced close='&vert;' open='&vert;'><mfrac><msup><mi>b</mi> <mo>&apos;</mo> </msup> <msup><mi>d</mi> <mo>&apos;</mo> </msup></mfrac></mfenced></math><texmath>\bigl \vert \frac{b^{\prime }}{d^{\prime }}\bigr \vert </texmath></formula>.</p>
 <p>In ordinary <LaTeX/> <EM r='ncn'>big</EM>, <EM r='ncn'>bigg</EM>, <EM r='ncn'>Big</EM>, and <EM r='ncn'>Bigg</EM>
-delimiters aren't scaled properly over the full range of <LaTeX/> font
+delimiters aren’t scaled properly over the full range of <LaTeX/> font
 sizes. With the <EM r='pkg'>amsmath</EM> package they are.</p>
 </div1>
 <div1 id='uid82' id-text='2'><head>Vertical bar notations</head>
@@ -908,10 +908,10 @@ sizes. With the <EM r='pkg'>amsmath</EM> package they are.</p>
 <EM r='cn'>lVert</EM>, <EM r='cn'>rVert</EM> (compare <EM r='cn'>langle</EM>, <EM r='cn'>rangle</EM>) to address the
 problem of overloading for the vert bar character <EM r='cn'>|</EM>. This
 character is currently used in <LaTeX/> documents to represent a wide
-variety of mathematical objects: the `divides' relation in a
+variety of mathematical objects: the ‘divides’ relation in a
 number-theory expression like <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>p</mi><mo>&vert;</mo><mi>q</mi></mrow></math><texmath>p\vert q</texmath></formula>, or the absolute-value
-operation <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&vert;</mo><mi>z</mi><mo>&vert;</mo></mrow></math><texmath>\vert z\vert </texmath></formula>, or the `such that' condition in set
-notation, or the `evaluated at' notation <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>f</mi> <mi>&zeta;</mi> </msub><mrow><mo>(</mo><mi>t</mi><mo>)</mo></mrow><msub><mo>&vert;</mo> <mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow> </msub></mrow></math><texmath>f_\zeta (t)\bigr \vert _{t=0}</texmath></formula>.
+operation <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>&vert;</mo><mi>z</mi><mo>&vert;</mo></mrow></math><texmath>\vert z\vert </texmath></formula>, or the ‘such that’ condition in set
+notation, or the ‘evaluated at’ notation <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>f</mi> <mi>&zeta;</mi> </msub><mrow><mo>(</mo><mi>t</mi><mo>)</mo></mrow><msub><mo>&vert;</mo> <mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow> </msub></mrow></math><texmath>f_\zeta (t)\bigr \vert _{t=0}</texmath></formula>.
 The multiplicity of uses in itself is not so bad; what is bad, however,
 is that fact that not all of the uses take the same typographical
 treatment, and that the complex discriminatory powers of a knowledgeable
@@ -939,7 +939,7 @@ from one-letter math variables, which are set in math italic. The more
 common ones have predefined names, <EM r='cn'>log</EM>, <EM r='cn'>sin</EM>, <EM r='cn'>lim</EM>, and so
 forth, but new ones come up all the time in mathematical papers, so the
 <EM r='pkg'>amsmath</EM> package provides a general mechanism for defining new
-`operator names'. To define a math function <EM r='ncn'>xxx</EM> to work like
+‘operator names’. To define a math function <EM r='ncn'>xxx</EM> to work like
 <EM r='cn'>sin</EM>, you write</p>
 <p noindent='true'><hi rend='tt'>\DeclareMathOperator{\xxx}{xxx}</hi></p>
 <p noindent='true'>whereupon ensuing uses of <EM r='ncn'>xxx</EM> will produce xxx in the
@@ -953,7 +953,7 @@ instead of a centered math star. (Compare
 text is printed in math mode, so that you can use, e.g., subscripts and
 superscripts there.</p>
 <p>If the new operator should have subscripts and superscripts placed in
-`limits' position above and below as with <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix' movablelimits='true'>lim</mo></math><texmath>\lim </texmath></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix' movablelimits='true'>sup</mo></math><texmath>\sup </texmath></formula>, or <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix' movablelimits='true'>max</mo></math><texmath>\max </texmath></formula>, use
+‘limits’ position above and below as with <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix' movablelimits='true'>lim</mo></math><texmath>\lim </texmath></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix' movablelimits='true'>sup</mo></math><texmath>\sup </texmath></formula>, or <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix' movablelimits='true'>max</mo></math><texmath>\max </texmath></formula>, use
 the <EM r='cn'>*</EM> form of the <EM r='cn'>DeclareMathOperator</EM> command:</p>
 <p noindent='true'><hi rend='tt'>\DeclareMathOperator*{\Lim}{Lim}</hi></p>
 <p noindent='true'>See also the discussion of subscript placement in
@@ -1048,7 +1048,7 @@ constructing more complex notation or other purposes. (Use the variant
 <p>Commands <EM r='cn'>mod</EM>, <EM r='cn'>bmod</EM>, <EM r='cn'>pmod</EM>, <EM r='cn'>pod</EM> are provided to deal
 with the special spacing conventions of “mod” notation. <EM r='cn'>bmod</EM> and
 <EM r='cn'>pmod</EM> are available in <LaTeX/>, but with the <EM r='pkg'>amsmath</EM> package
-the spacing of <EM r='cn'>pmod</EM> will adjust to a smaller value if it's used in
+the spacing of <EM r='cn'>pmod</EM> will adjust to a smaller value if it’s used in
 a non-display-mode formula. <EM r='cn'>mod</EM> and <EM r='cn'>pod</EM> are variants of
 <EM r='cn'>pmod</EM> preferred by some authors; <EM r='cn'>mod</EM> omits the parentheses,
 whereas <EM r='cn'>pod</EM> omits the “mod” and retains the parentheses.</p>
@@ -1101,20 +1101,20 @@ P(i,j)</texmath></formula></cell>
 </row></table>
 </div0>
 <div0 id='cid36' id-text='2'><head>The <EM r='cn'>sideset</EM> command</head>
-<p>There's also a command called <EM r='cn'>sideset</EM>, for a rather special
+<p>There’s also a command called <EM r='cn'>sideset</EM>, for a rather special
 purpose: putting symbols at the subscript and
 superscript<anchor id='uid91' id-text='lid37'/> corners of a
 large operator symbol such as <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&sum;</mo></math><texmath>\sum </texmath></formula> or <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&prod;</mo></math><texmath>\prod </texmath></formula>. <hi rend='it'>Note: this
 command is not designed to be applied to anything other than sum-class symbols.</hi> The prime
 example is the case when you want to put a prime on a sum symbol. If
 there are no limits above or below the sum, you could just use
-<EM r='cn'>nolimits</EM>: here's
+<EM r='cn'>nolimits</EM>: here’s
 <hi rend='tt'>\sum\nolimits'<zws/> E_n</hi> in display mode:</p>
 <formula id='uid92' id-text='21' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mo>&sum;</mo> <mo>&apos;</mo> </msup><msub><mi>E</mi> <mi>n</mi> </msub></mrow></math><texmath>
 \sum \nolimits ^{\prime } E_n
 </texmath></formula>
 <p noindent='true'>If, however, you want not only the prime but also something below or
-above the sum symbol, it's not so easy—indeed, without
+above the sum symbol, it’s not so easy—indeed, without
 <EM r='cn'>sideset</EM>, it would be downright difficult. With <EM r='cn'>sideset</EM>, you
 can write</p>
 <table rend='inline'><row><cell halign='left'><minipage pos='t' width='256.2026pt'><p noindent='true'><hi rend='tt'>\sideset{}{'<zws/>}</hi></p>
@@ -1135,8 +1135,8 @@ product symbol, you would type</p>
 <div0 id='cid37' id-text='3'><head>Placement of subscripts and limits</head>
 <p>The default positioning for subscripts depends on the
 base symbol involved. The default for sum-class symbols is
-`displaylimits' positioning: When a sum-class symbol appears
-in a displayed formula, subscript and superscript are placed in `limits'
+‘displaylimits’ positioning: When a sum-class symbol appears
+in a displayed formula, subscript and superscript are placed in ‘limits’
 position above and below, but in an inline formula, they are placed to
 the side, to avoid unsightly and wasteful spreading of the
 surrounding text lines.
@@ -1144,8 +1144,8 @@ The default for integral-class symbols is to have sub- and
 superscripts always to the side, even in displayed formulas.
 (See the discussion of the <EM r='opt'>intlimits</EM> and related options in
 Section <ref target='cid2'/>.)</p>
-<p>Operator names such as <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>sin</mo></math><texmath>\sin </texmath></formula> or <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix' movablelimits='true'>lim</mo></math><texmath>\lim </texmath></formula> may have either `displaylimits'
-or `limits' positioning depending on how they were defined. The standard
+<p>Operator names such as <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix'>sin</mo></math><texmath>\sin </texmath></formula> or <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo form='prefix' movablelimits='true'>lim</mo></math><texmath>\lim </texmath></formula> may have either ‘displaylimits’
+or ‘limits’ positioning depending on how they were defined. The standard
 operator names are defined according to normal mathematical usage.</p>
 <p>The commands <EM r='cn'>limits</EM> and <EM r='cn'>nolimits</EM> can be used to override the
 normal behavior of a base symbol:</p>
@@ -1154,7 +1154,7 @@ normal behavior of a base symbol:</p>
 \qquad \varliminf \nolimits _{n\rightarrow \infty }
 </texmath></formula>
 <p noindent='true'>To define a command whose subscripts follow the
-same `displaylimits' behavior as <EM r='cn'>sum</EM>, put
+same ‘displaylimits’ behavior as <EM r='cn'>sum</EM>, put
 <EM r='cn'>displaylimits</EM> at the tail end of the definition. When multiple
 instances of <EM r='cn'>limits</EM>, <EM r='cn'>nolimits</EM>, or <EM r='cn'>displaylimits</EM> occur
 consecutively, the last one takes precedence.</p>
@@ -1228,7 +1228,7 @@ defining custom command names derived from the names of the underlying
 mathematical objects, rather than from the names of the fonts used to
 distinguish the objects. For example, if you are using bold to indicate
 vectors, then you will be better served in the long run if you define a
-`vector' command instead of a `math-bold' command:</p>
+‘vector’ command instead of a ‘math-bold’ command:</p>
 <p noindent='true'><hi rend='tt'>  \newcommand{\vect}[1]{\mathbf{#1}}</hi></p>
 <p noindent='true'>you can write <hi rend='tt'>\vect{a} + \vect{b}</hi> to produce <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&#x1D41A;</mi><mo>+</mo><mi>&#x1D41B;</mi></mrow></math><texmath>\mathbf {a} +
 \mathbf {b}</texmath></formula>.
@@ -1245,9 +1245,9 @@ command names for different letters of a particular font:</p>
 <p noindent='true'><hi rend='tt'>\DeclareMathSymbol{\C}{\mathalpha}{AMSb}{"43}</hi></p>
 <p noindent='true'><hi rend='tt'>\DeclareMathSymbol{\R}{\mathalpha}{AMSb}{"52}</hi></p>
 <p noindent='true'>These statements would define the commands <EM r='cn'>C</EM> and <EM r='cn'>R</EM> to produce
-blackboard-bold letters from the `AMSb' math symbols font. If you refer
+blackboard-bold letters from the ‘AMSb’ math symbols font. If you refer
 often to thecomplex numbers or real numbers in your document, you
-might find this method more convenient than (let's say) defining a
+might find this method more convenient than (let’s say) defining a
 <EM r='ncn'>field</EM> command and writing<hi rend='tt'>\field{C}</hi>, <hi rend='tt'>\field{R}</hi>. But for
 maximum flexibility and control, define such a <EM r='ncn'>field</EM> command and
 then define <EM r='ncn'>C</EM> and <EM r='ncn'>R</EM> in terms of that
@@ -1271,7 +1271,7 @@ symbols. <EM r='cn'>boldsymbol</EM> can be used for a math symbol that remains
 unaffected by <EM r='cn'>mathbf</EM> if (and only if) your current math font set
 includes a bold version of that symbol. <EM r='cn'>pmb</EM> can be used as a last
 resort for any math symbols that do not have a true bold version
-provided by your set of math fonts; “pmb” stands for “poor man's
+provided by your set of math fonts; “pmb” stands for “poor man’s
 bold” and the command works by typesetting multiple copies of the symbol
 with slight offsets. The quality of the output is inferior, especially
 for symbols that contain any hairline strokes. When the standard default set of
@@ -1326,9 +1326,9 @@ are provided:</p>
 </div0>
 <div0 id='cid46' id-text='1'><head>General remarks</head>
 <p>This is a supplement to Chapter 8 of the <LaTeX/> manual <cit><ref target='bid0'/></cit> (first
-edition: Chapter 6). For the reader's convenience, the set of error
+edition: Chapter 6). For the reader’s convenience, the set of error
 messages discussed here overlaps somewhat with the set in that chapter,
-but please be aware that we don't provide exhaustive coverage here.
+but please be aware that we don’t provide exhaustive coverage here.
 The error messages are arranged in alphabetical order, disregarding
 unimportant text such as <hi rend='tt'>! LaTeX Error:</hi> at the beginning, and
 nonalphabetical characters such as <hi rend='tt'>\\</hi>. Where examples are given, we
@@ -1339,7 +1339,7 @@ where the printed document has something wrong but there was no <LaTeX/>
 error during typesetting.</p>
 </div0>
 <div0 id='cid47' id-text='2'><head>Error messages</head>
-<error><msg>\beginsplit won't work here.</msg><p noindent='true'><hi rend='it'>Example</hi>:</p>
+<error><msg>\beginsplit won’t work here.</msg><p noindent='true'><hi rend='it'>Example</hi>:</p>
 <p noindent='true'><hi rend='tt'>! Package amsmath Error: \begin{split} won'<zws/>t work here.</hi></p>
 <p noindent='true'><hi rend='tt'> ...</hi></p>
 <p noindent='true'><hi rend='tt'> </hi></p>
@@ -1448,8 +1448,8 @@ in:</p>
 <p>Another possibility is that you have a left bracket character <hi rend='tt'>[</hi>
 following a linebreak command <hi rend='tt'>\\</hi> in a multiline construction such
 as <EM r='cls'>array</EM>, <EM r='cls'>tabular</EM>, or <EM r='cls'>eqnarray</EM>. This will be
-interpreted by <LaTeX/> as the beginning of an `additional vertical
-space' request <cit><ref target='bid0'>§C.1.6</ref></cit>, even if it occurs on the following
+interpreted by <LaTeX/> as the beginning of an ‘additional vertical
+space’ request <cit><ref target='bid0'>§C.1.6</ref></cit>, even if it occurs on the following
 line and is intended to be part of the contents. For example</p>
 <p noindent='true'><hi rend='tt'>\begin{array}</hi></p>
 <p noindent='true'><hi rend='tt'>a+b\\</hi></p>
@@ -1483,7 +1483,7 @@ add braces as discussed in the <LaTeX/> manual <cit><ref target='bid0'>§C.1.1</
 <p noindent='true'><hi rend='tt'>  CCC\right)</hi></p>
 <p noindent='true'><hi rend='tt'>\end{multline}</hi></p>
 <p noindent='true'>There are two possible solutions: (1) instead of using <EM r='cn'>left</EM> and
-<EM r='cn'>right</EM>, use `big' delimiters of fixed size (<EM r='cn'>bigl</EM> <EM r='cn'>bigr</EM>
+<EM r='cn'>right</EM>, use ‘big’ delimiters of fixed size (<EM r='cn'>bigl</EM> <EM r='cn'>bigr</EM>
 <EM r='cn'>biggl</EM> <EM r='cn'>biggr</EM> ...; see §<ref target='uid79'/>); or (2) use null
 delimiters to break up the <EM r='cn'>left</EM>-<EM r='cn'>right</EM> pair into parts for each
 line:</p>
@@ -1524,7 +1524,7 @@ the more complex displayed equation environments of the <EM r='pkg'>amsmath</EM>
 (<EM r='cls'>gather</EM>, <EM r='cls'>align</EM>, <EM r='cls'>split</EM>, etc.; cf. <EM r='fn'>technote.tex</EM>).</p>
 </error><error><msg>Runaway argument?</msg><p>See the discussion for the error message
 <hi rend='tt'>Paragraph ended before <EM r='ncn'>xxx</EM> was complete</hi>.</p>
-</error><error><msg>Unknown option `xxx' for package `yyy'</msg><p noindent='true'><hi rend='it'>Example</hi>:</p>
+</error><error><msg>Unknown option ‘xxx’ for package ‘yyy’</msg><p noindent='true'><hi rend='it'>Example</hi>:</p>
 <p noindent='true'><hi rend='tt'>! LaTeX Error: Unknown option `<zws/>intlim'<zws/> for package `<zws/>amsmath'<zws/>.</hi></p>
 <p noindent='true'><hi rend='tt'>...</hi></p>
 <p noindent='true'><hi rend='tt'>? h</hi></p>
@@ -1534,7 +1534,7 @@ the more complex displayed equation environments of the <EM r='pkg'>amsmath</EM>
 <p noindent='true'><hi rend='it'>Explanation</hi>: This means that you misspelled the option name, or the package simply
 does not have an option that you expected it to have. Consult the
 documentation for the given package.</p>
-</error><error><msg>Old form `\pmatrix' should be \beginpmatrix.</msg><p noindent='true'><hi rend='it'>Example</hi>:</p>
+</error><error><msg>Old form ‘\pmatrix’ should be \beginpmatrix.</msg><p noindent='true'><hi rend='it'>Example</hi>:</p>
 <p noindent='true'><hi rend='tt'>! Package amsmath Error: Old form `<zws/>\pmatrix'<zws/> should be</hi></p>
 <p noindent='true'><hi rend='tt'>                         \begin{pmatrix}.</hi></p>
 <p noindent='true'><hi rend='tt'> </hi></p>
@@ -1578,7 +1578,7 @@ other displayed equation structure. The chief exception is that
 <EM r='pkg'>amsmath</EM> package is used because their syntax is foreign to <LaTeX/>
 and <EM r='pkg'>amsmath</EM> provides native <LaTeX/> equivalents. See
 <EM r='fn'>technote.tex</EM> for further information.</p>
-</error><error><msg>Cannot use `split' here</msg><p noindent='true'><hi rend='it'>Example</hi>:</p>
+</error><error><msg>Cannot use ‘split’ here</msg><p noindent='true'><hi rend='it'>Example</hi>:</p>
 <p noindent='true'><hi rend='tt'>Package amsmath Warning: Cannot use `<zws/>split'<zws/> here;</hi></p>
 <p noindent='true'><hi rend='tt'>(amsmath)                trying to recover with `<zws/>aligned'<zws/></hi></p>
 <p noindent='true'><hi rend='it'>Explanation</hi>: The <EM r='cls'>split</EM> environment is designed to serve as the entire
@@ -1598,9 +1598,9 @@ after it within the same enclosing structure:</p>
 <p>This most likely means that you have the arguments for <EM r='cn'>numberwithin</EM>
 in reverse order:</p>
 <p noindent='true'><hi rend='tt'>\numberwithin{section}{equation}</hi></p>
-<p noindent='true'>That means `print the section number as <hi rend='it'>equation
+<p noindent='true'>That means ‘print the section number as <hi rend='it'>equation
 number</hi>.<hi rend='it'>section number</hi> and reset to 1 every time an equation
-occurs' when what you probably wanted was the inverse</p>
+occurs’ when what you probably wanted was the inverse</p>
 <p noindent='true'><hi rend='tt'>\numberwithin{equation}{section}</hi></p>
 </div1>
 <div1 id='uid101' id-text='2'><head>The <EM r='cn'>numberwithin</EM> command had no effect on equation
@@ -1692,10 +1692,10 @@ development of free <TeX/>-related software. There are also many local
 local user group can be gotten from the <TeX/> Users Group.</p>
 <p>There is a Usenet newsgroup called <EM r='fn'>comp.text.tex</EM> that is a fairly
 good source of information about <LaTeX/> and <TeX/> in general. If you
-don't know about reading newsgroups, check with your local system
+don’t know about reading newsgroups, check with your local system
 administrator to see if newsgroup service is available at your site.</p>
 <Bibliography><p>tocchapterBibliography</p>
-<p noindent='true'><bibitem id='bid1'/><hi rend='it'>AMSFonts version </hi>2.2<hi rend='it'>—user's guide</hi>,
+<p noindent='true'><bibitem id='bid1'/><hi rend='it'>AMSFonts version </hi>2.2<hi rend='it'>—user’s guide</hi>,
 Amer. Math. Soc., Providence, RI, 1994; distributed
 with the AMSFonts package.</p>
 <p noindent='true'><bibitem id='bid3'/><hi rend='it'>Instructions for preparation of

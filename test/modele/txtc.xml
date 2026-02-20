@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE std SYSTEM 'classes.dtd'>
-<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2026/02/20 -->
 <std filename='txtc'>
 <title>A sample file for Tralics</title><author>José Grimm</author><abstract><p>This document shows some commands of <hi rend='it'>Tralics</hi>.
 We use it also to show that characters are converted into the right encoding
@@ -186,7 +186,7 @@ bad accent ̀ on x bad accent ̆ on z</p>
 <xref url='http://www.w3.org/TR/MathML2/'>http://<allowbreak/>www.<allowbreak/>w3.<allowbreak/>org/<allowbreak/>TR/<allowbreak/>MathML2/</xref></citation>
 <citation from='year' id='bid0' key='HP99' type='inproceedings' userid='cite:place99'>
 <bauteurs><bpers nom='Haralambous' prenom='Y.' prenomcomplet='Yannis'/><bpers nom='Place' prenom='J.' prenomcomplet='John'/></bauteurs>
-<btitle>Produire du MathML et autres ...ML à partir d'<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Omega;</mi></math></formula> : <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Omega;</mi></math></formula> se généralise</btitle>
+<btitle>Produire du MathML et autres ...ML à partir d’<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Omega;</mi></math></formula> : <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Omega;</mi></math></formula> se généralise</btitle>
 <bbooktitle>Cahiers Gutenberg</bbooktitle>
 <bnumber>33-34</bnumber>
 <bpages>173-182</bpages>
@@ -194,7 +194,7 @@ bad accent ̀ on x bad accent ̆ on z</p>
 </citation>
 <citation from='year' id='bid1' key='Kay01' type='book' userid='cite:mKay'>
 <bauteurs><bpers nom='Kay' prenom='M.' prenomcomplet='Michael'/></bauteurs>
-<btitle>XSLT, Programmer's Reference</btitle>
+<btitle>XSLT, Programmer’s Reference</btitle>
 <bedition>2nd</bedition>
 <bpublisher>Wrox Press Ltd</bpublisher>
 <byear>2001</byear>

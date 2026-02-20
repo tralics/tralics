@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE std SYSTEM 'classes.dtd'>
-<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/11/11 -->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2026/02/20 -->
 <std>
 <p>Test of the OT2 encoding</p>
 <p>ЊЉЏЭІЄЂЋњљџэієђћ
@@ -30,18 +30,18 @@
 <p>Test of the OT1 encoding</p>
 <p>ΓΔΘΛΞΠΣΥΦΨΩxxxxx
 xxxxxxxxxßæœøÆŒØ
-x!"#$%&amp;'()*+,-./
+x!"#$%&amp;’()*+,-./
 0123456789:;¡=¿?
 @ABCDEFGHIJKLMNO
 PQRSTUVWXYZ[x]xx
-`abcdefghijklmno
+‘abcdefghijklmno
 pqrstuvwxyzxxxxx</p>
 <p>Test of the T1 encoding</p>
-<p>␣!"#$%&amp;'()*+,-./
+<p>␣!"#$%&amp;’()*+,-./
 0123456789:;&lt;=&gt;?
 @ABCDEFGHIJKLMNO
 PQRSTUVWXYZ[\]^_
-`abcdefghijklmno
+‘abcdefghijklmno
 pqrstuvwxyz{|}~-
 ĂĄĆČĎĚĘĞĹĽŁŇŃŊŐŔ
 ŘŚŠŞŤŢŰŮŸŹŽŻĲİđ§

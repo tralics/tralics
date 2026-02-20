@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE ramain SYSTEM 'raweb.dtd'>
-<!-- Translated from LaTeX by tralics 2.15.4, date: 2026/01/12 -->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2026/02/20 -->
 <ramain creator='Tralics version 2.15.4'>
 <biblio>
 <citation from='year' id='bid35' key='A+' type='misc' userid='cite:tor41'>
@@ -480,7 +480,7 @@
 <xref url='ftp://ftp.inria.fr/INRIA/Projects/Cristal/iandc.ps.gz'><font-large1>ftp://<allowbreak/>ftp.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>INRIA/<allowbreak/>Projects/<allowbreak/>Cristal/<allowbreak/>iandc.<allowbreak/>ps.<allowbreak/>gz</font-large1></xref></citation>
 <citation from='year' id='bid85' key='Gri02' type='techreport' userid='cite:RT-ra2002'>
 <bauteurs><bpers nom='Grimm' prenom='J.' prenomcomplet='José'/></bauteurs>
-<btitle>Outils pour la manipulation du rapport d'activité</btitle>
+<btitle>Outils pour la manipulation du rapport d’activité</btitle>
 <btype>Technical report</btype>
 <bnumber>RT-0265</bnumber>
 <binstitution>Inria</binstitution>
@@ -504,7 +504,7 @@
 </citation>
 <citation from='year' id='bid77' key='HP99' type='inproceedings' userid='cite:place99'>
 <bauteurs><bpers nom='Haralambous' prenom='Y.' prenomcomplet='Yannis'/><bpers nom='Place' prenom='J.' prenomcomplet='John'/></bauteurs>
-<btitle>Produire du MathML et autres ...ML à partir d'<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Omega;</mi></math></formula> : <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Omega;</mi></math></formula> se généralise</btitle>
+<btitle>Produire du MathML et autres ...ML à partir d’<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Omega;</mi></math></formula> : <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&Omega;</mi></math></formula> se généralise</btitle>
 <bbooktitle>Cahiers Gutenberg</bbooktitle>
 <bnumber>33-34</bnumber>
 <bpages>173-182</bpages>
@@ -535,7 +535,7 @@
 </citation>
 <citation from='year' id='bid76' key='Lou88' type='article' userid='cite:louarn88'>
 <bauteurs><bpers nom='Louarn' prenom='P.' prenomcomplet='Philippe'/></bauteurs>
-<btitle>Une expérience d'utilisation de LaTeX : le Rapport d'activité de l'INRIA</btitle>
+<btitle>Une expérience d’utilisation de LaTeX : le Rapport d’activité de l’INRIA</btitle>
 <bjournal>Cahiers Gutenberg</bjournal>
 <bnumber>0</bnumber>
 <bmonth>apr</bmonth>
@@ -553,14 +553,14 @@
 </citation>
 <citation from='year' id='bid100' key='Sey98a' type='phdthesis' userid='cite:thesefabien'>
 <bauteurs><bpers nom='Seyfert' prenom='F.' prenomcomplet='Fabien'/></bauteurs>
-<btitle>Problèmes extrémaux dans les espaces de Hardy, Application à l'identification de filtres hyperfréquences à cavités couplées</btitle>
+<btitle>Problèmes extrémaux dans les espaces de Hardy, Application à l’identification de filtres hyperfréquences à cavités couplées</btitle>
 <btype>Ph. D. Thesis</btype>
 <bschool>Ecole de Mines de Paris</bschool>
 <byear>1998</byear>
 </citation>
 <citation from='year' id='bid102' key='Sey98b' type='hdr' userid='cite:aphd'>
 <bauteurs><bpers nom='Seyfert' prenom='F.' prenomcomplet='Fabien'/></bauteurs>
-<btitle>Problèmes extrémaux dans les espaces de Hardy, Application à l'identification de filtres hyperfréquences à cavités couplées</btitle>
+<btitle>Problèmes extrémaux dans les espaces de Hardy, Application à l’identification de filtres hyperfréquences à cavités couplées</btitle>
 <bediteur><bpers nom='Myself' prenom=''/></bediteur>
 <btype>Thèse de doctorat</btype>
 <bschool>Ecole de Mines de Paris</bschool>
@@ -594,7 +594,7 @@
 <citation from='year' id='bid79' key='WM99' type='book' userid='cite:docbook'>
 <bauteurs><bpers nom='Walsh' prenom='N.' prenomcomplet='Norman'/><bpers nom='Muelner' prenom='L.' prenomcomplet='Leonard'/></bauteurs>
 <btitle>Docbook. The Definite Guide</btitle>
-<bpublisher>O'Reilly &amp; Associates, Inc</bpublisher>
+<bpublisher>O’Reilly &amp; Associates, Inc</bpublisher>
 <byear>1999</byear>
 </citation>
 <citation from='year' id='bid39' key='X10a' type='misc' userid='cite:tor100'>

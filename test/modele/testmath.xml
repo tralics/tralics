@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE std SYSTEM 'classes.dtd'>
-<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/12/08 -->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2026/02/20 -->
 <std RR-type='RR' UR-val='Sophia' chapters='true' equation-number='right' theme-val='THnum'>
 <title>Producing MathML with Tralics</title><ftitle>Produire du MathML avec Tralics</ftitle><date>May 2007</date><rev-date>29 November 2007</rev-date><version-number>2</version-number><author>José Grimm</author><RRnote>The software and the documentation is available
 at <xref url='http://www-sop.inria.fr/apics/tralics'>http://<allowbreak/>www-sop.<allowbreak/>inria.<allowbreak/>fr/<allowbreak/>apics/<allowbreak/>tralics</xref></RRnote><RRemail>Jose.Grimm[at]sophia.inria.fr</RRemail><abstract><p>The purpose of this paper is to show that it is possible to
@@ -18,7 +18,7 @@ the MathML namespace). All files needed to produce this document are part of
 the <hi rend='it'>Tralics</hi> bundle (version 2.10 or more).</p>
 <p>This document was compiled with the experimental version 2.10.8, in which examples
 in section <ref target='uid170'/> should work fine.</p>
-</abstract><resume><p>Le but de ce papier est de démontrer qu'il est possible de
+</abstract><resume><p>Le but de ce papier est de démontrer qu’il est possible de
 traduire presque toutes les formules de mathématiques de la syntaxe
 <LaTeX/> vers le langage XML. Le document que vous lisez contient un grand
 nombre de formules extraites du <TeX/>book, du <LaTeX/> companion, de la
@@ -31,7 +31,7 @@ fontes associées pour les symboles et les opérateurs.
 La version Pdf a été obtenue grâce au package
 <hi rend='sansserif'>xmltex</hi> de D. Carlisle (qui fait de <TeX/> un interprète XML),
 et un grand nombre de modifications dans le fichier <hi rend='sansserif'>mathml2.xmt</hi>,
-qui contient le code d'interprétation des mathématiques. Tous les fichiers
+qui contient le code d’interprétation des mathématiques. Tous les fichiers
 nécessaires pour obtenir ce document sont distribués avec le package
 <hi rend='it'>Tralics</hi> à partir de la version 2.10.</p>
 </resume><keyword>Tralics, XML, MathML, mathematics, LaTeX, HTML, Pdf</keyword><motcle>Tralics, XML, MathML, mathématiques, LaTeX, HTML, Pdf</motcle><rrnumber>6181</rrnumber><location>Sophia Antipolis – Méditerranée</location><theme>THnum</theme><inria-team>Apics</inria-team>
@@ -42,12 +42,12 @@ and associated tools. In particular, we explain how the XML file
 can be converted
 to HTML, or to Pdf (using the excellent work of D. Carlisle
 and S. Rahtz (<cit><ref target='bid2'/></cit>, <cit><ref target='bid3'/></cit>, <cit><ref target='bid4'/></cit>).
-One application is RalyX (Inria's Annual Activity Report), where all math
+One application is RalyX (Inria’s Annual Activity Report), where all math
 formulas are converted to images before inclusion in the HTML document.</p>
 <p>Recently, the cedram (Centre de diffusion de revues académiques de
 mathématiques, <xref url='http://www.cedram.org/'>http://www.cedram.org/</xref>)
 has decided to convert the metadata of some collections (including the
-Annales de l'institut Fourier) from <LaTeX/> to HTML, <cit><ref target='bid5'/></cit>. The
+Annales de l’institut Fourier) from <LaTeX/> to HTML, <cit><ref target='bid5'/></cit>. The
 <hi rend='it'>Tralics</hi> software has been adapted for this purpose, the idea being the
 following: there are nowadays some browsers with a high quality math
 renderer, where native MathML formulas are more readable than images;
@@ -69,8 +69,8 @@ explaining why some constructions do not work, if you have a solution or
 suggestions, please send mail to the author. Additional examples are welcome.</p>
 <p>We also wanted to make sure that the RalyX still works: more than one hundred
 teams use <hi rend='it'>Tralics</hi> once a year, asking sometimes silly questions, like: how to
-add color to the text, or a page break; the answer is generally either `not yet
-implemented, wait for next year', or `incompatible with the Raweb semantics'.
+add color to the text, or a page break; the answer is generally either ‘not yet
+implemented, wait for next year’, or ‘incompatible with the Raweb semantics’.
 This document uses colors and page breaks, as explained below; no modification
 to the translator was needed, but, unless the style sheets are modified, these
 additions are ignored.</p>
@@ -151,16 +151,16 @@ indicated here.</p>
 <pre class='latex-code'><p noindent='true'><hi rend='tt'>-<zws/>noentnames -<zws/>trivialmath=7 -<zws/>leftquote=2018 -<zws/>rightquote=2019 -<zws/>nozerowidthspace</hi></p>
 </pre><p noindent='true'>The first option says that you prefer <xmlcode>&amp;#x21DA;</xmlcode> to <xmlcode>&amp;Lleftarrow;</xmlcode>
 (this is useless if you use an XSLT processor to convert the XML document).
-Option `trivialmath=7' says that simple math expressions are translated as
-text; option `mathvariant' says that a command like <latexcode>\mathbb</latexcode> should add a
+Option ‘trivialmath=7’ says that simple math expressions are translated as
+text; option ‘mathvariant’ says that a command like <latexcode>\mathbb</latexcode> should add a
 mathvariant attribute; these two options set initial values to some counters,
 they are not needed, because the associated file <hi rend='sansserif'>testmath.ult</hi>
 resets them to the values needed here. Following options are
-problematic. If you say `nostraightquotes', this changes the translation of
+problematic. If you say ‘nostraightquotes’, this changes the translation of
 the apostrophe character to character U+B4, this option produces a nice HTML
 file, but the Pdf is not so nice. Here we modify left and right quotes to
 U+2018 and U+2019.
-If you say `zerowidthspace', <hi rend='it'>Tralics</hi> inserts an
+If you say ‘zerowidthspace’, <hi rend='it'>Tralics</hi> inserts an
 invisible character in verbatim mode, that is supposed to inhibit ligatures
 when converting the XML file into Pdf file, the trouble is that this character
 is shown as a normal space by my browser in certain cases. In <hi rend='it'>Tralics</hi> version 2.10, the translation changed: the old behavior can be obtained by
@@ -188,7 +188,7 @@ behaves like the default one; namely one that defines the root element to be
 </item>
 <item id='uid8' id-text='6'><p noindent='true'>the file <hi rend='sansserif'>RR.plt</hi> for the meta data.</p>
 </item></list>
-<p>When converting the document to HTML, we use the `xsltproc' program. The style
+<p>When converting the document to HTML, we use the ‘xsltproc’ program. The style
 sheet is <hi rend='sansserif'>testmathhtml.xsl</hi>; this is a short style sheet; but it
 needs <hi rend='sansserif'>cls.xsl</hi> and <hi rend='sansserif'>RR.xsl</hi>. Conversion to XSL/FO uses
 <hi rend='sansserif'>RRfo.xsl</hi> as style sheet, it needs <hi rend='sansserif'>clsfo.xsl</hi>, that
@@ -221,7 +221,7 @@ math formulas. Two steps are required for processing them: first a tree is
 created, after that, it is converted. This mechanism is similar to the
 behavior of <TeX/>, but some details are not yet implemented, and some
 information is lost (for instance, <latexcode>\mathbin</latexcode> is a command that says that
-the object that follows should be of type `binary'; this information is used
+the object that follows should be of type ‘binary’; this information is used
 by the program, but the resulting XML tree does not contain this information
 (we cannot simply add an attribute pair class=bin to the object).</p>
 <p>When <hi rend='it'>Tralics</hi> sees a math formula, it constructs recursively a tree, also
@@ -282,8 +282,8 @@ between them inhibits the double-hat feature mentioned above). Two consecutive
 new line characters are replaced by <latexcode>\par</latexcode>, this is illegal.
 Characters that are neither letters nor digits generally translate to a
 <xmlcode>&lt;mo&gt;</xmlcode> element. No attempt is made to convert two plus characters into a
-double plus character (some people use `:=' as an operator, meaning `is equal
-by definition', and expect no white space between the two
+double plus character (some people use ‘:=’ as an operator, meaning ‘is equal
+by definition’, and expect no white space between the two
 characters). In a case like <latexcode>\sqrt</latexcode><latexcode>\frac</latexcode><latexcode>{1}</latexcode><latexcode>{2}</latexcode>,
 where we have two consecutive commands that take arguments, the argument of
 the root operator is the fraction operator, not the full fraction (this
@@ -338,8 +338,8 @@ enclosed in special math brackets, dollar signs. He also says that
 spaces are ignored in math mode.</p>
 <pre class='latex-code'><p noindent='true'><vbnumber>1</vbnumber> <hi rend='tt'>`<zws/>$x$'<zws/>, `<zws/>$2$'<zws/>, `<zws/>$ x$'<zws/>, `<zws/>$ 2 $'<zws/>,</hi></p>
 <p noindent='true'><vbnumber>2</vbnumber> <hi rend='tt'>`<zws/>$(x + y)/(x -<zws/> y)$'<zws/>, `<zws/>$(x+y) / (x-<zws/>y)$'<zws/></hi></p>
-</pre><p noindent='true'>Easy formulas: `<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>x</mi></math></formula>', `<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mn>2</mn></math></formula>', `<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>x</mi></math></formula>', `<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mn>2</mn></math></formula>',
-`<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>(</mo><mi>x</mi><mo>+</mo><mi>y</mi><mo>)</mo><mo>/</mo><mo>(</mo><mi>x</mi><mo>-</mo><mi>y</mi><mo>)</mo></mrow></math></formula>', `<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>(</mo><mi>x</mi><mo>+</mo><mi>y</mi><mo>)</mo><mo>/</mo><mo>(</mo><mi>x</mi><mo>-</mo><mi>y</mi><mo>)</mo></mrow></math></formula>'.</p>
+</pre><p noindent='true'>Easy formulas: ‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>x</mi></math></formula>’, ‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mn>2</mn></math></formula>’, ‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>x</mi></math></formula>’, ‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mn>2</mn></math></formula>’,
+‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>(</mo><mi>x</mi><mo>+</mo><mi>y</mi><mo>)</mo><mo>/</mo><mo>(</mo><mi>x</mi><mo>-</mo><mi>y</mi><mo>)</mo></mrow></math></formula>’, ‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>(</mo><mi>x</mi><mo>+</mo><mi>y</mi><mo>)</mo><mo>/</mo><mo>(</mo><mi>x</mi><mo>-</mo><mi>y</mi><mo>)</mo></mrow></math></formula>’.</p>
 <p>We show here some Greek letters, and some other symbols:</p>
 <pre class='latex-code'><p noindent='true'><vbnumber>3</vbnumber> <hi rend='tt'>$\Gamma, \nu,\kappa$,</hi></p>
 <p noindent='true'><vbnumber>4</vbnumber> <hi rend='tt'>$\phi,\emptyset, \epsilon,\in,\approx,\mapsto$</hi></p>
@@ -444,7 +444,7 @@ better; but Knuth says:
 it is just as easy to read.”</p>
 <pre class='latex-code'><p noindent='true'><vbnumber>45</vbnumber> <hi rend='tt'>`<zws/>${}_2F_3$'<zws/>, `<zws/>${_2}F_3$'<zws/>, `<zws/>${_2F_3}$'<zws/></hi></p>
 </pre><p><hi rend='bold'>Exercise 16.3:</hi> Three ways to have an empty kernel:
-`<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mrow/> <mn>2</mn> </msub><msub><mi>F</mi> <mn>3</mn> </msub></mrow></math></formula>', `<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mrow/> <mn>2</mn> </msub><msub><mi>F</mi> <mn>3</mn> </msub></mrow></math></formula>', `<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mrow/> <mn>2</mn> </msub><msub><mi>F</mi> <mn>3</mn> </msub></mrow></math></formula>'. The translation is the same in all
+‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mrow/> <mn>2</mn> </msub><msub><mi>F</mi> <mn>3</mn> </msub></mrow></math></formula>’, ‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mrow/> <mn>2</mn> </msub><msub><mi>F</mi> <mn>3</mn> </msub></mrow></math></formula>’, ‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mrow/> <mn>2</mn> </msub><msub><mi>F</mi> <mn>3</mn> </msub></mrow></math></formula>’. The translation is the same in all
 cases because of the following two rules: if a math list starts with a
 subscript or superscript operator, an empty math list is added before, it
 serves as
@@ -458,7 +458,7 @@ main math list has a single element, a <xmlcode>&lt;mrow&gt;</xmlcode>, thus, no
 added and braces are useless.</p>
 <pre class='latex-code'><p noindent='true'><vbnumber>46</vbnumber> <hi rend='tt'>`<zws/>$x+_2F_3$'<zws/> and `<zws/>$x+{}_2F_3$'<zws/>.</hi></p>
 </pre><p noindent='true'>Effect of braces after plus sign:
-`<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><msub><mo>+</mo> <mn>2</mn> </msub><msub><mi>F</mi> <mn>3</mn> </msub></mrow></math></formula>' and `<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mo>+</mo><msub><mrow/> <mn>2</mn> </msub><msub><mi>F</mi> <mn>3</mn> </msub></mrow></math></formula>'. The MathML recommendation says that the distance
+‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><msub><mo>+</mo> <mn>2</mn> </msub><msub><mi>F</mi> <mn>3</mn> </msub></mrow></math></formula>’ and ‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mo>+</mo><msub><mrow/> <mn>2</mn> </msub><msub><mi>F</mi> <mn>3</mn> </msub></mrow></math></formula>’. The MathML recommendation says that the distance
 between the plus sign and the letter F should be the same in both cases; in the
 first case, index 2 is attached to the plus sign, in the second case to the
 letter F (<hi rend='it'>AM</hi> shows both formulas with index attached to F).</p>
@@ -482,7 +482,7 @@ attached to the letter P, and alignment can depend on the slant of the letter.
 <pre class='latex-code'><p noindent='true'><vbnumber>50</vbnumber> <hi rend='tt'>`<zws/>$\prime$'<zws/>, $y_1^\prime$, $y_2^{\prime\prime}$, $y_3^{\prime\prime\prime}$,</hi></p>
 <p noindent='true'><vbnumber>51</vbnumber> <hi rend='tt'>$f'<zws/>[g(x)]g'<zws/>(x)$, $y_1'<zws/>+y_2'<zws/>'<zws/>$, $y'<zws/>_1+y'<zws/>'<zws/>_2$, $y'<zws/>'<zws/>'<zws/>_3+g'<zws/>^2$</hi></p>
 </pre><p noindent='true'>Primes and shorthand:
-`<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&prime;</mo></math></formula>', <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msubsup><mi>y</mi> <mn>1</mn> <mo>&prime;</mo> </msubsup></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msubsup><mi>y</mi> <mn>2</mn> <mrow><mo>&prime;</mo><mo>&prime;</mo></mrow> </msubsup></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msubsup><mi>y</mi> <mn>3</mn> <mrow><mo>&prime;</mo><mo>&prime;</mo><mo>&prime;</mo></mrow> </msubsup></math></formula>,
+‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&prime;</mo></math></formula>’, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msubsup><mi>y</mi> <mn>1</mn> <mo>&prime;</mo> </msubsup></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msubsup><mi>y</mi> <mn>2</mn> <mrow><mo>&prime;</mo><mo>&prime;</mo></mrow> </msubsup></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msubsup><mi>y</mi> <mn>3</mn> <mrow><mo>&prime;</mo><mo>&prime;</mo><mo>&prime;</mo></mrow> </msubsup></math></formula>,
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>f</mi> <mo>&prime;</mo> </msup><mrow><mo>[</mo><mi>g</mi><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>]</mo></mrow><msup><mi>g</mi> <mo>&prime;</mo> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msubsup><mi>y</mi> <mn>1</mn> <mo>&prime;</mo> </msubsup><mo>+</mo><msubsup><mi>y</mi> <mn>2</mn> <mrow><mo>&prime;</mo><mo>&prime;</mo></mrow> </msubsup></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msubsup><mi>y</mi> <mn>1</mn> <mo>&prime;</mo> </msubsup><mo>+</mo><msubsup><mi>y</mi> <mn>2</mn> <mrow><mo>&prime;</mo><mo>&prime;</mo></mrow> </msubsup></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msubsup><mi>y</mi> <mn>3</mn> <mrow><mo>&prime;</mo><mo>&prime;</mo><mo>&prime;</mo></mrow> </msubsup><mo>+</mo><msup><mi>g</mi> <mrow><mo>&prime;</mo><mn>2</mn></mrow> </msup></mrow></math></formula>.
 In the code shown here, the character used as delimiter for XML attributes is
 character U+39, the quotes around the math formulas are U+60 and U+B4 (this
@@ -492,7 +492,7 @@ The
 prime character used in the formula is U+2032. This is not the right character.
 Thus, in <hi rend='it'>Tralics</hi> 2.9.5, translation of prime changed, it is now
 character U+39. The same formula is now:
-`<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&apos;</mo></math></formula>', <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msubsup><mi>y</mi> <mn>1</mn> <mo>&apos;</mo> </msubsup></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msubsup><mi>y</mi> <mn>2</mn> <mrow><mo>&apos;</mo><mo>&apos;</mo></mrow> </msubsup></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msubsup><mi>y</mi> <mn>3</mn> <mrow><mo>&apos;</mo><mo>&apos;</mo><mo>&apos;</mo></mrow> </msubsup></math></formula>,
+‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mo>&apos;</mo></math></formula>’, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msubsup><mi>y</mi> <mn>1</mn> <mo>&apos;</mo> </msubsup></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msubsup><mi>y</mi> <mn>2</mn> <mrow><mo>&apos;</mo><mo>&apos;</mo></mrow> </msubsup></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msubsup><mi>y</mi> <mn>3</mn> <mrow><mo>&apos;</mo><mo>&apos;</mo><mo>&apos;</mo></mrow> </msubsup></math></formula>,
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mi>f</mi> <mo>&apos;</mo> </msup><mrow><mo>[</mo><mi>g</mi><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>]</mo></mrow><msup><mi>g</mi> <mo>&apos;</mo> </msup><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msubsup><mi>y</mi> <mn>1</mn> <mo>&apos;</mo> </msubsup><mo>+</mo><msubsup><mi>y</mi> <mn>2</mn> <mrow><mo>&apos;</mo><mo>&apos;</mo></mrow> </msubsup></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msubsup><mi>y</mi> <mn>1</mn> <mo>&apos;</mo> </msubsup><mo>+</mo><msubsup><mi>y</mi> <mn>2</mn> <mrow><mo>&apos;</mo><mo>&apos;</mo></mrow> </msubsup></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msubsup><mi>y</mi> <mn>3</mn> <mrow><mo>&apos;</mo><mo>&apos;</mo><mo>&apos;</mo></mrow> </msubsup><mo>+</mo><msup><mi>g</mi> <mrow><mo>&apos;</mo><mn>2</mn></mrow> </msup></mrow></math></formula>. It is unclear
 whether this is the good solution. It seems that Firefox uses the same font
 metrics as <TeX/>, i.e., a very large prime character that has a normal size
@@ -530,7 +530,7 @@ There is a text version in <hi rend='it'>Tralics</hi>:
 <p noindent='true'><vbnumber>60</vbnumber> <hi rend='tt'>$\sqrt[3]{2}$, $\sqrt[n]{x^n + y^n}$, $\sqrt[n+1]a$, `<zws/>$\sqrt[3]{~~}$'<zws/>.</hi></p>
 </pre><p noindent='true'>Translation
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mroot><mn>2</mn> <mn>3</mn></mroot></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mroot><mrow><msup><mi>x</mi> <mi>n</mi> </msup><mo>+</mo><msup><mi>y</mi> <mi>n</mi> </msup></mrow> <mi>n</mi></mroot></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mroot><mi>a</mi> <mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></mroot></math></formula>,
-<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mroot><mn>2</mn> <mn>3</mn></mroot></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mroot><mrow><msup><mi>x</mi> <mi>n</mi> </msup><mo>+</mo><msup><mi>y</mi> <mi>n</mi> </msup></mrow> <mi>n</mi></mroot></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mroot><mi>a</mi> <mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></mroot></math></formula>, `<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mroot><mrow><mspace width='3.33333pt'/><mspace width='3.33333pt'/></mrow> <mn>3</mn></mroot></math></formula>'.</p>
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mroot><mn>2</mn> <mn>3</mn></mroot></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mroot><mrow><msup><mi>x</mi> <mi>n</mi> </msup><mo>+</mo><msup><mi>y</mi> <mi>n</mi> </msup></mrow> <mi>n</mi></mroot></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mroot><mi>a</mi> <mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></mroot></math></formula>, ‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mroot><mrow><mspace width='3.33333pt'/><mspace width='3.33333pt'/></mrow> <mn>3</mn></mroot></math></formula>’.</p>
 <pre class='latex-code'><p noindent='true'><vbnumber>61</vbnumber> <hi rend='tt'>$\sqrt{\mathstrut a} + \sqrt{\mathstrut d} + \sqrt{\mathstrut y}$,</hi></p>
 <p noindent='true'><vbnumber>62</vbnumber> <hi rend='tt'>$\sqrt{a} + \sqrt{d} + \sqrt{y}$,</hi></p>
 <p noindent='true'><vbnumber>63</vbnumber> <hi rend='tt'>$\overline{a} + \overline{d} + \overline{y}$,</hi></p>
@@ -588,7 +588,7 @@ see a red X. We should add rules like: <latexcode>\not=</latexcode> should give 
 <pre class='latex-code'><p noindent='true'><vbnumber>77</vbnumber> <hi rend='tt'>$f(x,y;z)$, $f:A\to B$, $f\colon A\to B$</hi></p>
 <p noindent='true'><vbnumber>78</vbnumber> <hi rend='tt'>%\def\colon{\mathmo[lspace][0]{:}}</hi></p>
 </pre><p noindent='true'>Punctuation <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>f</mi><mo>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>;</mo><mi>z</mi><mo>)</mo></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>f</mi><mo>:</mo><mi>A</mi><mo>&rightarrow;</mo><mi>B</mi></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>f</mi><mo lspace='0pt'>:</mo><mi>A</mi><mo>&rightarrow;</mo><mi>B</mi></mrow></math></formula>. Note that <latexcode>\colon</latexcode> is
-a colon with <hi rend='sansserif'>lspace</hi> = `0pt', but the attribute is ignored in the Pdf
+a colon with <hi rend='sansserif'>lspace</hi> = ‘0pt’, but the attribute is ignored in the Pdf
 version. It seems that Amaya uses a zero lspace by default.</p>
 <pre class='latex-code'><p noindent='true'><vbnumber>79</vbnumber> <hi rend='tt'>$12,345x$, $12{,}245x$, $\mathcn{12,345}x$, $\mathmn{12,345}x$</hi></p>
 </pre><p noindent='true'><formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>12</mn><mo>,</mo><mn>345</mn><mi>x</mi></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>12</mn><mo>,</mo><mn>245</mn><mi>x</mi></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><cn>12,345</cn><mi>x</mi></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>12,345</mn><mi>x</mi></mrow></math></formula>. The translation
@@ -744,7 +744,7 @@ that <LaTeX/> variant is omitted.</p>
 
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac><mstyle displaystyle='true' scriptlevel='0'><mrow><mfenced close=')' open='(' separators=''><mfrac linethickness='0pt'><mi>T</mi> <mi>T</mi></mfrac></mfenced><mi>D</mi></mrow></mstyle> <mstyle displaystyle='true' scriptlevel='0'><mi>D</mi></mstyle></mfrac></math></formula>,
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mstyle displaystyle='true' scriptlevel='0'><mfrac><mrow><mfenced close=')' open='('><mstyle displaystyle='true' scriptlevel='0'><mfrac linethickness='0pt'><mi>T</mi> <mi>T</mi></mfrac></mstyle></mfenced><mi>T</mi></mrow> <mi>T</mi></mfrac></mstyle></math></formula>.
-Note that the `d' in <latexcode>\dfrac</latexcode> or <latexcode>\dbinom</latexcode>
+Note that the ‘d’ in <latexcode>\dfrac</latexcode> or <latexcode>\dbinom</latexcode>
 means that the expression is in display style, hence numerator and
 denominator are in text style; as a consequence the <latexcode>\choose</latexcode> is same as the
 <latexcode>\dbinom</latexcode>; on the other hand, the <latexcode>\over</latexcode> produces a fraction in text
@@ -759,7 +759,7 @@ Fine space added for legibility.</p>
 <pre class='latex-code'><p noindent='true'><vbnumber>118</vbnumber> <hi rend='tt'>\[{\displaystyle{a\over b}\above3pt\displaystyle{c\over d}}</hi></p>
 <p noindent='true'><vbnumber>119</vbnumber> <hi rend='tt'>\text{~~and~~} \genfrac{}{}{3pt}{}{\dfrac{a}{b}}{\dfrac{c}{d}}\]</hi></p>
 </pre><p noindent='true'>There are six operators that behave alike: <latexcode>\over</latexcode>, <latexcode>\atop</latexcode> and
-<latexcode>\above</latexcode>, and the same with delimiters. The `above' commands read a
+<latexcode>\above</latexcode>, and the same with delimiters. The ‘above’ commands read a
 dimension, the thickness of the fraction rule. In the current version of
 <hi rend='it'>Tralics</hi>, this has better to be explicit (if you want the value of
 <latexcode>\parskip</latexcode>, you must use <latexcode>\genfrac</latexcode>).</p>
@@ -772,13 +772,13 @@ index is unaffected by the style.</p>
 <p noindent='true'><vbnumber>123</vbnumber> <hi rend='tt'>{\textstyle \int_{-<zws/>\infty}^{\infty} \sum_{n=1}^m},</hi></p>
 <p noindent='true'><vbnumber>124</vbnumber> <hi rend='tt'>{\displaystyle\int\limits_0^{\frac{\pi}{2}} \sum\nolimits_{n=1}^m} \]</hi></p>
 </pre><p noindent='true'>This example demonstrates that the position of scripts depends on the style if
-the kernel is a math operator, and the presence of key words like `limits',
-`nolimits' or `displaylimits'. Scripts can be added to a MathML object using
+the kernel is a math operator, and the presence of key words like ‘limits’,
+‘nolimits’ or ‘displaylimits’. Scripts can be added to a MathML object using
 m/sub/sup, and for an operator using m/under/over. In this last case, the
-attribute movablelimits corresponds to the `displaylimits' keyword. If set,
-`under' means `sub' if the style is not display. <hi rend='it'>Tralics</hi> uses `under' or
-`sub', depending on where the indices should be placed, and never sets the
-attribute. On the other hand, when <TeX/> typesets a `under' or `sub', it
+attribute movablelimits corresponds to the ‘displaylimits’ keyword. If set,
+‘under’ means ‘sub’ if the style is not display. <hi rend='it'>Tralics</hi> uses ‘under’ or
+‘sub’, depending on where the indices should be placed, and never sets the
+attribute. On the other hand, when <TeX/> typesets a ‘under’ or ‘sub’, it
 sometimes uses a wrong strategy. The last expression (display style sum
 without limits) uses a <latexcode>\msubsup</latexcode> element; in this case, there is an
 implicit <latexcode>\nolimits</latexcode>, we cannot make it explicit, because such a command
@@ -816,7 +816,7 @@ normal subscript; the example here shows that <hi rend='it'>Tralics</hi> behaves
 <pre class='latex-code'><p noindent='true'><vbnumber>135</vbnumber> <hi rend='tt'>\[\sum_{\scriptstyle0\le i\le m\atop\scriptstyle0&lt;<zws/>j&lt;<zws/>n}P(i,j)\qquad</hi></p>
 <p noindent='true'><vbnumber>136</vbnumber> <hi rend='tt'>\sum_{\stackrel{0\le i\le m}{0&lt;<zws/>j&lt;<zws/>n}}P(i,j)\]</hi></p>
 </pre><p noindent='true'>In the first expression given here, and in exercise 17.9 that follows, scripts
-use an explicit `script style' command, hence should be typeset in scriptstyle
+use an explicit ‘script style’ command, hence should be typeset in scriptstyle
 size. This is not the case in the HTML version: we have an atop in an atop,
 and the style of the inner one is wrong. The second formula uses a <LaTeX/> command, this is not the right command for stacking indices because the first
 argument uses a smaller style than the second. It seems to me that the top
@@ -859,7 +859,7 @@ the first character has fixed size as the following demonstrates
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mrow><mo>&Verbar;</mo></mrow><mfrac><mn>1</mn> <mn>2</mn></mfrac><mrow><mo>&parallel;</mo></mrow></mrow></math></formula> (the effect is only visible in HTML
 with FM).</p>
 <p>Translation of backslash changed: it is now Unicode U+2216, you can use
-the backslash character (Unicode U+5C) by saying <latexcode>\char`</latexcode><latexcode>\^^5c</latexcode>.
+the backslash character (Unicode U+5C) by saying <latexcode>\char‘</latexcode><latexcode>\^^5c</latexcode>.
 Example: old is <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>X</mi><mo>\</mo><mi>Y</mi></mrow></math></formula>, new is <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>X</mi><mo>&Backslash;</mo><mi>Y</mi></mrow></math></formula>, note the different
 spacing.</p>
 <p>Example of <latexcode>\bigl</latexcode> and <latexcode>\bigr</latexcode>, followed by the same code without these
@@ -1051,10 +1051,10 @@ and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mro
 </pre><p><hi rend='bold'>Exercise 18.3:</hi></p>
 <formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><munder><mo form='prefix' movablelimits='true'>lim</mo> <mrow><mi>n</mi><mo>&rightarrow;</mo><mi>&infin;</mi></mrow> </munder><msub><mi>x</mi> <mi>n</mi> </msub><mspace width='4.pt'/><mtext>exists</mtext><mo>&Leftrightarrow;</mo><munder><mo form='prefix' movablelimits='true'>lim sup</mo> <mrow><mi>n</mi><mo>&rightarrow;</mo><mi>&infin;</mi></mrow> </munder><msub><mi>x</mi> <mi>n</mi> </msub><mo>=</mo><munder><mo form='prefix' movablelimits='true'>lim inf</mo> <mrow><mi>n</mi><mo>&rightarrow;</mo><mi>&infin;</mi></mrow> </munder><msub><mi>x</mi> <mi>n</mi> </msub><mo>.</mo></mrow></math></formula>
 <formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><munder><mo form='prefix' movablelimits='true'>lim</mo> <mrow><mi>n</mi><mo>&rightarrow;</mo><mi>&infin;</mi></mrow> </munder><msub><mi>x</mi> <mi>n</mi> </msub><mspace width='4.pt'/><mtext>exists</mtext><mo>&Leftrightarrow;</mo><munder><mover><mo>lim</mo> <mo>&OverBar;</mo></mover> <mrow><mi>n</mi><mo>&rightarrow;</mo><mi>&infin;</mi></mrow> </munder><msub><mi>x</mi> <mi>n</mi> </msub><mo>=</mo><munder><munder><mo>lim</mo> <mo>&UnderBar;</mo></munder> <mrow><mi>n</mi><mo>&rightarrow;</mo><mi>&infin;</mi></mrow> </munder><msub><mi>x</mi> <mi>n</mi> </msub><mo>.</mo></mrow></math></formula>
-<p>The code above is wrong, because `lim' is a known operator, with movable
+<p>The code above is wrong, because ‘lim’ is a known operator, with movable
 limits, hence, in non-display mode, both the underline and the real subscript
 will move. The real definitions adds
-<hi rend='sansserif'>movablelimits</hi> = `false' to the operator.</p>
+<hi rend='sansserif'>movablelimits</hi> = ‘false’ to the operator.</p>
 <pre class='latex-code'><p noindent='true'><vbnumber>194</vbnumber> <hi rend='tt'>$\gcd(m,n)=\gcd(n,m\bmod n)$, or $x\equiv y+1\pmod{m^2}$</hi></p>
 <p noindent='true'><vbnumber>195</vbnumber> <hi rend='tt'>$x\equiv0(\pmod y^n)$.</hi></p>
 </pre><p noindent='true'>Modulo: <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo form='prefix' movablelimits='true'>gcd</mo><mo>(</mo><mi>m</mi><mo>,</mo><mi>n</mi><mo>)</mo><mo>=</mo><mo form='prefix' movablelimits='true'>gcd</mo><mo>(</mo><mi>n</mi><mo>,</mo><mi>m</mi><mspace width='0.277778em'/><mo form='prefix'>mod</mo><mspace width='0.277778em'/><mi>n</mi><mo>)</mo></mrow></math></formula>, or <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mo>&equiv;</mo><mi>y</mi><mo>+</mo><mn>1</mn><mspace width='4.44443pt'/><mo>(</mo><mo form='prefix'>mod</mo><mspace width='0.277778em'/><msup><mi>m</mi> <mn>2</mn> </msup><mo>)</mo></mrow></math></formula></p>
@@ -1159,7 +1159,7 @@ etc, this is the same as 3mu, 4mu and 5mu, because 1em=18mu. In <hi rend='it'>Tr
 <latexcode>\mskip 18mu</latexcode> is equivalent to <latexcode>\hskip1em</latexcode>, and, as said above, this is
 the same as <latexcode>\hskip10pt</latexcode>. The same is true for <latexcode>\mkern18mu</latexcode>; the
 translation is an empty <xmlcode>&lt;mspace&gt;</xmlcode> element, with attribute
-<hi rend='sansserif'>value</hi> = `10.0pt'. The amount of space given by backslash-space changed
+<hi rend='sansserif'>value</hi> = ‘10.0pt’. The amount of space given by backslash-space changed
 from 6pt to 4pt (this is the same amount of space used by the <latexcode>\text</latexcode>
 command).</p>
 <pre class='latex-code'><p noindent='true'><vbnumber>208</vbnumber> <hi rend='tt'>$\int_0^\infty f(x)\,dx$, $y\,dx-<zws/>x\,dy$, $dx\,dy=r\,dr\,d\theta$, $x\,dy/dx$</hi></p>
@@ -1218,7 +1218,7 @@ with nothing <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/Mat
 Prove that <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mrow><mo>(</mo><mn>1</mn><mo>-</mo><mi>x</mi><mo>)</mo></mrow> <mrow><mo>-</mo><mn>1</mn></mrow> </msup><mo>=</mo><mn>1</mn><mo>+</mo><mi>x</mi><mo>+</mo><msup><mi>x</mi> <mn>2</mn> </msup><mo>+</mo><mo>&ctdot;</mo><mspace width='0.166667em'/></mrow></math></formula>. Clearly <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>a</mi> <mi>i</mi> </msub><mo>&lt;</mo><msub><mi>b</mi> <mi>i</mi> </msub></mrow></math></formula>, for <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow></math></formula>, 2,
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>...</mo><mspace width='0.166667em'/></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>n</mi></math></formula>. The coefficients <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mi>c</mi> <mn>0</mn> </msub></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mi>c</mi> <mn>1</mn> </msub></math></formula>, ..., <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><msub><mi>c</mi> <mi>n</mi> </msub></math></formula> are positive.
 With braces surrounding the LHS: <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mrow><mo>(</mo><mn>1</mn><mo>-</mo><mi>x</mi><mo>)</mo></mrow> <mrow><mo>-</mo><mn>1</mn></mrow> </msup><mo>=</mo><mn>1</mn><mo>+</mo><mi>x</mi><mo>+</mo><msup><mi>x</mi> <mn>2</mn> </msup><mo>+</mo><mo>&ctdot;</mo><mspace width='0.166667em'/></mrow></math></formula>.</p>
-<p><hi rend='bold'>Exercise 18.17:</hi> Clearly <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>a</mi> <mi>i</mi> </msub><mo>&lt;</mo><msub><mi>b</mi> <mi>i</mi> </msub></mrow></math></formula>, for <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>i</mi><mo>=</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mo>...</mo><mo>,</mo><mi>n</mi></mrow></math></formula>. Note that the `2' here is
+<p><hi rend='bold'>Exercise 18.17:</hi> Clearly <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msub><mi>a</mi> <mi>i</mi> </msub><mo>&lt;</mo><msub><mi>b</mi> <mi>i</mi> </msub></mrow></math></formula>, for <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>i</mi><mo>=</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mo>...</mo><mo>,</mo><mi>n</mi></mrow></math></formula>. Note that the ‘2’ here is
 a math digit, while it is text digit in the sentence above.</p>
 <p><hi rend='bold'>Exercise 18.18:</hi> Knuth used <latexcode>\dots</latexcode>.</p>
 </div2>
@@ -1259,10 +1259,10 @@ under-accent.</p>
 <formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mover><mover accent='true'><mrow><mi>x</mi><mo>+</mo><mo>&ctdot;</mo><mo>+</mo><mi>x</mi></mrow> <mo>&OverBrace;</mo></mover> <mrow><mi>k</mi><mspace width='0.277778em'/><mi> times </mi></mrow> </mover><mspace width='2.em'/><munder><munder accentunder='true'><mrow><mi>x</mi><mo>+</mo><mi>y</mi><mo>+</mo><mi>z</mi></mrow> <mo>&UnderBrace;</mo></munder> <mrow><mo>&gt;</mo><mspace width='0.166667em'/><mn>0</mn></mrow> </munder></mrow></math></formula>
 </div2>
 <div2 id='uid33' id-text='2.3.8'><head>Matrices</head>
-<p>The plain <TeX/> command <latexcode>\matrix</latexcode> should not be used. The `array'
+<p>The plain <TeX/> command <latexcode>\matrix</latexcode> should not be used. The ‘array’
 environment can be used in math mode, and you must specify for each column the
-alignment method. The `matrix' environment can be used, cells are centered. He
-we use `pmatrix', because it adds automatically parentheses. In
+alignment method. The ‘matrix’ environment can be used, cells are centered. He
+we use ‘pmatrix’, because it adds automatically parentheses. In
 <hi rend='it'>Tralics</hi> 2.14.2 there is a possibility to put an attribute pair on
 the current table.</p>
 <pre class='latex-code'><p noindent='true'><vbnumber>225</vbnumber> <hi rend='tt'>\[A=\begin{pmatrix}x-<zws/>\lambda&amp;1&amp;0\\0&amp;x-<zws/>\lambda&amp;1\\0&amp;0&amp;x-<zws/>\lambda\end{pmatrix}\]</hi></p>
@@ -1361,7 +1361,7 @@ lines? Let <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathM
 <latexcode>\lineskiplimit</latexcode> and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>z</mi></math></formula> the value of <latexcode>\lineskip</latexcode>. Then, the quantity
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>y</mi></math></formula> is computed so that <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>X</mi><mo>=</mo><mi>x</mi></mrow></math></formula>, unless this gives <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>Y</mi><mo>&lt;</mo><mi>y</mi></mrow></math></formula>, case where <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>z</mi></math></formula> is used
 instead. Typically, for a normal paragraph, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mo>=</mo><mn>12</mn></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>y</mi><mo>=</mo><mn>0</mn></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>z</mi><mo>=</mo><mn>1</mn></mrow></math></formula>, and for a
-`align' environment, we have <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mo>=</mo><mn>15</mn></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>y</mi><mo>=</mo><mn>3</mn></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>z</mi><mo>=</mo><mn>4</mn></mrow></math></formula>. In the case of an array,
+‘align’ environment, we have <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mo>=</mo><mn>15</mn></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>y</mi><mo>=</mo><mn>3</mn></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>z</mi><mo>=</mo><mn>4</mn></mrow></math></formula>. In the case of an array,
 all three values are zero. This means: normal baseline in a paragraph is 12pt,
 but there is at least one pt between two lines, and in the case of multiline
 equations, the baseline is larger, as well as the clearance. In the case of an
@@ -1370,10 +1370,10 @@ is an invisible rule; as a consequence, the total height plus depth of each
 line is the matrix is at least 12pt, hence <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>X</mi></math></formula> is at least 12pt.</p>
 <p>This has as consequence that, in the big matrix above, parentheses do touch.
 We changed, in the file <hi rend='sansserif'>raweb-cfg.sty</hi>, the code of the <latexcode>\@array</latexcode> command:
-<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>z</mi><mo>=</mo><mn>5</mn></mrow></math></formula>, and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>y</mi></math></formula> is 3 or 5, depending on whether the `displaystyle' attribute
+<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>z</mi><mo>=</mo><mn>5</mn></mrow></math></formula>, and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>y</mi></math></formula> is 3 or 5, depending on whether the ‘displaystyle’ attribute
 array of the array is true (if the attribute is true, then all entries are
 typeset in <latexcode>\display</latexcode> mode; this is the case for all environments like
-`gather' or `align' that are translated by <hi rend='it'>Tralics</hi> as an array).</p>
+‘gather’ or ‘align’ that are translated by <hi rend='it'>Tralics</hi> as an array).</p>
 <p><hi rend='bold'>Exercise 18.43:</hi> Note: entries are left aligned because of explicit <latexcode>\hfil</latexcode>.</p>
 <formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo form='prefix' movablelimits='true'>det</mo><mfenced close='|' open='|'><mtable><mtr><mtd columnalign='left'><msub><mi>c</mi> <mn>0</mn> </msub></mtd><mtd columnalign='left'><msub><mi>c</mi> <mn>1</mn> </msub></mtd><mtd columnalign='left'><msub><mi>c</mi> <mn>2</mn> </msub></mtd><mtd><mo>...</mo></mtd><mtd columnalign='left'><msub><mi>c</mi> <mi>n</mi> </msub></mtd></mtr><mtr><mtd columnalign='left'><msub><mi>c</mi> <mn>1</mn> </msub></mtd><mtd columnalign='left'><msub><mi>c</mi> <mn>2</mn> </msub></mtd><mtd columnalign='left'><msub><mi>c</mi> <mn>3</mn> </msub></mtd><mtd><mo>...</mo></mtd><mtd columnalign='left'><msub><mi>c</mi> <mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow> </msub></mtd></mtr><mtr><mtd columnalign='left'><msub><mi>c</mi> <mn>2</mn> </msub></mtd><mtd columnalign='left'><msub><mi>c</mi> <mn>3</mn> </msub></mtd><mtd columnalign='left'><msub><mi>c</mi> <mn>4</mn> </msub></mtd><mtd><mo>...</mo></mtd><mtd columnalign='left'><msub><mi>c</mi> <mrow><mi>n</mi><mo>+</mo><mn>2</mn></mrow> </msub></mtd></mtr><mtr><mtd columnalign='left'><mo>&vellip;</mo></mtd><mtd columnalign='left'><mo>&vellip;</mo></mtd><mtd columnalign='left'><mo>&vellip;</mo></mtd><mtd/><mtd columnalign='left'><mo>&vellip;</mo></mtd></mtr><mtr><mtd columnalign='left'><msub><mi>c</mi> <mi>n</mi> </msub></mtd><mtd columnalign='left'><msub><mi>c</mi> <mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow> </msub></mtd><mtd><msub><mi>c</mi> <mrow><mi>n</mi><mo>+</mo><mn>2</mn></mrow> </msub></mtd><mtd><mo>...</mo></mtd><mtd columnalign='left'><msub><mi>c</mi> <mrow><mn>2</mn><mi>n</mi></mrow> </msub></mtd></mtr></mtable></mfenced></mrow></math></formula>
 <p><hi rend='bold'>Exercise 18.44:</hi></p>
@@ -1436,7 +1436,7 @@ but you have to use the <latexcode>matrix</latexcode> environment.</p>
 friends (the previous formula is in italics). This is a more elaborate example</p>
 <pre class='latex-code'><p noindent='true'><vbnumber>266</vbnumber> <hi rend='tt'>$\hbox{upright} \it \text{Italic\bf Boldface} {\tt \text{x = y$^2$}}$</hi></p>
 </pre><p noindent='true'>Translation: <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mtext>upright</mtext><mtext mathvariant='italic'>Italic</mtext><mtext mathvariant='bold'>Boldface</mtext><mrow><mtext mathvariant='monospace'>x</mtext><mspace width='4.pt'/><mtext mathvariant='monospace'>=</mtext><mspace width='4.pt'/><mtext mathvariant='monospace'>y</mtext><msup><mrow/> <mn>2</mn> </msup></mrow></mrow></math></formula>.</p>
-<p><hi rend='bold'>Exercise 19.2:</hi> Compare B. L. User's solution, Knuth's solutions and <latexcode>\tfrac</latexcode>:</p>
+<p><hi rend='bold'>Exercise 19.2:</hi> Compare B. L. User’s solution, Knuth’s solutions and <latexcode>\tfrac</latexcode>:</p>
 <formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>y</mi><mo>=</mo><mfrac><mstyle displaystyle='false' scriptlevel='1'><mn>1</mn></mstyle> <mstyle displaystyle='false' scriptlevel='1'><mn>2</mn></mstyle></mfrac><mi>x</mi><mspace width='1.em'/><mtext>vs</mtext><mspace width='1.em'/><mstyle displaystyle='false' scriptlevel='0'><mrow><mi>y</mi><mo>=</mo><mfrac><mn>1</mn> <mn>2</mn></mfrac><mi>x</mi></mrow></mstyle><mspace width='1.em'/><mtext>vs</mtext><mspace width='1.em'/><mstyle displaystyle='false' scriptlevel='0'><mfrac><mn>1</mn> <mn>2</mn></mfrac></mstyle><mi>x</mi></mrow></math></formula>
 <p><hi rend='bold'>Exercise 19.3:</hi> We demonstrate in this example that using
 <latexcode>$$<latexcode>\hbox</latexcode><latexcode>{$formula$}</latexcode>$$</latexcode> is non-trivial.</p>
@@ -1477,7 +1477,7 @@ tag names). In a first pass, <LaTeX/> computes the value of the label, and
 stores it in a file, in a second pass, it reads the file, and uses this
 number. No number is computed by <hi rend='it'>Tralics</hi>, in some cases, this can be
 annoying. A side effect of the translation of the <latexcode>\label</latexcode> command is the
-addition of an id (for instance `id12' to the equation<note id='uid41' id-text='9' place='foot'>The label name
+addition of an id (for instance ‘id12’ to the equation<note id='uid41' id-text='9' place='foot'>The label name
 provided by the user cannot be used since it is an invalid XML id in this case</note>), and translation of
 the <latexcode>\ref</latexcode> is a <xmlcode>&lt;ref&gt;</xmlcode> element with a reference to the id.</p>
 <p>Equation numbers are computed by the XML-to-whathever processor.
@@ -1488,11 +1488,11 @@ only for <xmlcode>&lt;ref&gt;</xmlcode>, the equation number is added to the equ
 when the XSL/FO is converted to Pdf (this is not really important, because
 nobody looks at the FO file).</p>
 <p>Assume that you have hundreds of equations, and you want to refer the previous
-one; very often it is tagged `(*)', in some cases `(**)'. Some people use
-`(***)'. Exercise 19.7 that follows says that, in math mode, these come out as
+one; very often it is tagged ‘(*)’, in some cases ‘(**)’. Some people use
+‘(***)’. Exercise 19.7 that follows says that, in math mode, these come out as
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>(</mo><mo>*</mo><mo>)</mo></mrow></math></formula>, in some cases <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>(</mo><mo>*</mo><mo>*</mo><mo>)</mo></mrow></math></formula> and <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>(</mo><mo>*</mo><mo>*</mo><mo>*</mo><mo>)</mo></mrow></math></formula>. In particular, a non-trivial question
 is: should equation numbers by typeset as math or as text? In <hi rend='it'>Tralics</hi>, we
-implemented <latexcode>\eqno</latexcode> and <latexcode>\tag</latexcode>; that's a bit tricky, let's explain
+implemented <latexcode>\eqno</latexcode> and <latexcode>\tag</latexcode>; that’s a bit tricky, let’s explain
 some difficulties.</p>
 <list type='simple'>
 <item id='uid42' id-text='1'><p noindent='true'>The MathML recommendation says: automatic equation numbering and
@@ -1507,9 +1507,9 @@ The problem is that my browser ignores the whole line. This is bad news.</p>
 </item>
 <item id='uid43' id-text='2'><p noindent='true'>The current implementation is: if the formula has a label, it has an
 equation number. It cannot have more than one label/id/equation number.
-(here `formula' designates the element that contains the translated math
+(here ‘formula’ designates the element that contains the translated math
 formula). The style sheet computes the equation number via
-<xmlcode>&lt;xsl:number</xmlcode> <xmlcode>level='any'</xmlcode> <xmlcode>count='formula[@id]'</xmlcode> <xmlcode>/&gt;</xmlcode>.</p>
+<xmlcode>&lt;xsl:number</xmlcode> <xmlcode>level=’any’</xmlcode> <xmlcode>count=’formula[@id]’</xmlcode> <xmlcode>/&gt;</xmlcode>.</p>
 </item>
 <item id='uid44' id-text='3'><p noindent='true'>What happens if a formula has a tag and a label? Currently the tag is
 ignored. What we should do is modify the template above (count all formulas
@@ -1658,7 +1658,7 @@ small ones, you must use the <latexcode>\smash</latexcode> command, and you get
 <p><hi rend='bold'>Exercise 19.14:</hi> Knuth explains that <latexcode>eqalign</latexcode> and <latexcode>eqalignno</latexcode> environments
 are based on <latexcode>\halign</latexcode>, so that <latexcode>\noalign</latexcode> can be used. In environments
 like <latexcode>gather</latexcode>, you can try <latexcode>\multicolumn</latexcode>. As you can see here, the word
-`and' occurs at the left of the table, not at the left margin; this is the same
+‘and’ occurs at the left of the table, not at the left margin; this is the same
 as what happens with <latexcode>\eqalign</latexcode>.</p>
 <formula id='uid59' id-text='2.4.2' textype='gather' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd><mrow><mi>x</mi><mo>=</mo><mi>y</mi><mo>+</mo><mi>z</mi></mrow></mtd></mtr><mtr><mtd columnalign='left' columnspan='1'><mtext>and</mtext></mtd></mtr><mtr><mtd><mrow><msup><mi>x</mi> <mn>2</mn> </msup><mo>=</mo><msup><mi>y</mi> <mn>2</mn> </msup><msup><mi>z</mi> <mn>2</mn> </msup></mrow></mtd></mtr></mtable></math></formula>
 <p><hi rend='bold'>Exercise 19.16:</hi> This uses <latexcode>\gather</latexcode>. There are no equation numbers, because
@@ -1804,13 +1804,13 @@ the amsmath package: <latexcode>\vartriangle</latexcode>, <latexcode>\doublebarw
 <latexcode>\nsupseteqq</latexcode>, <latexcode>\(n)shortmid</latexcode>, <latexcode>\(n)shortparallel</latexcode>.</p>
 </item>
 <item id='uid78' id-text='12'><p noindent='true'>eufrak. The package defines family <latexcode>\Eufrak</latexcode> (this command is
-<latexcode>\mathfrak</latexcode> in <hi rend='it'>Tralics</hi>), this is assumed to use the font family `euf'.
+<latexcode>\mathfrak</latexcode> in <hi rend='it'>Tralics</hi>), this is assumed to use the font family ‘euf’.
 The eufrak package is redundant if the amsfonts package is used.</p>
 </item>
 <item id='uid79' id-text='13'><p noindent='true'>eucal.
 The package defines family <latexcode>\Euscript</latexcode> (this command is <latexcode>\mathcal</latexcode> in
-<hi rend='it'>Tralics</hi>), this is assumed to use the font family `eus'.
-Accepts options `mathcal' and `mathscr' (this make <latexcode>\mathscr</latexcode>
+<hi rend='it'>Tralics</hi>), this is assumed to use the font family ‘eus’.
+Accepts options ‘mathcal’ and ‘mathscr’ (this make <latexcode>\mathscr</latexcode>
 equivalent to <latexcode>\mathcal</latexcode>.</p>
 </item></list>
 <p>All undefined math symbols are defined to be <latexcode>\ams@unimp</latexcode>, a command that
@@ -1834,18 +1834,18 @@ expands to an undefined command, the one defined here to produce a red X.</p>
 <p noindent='true'><vbnumber>323</vbnumber> <hi rend='tt'>      \biggl\lbrace g(y)^2 \int_t^a</hi></p>
 <p noindent='true'><vbnumber>324</vbnumber> <hi rend='tt'>        f(x)^2 \,dx \biggr\rbrace \,dy</hi></p>
 <p noindent='true'><vbnumber>325</vbnumber> <hi rend='tt'>\end{multline}</hi></p>
-</pre><p>Example 8-2-1. This uses the `leqno' option of the amsmath package,
+</pre><p>Example 8-2-1. This uses the ‘leqno’ option of the amsmath package,
 that is assumed to put equation numbers on the left. In <hi rend='it'>Tralics</hi>, this will
-set the attribute <hi rend='sansserif'>equation-number</hi> = `left' of the document element.</p>
+set the attribute <hi rend='sansserif'>equation-number</hi> = ‘left’ of the document element.</p>
 <p>In <hi rend='it'>Tralics</hi>, if a formula has no <latexcode>\label</latexcode>, no number
 is associated to it. Here we have a formula using the <latexcode>equation</latexcode>
 environment, or a displaymath formula enclosed in a <latexcode>\[</latexcode>, <latexcode>\]</latexcode> pair.</p>
 <formula id='uid81' id-text='10' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mrow><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo></mrow> <mn>2</mn> </msup><mo>=</mo><msup><mi>a</mi> <mn>2</mn> </msup><mo>+</mo><mn>2</mn><mi>a</mi><mi>b</mi><mo>+</mo><msup><mi>b</mi> <mn>2</mn> </msup></mrow></math></formula>
 <formula type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mrow><msup><mo form='prefix'>sin</mo> <mn>2</mn> </msup><mi>&eta;</mi><mo>+</mo><msup><mo form='prefix'>cos</mo> <mn>2</mn> </msup><mi>&eta;</mi><mo>=</mo><mn>1</mn></mrow></math></formula>
-<p>Example 8-2-2. This uses options `reqno' option of the amsmath package
+<p>Example 8-2-2. This uses options ‘reqno’ option of the amsmath package
 (equations to the right), it puts
-<hi rend='sansserif'>equation-number</hi> = `left' on the document element. It uses also
-`fleqn', that sets <hi rend='sansserif'>flushed-equation</hi> = `true'; in <LaTeX/>, you must
+<hi rend='sansserif'>equation-number</hi> = ‘left’ on the document element. It uses also
+‘fleqn’, that sets <hi rend='sansserif'>flushed-equation</hi> = ‘true’; in <LaTeX/>, you must
 define <latexcode>\mathindent</latexcode>, here to 1pc, as the distance between the left margin
 and the formula; ignored by <hi rend='it'>Tralics</hi>. Same formulas as above, with a label
 added, in order to show the difference.</p>
@@ -1916,10 +1916,10 @@ attribute (If the token that follows a display math formula is not a
 <formula id='uid93' id-text='20' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><msup><mrow><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo></mrow> <mn>4</mn> </msup></mtd><mtd columnalign='left'><mrow><mo>=</mo><msup><mrow><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo></mrow> <mn>2</mn> </msup><msup><mrow><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo></mrow> <mn>2</mn> </msup></mrow></mtd></mtr><mtr><mtd/><mtd columnalign='left'><mrow><mo>=</mo><mrow><mo>(</mo><msup><mi>a</mi> <mn>2</mn> </msup><mo>+</mo><mn>2</mn><mi>a</mi><mi>b</mi><mo>+</mo><msup><mi>b</mi> <mn>2</mn> </msup><mo>)</mo></mrow><mrow><mo>(</mo><msup><mi>a</mi> <mn>2</mn> </msup><mo>+</mo><mn>2</mn><mi>a</mi><mi>b</mi><mo>+</mo><msup><mi>b</mi> <mn>2</mn> </msup><mo>)</mo></mrow></mrow></mtd></mtr><mtr><mtd/><mtd columnalign='left'><mrow><mo>=</mo><msup><mi>a</mi> <mn>4</mn> </msup><mo>+</mo><mn>4</mn><msup><mi>a</mi> <mn>3</mn> </msup><mi>b</mi><mo>+</mo><mn>6</mn><msup><mi>a</mi> <mn>2</mn> </msup><msup><mi>b</mi> <mn>2</mn> </msup><mo>+</mo><mn>4</mn><mi>a</mi><msup><mi>b</mi> <mn>3</mn> </msup><mo>+</mo><msup><mi>b</mi> <mn>4</mn> </msup></mrow></mtd></mtr></mtable></math></formula>
 <p>Example 8.2.8. The <LaTeX/> companion explains that the amsmath
 package can be loaded
-with options `centertags' or `tbtags'. In the first case, tags centered with
+with options ‘centertags’ or ‘tbtags’. In the first case, tags centered with
 the formula (left or right), in the second case, tags are on the first line
 (on the left) or last line (on the right). By default, <hi rend='it'>Tralics</hi> does
-nothing, and in the case of `tbtags', it sets <hi rend='sansserif'>split-tags</hi> = `tb' on the
+nothing, and in the case of ‘tbtags’, it sets <hi rend='sansserif'>split-tags</hi> = ‘tb’ on the
 root element.</p>
 <formula id='uid94' id-text='21' textype='equation' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd columnalign='right'><msup><mrow><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo></mrow> <mn>3</mn> </msup></mtd><mtd columnalign='left'><mrow><mo>=</mo><mrow><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo></mrow><msup><mrow><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo></mrow> <mn>2</mn> </msup></mrow></mtd></mtr><mtr><mtd/><mtd columnalign='left'><mrow><mo>=</mo><mrow><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo></mrow><mrow><mo>(</mo><msup><mi>a</mi> <mn>2</mn> </msup><mo>+</mo><mn>2</mn><mi>a</mi><mi>b</mi><mo>+</mo><msup><mi>b</mi> <mn>2</mn> </msup><mo>)</mo></mrow></mrow></mtd></mtr><mtr><mtd/><mtd columnalign='left'><mrow><mo>=</mo><msup><mi>a</mi> <mn>3</mn> </msup><mo>+</mo><mn>3</mn><msup><mi>a</mi> <mn>2</mn> </msup><mi>b</mi><mo>+</mo><mn>3</mn><mi>a</mi><msup><mi>b</mi> <mn>2</mn> </msup><mo>+</mo><msup><mi>b</mi> <mn>3</mn> </msup></mrow></mtd></mtr></mtable></math></formula>
 <pre class='latex-code'><p noindent='true'><vbnumber>343</vbnumber> <hi rend='tt'>\newcommand\relphantom[1]{\mathrel{\phantom{#1}}}</hi></p>
@@ -2079,9 +2079,9 @@ wrong; we omit them.</p>
 <p noindent='true'><vbnumber>458</vbnumber> <hi rend='tt'>\end{align}</hi></p>
 </pre><p>Example 8-2-25. In the Companion, first equation is numbered <latexcode>(1)</latexcode>,
 second equation has no number, third is <latexcode>(*)</latexcode>, then come <latexcode>*</latexcode>,
-<latexcode>(1')</latexcode>, <latexcode>(2)</latexcode>, <latexcode>ALSO (2)</latexcode> and <latexcode>(3)</latexcode>. Since <hi rend='it'>Tralics</hi> does not
+<latexcode>(1’)</latexcode>, <latexcode>(2)</latexcode>, <latexcode>ALSO (2)</latexcode> and <latexcode>(3)</latexcode>. Since <hi rend='it'>Tralics</hi> does not
 compute equation numbers, you will not see <latexcode>(1)</latexcode>, <latexcode>(2)</latexcode>, <latexcode>(3)</latexcode>.
-Since <latexcode>(1')</latexcode> is obtained by a reference to the first equation, the whole
+Since <latexcode>(1’)</latexcode> is obtained by a reference to the first equation, the whole
 set of equations is numbered, namely (<ref target='uid113'/>). It is currently impossible
 to use a reference, we locally change <latexcode>\ref</latexcode>, so that it produces a
 number, here 17. This is also the current value of the equation counter.
@@ -2139,8 +2139,8 @@ We have redefined here the command as follows</p>
 <p noindent='true'><vbnumber>481</vbnumber> <hi rend='tt'>\else</hi></p>
 <p noindent='true'><vbnumber>482</vbnumber> <hi rend='tt'>\formulaattribute{tag-<zws/>up}{\the\dimen0}\fi}</hi></p>
 </pre><p>Thus <latexcode>\raisetag</latexcode> with a value of <latexcode>-10pt</latexcode> will add
-<hi rend='sansserif'>tag-down</hi> = `10pt' to the formula element. In this case, the style sheet
-adds <hi rend='sansserif'>style</hi> = `padding-top:10pt' to the cell containing the equation
+<hi rend='sansserif'>tag-down</hi> = ‘10pt’ to the formula element. In this case, the style sheet
+adds <hi rend='sansserif'>style</hi> = ‘padding-top:10pt’ to the cell containing the equation
 number. In the case of a positive value, padding-bottom is used instead.
 In this example, we use 40pt.</p>
 <formula id='uid117' id-text='19' tag-down='40.0pt' textype='gather' type='display'><math mode='display' xmlns='http://www.w3.org/1998/Math/MathML'><mtable displaystyle='true'><mtr><mtd><mrow><mtext>The</mtext><mspace width='4.pt'/><mtext>sign</mtext><mspace width='4.pt'/><mtext>function:</mtext><mspace width='4.pt'/><mspace width='4.pt'/><mi mathvariant='script'>S</mi><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow><mo>=</mo><mfenced close='' open='&lbrace;' separators=''><mtable><mtr><mtd columnalign='left'><mrow><mo>-</mo><mn>1</mn></mrow></mtd><mtd columnalign='left'><mrow><mi>x</mi><mo>&lt;</mo><mn>0</mn></mrow></mtd></mtr><mtr><mtd columnalign='left'><mn>0</mn></mtd><mtd columnalign='left'><mrow><mi>x</mi><mo>=</mo><mn>0</mn></mrow></mtd></mtr><mtr><mtd columnalign='left'><mn>1</mn></mtd><mtd columnalign='left'><mrow><mi>x</mi><mo>&gt;</mo><mn>0</mn></mrow></mtd></mtr></mtable></mfenced></mrow></mtd></mtr></mtable></math></formula>
@@ -2734,7 +2734,7 @@ first one to be <latexcode>\relax</latexcode>.
 formula: the command <latexcode>\sqrtsign</latexcode> is identical to <latexcode>\sqrt</latexcode>; you may wonder
 what the argument is. Currently <latexcode>\bm</latexcode> is the same as <latexcode>\mathbf</latexcode>, it takes
 one argument and typesets it in bold face font. Hence, <hi rend='it'>Tralics</hi> executes the
-line shown above, marked `see below A'. Here <latexcode>\bf</latexcode> and <latexcode>\it</latexcode> are the
+line shown above, marked ‘see below A’. Here <latexcode>\bf</latexcode> and <latexcode>\it</latexcode> are the
 tokens inserted by the <latexcode>\bm</latexcode> command corresponding to the new and old font
 (in reality, these tokens have complicated names).
 Thus, the argument of <latexcode>\sqrt</latexcode> is the <latexcode>\it</latexcode>
@@ -2743,7 +2743,7 @@ idea?), so that the <latexcode>\it</latexcode> command changes font locally; sai
 current font remains bold, and <latexcode>\IT</latexcode> is <latexcode>\bf</latexcode>. It is a wonder that this
 works. We noticed that <LaTeX/> font change commands like <latexcode>\mathbf</latexcode> typeset
 their arguments in a group, and modified the <hi rend='it'>Tralics</hi> code; thus the
-equivalent of line marked `see below B' is executed. Suddenly <latexcode>\sqrt</latexcode>
+equivalent of line marked ‘see below B’ is executed. Suddenly <latexcode>\sqrt</latexcode>
 looses its argument. For this reason, we changed the command <latexcode>\sqrtsign</latexcode>
 to <latexcode>\sqrt</latexcode><latexcode>{}</latexcode>. The example is
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mroot><mrow><mi mathvariant='bold'>x</mi><mo>&times;</mo><mi>&alpha;</mi></mrow> <mn mathvariant='bold'>2</mn></mroot></math></formula> but
@@ -2798,7 +2798,7 @@ or the similar
 <p noindent='true'><vbnumber>787</vbnumber> <hi rend='tt'>\end{align}</hi></p>
 </pre><p noindent='true'>Example 8-8-10. Changed a little bit: it is currently not possible to put a
 <latexcode>\quad</latexcode> in a <latexcode>\text</latexcode> in math mode. Thus, the <latexcode>\text</latexcode> contains only
-the word `for'.</p>
+the word ‘for’.</p>
 </div1>
 <div1 id='uid137' id-text='3.10'><head>Sample page of mathematical typesetting</head>
 <p>First some large operators
@@ -4391,9 +4391,9 @@ means the square of the variable <formula type='inline'><math xmlns='http://www.
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>x</mi></math></formula>.</p>
 <p>In the example F3, there are five leafs, two identifiers, a number, two
 operators. The default translation is a token element in presentation markup.
-This means that the translation of `a' is implicitly a <xmlcode>&lt;mi&gt;</xmlcode>
+This means that the translation of ‘a’ is implicitly a <xmlcode>&lt;mi&gt;</xmlcode>
 obtained by <latexcode>\mathmi</latexcode>, instead of a <xmlcode>&lt;ci&gt;</xmlcode> obtained by <latexcode>\mathci</latexcode>.
-A non-trivial question is how to translate `xy25' (the default is one or two
+A non-trivial question is how to translate ‘xy25’ (the default is one or two
 identifiers, followed by a number). Our formulas contain characters that are
 neither letters nor digits: parenthesis, plus sign, superscript
 character. These are operators; in the case of presentation markup,
@@ -4452,7 +4452,7 @@ Translation from XML to Pdf is empty for this character.</p>
 <pre class='latex-code'><p noindent='true'><vbnumber>892</vbnumber> <hi rend='tt'>$x=\frac{{-<zws/>b}\pm\sqrt{b^2-<zws/>{4\* a\* c}}}{2\* a}$</hi></p>
 </pre><p noindent='true'>Second example,
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mo>=</mo><mfrac><mrow><mrow><mo>-</mo><mi>b</mi></mrow><mo>&pm;</mo><msqrt><mrow><msup><mi>b</mi> <mn>2</mn> </msup><mo>-</mo><mrow><mn>4</mn><mo>&InvisibleTimes;</mo><mi>a</mi><mo>&InvisibleTimes;</mo><mi>c</mi></mrow></mrow></msqrt></mrow> <mrow><mn>2</mn><mo>&InvisibleTimes;</mo><mi>a</mi></mrow></mfrac></mrow></math></formula>.
-<hi rend='it'>Notice that the `plus or minus' sign is given by the entity name
+<hi rend='it'>Notice that the ‘plus or minus’ sign is given by the entity name
 &amp;PlusMinus; this is equivalent to using the character reference
 &amp;#00B1;</hi>. When converting an XML document into Pdf, the character
 reference is
@@ -4526,8 +4526,8 @@ shows the same result!</p>
 <p noindent='true'><vbnumber>917</vbnumber> <hi rend='tt'>$\X{mi}{x}\X{mo}{+}{\X{mi}{a}\X{mo}{/}\X{mi}{b}}$</hi></p>
 <p noindent='true'><vbnumber>918</vbnumber> <hi rend='tt'>$x+{a/b}$</hi></p>
 </pre><p>Compare
-`<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi> x </mi><mo> + </mo><mrow><mi> a </mi><mo> / </mo><mi> b </mi></mrow></mrow></math></formula>'
-with `<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mo>+</mo><mrow><mi>a</mi><mo>/</mo><mi>b</mi></mrow></mrow></math></formula>'.
+‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi> x </mi><mo> + </mo><mrow><mi> a </mi><mo> / </mo><mi> b </mi></mrow></mrow></math></formula>’
+with ‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mo>+</mo><mrow><mi>a</mi><mo>/</mo><mi>b</mi></mrow></mrow></math></formula>’.
 These two examples should look the same; in the first case the content of each
 element is a space, a character, a space; for the second example, there are no
 spaces.</p>
@@ -4535,30 +4535,30 @@ spaces.</p>
 <p noindent='true'><vbnumber>920</vbnumber> <hi rend='tt'>$\mathmi[fontweight][bold][mathvariant][sans-<zws/>serif]{a}$</hi></p>
 <p noindent='true'><vbnumber>921</vbnumber> <hi rend='tt'>$\mathmi[fontweight][bold][mathvariant][fraktur]{a1}$</hi></p>
 <p noindent='true'><vbnumber>922</vbnumber> <hi rend='tt'>$\mathbox{mstyle}[fontstyle][italic]{\mathbf{a}b}$</hi></p>
-</pre><p>Deprecated styles: `<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi fontweight='bold' mathvariant='normal'>a</mi></math></formula>'
-should be a normal a, `<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi fontweight='bold' mathvariant='sans-serif'>a</mi></math></formula>'
+</pre><p>Deprecated styles: ‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi fontweight='bold' mathvariant='normal'>a</mi></math></formula>’
+should be a normal a, ‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi fontweight='bold' mathvariant='sans-serif'>a</mi></math></formula>’
 should be a sans-serif a, and
-`<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi fontweight='bold' mathvariant='fraktur'>a1</mi></math></formula>' should be fraktur.
+‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi fontweight='bold' mathvariant='fraktur'>a1</mi></math></formula>’ should be fraktur.
 In the case of
-`<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mstyle fontstyle='italic'><mi mathvariant='bold'>a</mi><mi>b</mi></mstyle></math></formula>', the a should be bold
+‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mstyle fontstyle='italic'><mi mathvariant='bold'>a</mi><mi>b</mi></mstyle></math></formula>’, the a should be bold
 upright, and the b should be italic. The MathML recommendation says that
-`mathvariant' should have precedence over `fontstyle', which is deprecated,
+‘mathvariant’ should have precedence over ‘fontstyle’, which is deprecated,
 and not used by <hi rend='it'>Tralics</hi>. In the Pdf, attributes of <latexcode>\mstyle</latexcode> are
 currently ignored.</p>
 <pre class='latex-code'><p noindent='true'><vbnumber>923</vbnumber> <hi rend='tt'>$x$ $\mathmi{\char32x\char32}$</hi></p>
 <p noindent='true'><vbnumber>924</vbnumber> <hi rend='tt'>$D$ $\mathmi{\char32sin\char32}$ $\mathmi[mathvariant][script]{L}$</hi></p>
 <p noindent='true'><vbnumber>925</vbnumber> <hi rend='tt'>$\mathmi{}$</hi></p>
-</pre><p>Examples for 3.2.3: `<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>x</mi></math></formula>' (an x without spaces),
-`<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi> x </mi></math></formula>' (an x with spaces),
-`<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>D</mi></math></formula>', `<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi> sin </mi></math></formula>', '<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi mathvariant='script'>L</mi></math></formula>'
-and `<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi></mi></math></formula>' (empty identifier). An italic font should be used unless
+</pre><p>Examples for 3.2.3: ‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>x</mi></math></formula>’ (an x without spaces),
+‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi> x </mi></math></formula>’ (an x with spaces),
+‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>D</mi></math></formula>’, ‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi> sin </mi></math></formula>’, ’<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi mathvariant='script'>L</mi></math></formula>’
+and ‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi></mi></math></formula>’ (empty identifier). An italic font should be used unless
 defined by an attribute, or an upright font if the element has more than
 one character. In the Pdf, spaces are incorreclty counted as characters.</p>
 <pre class='latex-code'><p noindent='true'><vbnumber>926</vbnumber> <hi rend='tt'>$\sin(x)$ $\mathmi{sin}\ApplyFunction x$ $1+x+\mathmo{...}+n$</hi></p>
 <p noindent='true'><vbnumber>927</vbnumber> <hi rend='tt'>$1+x+\mathmi{...}+n$ $\pi, \ImaginaryI,\ExponentialE$</hi></p>
 </pre><p noindent='true'>This is <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo form='prefix'>sin</mo><mo>(</mo><mi>x</mi><mo>)</mo></mrow></math></formula>, using &amp;ApplyFunction;, Unicode character U+2061:
-`<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>sin</mi><mo>&ApplyFunction;</mo><mi>x</mi></mrow></math></formula>'. Ellipses using <xmlcode>&lt;mo&gt;</xmlcode>: `<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>1</mn><mo>+</mo><mi>x</mi><mo>+</mo><mo>...</mo><mo>+</mo><mi>n</mi></mrow></math></formula>'
-and <xmlcode>&lt;mi&gt;</xmlcode>: `<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>1</mn><mo>+</mo><mi>x</mi><mo>+</mo><mi>...</mi><mo>+</mo><mi>n</mi></mrow></math></formula>', constants <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&pi;</mi><mo>,</mo><mi>&ImaginaryI;</mi><mo>,</mo><mi>&ExponentialE;</mi></mrow></math></formula>
+‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>sin</mi><mo>&ApplyFunction;</mo><mi>x</mi></mrow></math></formula>’. Ellipses using <xmlcode>&lt;mo&gt;</xmlcode>: ‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>1</mn><mo>+</mo><mi>x</mi><mo>+</mo><mo>...</mo><mo>+</mo><mi>n</mi></mrow></math></formula>’
+and <xmlcode>&lt;mi&gt;</xmlcode>: ‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mn>1</mn><mo>+</mo><mi>x</mi><mo>+</mo><mi>...</mi><mo>+</mo><mi>n</mi></mrow></math></formula>’, constants <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>&pi;</mi><mo>,</mo><mi>&ImaginaryI;</mi><mo>,</mo><mi>&ExponentialE;</mi></mrow></math></formula>
 (these are somehow unusual in Pdf).</p>
 <pre class='latex-code'><p noindent='true'><vbnumber>928</vbnumber> <hi rend='tt'>$2, \mathmn{0.123}, \mathmn{1,000,000}, \mathmn{2.1e10},</hi></p>
 <p noindent='true'><vbnumber>929</vbnumber> <hi rend='tt'>\mathmn{0xFFEF}, \mathmn{MCMLXIX}, \mathmn{twenty one}$.</hi></p>
@@ -4577,7 +4577,7 @@ Numbers, that could be <xmlcode>&lt;mathcn&gt;</xmlcode> (content markup numbers
 <p noindent='true'><vbnumber>935</vbnumber> <hi rend='tt'>and $m_{1\InvisibleComma2}$.</hi></p>
 </pre><p noindent='true'>Example of <xmlcode>&lt;mathmo&gt;</xmlcode> (operators):
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>+</mo><mo>,</mo><mo>&lt;</mo><mo>,</mo><mo>&le;</mo><mo>,</mo><mo>&lt;=</mo><mo>,</mo><mo>++</mo><mo>,</mo><mo>&sum;</mo><mo>,</mo><mo>.NOT</mo><mo>,</mo><mo>and</mo><mo>,</mo><mo>&InvisibleTimes;</mo><mo>,</mo><mo mathvariant='bold'>+</mo></mrow></math></formula>. In the Pdf version, font attributes are
-ignored for operators (they are complicated to implement, and only `bold'
+ignored for operators (they are complicated to implement, and only ‘bold’
 variant is available with the current math fonts).</p>
 <p>More examples: <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>(</mo><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow><mo>)</mo></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo>[</mo><mrow><mn>0</mn><mo>,</mo><mn>1</mn></mrow><mo>)</mo></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>f</mi><mo>&ApplyFunction;</mo><mrow><mo>(</mo><mrow><mi>x</mi><mo>,</mo><mi>y</mi></mrow><mo>)</mo></mrow></mrow></math></formula>.</p>
 <p>Invisible operators: <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>x</mi><mo>&InvisibleTimes;</mo><mi>y</mi></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>f</mi><mo>&ApplyFunction;</mo><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow></mrow></math></formula>, <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo form='prefix'>sin</mo><mo>&ApplyFunction;</mo><mi>x</mi></mrow></math></formula>
@@ -4611,12 +4611,12 @@ a normal arrow.</p>
 <p noindent='true'><vbnumber>946</vbnumber> <hi rend='tt'>$X\mtext{ /* a comment */ }X$'<zws/></hi></p>
 <p noindent='true'><vbnumber>947</vbnumber> <hi rend='tt'>$\mathmo{ there exists }{{\delta&gt;<zws/>0}\mathmo{ such that</hi></p>
 <p noindent='true'><vbnumber>948</vbnumber> <hi rend='tt'>}{{f\ApplyFunction{(x)}}&lt;<zws/>1}}$</hi></p>
-</pre><p noindent='true'>Text: `<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtext> Theorem 1: </mtext></math></formula>',
-`<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>X</mi><mtext> </mtext><mi>X</mi></mrow></math></formula>'
-`<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>X</mi><mtext>      </mtext><mi>X</mi></mrow></math></formula>' (expression obtained by inserting twice three characters:
+</pre><p noindent='true'>Text: ‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mtext> Theorem 1: </mtext></math></formula>’,
+‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>X</mi><mtext> </mtext><mi>X</mi></mrow></math></formula>’
+‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>X</mi><mtext>      </mtext><mi>X</mi></mrow></math></formula>’ (expression obtained by inserting twice three characters:
 thickspace, thinspace and verythinspace, should be the same as
-`<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>X</mi><mspace width='5.55542pt'/><mi>X</mi></mrow></math></formula>',
-`<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>X</mi><mtext> /* a comment */ </mtext><mi>X</mi></mrow></math></formula>'. Other example:
+‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>X</mi><mspace width='5.55542pt'/><mi>X</mi></mrow></math></formula>’,
+‘<formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mi>X</mi><mtext> /* a comment */ </mtext><mi>X</mi></mrow></math></formula>’. Other example:
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mo> there exists </mo><mrow><mrow><mi>&delta;</mi><mo>&gt;</mo><mn>0</mn></mrow><mo> such that
 </mo><mrow><mrow><mi>f</mi><mo>&ApplyFunction;</mo><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow></mrow><mo>&lt;</mo><mn>1</mn></mrow></mrow></mrow></math></formula>. The MathML rules say that initial and final
 space should be removed and consecutive space characters should be replaced by
@@ -4625,7 +4625,7 @@ done in the Pdf version, and you will see the following: normally <xmlcode>&lt;m
 is typeset via <latexcode>\text</latexcode>, and spaces are typeset as usual outside math mode;
 the default for all other operators is a math font, and spaces are ignored.
 A non-trivial question is: what amount of space is inserted between the
-`exists' and the <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&delta;</mi></math></formula> that follows? Firefox uses none, this is not good,
+‘exists’ and the <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>&delta;</mi></math></formula> that follows? Firefox uses none, this is not good,
 <TeX/> uses a small space, but ignores the space before it, the MathML
 recommendation is unclear, and the sample renderings of the MathML test suite
 show no space between two <xmlcode>&lt;mtext&gt;</xmlcode> elements or between a <xmlcode>&lt;mtext&gt;</xmlcode> and a
@@ -4712,7 +4712,7 @@ expressions are wrong.</p>
 <p>The first expression is wrong, because the MathML
 documentation says that a <xmlcode>&lt;mrow&gt;</xmlcode> is necessary so that the <xmlcode>&lt;mfenced&gt;</xmlcode>
 has just one argument; a pair of braces should be added, this gives the
-<latexcode>\mrow</latexcode>. Examples that follow are wrong because `01' or `xy' produce a
+<latexcode>\mrow</latexcode>. Examples that follow are wrong because ‘01’ or ‘xy’ produce a
 single <xmlcode>&lt;mn&gt;</xmlcode> or <xmlcode>&lt;mi&gt;</xmlcode> element; in the case of an identifier this may
 depend on the font. You can use a separator (space or
 <latexcode>\relax</latexcode>) or uses braces (no <xmlcode>&lt;mrow&gt;</xmlcode> is produced if there is a single
@@ -4756,7 +4756,7 @@ Compare <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'>
 not obvious because if a brace character is an accent-declared overscript, we
 must apply some command to the kernel. In order for this example to work,
 another command must be applied if the brace is non-accent (we use the same
-command, that's simplier). In a case like
+command, that’s simplier). In a case like
 <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mrow><mover><munder><mo>&int;</mo> <mn>0</mn> </munder> <mi>&infin;</mi> </mover><mspace width='4.pt'/><mtext>versus</mtext><mspace width='4.pt'/><munderover><mo>&int;</mo> <mn>0</mn> <mi>&infin;</mi> </munderover></mrow></math></formula>
 there is no difference between an operator with underscript to which an
 overscript is added, and an operator with two scripts.</p>

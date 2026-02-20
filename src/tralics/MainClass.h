@@ -89,8 +89,8 @@ public:
     bool     nofloat_hack{false};
     bool     no_xml_error{false};
     bool     use_quotes{false};
-    char32_t leftquote_val{'`'};
-    char32_t rightquote_val{'\''};
+    char32_t leftquote_val{0x2018};
+    char32_t rightquote_val{0x2019};
 
     auto check_for_tcf(const std::string &s) -> bool; // Look for a `.tcf` file, and if found set `tcf_file` and `use_tcf`
     [[nodiscard]] auto get_executable_path() const -> const std::filesystem::path & { return executable_path; }

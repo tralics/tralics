@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE ramain SYSTEM 'raweb.dtd'>
-<!-- Translated from LaTeX by tralics 2.15.4, date: 2026/02/16 -->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2026/02/20 -->
 <ramain creator='Tralics version 2.15.4'>
-<p>The time is 23h 15min, 16th February 2026.</p>
+<p>The time is 22h 42min, 20th February 2026.</p>
 <p>DOCSTART</p>
 <div0 id='cid1' id-text='1'><head>First</head>
 <p>31.5pt0.0pt0.0mu1717.0pt17.0pt plus 1.0pt minus 2.0pt17.0mu plus 1.0mu minus 2.0mu3.0mu plus 4.0fil minus 17.0mu0.0mu119811711.0pt
@@ -279,8 +279,8 @@ ok19
 ok20
 ok21</p>
 <p>dd et rr.</p>
-<p>You agree “OK” or don't “not OK”.
-D'accord “OK” ou pas “not OK”.</p>
+<p>You agree “OK” or don’t “not OK”.
+D’accord “OK” ou pas “not OK”.</p>
 </div3>
 <div3 id='uid20' id-text='0.0.0.7'><head>CALC</head>
 <p>1=1
@@ -355,12 +355,12 @@ Hàn Th&#x1ebf; Thành designed pdf<TeX/>. ł and &lstrok;.</p>
 </div3>
 <div3 id='uid23' id-text='0.0.0.9'><head>Letter c</head>
 <p>testchar&lt;  
- é Ĭ ~ -- '' `` &lt;&lt; &gt;&gt;
+ é Ĭ ~ -- '’ `‘ &lt;&lt; &gt;&gt;
 ;:!?«»&amp;<font-italic-shape>~-<zws/>-<zws/>`<zws/>`<zws/>xx'<zws/>'<zws/>&lt;<zws/>&lt;<zws/>&gt;<zws/>&gt;<zws/>;:!?«»&amp;</font-italic-shape>
  –“«  » ; : ! ?«  »”&amp;
 
 &lt;  
- é Ĭ ~ -- '' `` &lt;&lt; &gt;&gt;
+ é Ĭ ~ -- '’ `‘ &lt;&lt; &gt;&gt;
 ;:!?«»&amp;<font-italic-shape>~-<zws/>-<zws/>`<zws/>`<zws/>&lt;<zws/>&lt;<zws/>&gt;<zws/>&gt;<zws/>;:!?«»&amp;'<zws/>'<zws/></font-italic-shape>
  –“&lt;&lt;&gt;&gt;;:!?«»”&amp;
 
@@ -1364,9 +1364,9 @@ Ifempty 122112112122122112112122 222.</p>
 </item><label>(4)</label>
 <item id='uid81' id-text='4'><p noindent='true'>bli bli</p>
 </item></list>
-<p><a>-</a><a>–</a><a>'</a><a>`</a><a>&lt;</a><a>&gt;</a><a>–</a><a>—</a><a>”</a><a>“</a><a>&lt;&lt;</a><a>&gt;&gt;</a>
+<p><a>-</a><a>–</a><a>’</a><a>‘</a><a>&lt;</a><a>&gt;</a><a>–</a><a>—</a><a>”</a><a>“</a><a>&lt;&lt;</a><a>&gt;&gt;</a>
 
-<a>-</a><a>–</a><a>'</a><a>`</a><a>&lt;</a><a>&gt;</a><a>–</a><a>—</a><a>”</a><a>“</a><a>« </a><a> »</a></p>
+<a>-</a><a>–</a><a>’</a><a>‘</a><a>&lt;</a><a>&gt;</a><a>–</a><a>—</a><a>”</a><a>“</a><a>« </a><a> »</a></p>
 <p>00</p>
 <foo y='2'>Vest1<bar x='1'>Vest2</bar> 3</foo><foo y='4'>West1<bar x='1'>West2</bar> 3</foo><p>A</p>
 <clearpage/><p>B</p>

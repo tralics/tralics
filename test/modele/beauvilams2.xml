@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE std SYSTEM 'classes.dtd'>
-<!-- Translated from LaTeX by tralics 2.15.4, date: 2020/12/08 -->
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2026/02/20 -->
 <std equation-number='left'>
 <Metadata>
 <shortitle>Ams-art example</shortitle>
@@ -396,7 +396,7 @@ and rendering of subfigures in the next figure.</p>
 </citation>
 <citation from='year' id='bid5' key='BBB98' type='article' userid='cite:BLS'>
 <bauteurs><bpers nom='Beebe' prenom='N.' prenomcomplet='N.'/><bpers nom='Beeton' prenom='B.' prenomcomplet='B.'/><bpers nom='Bennet' prenom='F.' prenomcomplet='Franck'/></bauteurs>
-<btitle>User's Guide to the <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>G</mi></math></formula>-bundles citator</btitle>
+<btitle>User’s Guide to the <formula type='inline'><math xmlns='http://www.w3.org/1998/Math/MathML'><mi>G</mi></math></formula>-bundles citator</btitle>
 <bjournal>Compositio Math.</bjournal>
 <bnumber>2</bnumber>
 <bvolume>112</bvolume>
