@@ -24,7 +24,7 @@ jobs:
         python-version: '3.x'
 
     - name: Install dependencies
-      run: sudo apt update ; sudo apt-get install texlive-base gcc-9
+      run: sudo apt update ; sudo apt-get install texlive-base gcc
 
     - name: configure
       env:
