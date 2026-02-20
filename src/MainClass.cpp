@@ -776,10 +776,15 @@ void MainClass::find_dtd() {
     std::string res = opt_doctype;
     if (res.empty()) res = config_file.find_top_val("DocType", false);
 
-    static constexpr auto pattern = ctll::fixed_string{R"(([a-zA-Z0-9.]+) *([^\s]+).*)"};
+    static constexpr auto pattern = ctll::fixed_string{R"(\s*(\S+)(?:\s+(\S+))?.*)"};
     if (auto m = ctre::match<pattern>(res)) {
-        dtd     = m.get<1>().to_string();
-        dtd_uri = m.get<2>().to_string();
+        auto dtd_candidate = m.get<1>().to_string();
+        if (is_valid_xml_name(dtd_candidate)) {
+            dtd     = dtd_candidate;
+            dtd_uri = m.get<2>().to_string();
+        } else {
+            spdlog::warn("Ignoring invalid root element name in DocType: {}", dtd_candidate);
+        }
     }
 
     if (dtd_uri.empty()) {

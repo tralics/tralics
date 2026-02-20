@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE foo-bar SYSTEM 'classes.dtd'>
+<!-- Translated from LaTeX by tralics 2.15.4, date: 2026/02/20 -->
+<foo-bar>
+<p>Issue 15 regression.
+</p>
+</foo-bar>
