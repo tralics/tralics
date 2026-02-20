@@ -94,53 +94,6 @@ Keep char* at boundaries (CLI/readline and mutable buffers):
 
 ## Active refactor plans
 
-### Plan: eliminate the String type alias
-
-#### Problem
-String is `using String = const char*` (types.h:7). It is used across the
-codebase. The alias is dangerous because `std::string(nullptr)` is UB, and the
-codebase already converts String -> std::string in CmdChr::name().
-
-#### Replacement strategy
-
-| old pattern | new type | when |
-|---|---|---|
-| return type that can be nullptr | std::optional<std::string_view> (or std::optional<std::string> if ownership needed) | indicates absence |
-| return type that is always non-null | std::string_view | no optionality needed |
-| parameter (never null, typically a literal) | std::string_view | zero-copy, accepts literals |
-| member / array of compile-time literals | std::string_view | lightweight, constexpr-friendly |
-| local variable | auto / std::string / std::string_view | follow the source |
-| pointer arithmetic (s + 3) | .substr(3) | on string or string_view |
-
-#### Remaining phases
-- [ ] Phase 4 - function parameters (~73)
-  - [ ] Change String parameters to std::string_view across Parser.h, Buffer.h,
-        Bibtex.h, MathDataP.h, FpGenList.h, etc.
-  - [ ] Inside function bodies, replace pointer arithmetic with .substr(),
-        strlen() with .size(), strcmp() with ==.
-  - [ ] At CLI/readline boundaries (readline.cpp, tralics.cpp, MainClass.cpp)
-        keep const char* and convert as needed.
-  - [ ] Build & test after each header.
-- [ ] Phase 5 - members, arrays, local variables (~40)
-  - [ ] Convert std::array<String, N> lookup tables to
-        std::array<std::string_view, N>.
-  - [ ] Convert local String variables to auto, std::string_view, or
-        std::string depending on context.
-  - [ ] Convert struct members (e.g. in Bibtex.h) to std::string_view or
-        std::string depending on ownership.
-  - [ ] Build & test.
-- [ ] Phase 6 - remove the alias
-  - [ ] Delete using String = const char *; from types.h.
-  - [ ] Full build - fix any stragglers.
-  - [ ] Final test run.
-
-#### Risks & notes
-- CLI boundaries (readline.cpp, MainClass.cpp) should keep raw const char*.
-- CmdChr::name() returns std::optional<std::string> because some branches
-  return std::string and callers need owned strings.
-- Buffer::see_config_kw() returns std::optional<std::string> because it returns
-  a pointer into its own mutable buffer.
-
 ### Plan: replace dispatch-only subtypes with string-keyed registry
 
 #### Problem
@@ -193,28 +146,14 @@ and the enum maintenance burden.
 - C-style casts: only 7, mostly long(x) functional casts in math code.
 
 ## TODO backlog (2026-02-11)
-Items below need deeper refactoring or design work; copied from TODO markers in src/.
-
-- [x] src/NameMapper.cpp
-  - 241: without Buffer (done 2026-02-15)
-  - 246: without Buffer (done 2026-02-15)
-
-- [x] src/txio.cpp
-  - 55: nullopt (done 2026-02-15)
 
 - src/BibEntry.cpp
   - 420: [[deprecated]]
-
-- [x] src/MathHelper.cpp
-  - 11: elsewhere (done 2026-02-15)
 
 - src/Hashtab_boot.cpp
   - 1387: useless alone?
   - 1388: useless alone?
   - 1401: useless alone?
-
-- [x] src/TexFonts.cpp
-  - 13: Replace that with size_t or std::optional<size_t> (done 2026-02-15)
 
 - src/Mactab.cpp
   - 21: shared_ptr or something RAII?
