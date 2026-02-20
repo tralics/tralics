@@ -219,8 +219,12 @@ auto Buffer::see_config_kw(const std::string &s, bool c) -> std::optional<std::s
 void Buffer::find_top_atts() {
     if (!see_equals("DocAttrib")) return;
     ptrs.a = ptrs.b;
-    skip_letter();
+    while (ptrs.b < size() && !is_special_end() && std::isspace(uchar(head())) == 0) advance();
     std::string a = substr(ptrs.a, ptrs.b - ptrs.a);
+    if (!is_valid_xml_name(a)) {
+        spdlog::warn("Ignoring invalid DocAttrib name: {}", a);
+        return;
+    }
     skip_sp_tab();
     if (head() != '\\' && head() != '\"') return;
     remove_space_at_end();

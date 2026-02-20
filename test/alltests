@@ -84,6 +84,7 @@ echo "Tralics tests started at $(date) " >Trace
 rm -f *.log *.spdlog *.xml
 run_tralics hello
 run_tralics issue15
+run_tralics issue17 -config=./issue17.tcf
 run_tralics hello1
 run_tralics hello2.tex -config=hello.tcf -oe8
 # run_tralics hello3
@@ -136,6 +137,7 @@ run_tralics_with_err omitcite "There were 3 errors."
 
 compare_file hello.xml
 compare_file issue15.xml
+compare_file issue17.xml
 compare_file hello1.xml
 compare_file hello2.xml 5
 # compare_file hello3.xml 5 3
