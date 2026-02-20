@@ -775,19 +775,21 @@ auto MainClass::find_document_type() -> bool {
 void MainClass::find_dtd() {
     std::string res = opt_doctype;
     if (res.empty()) res = config_file.find_top_val("DocType", false);
+    bool have_doctype = false;
 
     static constexpr auto pattern = ctll::fixed_string{R"(\s*(\S+)(?:\s+(\S+))?.*)"};
     if (auto m = ctre::match<pattern>(res)) {
         auto dtd_candidate = m.get<1>().to_string();
         if (is_valid_xml_name(dtd_candidate)) {
-            dtd     = dtd_candidate;
-            dtd_uri = m.get<2>().to_string();
+            have_doctype = true;
+            dtd          = dtd_candidate;
+            dtd_uri      = m.get<2>().to_string();
         } else {
             spdlog::warn("Ignoring invalid root element name in DocType: {}", dtd_candidate);
         }
     }
 
-    if (dtd_uri.empty()) {
+    if (!have_doctype) {
         if (dft == 3) {
             dtd     = "unknown";
             dtd_uri = "unknown.dtd";
@@ -796,7 +798,10 @@ void MainClass::find_dtd() {
             dtd_uri = "classes.dtd";
         }
     }
-    spdlog::info("DTD is {} from {}", dtd, dtd_uri);
+    if (dtd_uri.empty())
+        spdlog::info("DTD is {}", dtd);
+    else
+        spdlog::info("DTD is {} from {}", dtd, dtd_uri);
 }
 
 void MainClass::read_config_and_other() {
@@ -935,7 +940,10 @@ void MainClass::out_xml() {
     fmt::print(fp, "<?xml version='1.0' encoding='UTF-8'?>\n");
     if (auto sl = the_names["stylesheet"]; !sl.empty())
         fmt::print(fp, "<?xml-stylesheet href=\"{}\" type=\"{}\"?>\n", sl, the_names["stylesheettype"]);
-    fmt::print(fp, "<!DOCTYPE {} SYSTEM '{}'>\n", dtd, dtd_uri);
+    if (dtd_uri.empty())
+        fmt::print(fp, "<!DOCTYPE {}>\n", dtd);
+    else
+        fmt::print(fp, "<!DOCTYPE {} SYSTEM '{}'>\n", dtd, dtd_uri);
     fmt::print(fp, "<!-- Translated from LaTeX by tralics {}, date: {} -->\n", the_main.tralics_version, short_date);
     fp << the_stack.document_element() << "\n";
 
