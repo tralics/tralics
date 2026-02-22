@@ -44,4 +44,5 @@ jobs:
           external_repository: tralics/tralics.github.io
           publish_branch: master
           publish_dir: docs/_build/html
+          enable_jekyll: false
           force_orphan: true
