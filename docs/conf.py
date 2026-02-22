@@ -11,6 +11,7 @@ extensions = ['sphinx_rtd_theme', 'breathe',
               'sphinxcontrib.bibtex', 'sphinxcontrib.katex']
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+bibtex_bibfiles = ['tralics.bib']
 
 # -- Breathe configuration
 
