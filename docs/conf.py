@@ -10,7 +10,7 @@ release = '2.16.0pre'
 extensions = ['sphinx_rtd_theme', 'breathe',
               'sphinxcontrib.bibtex', 'sphinxcontrib.katex']
 templates_path = ['_templates']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', '.venv', '.uv-cache', 'Thumbs.db', '.DS_Store']
 bibtex_bibfiles = ['tralics.bib']
 
 # -- Breathe configuration

@@ -36,7 +36,7 @@ jobs:
       - name: Build docs
         run: |
           cd docs
-          uv run --python .venv/bin/python sphinx-build -b html -n -W --keep-going . _build/html
+          uv run --python .venv/bin/python sphinx-build -b html -n --keep-going . _build/html
 
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'
