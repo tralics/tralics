@@ -17,6 +17,19 @@ Run the translator:
 ./build/tralics input.tex
 ```
 
+## Homebrew (Tap)
+
+A Homebrew formula is provided at `Formula/tralics.rb` for use in a tap
+repository.
+
+For a tap repository (for example `tralics/homebrew-tap`), users can install
+with:
+
+```
+brew tap tralics/tap
+brew install tralics
+```
+
 ## Configuration
 
 Default configuration files live in `confdir/`. Common file types include:

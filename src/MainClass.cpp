@@ -148,24 +148,38 @@ found at http://www.cecill.info.)";
     // Locate the config dir, using a few standard sources TODO: this should be
     // managed by CMake, or by kpathsea
     void find_conf_path() {
+        auto add_confdir_candidate = [](const std::filesystem::path &dir) -> bool {
+            if (dir.empty()) return false;
+            if (!exists(dir / "article.clt")) return false;
+            if (std::find(the_main.conf_path.begin(), the_main.conf_path.end(), dir) == the_main.conf_path.end())
+                the_main.conf_path.emplace_back(dir);
+            spdlog::info("Found configuration folder: {}", dir.string());
+            return true;
+        };
+
         // 1) already-configured paths (user options/environment defaults)
-        if (auto s = std::find_if(the_main.conf_path.begin(), the_main.conf_path.end(),
-                                  [](const auto &S) { return exists(S / "article.clt"); });
-            s != the_main.conf_path.end()) {
-            spdlog::info("Found configuration folder: {}", s->string());
-            return;
-        }
+        for (const auto &path : the_main.conf_path)
+            if (add_confdir_candidate(path)) return;
 
         // 2) one-time kpathsea probe; add containing folder for fast subsequent lookups
         if (auto p = find_in_kpathsea("article.clt")) {
             auto dir = p->parent_path();
-            if (!dir.empty()) {
-                if (std::find(the_main.conf_path.begin(), the_main.conf_path.end(), dir) == the_main.conf_path.end())
-                    the_main.conf_path.emplace_back(dir);
-                spdlog::info("Found configuration folder via kpathsea: {}", dir.string());
-                return;
-            }
+            if (add_confdir_candidate(dir)) return;
         }
+
+        // 3) fallback: paths relative to executable location
+        // Build-tree layout: <build>/tralics with source confdir in <build>/../confdir.
+        // Install layout: <prefix>/bin/tralics with confdir in <prefix>/share/tralics/confdir.
+        auto exe = the_main.get_executable_path();
+        std::error_code ec;
+        auto real_exe = std::filesystem::weakly_canonical(exe, ec);
+        if (!ec) exe = real_exe;
+        auto bindir = exe.parent_path();
+        auto prefix = bindir.parent_path();
+        if (add_confdir_candidate(bindir / ".." / "confdir")) return;
+        if (add_confdir_candidate(prefix / "confdir")) return;
+        if (add_confdir_candidate(prefix / "share" / "tralics" / "confdir")) return;
+        if (add_confdir_candidate(prefix / "share" / "confdir")) return;
 
         spdlog::error("Configuration folder not found (set TEXINPUTS or use -confdir)");
     }

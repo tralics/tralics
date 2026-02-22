@@ -34,6 +34,9 @@ file (GLOB_RECURSE sources CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/src/*.cpp ${P
 
 add_executable(tralics ${sources})
 
+install(TARGETS tralics RUNTIME DESTINATION bin)
+install(DIRECTORY confdir/ DESTINATION share/tralics/confdir)
+
 add_custom_target(alltests ALL
     ../test/alltests ${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR}
     DEPENDS tralics
