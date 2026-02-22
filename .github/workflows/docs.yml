@@ -42,6 +42,6 @@ jobs:
         with:
           personal_token: ${{ secrets.PAGES_DEPLOY_TOKEN }}
           external_repository: tralics/tralics.github.io
-          publish_branch: main
+          publish_branch: master
           publish_dir: docs/_build/html
           force_orphan: true
