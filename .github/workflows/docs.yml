@@ -8,8 +8,6 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: pages
@@ -38,19 +36,12 @@ jobs:
           cd docs
           uv run --python .venv/bin/python sphinx-build -b html -n --keep-going . _build/html
 
-      - name: Upload Pages artifact
+      - name: Deploy to tralics.github.io
         if: github.event_name != 'pull_request'
-        uses: actions/upload-pages-artifact@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: docs/_build/html
-
-  deploy-pages:
-    if: github.event_name != 'pull_request'
-    needs: build-docs
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          personal_token: ${{ secrets.PAGES_DEPLOY_TOKEN }}
+          external_repository: tralics/tralics.github.io
+          publish_branch: main
+          publish_dir: docs/_build/html
+          force_orphan: true
