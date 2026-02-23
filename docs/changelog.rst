@@ -1,6 +1,11 @@
 ChangeLog for the Tralics software
 ==================================
 
+WIP, Version 3.0.1
+------------------
+
+- Add environment variable TRALICSCONFDIR as way to locate confdir
+
 2026-02-23, Version 3.0.0
 -------------------------
 

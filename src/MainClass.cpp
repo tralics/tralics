@@ -12,6 +12,7 @@
 #include "tralics/Xml.h"
 #include "tralics/globals.h"
 #include "tralics/util.h"
+#include <cstdlib>
 #include <ctre.hpp>
 #include <filesystem>
 #include <spdlog/fmt/ostr.h>
@@ -157,17 +158,23 @@ found at http://www.cecill.info.)";
             return true;
         };
 
-        // 1) already-configured paths (user options/environment defaults)
+        // 1) already-configured paths (typically from command-line options)
         for (const auto &path : the_main.conf_path)
             if (add_confdir_candidate(path)) return;
 
-        // 2) one-time kpathsea probe; add containing folder for fast subsequent lookups
+        // 2) explicit environment override
+        if (const char *env_confdir = std::getenv("TRALICSCONFDIR")) {
+            auto dir = std::filesystem::path(env_confdir);
+            if (add_confdir_candidate(dir)) return;
+        }
+
+        // 3) one-time kpathsea probe; add containing folder for fast subsequent lookups
         if (auto p = find_in_kpathsea("article.clt")) {
             auto dir = p->parent_path();
             if (add_confdir_candidate(dir)) return;
         }
 
-        // 3) fallback: paths relative to executable location
+        // 4) fallback: paths relative to executable location
         // Build-tree layout: <build>/tralics with source confdir in <build>/../confdir.
         // Install layout: <prefix>/bin/tralics with confdir in <prefix>/share/tralics/confdir.
         auto exe = the_main.get_executable_path();
