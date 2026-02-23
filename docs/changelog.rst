@@ -1,33 +1,16 @@
 ChangeLog for the Tralics software
 ==================================
 
-Work in progress
-----------------
+2026-02-23, Version 3.0.0
+-------------------------
 
-Bookkeeping with no functional change
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
--  Lots of refactoring of the C++ code using ``clang-tidy`` and
-   ``clang-format``, making use of some C++17 features (too many changes
-   to list, many of them automated)
--  Merging of the various documentation files, reorganization of the
-   directory structure to make it more readable
--  Transition to CMake, and automatic run of the tests as part of the
-   build
--  Remove a few unused function parameters and some dead code
-
-Changes affecting the output
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
--  [2020-02-12] import a
-   `patch <https://github.com/softcover/tralics/commit/5164df1cdf978da0e8eb28d38b6e8fd2baf8f47b>`__
-   from the SoftCover fork which includes missing refs in links for
-   reference (only changes the output if there is an error)
--  [2020-04-21] switch to ``spdlog`` for logging, this changes the
-   format and the repartition of the contents, hopefully in a reasonable
-   direction
--  [2020-08-14] do not insert an empty attribute pair in
-   Parser::T_start_theorem, this changes the output slightly but is cleaner
+Many changes for this release, mostly none of them affecting the output (too
+many to list here). Of note:
+- Switch to CMake for better compatibility
+- Use typographically correct quotation marks in the output
+- Change the confdir search algorithm, enable kpathsea lookup for it
+- Switch to spdlog for logging
+- Only support UTF8 output
 
 2015-11-25, Version 2.15.4
 --------------------------
@@ -1917,4 +1900,3 @@ Version 1.5
    ``\ensuremath{\alpha}`` works.
    ``$\ensuremath{\beta}$`` puts too many braces, but there are other
    functions that do the same. Must correct this one day.
-

@@ -52,7 +52,7 @@ public:
 
     std::array<std::array<char32_t, lmaxchar>, max_encoding - 2> custom_table{};
 
-    std::string tralics_version{"2.15.4"};
+    std::string tralics_version{"3.0.0"};
 
     std::string default_class; // The default class
     std::string short_date;    // Date of start of run (short format)

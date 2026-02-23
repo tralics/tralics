@@ -98,8 +98,7 @@ Status of the Software
 
 What's new ? you can consult the `ChangeLog <ChangeLog.html>`__ file.
 
-| Current version is 2.15.4 released 25-november-2015; modfoed
-  26-may-2017
+| Current version is 3.0.0 released 23-february-2026.
 | version 2.15.3 released 06-august-2015
 | version 2.15.2 released 22-jan-2015
 | version 2.15.1 released 25-july-2013
@@ -118,8 +117,8 @@ Source
 ------
 
 | Source is available.
-| `current version 2.15.4 (dated
-  26-may-2017) <ftp://ftp-sop.inria.fr/marelle/tralics/src/tralics-src-2.15.4.tar.gz>`__
+| `current version 3.0.0 (dated
+  23-february-2026) <https://github.com/tralics/tralics/archive/refs/tags/v3.0.0.tar.gz>`__
 | `version 2.15.3 (dated
   06-august-2015) <ftp://ftp-sop.inria.fr/marelle/tralics/src/tralics-src-2.15.3.tar.gz>`__
 | `version 2.15.2 (dated
@@ -22298,8 +22297,8 @@ docs/changelog.rst
 ChangeLog for the Tralics software
 ==================================
 
-Work in progress
-----------------
+2026-02-23, Version 3.0.0
+-------------------------
 
 Bookkeeping with no functional change
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -27054,5 +27053,4 @@ docs/tralics.bib
   language = {fr},
   number = {51}
 }
-
 
