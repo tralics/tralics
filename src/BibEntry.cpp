@@ -190,6 +190,7 @@ namespace {
         case type_masterthesis: return "mastersthesis";
         case type_misc: return "misc";
         case type_phdthesis: return "phdthesis";
+        case type_thesis: return "thesis";
         case type_proceedings: return "proceedings";
         case type_report: return "report";
         case type_techreport: return "techreport";
@@ -528,6 +529,11 @@ void BibEntry::call_type_special() {
             out_something(fp_type, 1);
         else
             out_something(fp_type, 3);
+        out_something(fp_school);
+        out_something(fp_address);
+        break;
+    case type_thesis:
+        out_something(fp_type);
         out_something(fp_school);
         out_something(fp_address);
         break;

@@ -2035,6 +2035,7 @@ enum entry_type : unsigned {
     type_masterthesis,
     type_misc,
     type_phdthesis,
+    type_thesis,
     type_coursenotes,
     type_proceedings,
     type_report,

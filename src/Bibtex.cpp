@@ -44,6 +44,7 @@ namespace {
         if (s == the_names["mastersthesis"]) return type_masterthesis;
         if (s == the_names["misc"]) return type_misc;
         if (s == the_names["phdthesis"]) return type_phdthesis;
+        if (s == the_names["thesis"]) return type_thesis;
         if (s == the_names["proceedings"]) return type_proceedings;
         if (s == the_names["preamble"]) return type_preamble;
         if (s == the_names["report"]) return type_report;
