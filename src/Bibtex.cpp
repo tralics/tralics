@@ -76,6 +76,7 @@ namespace {
         if (s == the_names["author"]) return fp_author;
         if (s == the_names["booktitle"]) return fp_booktitle;
         if (s == the_names["chapter"]) return fp_chapter;
+        if (s == the_names["date"]) return fp_date;
         if (s == the_names["doi"]) return fp_doi;
         if (s == the_names["edition"]) return fp_edition;
         if (s == the_names["editor"]) return fp_editor;

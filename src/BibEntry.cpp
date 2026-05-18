@@ -126,11 +126,13 @@ namespace {
         };
     };
 
-    const std::array<std::string, 30> bib_xml_name{"bcrossref", "bkey",     "baddress",      "bauthors",     "bbooktitle",   "bchapter",
-                                                   "bedition",  "beditors", "bhowpublished", "binstitution", "bjournal",     "bmonth",
-                                                   "bnote",     "bnumber",  "borganization", "bpages",       "bpublisher",   "bschool",
-                                                   "bseries",   "btitle",   "btype",         "burl",         "bvolume",      "byear",
-                                                   "bdoi",      "bsubtype", "bunite",        "bequipe",      "bidentifiant", "bunknown"};
+    const std::array<std::string, fp_unknown+1> bib_xml_name{
+        "bcrossref", "bkey",     "baddress",      "bauthors",     "bbooktitle",   "bchapter",
+        "bedition",  "beditors", "bhowpublished", "binstitution", "bjournal",     "bmonth",
+        "bnote",     "bnumber",  "borganization", "bpages",       "bpublisher",   "bschool",
+        "bseries",   "btitle",   "btype",         "burl",         "bvolume",      "byear",
+        "bdoi",      "bsubtype", "bunite",        "bequipe",      "bidentifiant", "bdate",
+        "bunknown"};
 
     // In the case of `Lo{\"i}c', returns  `Lo{\"i}'.
     auto first_three(const std::string &s) -> std::string {
@@ -483,6 +485,7 @@ void BibEntry::call_type_special() {
     if (type_int != type_proceedings) format_author(true);
     if (type_int == type_book || type_int == type_inbook) format_author(false);
     out_something(fp_title);
+    out_something(fp_date);
     if (type_int == type_proceedings || type_int == type_incollection) format_author(false);
     switch (type_int) {
     case type_article:

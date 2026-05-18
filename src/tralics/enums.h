@@ -2126,6 +2126,7 @@ enum field_pos {
     fp_isbn,
     fp_issn,
     fp_isrn,
+    fp_date,
     fp_unknown
 };
 
